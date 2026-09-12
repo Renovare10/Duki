@@ -125,7 +125,8 @@ export function coveragePercents(score: TextScore): { known: number; unknown: nu
   return { known, unknown: 100 - known };
 }
 
-export const HARD_CAP = 0.2;
+/** Recommended may stretch to ~35% unknown. 43% stays out. */
+export const REC_HARD_MAX = 0.38;
 
 export function isScored(score: TextScore): boolean {
   return score.total > 0;

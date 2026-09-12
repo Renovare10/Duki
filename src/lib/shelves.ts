@@ -8,9 +8,7 @@ import {
   type ShelfItem,
 } from "./books";
 import {
-  BAND_HI,
-  BAND_LO,
-  HARD_CAP,
+  REC_HARD_MAX,
   TARGET,
   isScored,
   stillTeaches,
@@ -133,43 +131,37 @@ export function pickRecommendedItems(
   items: ShelfItem[],
   scores: Map<string, TextScore>,
 ): { easy: ShelfItem | null; justRight: ShelfItem | null; hard: ShelfItem | null } {
-  const pool = items.filter((item) => itemTeaches(item, scores));
-  const used = new Set<string>();
+  const unread = items.filter((item) => {
+    if (!itemTeaches(item, scores)) return false;
+    const src = scoreSource(item);
+    if (!src) return false;
+    const load = scores.get(src.id)?.unknownLoad ?? -1;
+    if (load <= 0 || load > REC_HARD_MAX) return false;
+    if (item.type === "text") return !item.text.readAt;
+    return bookProgress(item.book.chapters) !== "read";
+  });
 
-  function pickIn(
-    pred: (load: number) => boolean,
-    prefer: "low" | "target",
-  ): ShelfItem | null {
-    const matches = pool.filter((item) => {
-      const src = scoreSource(item);
-      if (!src || used.has(itemId(item))) return false;
-      return pred(scores.get(src.id)?.unknownLoad ?? -1);
-    });
-    if (matches.length === 0) return null;
-    const unread = matches.filter((item) => {
-      if (item.type === "text") return !item.text.readAt;
-      return bookProgress(item.book.chapters) !== "read";
-    });
-    if (unread.length === 0) return null;
-    const use = unread;
-    use.sort((a, b) => {
-      const sa = scores.get(scoreSource(a)!.id)!;
-      const sb = scores.get(scoreSource(b)!.id)!;
-      if (prefer === "target") {
-        return Math.abs(sa.unknownLoad - TARGET) - Math.abs(sb.unknownLoad - TARGET);
-      }
-      return sa.unknownLoad - sb.unknownLoad;
-    });
-    const pick = use[0];
-    used.add(itemId(pick));
-    return pick;
+  if (unread.length === 0) {
+    return { easy: null, justRight: null, hard: null };
   }
 
-  return {
-    easy: pickIn((load) => load > 0 && load < BAND_LO, "low"),
-    justRight: pickIn((load) => load >= BAND_LO && load <= BAND_HI, "target"),
-    hard: pickIn((load) => load > BAND_HI && load <= HARD_CAP, "low"),
-  };
+  const byLoad = [...unread].sort((a, b) => {
+    return (scores.get(scoreSource(a)!.id)!.unknownLoad - scores.get(scoreSource(b)!.id)!.unknownLoad);
+  });
+
+  const easy = byLoad[0];
+  const rest = byLoad.slice(1);
+  if (rest.length === 0) return { easy, justRight: null, hard: null };
+
+  const justRight = [...rest].sort((a, b) => {
+    const da = Math.abs(scores.get(scoreSource(a)!.id)!.unknownLoad - TARGET);
+    const db = Math.abs(scores.get(scoreSource(b)!.id)!.unknownLoad - TARGET);
+    return da - db;
+  })[0];
+  const after = rest.filter((item) => itemId(item) !== itemId(justRight));
+  const hard = after.length ? after[after.length - 1] : null;
+
+  return { easy, justRight, hard };
 }
 
 export function pickRecommendedTrio(

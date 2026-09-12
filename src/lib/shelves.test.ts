@@ -211,9 +211,9 @@ describe("pickRecommendedTrio", () => {
       ["cap", sc(0.16)],
     ]);
     const trio = pickRecommendedTrio(texts, scores);
-    expect(trio.hard?.id).toBe("cap");
-    expect(trio.easy).toBeNull();
+    expect(trio.easy?.id).toBe("cap");
     expect(trio.justRight).toBeNull();
+    expect(trio.hard).toBeNull();
   });
 
   it("omits Harder rather than filling with a 43% text", () => {
@@ -225,13 +225,30 @@ describe("pickRecommendedTrio", () => {
     expect(trio.hard).toBeNull();
   });
 
-  it("omits Easy rather than filling with a hard text", () => {
+  it("uses a lone 15% unread story as Easy rather than leaving Recommended empty", () => {
     const texts = [text({ id: "h", title: "H", category: "story" })];
     const scores = new Map([["h", sc(0.15)]]);
     const trio = pickRecommendedTrio(texts, scores);
-    expect(trio.easy).toBeNull();
+    expect(trio.easy?.id).toBe("h");
     expect(trio.justRight).toBeNull();
-    expect(trio.hard?.id).toBe("h");
+    expect(trio.hard).toBeNull();
+  });
+
+  it("fills Easy / Just right / Harder from unread stories at 17%, 32%, 35%", () => {
+    const texts = [
+      text({ id: "a", title: "A", category: "graded" }),
+      text({ id: "b", title: "B", category: "story" }),
+      text({ id: "c", title: "C", category: "children" }),
+    ];
+    const scores = new Map([
+      ["a", sc(0.17)],
+      ["b", sc(0.32)],
+      ["c", sc(0.35)],
+    ]);
+    const trio = pickRecommendedTrio(texts, scores);
+    expect(trio.easy?.id).toBe("a");
+    expect(trio.justRight?.id).toBe("b");
+    expect(trio.hard?.id).toBe("c");
   });
 
   it("omits a slot rather than recommending an already-read story", () => {
@@ -241,6 +258,33 @@ describe("pickRecommendedTrio", () => {
     expect(trio.easy).toBeNull();
     expect(trio.justRight).toBeNull();
     expect(trio.hard).toBeNull();
+  });
+
+  it("omits a band if the only match is already read", () => {
+    const texts = [
+      text({ id: "e-read", title: "Finished easy", category: "graded", readAt: 9 }),
+      text({ id: "j", title: "Unread JR", category: "graded" }),
+    ];
+    const scores = new Map([
+      ["e-read", sc(0.03)],
+      ["j", sc(0.08)],
+    ]);
+    const trio = pickRecommendedTrio(texts, scores);
+    expect(trio.easy?.id).toBe("j");
+    expect(trio.justRight).toBeNull();
+    expect(trio.hard).toBeNull();
+  });
+
+  it("prefers an unread Easy over a finished one in the same band", () => {
+    const texts = [
+      text({ id: "e-old", title: "Old easy", category: "graded", readAt: 2 }),
+      text({ id: "e-new", title: "New easy", category: "graded" }),
+    ];
+    const scores = new Map([
+      ["e-old", sc(0.03)],
+      ["e-new", sc(0.03)],
+    ]);
+    expect(pickRecommendedTrio(texts, scores).easy?.id).toBe("e-new");
   });
 
   it("does not recommend an unscored stub", () => {

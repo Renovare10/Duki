@@ -9,6 +9,7 @@ import {
   type ReadFilter,
   type Shelf,
 } from "../lib/shelves";
+import { bookProgress, itemId, type Book, type ShelfItem } from "../lib/books";
 import { cardHitAction } from "../lib/card-hit";
 import { bookmarkProgress } from "../lib/text";
 
@@ -19,6 +20,7 @@ type Props = {
   openShelf: string | null;
   onOpenShelf: (id: string | null) => void;
   onOpen: (id: string) => void;
+  onOpenBook: (seriesId: string) => void;
   onScore?: (id: string) => void;
   onDelete: (id: string) => void;
   onMarkRead: (id: string, read: boolean) => void;
@@ -53,7 +55,6 @@ const CATS: { id: CategoryFilter; label: string }[] = [
   { id: "novel", label: "Novels" },
   { id: "wiki", label: "Wikipedia" },
   { id: "wikisource", label: "Wikisource" },
-  { id: "gutenberg", label: "Gutenberg" },
   { id: "paste", label: "Yours" },
 ];
 
@@ -92,6 +93,7 @@ export function Home({
   openShelf,
   onOpenShelf,
   onOpen,
+  onOpenBook,
   onScore,
   onDelete,
   onMarkRead,
@@ -135,7 +137,7 @@ export function Home({
         <input
           type="search"
           className="home-search"
-          placeholder="Search titles, Wikipedia, Gutenberg…"
+          placeholder="Search titles, Wikipedia, Wikisource…"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           aria-label="Search the library"
@@ -193,15 +195,16 @@ export function Home({
           </button>
           <h2 className="shelf-title">{active.title}</h2>
           <div className="shelf-grid">
-            {active.items.map((text) => (
-              <TitleCard
-                key={text.id}
-                text={text}
-                score={scores.get(text.id)}
-                tag={active.tags?.[text.id]}
-                error={wikiErrors?.[text.id]}
-                loading={wikiLoading === text.id}
+            {active.items.map((item) => (
+              <ShelfCard
+                key={itemId(item)}
+                item={item}
+                scores={scores}
+                tag={active.tags?.[itemId(item)]}
+                wikiErrors={wikiErrors}
+                wikiLoading={wikiLoading}
                 onOpen={onOpen}
+                onOpenBook={onOpenBook}
                 onScore={onScore}
                 onDelete={onDelete}
                 onMarkRead={onMarkRead}
@@ -223,6 +226,7 @@ export function Home({
               wikiLoading={wikiLoading}
               onOpenShelf={onOpenShelf}
               onOpen={onOpen}
+              onOpenBook={onOpenBook}
               onScore={onScore}
               onDelete={onDelete}
               onMarkRead={onMarkRead}
@@ -236,7 +240,7 @@ export function Home({
           Add your own
         </button>
         <span>
-          Original stories, Wikipedia (CC BY-SA), Wikisource, and Project Gutenberg.
+          Original stories, Wikipedia (CC BY-SA), and Wikisource.
           Paste books you own.
         </span>
       </p>
@@ -251,6 +255,7 @@ function Carousel({
   wikiLoading,
   onOpenShelf,
   onOpen,
+  onOpenBook,
   onScore,
   onDelete,
   onMarkRead,
@@ -261,6 +266,7 @@ function Carousel({
   wikiLoading?: string | null;
   onOpenShelf: (id: string) => void;
   onOpen: (id: string) => void;
+  onOpenBook: (seriesId: string) => void;
   onScore?: (id: string) => void;
   onDelete: (id: string) => void;
   onMarkRead: (id: string, read: boolean) => void;
@@ -272,15 +278,16 @@ function Carousel({
         <span className="shelf-count">{shelf.items.length}</span>
       </button>
       <div className="shelf-track">
-        {shelf.items.map((text) => (
-          <TitleCard
-            key={text.id}
-            text={text}
-            score={scores.get(text.id)}
-            tag={shelf.tags?.[text.id]}
-            error={wikiErrors?.[text.id]}
-            loading={wikiLoading === text.id}
+        {shelf.items.map((item) => (
+          <ShelfCard
+            key={itemId(item)}
+            item={item}
+            scores={scores}
+            tag={shelf.tags?.[itemId(item)]}
+            wikiErrors={wikiErrors}
+            wikiLoading={wikiLoading}
             onOpen={onOpen}
+            onOpenBook={onOpenBook}
             onScore={onScore}
             onDelete={onDelete}
             onMarkRead={onMarkRead}
@@ -288,6 +295,90 @@ function Carousel({
         ))}
       </div>
     </section>
+  );
+}
+
+function ShelfCard({
+  item,
+  scores,
+  tag,
+  wikiErrors,
+  wikiLoading,
+  onOpen,
+  onOpenBook,
+  onScore,
+  onDelete,
+  onMarkRead,
+}: {
+  item: ShelfItem;
+  scores: Map<string, TextScore>;
+  tag?: string;
+  wikiErrors?: Record<string, string>;
+  wikiLoading?: string | null;
+  onOpen: (id: string) => void;
+  onOpenBook: (seriesId: string) => void;
+  onScore?: (id: string) => void;
+  onDelete: (id: string) => void;
+  onMarkRead: (id: string, read: boolean) => void;
+}) {
+  if (item.type === "book") {
+    return (
+      <BookCard
+        book={item.book}
+        tag={tag}
+        onOpen={() => onOpenBook(item.book.id)}
+      />
+    );
+  }
+  return (
+    <TitleCard
+      text={item.text}
+      score={scores.get(item.text.id)}
+      tag={tag}
+      error={wikiErrors?.[item.text.id]}
+      loading={wikiLoading === item.text.id}
+      onOpen={onOpen}
+      onScore={onScore}
+      onDelete={onDelete}
+      onMarkRead={onMarkRead}
+    />
+  );
+}
+
+function BookCard({
+  book,
+  tag,
+  onOpen,
+}: {
+  book: Book;
+  tag?: string;
+  onOpen: () => void;
+}) {
+  const progress = bookProgress(book.chapters);
+  const label = progress === "read" ? "Read" : progress === "in-progress" ? "In progress" : "Unread";
+  return (
+    <article className="title-card">
+      <button type="button" className="title-hit" onClick={onOpen}>
+        <Cover category={book.category} coverUrl={book.coverUrl} tag={tag} />
+        <div className="title-copy">
+          <div className="title-card-name">{book.title}</div>
+          {book.blurb ? <p className="title-blurb">{book.blurb}</p> : null}
+        </div>
+      </button>
+      <div className="title-copy title-meta">
+        <div className="lib-meta">
+          <span className={`read-pill${progress === "read" ? " on" : ""}`}>{label}</span>
+          {book.author ? <span>{book.author}</span> : null}
+          <span>{book.chapters.length} chapters</span>
+          <span className="cat-tag">{categoryLabel(book.category)}</span>
+        </div>
+      </div>
+      <div className="card-actions">
+        <button type="button" className="ghost" onClick={onOpen}>
+          Read
+        </button>
+      </div>
+    </article>
   );
 }
 
@@ -312,7 +403,7 @@ export function TitleCard({
   onDelete?: (id: string) => void;
   onMarkRead?: (id: string, read: boolean) => void;
 }) {
-  const stub = !text.body.trim();
+  const stub = !(text.body || "").trim();
   function run(surface: Parameters<typeof cardHitAction>[0], event?: { stopPropagation: () => void }) {
     event?.stopPropagation();
     if (loading && cardHitAction(surface) === "score") return;
@@ -388,7 +479,7 @@ function CardMeta({
   const label = score && score.total > 0 ? fitLabel(score) : "unscored";
   const pct = score ? coveragePercents(score) : null;
   const progress = score ? bookmarkProgress(text.bookmark, score.total) : null;
-  const stub = !text.body.trim();
+  const stub = !(text.body || "").trim();
   return (
     <div className="lib-meta">
       <span className={`read-pill${text.readAt ? " on" : ""}`}>{text.readAt ? "Read" : "Unread"}</span>

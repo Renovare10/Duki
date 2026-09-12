@@ -724,6 +724,314 @@ const OWNED: LibraryText[] = [
 昔孟母，择邻处。
 子不学，断机杼。`,
   }),
+  entry({
+    id: "band-dumplings",
+    category: "children",
+    createdAt: 51,
+    title: "奶奶包饺子",
+    blurb: "Cabbage, flour, and a dumpling that does not look like the others.",
+    body: `星期六早上，厨房里很香。奶奶在包饺子。桌上有白菜、肉和面。
+
+我问：“我可以帮忙吗？”奶奶说：“可以。手要干净。”
+
+我学着包。第一个饺子不好看。奶奶笑了：“没有关系。好吃就行。”
+
+我们包了很多。中午全家人一起吃。饺子很热。我觉得今天比上学还高兴。`,
+  }),
+  entry({
+    id: "band-wet-dog",
+    category: "children",
+    createdAt: 52,
+    title: "小狗湿了",
+    blurb: "Rain, a small dog, and a towel by the door.",
+    body: `下午忽然下雨了。我从学校往家跑。门口有一只小狗，毛都湿了。
+
+它看我，不走。我说：“你是谁家的？”它不说话，只是站着。
+
+我打开门，给它一块布。它抖了抖毛，水都在地上。
+
+过了一会儿，邻居来找它。邻居说：“谢谢。它怕打雷。”小狗回家了。家里又安静了。`,
+  }),
+  entry({
+    id: "band-recess",
+    category: "children",
+    createdAt: 53,
+    title: "课间十分钟",
+    blurb: "Ten minutes, a ball, and a teacher who is not in a hurry.",
+    body: `下课了。同学们都出去了。有人跑步，有人说话，有人喝水。
+
+小华问我：“要不要一起玩球？”我说：“要。可是时间很短。”
+
+我们在操场上跑。球飞得很快。老师在旁边看，她也笑了。
+
+铃又响了。我们回到教室。衣服有一点热。我觉得十分钟也很长。`,
+  }),
+  entry({
+    id: "band-backpack",
+    category: "children",
+    createdAt: 54,
+    title: "新书包",
+    blurb: "A new bag, too many books, and a walk that feels longer.",
+    body: `妈妈给我买了新书包。书包是蓝色的，上面有一只小鸟。
+
+我把书都放进去。书包一下子变重了。我背着它去学校。
+
+同学说：“很好看。”我很高兴。可是路上我觉得有点累。
+
+放学以后，我把不用的书拿出来。明天书包会轻一点。我还是喜欢这只小鸟。`,
+  }),
+  entry({
+    id: "band-upstairs-cat",
+    category: "children",
+    createdAt: 55,
+    title: "楼上的猫",
+    blurb: "The cat upstairs visits, then remembers who feeds it.",
+    body: `我们楼上有一只猫。它常常坐在窗户边看人。
+
+今天它走到我家门口。我给它一点鱼。它吃完，还不走。
+
+妈妈说：“它不是我们的。”我说：“我知道。可是它好像很饿。”
+
+晚上，楼上的阿姨来找它。猫一下子就回家了。阿姨说：“它每天都要下来看看。”`,
+  }),
+  entry({
+    id: "band-baozi",
+    category: "children",
+    createdAt: 56,
+    title: "放学买包子",
+    blurb: "Steam in the street, two buns, and not quite enough for three.",
+    body: `放学以后，校门口有人卖包子。包子很热，味道很好。
+
+我和同学去买。一个包子两块钱。我买了两个。
+
+同学说：“我也要。”可是他没有带钱。我说：“我先给你一个。明天你再给我。”
+
+我们站在路边吃。风有一点冷。包子在手里很暖。我觉得回家的路变短了。`,
+  }),
+  entry({
+    id: "band-exam",
+    category: "graded",
+    createdAt: 57,
+    title: "今天有考试",
+    blurb: "A short test, a slow pencil, and tea at home afterwards.",
+    body: `今天上午有考试。我昨天晚上看书看到很晚。
+
+进教室的时候，我有一点紧张。老师说：“不要怕。你会的就会。”
+
+题目不是很难。可是我写得慢。下课的时候，我才写完。
+
+回家以后，妈妈问我难不难。我说：“还可以。”她给我倒了茶。我觉得明天可以睡久一点。`,
+  }),
+  entry({
+    id: "band-cook",
+    category: "graded",
+    createdAt: 58,
+    title: "我想学做饭",
+    blurb: "Eggs in a pan, too much salt, and a second try.",
+    body: `晚上爸爸在厨房做饭。我站在旁边看。
+
+我说：“我也要学。”爸爸说：“好。你先洗菜。”
+
+菜洗好了。他让我炒鸡蛋。油很热。鸡蛋很快就好了。可是我放了太多盐。
+
+爸爸尝了一口，笑了：“明天少放一点。”我们还是吃完了。我觉得做饭没有那么难。`,
+  }),
+  entry({
+    id: "band-station",
+    category: "graded",
+    createdAt: 59,
+    title: "车站的早晨",
+    blurb: "Early buses, a missed stop, and a kind driver.",
+    body: `今天我起得很早。我要坐车去看奶奶。车站里人已经很多。
+
+我上车，找到一个座位。车开了。外面的树很快过去。
+
+我看书，忘了下车。后来我才知道，车已经过了奶奶家。
+
+司机说：“没有关系。下一站你可以下来，再坐回去。”我下了车。风很大。可是我不着急了。`,
+  }),
+  entry({
+    id: "band-umbrella",
+    category: "graded",
+    createdAt: 60,
+    title: "一把伞两个人",
+    blurb: "Rain on the way home, and one umbrella that is not quite big enough.",
+    body: `放学的时候下雨了。我有伞，同学小李没有。
+
+她站在门口，衣服已经湿了一点。我走过去，说：“我们一起走吧。”
+
+一把伞不太大。我的左边还是会湿。她说：“对不起。”我说：“没有关系。快到家了。”
+
+到她家楼下，雨还没有停。她说：“谢谢。明天我带伞。”我点头。路上的灯都亮了。`,
+  }),
+  entry({
+    id: "band-bread",
+    category: "graded",
+    createdAt: 61,
+    title: "面包还是热的",
+    blurb: "A supermarket aisle, warm bread, and a small choice.",
+    body: `下午我和妈妈去超市。超市很大，人也不少。
+
+我们先买青菜，再买鸡蛋。后来我看见面包。面包还是热的。
+
+妈妈问：“要不要买？”我说：“要。明天早上可以吃。”
+
+回家的路上，袋子有一点重。可是面包很香。我觉得今天的晚饭也会很好。`,
+  }),
+  entry({
+    id: "band-walk",
+    category: "graded",
+    createdAt: 62,
+    title: "晚饭后散步",
+    blurb: "A slow walk after dinner, and neighbors who still say hello.",
+    body: `晚饭以后，爸爸说要去散步。外面风很凉快，天还没有全黑。
+
+我们走到河边。有人跑步，有人带着狗。河水很安静。
+
+邻居看见我们，说：“吃了吗？”爸爸说：“吃了。你们也出来了。”
+
+回家的时候，街上的灯都亮了。我有一点困。可是我觉得走路比坐在家里好。`,
+  }),
+  entry({
+    id: "band-teacher-note",
+    category: "graded",
+    createdAt: 63,
+    title: "给老师的话",
+    blurb: "A short note, three sentences, and a teacher who reads slowly.",
+    body: `老师明天过生日。同学们想送她一本书。
+
+我也想写几句话。我写：老师，谢谢您。我现在喜欢汉语了。因为上课的时候您会笑。
+
+我把纸放在书里。第二天我们一起给她。老师看了很久。
+
+她说：“我很高兴。你们也要好好休息。”我觉得这句话也很暖。`,
+  }),
+  entry({
+    id: "band-metro",
+    category: "story",
+    createdAt: 64,
+    title: "第一次坐地铁",
+    blurb: "Maps on the wall, the wrong exit, and a city under the ground.",
+    body: `今天我第一次坐地铁。车站在地下，人很多，风也很大。
+
+我看地图，找要去的地方。车来了。门开得很快。我走进去，拉着上面的东西。
+
+到站以后，我走错了出口。上面是一条我不认识的路。
+
+我又下去，换了一个出口。这次对了。太阳很亮。我觉得地铁很快，可是也很容易迷路。`,
+  }),
+  entry({
+    id: "band-window-flowers",
+    category: "story",
+    createdAt: 65,
+    title: "窗台上的花",
+    blurb: "Three small pots, too little water, then a little too much.",
+    body: `我家窗台上有三盆花。一盆是红的，两盆是白的。
+
+上个星期我忘了浇水。叶子有一点黄。妈妈说：“花也要吃饭。”
+
+今天我给它们水。水多了，流到桌子上。我赶快用布擦。
+
+晚上花还在。叶子看起来好一点。我觉得它们没有生气。它们只是等。`,
+  }),
+  entry({
+    id: "band-radio",
+    category: "children",
+    createdAt: 66,
+    title: "爷爷的收音机",
+    blurb: "An old radio, a song from far away, and tea that has gone cold.",
+    body: `爷爷有一台旧收音机。他每天早上都打开。里面有人说话，也有歌。
+
+我问：“这是哪里的声音？”爷爷说：“很远的地方。可是我们听得见。”
+
+茶在桌子上，已经不热了。爷爷还在听。他的眼睛看着窗外。
+
+我也坐下来。歌并不难。我觉得这台收音机关了以后，屋子会一下子变小。`,
+  }),
+  entry({
+    id: "band-because-rain",
+    category: "graded",
+    createdAt: 67,
+    title: "因为下雨",
+    blurb: "The park is cancelled, so the living room becomes a small shop.",
+    body: `今天我们要去公园。可是早上起来，外面在下雨。路都湿了。
+
+妈妈说：“今天不去了。因为下雨，会很冷。”我有一点不高兴。
+
+后来我们在家玩。我当商店的人，妹妹来买东西。她要苹果，我给她一本书。她笑了。
+
+下午雨小了。我们站在门口看水。我觉得没去公园，也没有关系。`,
+  }),
+  entry({
+    id: "band-see-sea",
+    category: "graded",
+    createdAt: 68,
+    title: "我要去看海",
+    blurb: "A map on the table, a long bus, and water that does not end.",
+    body: `爸爸说明年要带我去看海。我还没有见过海。
+
+我在桌子上画了一张图。有车，有路，还有很大的蓝色。妈妈说：“海比这个还大。”
+
+我问：“要坐很久的车吗？”爸爸说：“要。可是你会觉得值得。”
+
+晚上我睡觉的时候，还在想水的声音。我觉得海一定比河更安静，也更亮。`,
+  }),
+  entry({
+    id: "band-sister-sleep",
+    category: "children",
+    createdAt: 69,
+    title: "妹妹还不睡",
+    blurb: "Lights off, one more story, and a sister who is still talking.",
+    body: `晚上九点，妈妈说该睡觉了。灯关了。屋子里有一点黑。
+
+妹妹还在说话。她问月亮还在不在。我说：“在。你看不见，因为它在窗外。”
+
+她又问明天吃什么。我说：“米饭。现在睡觉。”她笑了一下，不说话了。
+
+过了一会儿，她已经睡了。我还醒着。窗外有车。我觉得家很安静，也很近。`,
+  }),
+  entry({
+    id: "band-borrow-salt",
+    category: "story",
+    createdAt: 70,
+    title: "邻居借盐",
+    blurb: "A knock at the door, a spoon of salt, and soup that is saved.",
+    body: `晚饭的时候，有人敲门。是对门的阿姨。她说：“还在做饭。盐没有了。可以借一点吗？”
+
+妈妈给她盐。阿姨说：“谢谢。明天还你。”妈妈说：“不用急。”
+
+过了一会儿，楼道里有菜的味道。很好闻。
+
+妈妈说：“邻居近，比商店近。”我觉得这句话对。有的东西不是买来的，是门对面来的。`,
+  }),
+  entry({
+    id: "band-library-card",
+    category: "graded",
+    createdAt: 71,
+    title: "办借书证",
+    blurb: "A quiet desk, a small card, and two books that go home.",
+    body: `今天我去图书馆办借书证。图书馆里很安静。大家都在看书。
+
+阿姨问我叫什么名字。我告诉她。她给我一张小卡片。卡片上有我的名字。
+
+我可以借两本书。我借了一本故事，一本汉语。
+
+回家的路上，书在书包里。我觉得这张卡片很小，可是它能打开很多门。`,
+  }),
+  entry({
+    id: "band-lost-key",
+    category: "story",
+    createdAt: 72,
+    title: "钥匙在哪里",
+    blurb: "No key in the pocket, a wait on the stairs, and dad coming home.",
+    body: `我到家门口，一摸口袋，钥匙没有了。门开不了。
+
+我在书包里找，在衣服里找。还是没有。我坐在楼梯上等。
+
+邻居路过，问我：“怎么了？”我说：“钥匙不见了。我在等爸爸。”
+
+六点半，爸爸回来了。钥匙在他的包里。他说：“早上我帮你拿了。”我觉得今天的楼梯特别长，可是现在已经过去了。`,
+  }),
 ];
 
 export const CATALOG: LibraryText[] = [...OWNED, ...wikiStubs(300), ...wikisourceStubs(800)];

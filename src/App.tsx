@@ -5,8 +5,9 @@ import { Reader } from "./components/Reader";
 import { Review } from "./components/Review";
 import { Stats } from "./components/Stats";
 import { CATALOG } from "./data/catalog";
-import { fetchGutenbergText, fetchGutendexList, gutenbergIdOf, PREVIEW_CHARS } from "./lib/gutenberg";
+import { findBook } from "./lib/books";
 import { parseShareHash, type ShareKind } from "./lib/share";
+import { BookScreen } from "./components/Book";
 import { fetchWikiPage, randomWikipedia, searchWikipedia, wikiStub, wikiTextId } from "./lib/wiki";
 import { fetchWikisourcePage, searchWikisource, wsTextId, wikisourceStubs } from "./lib/wikisource";
 import {
@@ -54,6 +55,7 @@ type View =
   | { name: "home"; shelf?: string }
   | { name: "add" }
   | { name: "reader"; id: string }
+  | { name: "book"; id: string }
   | { name: "share"; kind: ShareKind; key: string }
   | { name: "review"; focus?: string }
   | { name: "stats" };
@@ -72,6 +74,7 @@ function viewToHash(view: View): string {
     return view.shelf ? `#/shelf/${encodeURIComponent(view.shelf)}` : "#/";
   }
   if (view.name === "add") return "#/add";
+  if (view.name === "book") return `#/book/${encodeURIComponent(view.id)}`;
   if (view.name === "stats") return "#/stats";
   if (view.name === "share") {
     return `#/r/${view.kind}/${encodeURIComponent(view.key)}`;
@@ -90,6 +93,9 @@ function hashToView(hash: string): View {
     return { name: "home", shelf: decodeURIComponent(path.slice("/shelf/".length)) };
   }
   if (path === "/add") return { name: "add" };
+  if (path.startsWith("/book/")) {
+    return { name: "book", id: decodeURIComponent(path.slice("/book/".length)) };
+  }
   if (path === "/stats") return { name: "stats" };
   if (path === "/review") return { name: "review" };
   if (path.startsWith("/review/")) {
@@ -325,12 +331,6 @@ export default function App() {
   async function hydrateRemote(seeded: Map<string, LibraryText>) {
     void seeded;
     try {
-      const books = await fetchGutendexList();
-      mergeIncoming(books);
-    } catch {
-      /* gutendex optional */
-    }
-    try {
       const extra = await randomWikipedia();
       mergeIncoming(extra);
     } catch {
@@ -345,7 +345,6 @@ export default function App() {
     const batches = await Promise.allSettled([
       searchWikipedia(q),
       searchWikisource(q),
-      fetchGutendexList(q),
     ]);
     for (const batch of batches) {
       if (batch.status === "fulfilled") mergeIncoming(batch.value);
@@ -355,9 +354,13 @@ export default function App() {
   async function fillRemote(id: string, mode: "score" | "read"): Promise<LibraryText | null> {
     const text = textsRef.current.find((t) => t.id === id);
     if (!text) return null;
+    if (text.gutenbergId || text.kind === "gutenberg") {
+      setWikiErrors((prev) => ({ ...prev, [id]: "This text isn’t available in the library." }));
+      return null;
+    }
     const needsFetch =
       !text.body.trim() ||
-      (mode === "read" && text.preview && Boolean(text.gutenbergId || text.wikiTitle));
+      (mode === "read" && text.preview && Boolean(text.wikiTitle));
     if (!needsFetch) return text;
 
     setWikiLoading(id);
@@ -387,17 +390,6 @@ export default function App() {
           source: "From Wikisource (public domain / CC BY-SA)",
           sourceUrl: page.url,
           preview: false,
-        };
-      } else if (text.gutenbergId) {
-        const page = await fetchGutenbergText(text, {
-          maxChars: mode === "score" ? PREVIEW_CHARS : undefined,
-        });
-        next = {
-          ...text,
-          body: page.body,
-          source: "From Project Gutenberg (public domain)",
-          sourceUrl: text.sourceUrl || page.textUrl,
-          preview: mode === "score",
         };
       } else {
         return text;
@@ -499,27 +491,7 @@ export default function App() {
       return stub;
     }
     if (kind === "gutenberg") {
-      const num = Number(key);
-      if (!Number.isFinite(num) || num <= 0) return null;
-      const id = gutenbergIdOf(num);
-      const existing = textsRef.current.find((t) => t.id === id || t.gutenbergId === num);
-      if (existing) return existing;
-      const stub: LibraryText = {
-        id,
-        title: `Gutenberg ${num}`,
-        blurb: "Project Gutenberg",
-        body: "",
-        kind: "gutenberg",
-        category: "gutenberg",
-        createdAt: Date.now(),
-        readAt: null,
-        bookmark: null,
-        gutenbergId: num,
-        source: "From Project Gutenberg (public domain)",
-        sourceUrl: `https://www.gutenberg.org/ebooks/${num}`,
-      };
-      await saveText(stub);
-      return stub;
+      return null;
     }
     if (kind === "wikisource") {
       const id = wsTextId(key);
@@ -573,7 +545,8 @@ export default function App() {
     setSessions((prev) => [...prev, session]);
     await putSession(session);
     scheduleCloudPush();
-    navigate({ name: "home" });
+    if (text.seriesId) navigate({ name: "book", id: text.seriesId });
+    else navigate({ name: "home" });
   }
 
   async function onMarkRead(id: string, read: boolean) {
@@ -763,12 +736,35 @@ export default function App() {
           wikiLoading={wikiLoading}
           onOpenShelf={(id) => navigate(id ? { name: "home", shelf: id } : { name: "home" })}
           onOpen={(id) => void onOpen(id)}
+          onOpenBook={(seriesId) => navigate({ name: "book", id: seriesId })}
           onScore={(id) => void onScoreCard(id)}
           onDelete={(id) => void onDelete(id)}
           onMarkRead={(id, readFlag) => void onMarkRead(id, readFlag)}
           onAddText={() => navigate({ name: "add" })}
           onRemoteSearch={(q) => void onRemoteSearch(q)}
         />
+      ) : null}
+
+      {ready && view.name === "book" ? (
+        findBook(texts, view.id) ? (
+          <BookScreen
+            book={findBook(texts, view.id)!}
+            scores={scores}
+            wikiErrors={wikiErrors}
+            wikiLoading={wikiLoading}
+            onBack={() => navigate({ name: "home" })}
+            onOpenChapter={(id) => void onOpen(id)}
+            onScore={(id) => void onScoreCard(id)}
+            onMarkRead={(id, readFlag) => void onMarkRead(id, readFlag)}
+          />
+        ) : (
+          <div className="shell">
+            <p>That book is gone.</p>
+            <button className="primary" type="button" onClick={() => navigate({ name: "home" })}>
+              Back to the shelves
+            </button>
+          </div>
+        )
       ) : null}
 
       {ready && view.name === "add" ? (
@@ -800,8 +796,8 @@ export default function App() {
 
       {ready && view.name === "share" && !current?.body.trim() ? (
         <div className="shell">
-          {shareMissing ? (
-            <p>That text is gone.</p>
+          {shareMissing || (view.name === "share" && view.kind === "gutenberg") ? (
+            <p>{view.name === "share" && view.kind === "gutenberg" ? "This text isn’t available." : "That text is gone."}</p>
           ) : shareTextId && wikiErrors[shareTextId] ? (
             <p className="wiki-error">{wikiErrors[shareTextId]}</p>
           ) : (

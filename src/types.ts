@@ -54,6 +54,7 @@ export type LibraryText = {
   author?: string;
   coverUrl?: string;
   seriesId?: string;
+  seriesTitle?: string;
   chapter?: number;
   preview?: boolean;
 };

@@ -18,6 +18,9 @@ if (await page.getByPlaceholder("把中文贴在这里…").count()) {
 await page.locator(".chip", { hasText: /^Just right$/ }).waitFor();
 await page.locator(".chip", { hasText: /^Science$/ }).waitFor();
 await page.locator(".chip", { hasText: /^Wikipedia$/ }).waitFor();
+if (await page.locator(".chip", { hasText: /^Gutenberg$/ }).count()) {
+  throw new Error("Gutenberg must not appear in the library.");
+}
 if (await page.locator(".badge", { hasText: /^Unread$/ }).count()) {
   throw new Error("Unread must not be used as a difficulty badge.");
 }
@@ -178,7 +181,9 @@ await expectClass(page.locator(".word", { hasText: /^我$/ }).first(), "known");
 await page.locator(".brand").click();
 await page.locator(".chip", { hasText: /^All levels$/ }).click();
 await page.locator(".chip", { hasText: /^Novels$/ }).click();
-await page.getByRole("button", { name: /南风镇 · 一/ }).first().click();
+await page.locator(".title-card", { hasText: "南风镇" }).locator(".title-hit").first().click();
+await page.getByRole("heading", { name: "南风镇" }).waitFor();
+await page.locator(".title-card", { hasText: "南风镇 · 一" }).locator(".title-hit").first().click();
 await page.locator(".article").waitFor();
 await page.addStyleTag({ content: ".article { min-height: 2400px; }" });
 await page.evaluate(() => window.scrollTo(0, 520));
@@ -186,8 +191,9 @@ await page.waitForTimeout(800);
 await page.locator(".brand").click();
 await page.locator(".chip", { hasText: /^All levels$/ }).click();
 await page.locator(".chip", { hasText: /^Novels$/ }).click();
-await page.locator(".title-card", { hasText: "南风镇 · 一" }).getByText(/Resume/).first().waitFor();
-await page.getByRole("button", { name: /南风镇 · 一/ }).first().click();
+await page.locator(".title-card", { hasText: "南风镇" }).getByText(/In progress/).first().waitFor();
+await page.locator(".title-card", { hasText: "南风镇" }).locator(".title-hit").first().click();
+await page.getByRole("button", { name: /Continue/ }).click();
 await page.locator(".article").waitFor();
 await page.waitForTimeout(200);
 const y = await page.evaluate(() => window.scrollY);

@@ -18,11 +18,15 @@ describe("wikisource", () => {
   it("seeds chapter stubs with canonical ws titles", () => {
     expect(wikisourceStubs().length).toBeGreaterThanOrEqual(10);
     expect(wikisourceStubs()[0].kind).toBe("wikisource");
-    expect(wikisourceStubs()[0].wsTitle).toBe("論語/學而第一");
     expect(wikisourceStubs()[0].body).toBe("");
     const titles = wikisourceStubs().map((t) => t.wsTitle);
     expect(titles).toContain("西遊記/第001回");
+    expect(titles).toContain("西遊記/第020回");
+    expect(titles).toContain("論語/學而第一");
     expect(titles).toContain("狂人日記");
+    const xiyou = wikisourceStubs().filter((t) => t.seriesId === "xiyouji");
+    expect(xiyou.length).toBeGreaterThanOrEqual(10);
+    expect(xiyou[0].seriesTitle).toBe("西游记");
   });
 
   it("uses origin=* without a tiny exchars cap", () => {

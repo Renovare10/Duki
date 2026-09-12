@@ -59,6 +59,7 @@ export function normalizeText(
     author: raw.author,
     coverUrl: raw.coverUrl,
     seriesId: raw.seriesId,
+    seriesTitle: raw.seriesTitle,
     chapter: typeof raw.chapter === "number" ? raw.chapter : undefined,
     preview: Boolean(raw.preview),
   };

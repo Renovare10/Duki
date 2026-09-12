@@ -1,35 +1,120 @@
 import type { LibraryText } from "../types";
 
-export type WsSeed = {
+export type WsChapter = {
+  title: string;
+  wsTitle: string;
+};
+
+export type WsBookSeed = {
+  id: string;
+  title: string;
+  author: string;
+  blurb: string;
+  category: "novel" | "history";
+  chapters: WsChapter[];
+};
+
+export type WsWork = {
   title: string;
   wsTitle: string;
   author: string;
   blurb: string;
-  category: "novel" | "history" | "article";
+  category: "history" | "article";
 };
 
 const WS_CAP = 20000;
 
-/**
- * Canonical zh.wikisource titles (Traditional, chapter pages that exist).
- * Display titles stay simplified for the library.
- */
-export const WIKISOURCE_SEED: WsSeed[] = [
-  { title: "论语 · 学而", wsTitle: "論語/學而第一", author: "孔子", blurb: "The opening of the Analects.", category: "history" },
-  { title: "论语 · 为政", wsTitle: "論語/爲政第二", author: "孔子", blurb: "Governing, and learning that does not fade.", category: "history" },
-  { title: "道德经 · 上篇", wsTitle: "道德經", author: "老子", blurb: "The classic of the way, as Wikisource has it.", category: "history" },
-  { title: "孟子 · 梁惠王上", wsTitle: "孟子/梁惠王上", author: "孟子", blurb: "Kings, people, and a stubborn teacher.", category: "history" },
-  { title: "史记 · 项羽本纪", wsTitle: "史記/卷007", author: "司马迁", blurb: "Xiang Yu, in Sima Qian’s record.", category: "history" },
-  { title: "史记 · 高祖本纪", wsTitle: "史記/卷008", author: "司马迁", blurb: "The founding of Han.", category: "history" },
-  { title: "西游记 · 第一回", wsTitle: "西遊記/第001回", author: "吴承恩", blurb: "Stone monkey, Flower-Fruit Mountain.", category: "novel" },
-  { title: "西游记 · 第二回", wsTitle: "西遊記/第002回", author: "吴承恩", blurb: "The monkey seeks a teacher.", category: "novel" },
-  { title: "西游记 · 第三回", wsTitle: "西遊記/第003回", author: "吴承恩", blurb: "A name in the ledgers of death.", category: "novel" },
-  { title: "三国演义 · 第一回", wsTitle: "三國演義/第001回", author: "罗贯中", blurb: "Oath in the peach garden.", category: "novel" },
-  { title: "三国演义 · 第二回", wsTitle: "三國演義/第002回", author: "罗贯中", blurb: "Zhang Fei among the yellow turbans.", category: "novel" },
-  { title: "水浒传 · 第一回", wsTitle: "水滸傳 (120回本)/第001回", author: "施耐庵", blurb: "Demons released, heroes to come.", category: "novel" },
-  { title: "水浒传 · 第二回", wsTitle: "水滸傳 (120回本)/第002回", author: "施耐庵", blurb: "Wang Jin leaves the capital.", category: "novel" },
-  { title: "红楼梦 · 第一回", wsTitle: "紅樓夢/第001回", author: "曹雪芹", blurb: "A stone, a dream, a beginning.", category: "novel" },
-  { title: "红楼梦 · 第二回", wsTitle: "紅樓夢/第002回", author: "曹雪芹", blurb: "Cold talk in a warm house.", category: "novel" },
+const ZH_NUM = ["", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十"];
+
+export function zhChapterName(n: number): string {
+  if (n <= 10) return n === 10 ? "十" : ZH_NUM[n];
+  if (n < 20) return `十${ZH_NUM[n - 10]}`;
+  if (n === 20) return "二十";
+  if (n < 30) return `二十${ZH_NUM[n - 20]}`;
+  return String(n);
+}
+
+function paddedChapters(prefix: string, count: number): WsChapter[] {
+  return Array.from({ length: count }, (_, i) => {
+    const n = i + 1;
+    const pad = String(n).padStart(3, "0");
+    return { title: `第${zhChapterName(n)}回`, wsTitle: `${prefix}${pad}回` };
+  });
+}
+
+/** Canonical zh.wikisource chapter pages, grouped as books. */
+export const WIKISOURCE_BOOKS: WsBookSeed[] = [
+  {
+    id: "xiyouji",
+    title: "西游记",
+    author: "吴承恩",
+    blurb: "Stone monkey, Flower-Fruit Mountain, and the long road west.",
+    category: "novel",
+    chapters: paddedChapters("西遊記/第", 20),
+  },
+  {
+    id: "sanguo",
+    title: "三国演义",
+    author: "罗贯中",
+    blurb: "Oath in the peach garden, and the splitting of a world.",
+    category: "novel",
+    chapters: paddedChapters("三國演義/第", 12),
+  },
+  {
+    id: "shuihu",
+    title: "水浒传",
+    author: "施耐庵",
+    blurb: "Outlaws of the marsh, in the 120-chapter Wikisource text.",
+    category: "novel",
+    chapters: paddedChapters("水滸傳 (120回本)/第", 12),
+  },
+  {
+    id: "honglou",
+    title: "红楼梦",
+    author: "曹雪芹",
+    blurb: "A stone, a dream, and the house of Jia.",
+    category: "novel",
+    chapters: paddedChapters("紅樓夢/第", 12),
+  },
+  {
+    id: "lunyu",
+    title: "论语",
+    author: "孔子",
+    blurb: "The Analects, chapter by chapter.",
+    category: "history",
+    chapters: [
+      { title: "学而", wsTitle: "論語/學而第一" },
+      { title: "为政", wsTitle: "論語/爲政第二" },
+      { title: "八佾", wsTitle: "論語/八佾第三" },
+      { title: "里仁", wsTitle: "論語/里仁第四" },
+    ],
+  },
+  {
+    id: "mengzi",
+    title: "孟子",
+    author: "孟子",
+    blurb: "Kings, people, and a stubborn teacher.",
+    category: "history",
+    chapters: [
+      { title: "梁惠王上", wsTitle: "孟子/梁惠王上" },
+      { title: "梁惠王下", wsTitle: "孟子/梁惠王下" },
+    ],
+  },
+  {
+    id: "shiji",
+    title: "史记",
+    author: "司马迁",
+    blurb: "Xiang Yu and the founding of Han, from Sima Qian.",
+    category: "history",
+    chapters: [
+      { title: "项羽本纪", wsTitle: "史記/卷007" },
+      { title: "高祖本纪", wsTitle: "史記/卷008" },
+    ],
+  },
+];
+
+export const WIKISOURCE_WORKS: WsWork[] = [
+  { title: "道德经", wsTitle: "道德經", author: "老子", blurb: "The classic of the way, as Wikisource has it.", category: "history" },
   { title: "呐喊 · 自序", wsTitle: "吶喊/自序", author: "鲁迅", blurb: "Why Lu Xun began to shout.", category: "article" },
   { title: "狂人日记", wsTitle: "狂人日記", author: "鲁迅", blurb: "The diary that asked what people eat.", category: "article" },
   { title: "阿Q正传", wsTitle: "阿Q正傳", author: "鲁迅", blurb: "Ah Q, and a village that laughs.", category: "article" },
@@ -41,28 +126,70 @@ export const WIKISOURCE_SEED: WsSeed[] = [
   { title: "岳阳楼记", wsTitle: "岳陽樓記", author: "范仲淹", blurb: "Worry first, joy later.", category: "article" },
 ];
 
+/** Flattened chapter/work stubs. Prefer WIKISOURCE_BOOKS for grouping. */
+export const WIKISOURCE_SEED: { title: string; wsTitle: string; author: string; blurb: string; category: "novel" | "history" | "article" }[] =
+  [
+    ...WIKISOURCE_BOOKS.flatMap((book) =>
+      book.chapters.map((ch) => ({
+        title: ch.title,
+        wsTitle: ch.wsTitle,
+        author: book.author,
+        blurb: book.blurb,
+        category: book.category,
+      })),
+    ),
+    ...WIKISOURCE_WORKS,
+  ];
+
 export function wsTextId(wsTitle: string): string {
   return `ws-${wsTitle}`;
 }
 
 export function wikisourceStubs(startAt = 800): LibraryText[] {
-  return WIKISOURCE_SEED.map((item, i) => ({
-    id: wsTextId(item.wsTitle),
-    title: item.title,
-    blurb: `${item.author} · ${item.blurb}`,
-    body: "",
-    kind: "wikisource" as const,
-    category: "wikisource" as const,
-    createdAt: startAt + i,
-    readAt: null,
-    bookmark: null,
-    author: item.author,
-    wsTitle: item.wsTitle,
-    source: "From Wikisource (public domain / CC BY-SA)",
-    sourceUrl: `https://zh.wikisource.org/wiki/${encodeURIComponent(item.wsTitle)}`,
-    seriesId: item.wsTitle.split("/")[0],
-    chapter: i + 1,
-  }));
+  const out: LibraryText[] = [];
+  let n = 0;
+  for (const book of WIKISOURCE_BOOKS) {
+    book.chapters.forEach((ch, i) => {
+      out.push({
+        id: wsTextId(ch.wsTitle),
+        title: ch.title,
+        blurb: `${book.author} · ${book.blurb}`,
+        body: "",
+        kind: "wikisource",
+        category: "wikisource",
+        createdAt: startAt + n,
+        readAt: null,
+        bookmark: null,
+        author: book.author,
+        wsTitle: ch.wsTitle,
+        source: "From Wikisource (public domain / CC BY-SA)",
+        sourceUrl: `https://zh.wikisource.org/wiki/${encodeURIComponent(ch.wsTitle)}`,
+        seriesId: book.id,
+        seriesTitle: book.title,
+        chapter: i + 1,
+      });
+      n += 1;
+    });
+  }
+  for (const item of WIKISOURCE_WORKS) {
+    out.push({
+      id: wsTextId(item.wsTitle),
+      title: item.title,
+      blurb: `${item.author} · ${item.blurb}`,
+      body: "",
+      kind: "wikisource",
+      category: "wikisource",
+      createdAt: startAt + n,
+      readAt: null,
+      bookmark: null,
+      author: item.author,
+      wsTitle: item.wsTitle,
+      source: "From Wikisource (public domain / CC BY-SA)",
+      sourceUrl: `https://zh.wikisource.org/wiki/${encodeURIComponent(item.wsTitle)}`,
+    });
+    n += 1;
+  }
+  return out;
 }
 
 export function wikisourceApiUrl(title: string): string {

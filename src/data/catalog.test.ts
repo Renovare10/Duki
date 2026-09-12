@@ -17,6 +17,21 @@ describe("catalog", () => {
     }
   });
 
+  it("adds a band of original unread-length shorts", () => {
+    const band = CATALOG.filter((t) => t.id.startsWith("band-"));
+    expect(band.length).toBeGreaterThanOrEqual(18);
+    expect(band.every((t) => t.kind === "sample")).toBe(true);
+    expect(band.every((t) => ["children", "graded", "story"].includes(t.category))).toBe(true);
+    expect(band.every((t) => t.body.trim().length > 0 && t.blurb.length > 0)).toBe(true);
+    const titles = new Set(["坐火车", "河边的灯", "一只袜子"]);
+    expect(band.some((t) => titles.has(t.title))).toBe(false);
+    for (const text of band) {
+      const han = (text.body.match(/[\u3400-\u9fff]/g) || []).length;
+      expect(han).toBeGreaterThanOrEqual(80);
+      expect(han).toBeLessThanOrEqual(220);
+    }
+  });
+
   it("uses unique ids and cites PD only when a source is set", () => {
     const ids = CATALOG.map((t) => t.id);
     expect(new Set(ids).size).toBe(ids.length);
