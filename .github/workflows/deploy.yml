@@ -18,6 +18,7 @@ jobs:
     env:
       S3_BUCKET: chadm-duki
       CF_DISTRIBUTION_ID: E2C30FHOL2BUQ5
+      VITE_DUKI_API: https://j251m3eof8.execute-api.us-east-2.amazonaws.com
 
     steps:
       - uses: actions/checkout@v4

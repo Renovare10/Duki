@@ -78,6 +78,11 @@ export async function fetchGutendexList(search?: string): Promise<LibraryText[]>
   return parseGutendex(await res.json());
 }
 
+export function dukiApiBase(): string {
+  const raw = (import.meta.env.VITE_DUKI_API as string | undefined) || "";
+  return raw.replace(/\/$/, "");
+}
+
 export async function fetchGutenbergText(
   book: {
     gutenbergId?: number;
@@ -85,7 +90,21 @@ export async function fetchGutenbergText(
   },
   opts?: { maxChars?: number },
 ): Promise<{ body: string; textUrl: string }> {
-  const meta = await fetch(`https://gutendex.com/books/${book.gutenbergId}`);
+  const id = book.gutenbergId;
+  if (!id) throw new Error("Missing Gutenberg id.");
+  const maxChars = opts?.maxChars ?? MAX_CHARS;
+  const api = dukiApiBase();
+  if (api) {
+    const res = await fetch(`${api}/gutenberg/${id}`);
+    if (!res.ok) throw new Error("Could not download Gutenberg text.");
+    const json = (await res.json()) as { body?: string; textUrl?: string; error?: string };
+    if (!json.body) throw new Error(json.error || "Empty Gutenberg text.");
+    return {
+      body: trimGutenbergText(json.body, maxChars),
+      textUrl: json.textUrl || `https://www.gutenberg.org/ebooks/${id}`,
+    };
+  }
+  const meta = await fetch(`https://gutendex.com/books/${id}`);
   if (!meta.ok) throw new Error("Could not load Gutenberg metadata.");
   const json = (await meta.json()) as GutendexBook;
   const textUrl = pickPlainTextUrl(json.formats);
@@ -93,5 +112,5 @@ export async function fetchGutenbergText(
   const res = await fetch(textUrl);
   if (!res.ok) throw new Error("Could not download Gutenberg text.");
   const raw = await res.text();
-  return { body: trimGutenbergText(raw, opts?.maxChars ?? MAX_CHARS), textUrl };
+  return { body: trimGutenbergText(raw, maxChars), textUrl };
 }
