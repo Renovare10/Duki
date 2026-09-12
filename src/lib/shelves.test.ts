@@ -1,7 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { buildShelves, pickHero, pickRecommendedTrio } from "./shelves";
+import { buildShelves, pickHero, pickRecommendedTrio, type Shelf } from "./shelves";
 import { pickSuggestion } from "./score";
 import type { LibraryText, TextScore } from "../types";
+
+function ids(shelf: Shelf | undefined): string[] {
+  return (shelf?.items ?? []).map((item) => (item.type === "text" ? item.text.id : item.book.id));
+}
 
 function text(
   partial: Partial<LibraryText> & Pick<LibraryText, "id" | "title" | "category">,
@@ -56,7 +60,7 @@ describe("buildShelves", () => {
     ]);
     const shelves = buildShelves(texts, scores, [], filters);
     const cont = shelves.find((s) => s.id === "continue");
-    expect(cont?.items.map((t) => t.id)).toEqual(["a"]);
+    expect(ids(cont)).toEqual(["a"]);
   });
 
   it("has Unread and Read rows", () => {
@@ -69,8 +73,8 @@ describe("buildShelves", () => {
       ["r", sc(0.4)],
     ]);
     const shelves = buildShelves(texts, scores, [], filters);
-    expect(shelves.find((s) => s.id === "unread")?.items.map((t) => t.id)).toEqual(["u"]);
-    expect(shelves.find((s) => s.id === "read")?.items.map((t) => t.id)).toEqual(["r"]);
+    expect(ids(shelves.find((s) => s.id === "unread"))).toEqual(["u"]);
+    expect(ids(shelves.find((s) => s.id === "read"))).toEqual(["r"]);
   });
 
   it("keeps Wikipedia stubs on the category shelf when Just right is on", () => {
@@ -86,9 +90,9 @@ describe("buildShelves", () => {
     ];
     const scores = new Map([["wiki-猫", sc(0, { total: 0, uniqueUnknown: 0 })]]);
     const jr = buildShelves(texts, scores, [], { ...filters, level: "just-right" });
-    expect(jr.find((s) => s.id === "wiki")?.items.map((t) => t.id)).toEqual(["wiki-猫"]);
+    expect(ids(jr.find((s) => s.id === "wiki"))).toEqual(["wiki-猫"]);
     const all = buildShelves(texts, scores, [], filters);
-    expect(all.find((s) => s.id === "wiki")?.items[0].id).toBe("wiki-猫");
+    expect(ids(all.find((s) => s.id === "wiki"))[0]).toBe("wiki-猫");
   });
 
   it("does not drop Stories when Just right is on; matching cards come first", () => {
@@ -101,9 +105,9 @@ describe("buildShelves", () => {
       ["jr", sc(0.08)],
     ]);
     const shelves = buildShelves(texts, scores, [], { ...filters, level: "just-right" });
-    const unread = shelves.find((s) => s.id === "unread")?.items.map((t) => t.id) ?? [];
-    const stories = shelves.find((s) => s.id === "story")?.items.map((t) => t.id) ?? [];
-    expect(unread).toEqual(["jr"]);
+    const unread = ids(shelves.find((s) => s.id === "unread"));
+    const stories = ids(shelves.find((s) => s.id === "story"));
+    expect(unread).toEqual(["jr", "hard"]);
     expect(stories).toEqual(["jr", "hard"]);
     expect(shelves.find((s) => s.id === "story")).toBeTruthy();
   });
@@ -118,10 +122,39 @@ describe("buildShelves", () => {
       ["jr", sc(0.08)],
     ]);
     const shelves = buildShelves(texts, scores, [], { ...filters, level: "hard" });
-    const unread = shelves.find((s) => s.id === "unread")?.items.map((t) => t.id) ?? [];
-    const stories = shelves.find((s) => s.id === "story")?.items.map((t) => t.id) ?? [];
-    expect(unread).toEqual(["hard"]);
+    const unread = ids(shelves.find((s) => s.id === "unread"));
+    const stories = ids(shelves.find((s) => s.id === "story"));
+    expect(unread).toEqual(["hard", "jr"]);
     expect(stories).toEqual(["hard", "jr"]);
+  });
+
+  it("shows one Novels card for a series, not each chapter", () => {
+    const texts = [
+      text({
+        id: "a",
+        title: "南风镇 · 一",
+        category: "novel",
+        seriesId: "south-wind",
+        seriesTitle: "南风镇",
+        chapter: 1,
+      }),
+      text({
+        id: "b",
+        title: "南风镇 · 二",
+        category: "novel",
+        seriesId: "south-wind",
+        seriesTitle: "南风镇",
+        chapter: 2,
+      }),
+    ];
+    const scores = new Map([
+      ["a", sc(0.4)],
+      ["b", sc(0.4)],
+    ]);
+    const shelves = buildShelves(texts, scores, [], filters);
+    expect(ids(shelves.find((s) => s.id === "novel"))).toEqual(["south-wind"]);
+    const item = shelves.find((s) => s.id === "novel")?.items[0];
+    expect(item?.type).toBe("book");
   });
 
   it("always emits editorial category rows that have cards", () => {
@@ -144,6 +177,7 @@ describe("buildShelves", () => {
     expect(shelves.map((s) => s.id)).toContain("story");
     expect(shelves.map((s) => s.id)).toContain("wiki");
     expect(shelves.find((s) => s.id === "recommended")).toBeUndefined();
+    expect(shelves.find((s) => s.id === "gutenberg")).toBeUndefined();
   });
 });
 
@@ -198,6 +232,15 @@ describe("pickRecommendedTrio", () => {
     expect(trio.easy).toBeNull();
     expect(trio.justRight).toBeNull();
     expect(trio.hard?.id).toBe("h");
+  });
+
+  it("omits a slot rather than recommending an already-read story", () => {
+    const texts = [text({ id: "e", title: "E", category: "graded", readAt: 1 })];
+    const scores = new Map([["e", sc(0.03)]]);
+    const trio = pickRecommendedTrio(texts, scores);
+    expect(trio.easy).toBeNull();
+    expect(trio.justRight).toBeNull();
+    expect(trio.hard).toBeNull();
   });
 
   it("does not recommend an unscored stub", () => {

@@ -1,5 +1,13 @@
 import type { LibraryText, ReadingSession, TextCategory, TextScore } from "../types";
 import {
+  bookProgress,
+  collapseTexts,
+  itemId,
+  itemTeaches,
+  scoreSource,
+  type ShelfItem,
+} from "./books";
+import {
   BAND_HI,
   BAND_LO,
   HARD_CAP,
@@ -23,10 +31,12 @@ export type HomeFilters = {
   query: string;
 };
 
+export type { ShelfItem };
+
 export type Shelf = {
   id: string;
   title: string;
-  items: LibraryText[];
+  items: ShelfItem[];
   tags?: Record<string, string>;
 };
 
@@ -40,7 +50,6 @@ const EDITORIAL: { id: TextCategory; title: string }[] = [
   { id: "novel", title: "Novels" },
   { id: "wiki", title: "Wikipedia" },
   { id: "wikisource", title: "Wikisource" },
-  { id: "gutenberg", title: "Gutenberg" },
   { id: "paste", title: "Yours" },
 ];
 
@@ -50,8 +59,35 @@ export function matchesSearch(text: LibraryText, query: string): boolean {
   return (
     text.title.toLowerCase().includes(q) ||
     (text.blurb || "").toLowerCase().includes(q) ||
-    (text.author || "").toLowerCase().includes(q)
+    (text.author || "").toLowerCase().includes(q) ||
+    (text.seriesTitle || "").toLowerCase().includes(q)
   );
+}
+
+function itemSearch(item: ShelfItem, query: string): boolean {
+  if (item.type === "text") return matchesSearch(item.text, query);
+  const q = query.trim().toLowerCase();
+  if (!q) return true;
+  if (
+    item.book.title.toLowerCase().includes(q) ||
+    item.book.blurb.toLowerCase().includes(q) ||
+    (item.book.author || "").toLowerCase().includes(q)
+  ) {
+    return true;
+  }
+  return item.book.chapters.some((c) => matchesSearch(c, query));
+}
+
+function itemRead(item: ShelfItem, read: ReadFilter): boolean {
+  if (item.type === "text") return matchesRead(item.text, read);
+  const progress = bookProgress(item.book.chapters);
+  if (read === "unread") return progress !== "read";
+  if (read === "read") return progress === "read";
+  return true;
+}
+
+function itemCategory(item: ShelfItem): TextCategory {
+  return item.type === "text" ? item.text.category : item.book.category;
 }
 
 export function matchesRead(text: LibraryText, read: ReadFilter): boolean {
@@ -60,72 +96,72 @@ export function matchesRead(text: LibraryText, read: ReadFilter): boolean {
   return true;
 }
 
-function inBase(
-  text: LibraryText,
-  filters: HomeFilters,
+function itemMatchesLevel(
+  item: ShelfItem,
   scores: Map<string, TextScore>,
-  opts?: { ignoreLevel?: boolean },
+  level: LevelFilter,
 ): boolean {
-  if (!matchesSearch(text, filters.query)) return false;
-  if (!matchesRead(text, filters.read)) return false;
-  if (filters.category !== "all" && text.category !== filters.category) return false;
-  if (opts?.ignoreLevel) return true;
-  const score = scores.get(text.id);
-  if (!text.body.trim() || !score || !isScored(score)) return filters.level === "all";
-  return matchesLevel(score, filters.level);
+  if (level === "all") return true;
+  const src = scoreSource(item);
+  if (!src?.body.trim()) return false;
+  const score = scores.get(src.id);
+  return Boolean(score && isScored(score) && matchesLevel(score, level));
 }
 
 export function orderByLevel(
-  items: LibraryText[],
+  items: ShelfItem[],
   scores: Map<string, TextScore>,
   level: LevelFilter,
-): LibraryText[] {
+): ShelfItem[] {
   if (level === "all") return items;
-  const hit: LibraryText[] = [];
-  const rest: LibraryText[] = [];
+  const hit: ShelfItem[] = [];
+  const rest: ShelfItem[] = [];
   for (const item of items) {
-    const score = scores.get(item.id);
-    const matches =
-      Boolean(item.body.trim()) &&
-      Boolean(score && isScored(score) && matchesLevel(score, level));
-    (matches ? hit : rest).push(item);
+    (itemMatchesLevel(item, scores, level) ? hit : rest).push(item);
   }
   return hit.concat(rest);
 }
 
-function teaches(text: LibraryText, scores: Map<string, TextScore>): boolean {
-  if (!text.body.trim()) return false;
-  const score = scores.get(text.id);
-  return Boolean(score && stillTeaches(score));
+function inFilter(item: ShelfItem, filters: HomeFilters): boolean {
+  if (!itemSearch(item, filters.query)) return false;
+  if (!itemRead(item, filters.read)) return false;
+  if (filters.category !== "all" && itemCategory(item) !== filters.category) return false;
+  return true;
 }
 
-export function pickRecommendedTrio(
-  texts: LibraryText[],
+export function pickRecommendedItems(
+  items: ShelfItem[],
   scores: Map<string, TextScore>,
-): { easy: LibraryText | null; justRight: LibraryText | null; hard: LibraryText | null } {
-  const pool = texts.filter((t) => teaches(t, scores));
+): { easy: ShelfItem | null; justRight: ShelfItem | null; hard: ShelfItem | null } {
+  const pool = items.filter((item) => itemTeaches(item, scores));
   const used = new Set<string>();
 
   function pickIn(
     pred: (load: number) => boolean,
     prefer: "low" | "target",
-  ): LibraryText | null {
-    const matches = pool.filter(
-      (t) => !used.has(t.id) && pred(scores.get(t.id)?.unknownLoad ?? -1),
-    );
+  ): ShelfItem | null {
+    const matches = pool.filter((item) => {
+      const src = scoreSource(item);
+      if (!src || used.has(itemId(item))) return false;
+      return pred(scores.get(src.id)?.unknownLoad ?? -1);
+    });
     if (matches.length === 0) return null;
-    const unread = matches.filter((t) => !t.readAt);
-    const use = unread.length > 0 ? unread : matches;
+    const unread = matches.filter((item) => {
+      if (item.type === "text") return !item.text.readAt;
+      return bookProgress(item.book.chapters) !== "read";
+    });
+    if (unread.length === 0) return null;
+    const use = unread;
     use.sort((a, b) => {
-      const sa = scores.get(a.id)!;
-      const sb = scores.get(b.id)!;
+      const sa = scores.get(scoreSource(a)!.id)!;
+      const sb = scores.get(scoreSource(b)!.id)!;
       if (prefer === "target") {
         return Math.abs(sa.unknownLoad - TARGET) - Math.abs(sb.unknownLoad - TARGET);
       }
       return sa.unknownLoad - sb.unknownLoad;
     });
     const pick = use[0];
-    used.add(pick.id);
+    used.add(itemId(pick));
     return pick;
   }
 
@@ -134,6 +170,24 @@ export function pickRecommendedTrio(
     justRight: pickIn((load) => load >= BAND_LO && load <= BAND_HI, "target"),
     hard: pickIn((load) => load > BAND_HI && load <= HARD_CAP, "low"),
   };
+}
+
+export function pickRecommendedTrio(
+  texts: LibraryText[],
+  scores: Map<string, TextScore>,
+): { easy: LibraryText | null; justRight: LibraryText | null; hard: LibraryText | null } {
+  const trio = pickRecommendedItems(collapseTexts(texts), scores);
+  return {
+    easy: trio.easy ? scoreSource(trio.easy) : null,
+    justRight: trio.justRight ? scoreSource(trio.justRight) : null,
+    hard: trio.hard ? scoreSource(trio.hard) : null,
+  };
+}
+
+function teaches(text: LibraryText, scores: Map<string, TextScore>): boolean {
+  if (!text.body.trim()) return false;
+  const score = scores.get(text.id);
+  return Boolean(score && stillTeaches(score));
 }
 
 export function pickHero(
@@ -160,68 +214,43 @@ export function buildShelves(
 ): Shelf[] {
   const shelves: Shelf[] = [];
   const q = filters.query.trim();
-  const visible = texts.filter((t) => inBase(t, filters, scores, { ignoreLevel: true }));
-  const leveled = texts.filter((t) => inBase(t, filters, scores));
+  const collapsed = collapseTexts(texts).filter((item) => inFilter(item, filters));
+  const ordered = orderByLevel(collapsed, scores, filters.level);
 
   if (q) {
-    if (visible.length) {
-      shelves.push({
-        id: "results",
-        title: "Results",
-        items: orderByLevel(visible, scores, filters.level),
-      });
-    }
+    if (ordered.length) shelves.push({ id: "results", title: "Results", items: ordered });
     return shelves;
   }
 
-  const trioPool = texts.filter(
-    (t) =>
-      matchesSearch(t, filters.query) &&
-      matchesRead(t, filters.read) &&
-      (filters.category === "all" || t.category === filters.category),
-  );
-  const trio = pickRecommendedTrio(trioPool, scores);
-  const recItems = [trio.easy, trio.justRight, trio.hard].filter(Boolean) as LibraryText[];
+  const trio = pickRecommendedItems(collapsed, scores);
+  const recItems = [trio.easy, trio.justRight, trio.hard].filter(Boolean) as ShelfItem[];
   if (recItems.length) {
     const tags: Record<string, string> = {};
-    if (trio.easy) tags[trio.easy.id] = "Easy";
-    if (trio.justRight) tags[trio.justRight.id] = "Just right";
-    if (trio.hard) tags[trio.hard.id] = "Harder";
+    if (trio.easy) tags[itemId(trio.easy)] = "Easy";
+    if (trio.justRight) tags[itemId(trio.justRight)] = "Just right";
+    if (trio.hard) tags[itemId(trio.hard)] = "Harder";
     shelves.push({ id: "recommended", title: "Recommended", items: recItems, tags });
   }
 
-  const continuing = orderByLevel(
-    leveled.filter((t) => {
-      if (!isContinue(t)) return false;
-      const score = scores.get(t.id);
-      return score ? stillTeaches(score) : Boolean(t.body.trim());
-    }),
-    scores,
-    filters.level,
-  );
+  const continuing = ordered.filter((item) => {
+    if (item.type === "text") {
+      if (!isContinue(item.text)) return false;
+      const score = scores.get(item.text.id);
+      return score ? stillTeaches(score) : Boolean(item.text.body.trim());
+    }
+    return item.book.chapters.some((c) => isContinue(c));
+  });
   if (continuing.length) shelves.push({ id: "continue", title: "Continue", items: continuing });
 
-  const unread = orderByLevel(
-    leveled.filter((t) => !t.readAt),
-    scores,
-    filters.level,
-  );
+  const unread = ordered.filter((item) => itemRead(item, "unread"));
   if (unread.length) shelves.push({ id: "unread", title: "Unread", items: unread });
 
-  const read = orderByLevel(
-    leveled.filter((t) => Boolean(t.readAt)),
-    scores,
-    filters.level,
-  );
+  const read = ordered.filter((item) => itemRead(item, "read"));
   if (read.length) shelves.push({ id: "read", title: "Read", items: read });
 
   for (const row of EDITORIAL) {
     if (filters.category !== "all" && filters.category !== row.id) continue;
-    const items = orderByLevel(
-      visible.filter((t) => t.category === row.id),
-      scores,
-      filters.level,
-    );
+    const items = ordered.filter((item) => itemCategory(item) === row.id);
     if (items.length) shelves.push({ id: row.id, title: row.title, items });
   }
 
