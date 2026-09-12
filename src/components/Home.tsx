@@ -9,6 +9,7 @@ import {
   type ReadFilter,
   type Shelf,
 } from "../lib/shelves";
+import { cardHitAction } from "../lib/card-hit";
 import { bookmarkProgress } from "../lib/text";
 
 type Props = {
@@ -312,43 +313,59 @@ export function TitleCard({
   onMarkRead?: (id: string, read: boolean) => void;
 }) {
   const stub = !text.body.trim();
-  function onHit() {
-    if (loading) return;
-    if (stub && onScore) onScore(text.id);
+  function run(surface: Parameters<typeof cardHitAction>[0], event?: { stopPropagation: () => void }) {
+    event?.stopPropagation();
+    if (loading && cardHitAction(surface) === "score") return;
+    const action = cardHitAction(surface);
+    if (action === "score") onScore?.(text.id);
+    else if (action === "delete") onDelete?.(text.id);
+    else if (action === "mark") onMarkRead?.(text.id, !text.readAt);
     else onOpen(text.id);
   }
   return (
     <article className="title-card">
-      <button type="button" className="title-hit" onClick={onHit}>
+      <button type="button" className="title-hit" onClick={() => run("cover")}>
         <Cover category={text.category} coverUrl={text.coverUrl} tag={tag} />
         <div className="title-copy">
           <div className="title-card-name">{text.title}</div>
           {text.blurb ? <p className="title-blurb">{text.blurb}</p> : null}
           {loading ? <p className="title-blurb">Scoring…</p> : null}
           {error ? <p className="wiki-error">{error}</p> : null}
-          <CardMeta text={text} score={score} loading={loading} />
         </div>
       </button>
-      <div className="card-actions">
+      <div className="title-copy title-meta">
+        <CardMeta
+          text={text}
+          score={score}
+          loading={loading}
+          onUnscored={(e) => run("unscored", e)}
+        />
+      </div>
+      <div className="card-actions" onClick={(e) => e.stopPropagation()}>
         {stub ? (
-          <button type="button" className="ghost" onClick={() => onScore?.(text.id)} disabled={loading}>
+          <button
+            type="button"
+            className="ghost"
+            onClick={(e) => run("score", e)}
+            disabled={loading}
+          >
             Score
           </button>
         ) : null}
-        <button type="button" className="ghost" onClick={() => onOpen(text.id)}>
+        <button type="button" className="ghost" onClick={(e) => run("read", e)}>
           Read
         </button>
         {text.readAt ? (
-          <button type="button" className="ghost" onClick={() => onMarkRead?.(text.id, false)}>
+          <button type="button" className="ghost" onClick={(e) => run("mark", e)}>
             Mark unread
           </button>
         ) : (
-          <button type="button" className="ghost" onClick={() => onMarkRead?.(text.id, true)}>
+          <button type="button" className="ghost" onClick={(e) => run("mark", e)}>
             Mark as read
           </button>
         )}
         {text.kind === "paste" && onDelete ? (
-          <button type="button" className="ghost" onClick={() => onDelete(text.id)}>
+          <button type="button" className="ghost" onClick={(e) => run("remove", e)}>
             Remove
           </button>
         ) : null}
@@ -361,10 +378,12 @@ function CardMeta({
   text,
   score,
   loading,
+  onUnscored,
 }: {
   text: LibraryText;
   score?: TextScore;
   loading?: boolean;
+  onUnscored?: (event: { stopPropagation: () => void }) => void;
 }) {
   const label = score && score.total > 0 ? fitLabel(score) : "unscored";
   const pct = score ? coveragePercents(score) : null;
@@ -378,7 +397,9 @@ function CardMeta({
       ) : loading ? (
         <span className="badge new">Scoring…</span>
       ) : stub ? (
-        <span className="badge new">Unscored</span>
+        <button type="button" className="badge new" onClick={(e) => onUnscored?.(e)}>
+          Unscored
+        </button>
       ) : null}
       <span className="cat-tag">{categoryLabel(text.category)}</span>
       {score && score.total > 0 ? <span>{score.uniqueUnknown} new</span> : null}

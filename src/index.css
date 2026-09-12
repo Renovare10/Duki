@@ -138,6 +138,22 @@ button {
   color: var(--ink);
 }
 
+.auth-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+}
+
+.auth-email {
+  max-width: 9.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0.4rem 0.35rem;
+}
+
 .file-btn input {
   display: none;
 }
@@ -249,6 +265,16 @@ button {
 
 .title-copy {
   padding: 0.7rem 0.75rem 0.35rem;
+}
+
+.title-copy.title-meta {
+  padding-top: 0;
+}
+
+button.badge {
+  font: inherit;
+  border: 0;
+  cursor: pointer;
 }
 
 .title-card-name {

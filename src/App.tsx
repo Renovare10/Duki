@@ -10,6 +10,20 @@ import { parseShareHash, type ShareKind } from "./lib/share";
 import { fetchWikiPage, randomWikipedia, searchWikipedia, wikiStub, wikiTextId } from "./lib/wiki";
 import { fetchWikisourcePage, searchWikisource, wsTextId, wikisourceStubs } from "./lib/wikisource";
 import {
+  clearAuth,
+  createPkce,
+  exchangeAuthCode,
+  loadStoredAuth,
+  logoutUrl,
+  parseAuthCallback,
+  PKCE_VERIFIER_KEY,
+  storeAuth,
+  stripAuthQuery,
+  type AuthTokens,
+  authorizeUrl,
+} from "./lib/auth";
+import {
+  applySyncState,
   deleteText,
   importBackup,
   loadAll,
@@ -19,6 +33,7 @@ import {
   putText,
   putWord,
 } from "./lib/db";
+import { mergeSnapshots, packSnapshot, pullSnapshot, pushSnapshot } from "./lib/sync";
 import { hasWord, loadGlossary, MAX_WORD_LEN } from "./lib/glossary";
 import { remainingUniques, scoreTokens } from "./lib/score";
 import { segment } from "./lib/segment";
@@ -107,10 +122,19 @@ export default function App() {
   const [wikiLoading, setWikiLoading] = useState<string | null>(null);
   const [shareTextId, setShareTextId] = useState<string | null>(null);
   const [shareMissing, setShareMissing] = useState(false);
+  const [auth, setAuth] = useState<AuthTokens | null>(() => loadStoredAuth());
   const wordsRef = useRef(words);
   wordsRef.current = words;
   const textsRef = useRef(texts);
   textsRef.current = texts;
+  const sessionsRef = useRef(sessions);
+  sessionsRef.current = sessions;
+  const settingsRef = useRef(settings);
+  settingsRef.current = settings;
+  const authRef = useRef(auth);
+  authRef.current = auth;
+  const syncingRef = useRef(false);
+  const syncTimerRef = useRef<number | null>(null);
 
   function navigate(next: View) {
     const hash = viewToHash(next);
@@ -125,6 +149,92 @@ export default function App() {
     window.addEventListener("hashchange", onHash);
     return () => window.removeEventListener("hashchange", onHash);
   }, []);
+
+  useEffect(() => {
+    const parsed = parseAuthCallback(window.location.search, window.location.hash);
+    if (!parsed) return;
+    window.history.replaceState(
+      null,
+      "",
+      stripAuthQuery(window.location.pathname, window.location.hash),
+    );
+    const verifier = window.sessionStorage.getItem(PKCE_VERIFIER_KEY);
+    if (!verifier) return;
+    void exchangeAuthCode(parsed.code, verifier, window.location.origin)
+      .then((tokens) => {
+        storeAuth(tokens);
+        setAuth(tokens);
+        window.sessionStorage.removeItem(PKCE_VERIFIER_KEY);
+      })
+      .catch(() => {
+        /* stay a guest */
+      });
+  }, []);
+
+  async function onSignIn() {
+    const pkce = await createPkce();
+    window.sessionStorage.setItem(PKCE_VERIFIER_KEY, pkce.verifier);
+    window.location.assign(authorizeUrl(window.location.origin, pkce.challenge));
+  }
+
+  function onSignOut() {
+    clearAuth();
+    setAuth(null);
+    window.location.assign(logoutUrl(window.location.origin));
+  }
+
+  function localSnapshot() {
+    return packSnapshot({
+      words: [...wordsRef.current.values()],
+      texts: textsRef.current,
+      sessions: sessionsRef.current,
+      settings: settingsRef.current,
+    });
+  }
+
+  async function runCloudSync(pullFirst: boolean) {
+    const tokens = authRef.current;
+    if (!tokens?.idToken || syncingRef.current) return;
+    syncingRef.current = true;
+    try {
+      let next = localSnapshot();
+      if (pullFirst) {
+        const remote = await pullSnapshot(tokens.idToken);
+        if (remote && (remote.updatedAt > 0 || remote.words.length > 0 || remote.texts.length > 0)) {
+          next = mergeSnapshots(next, remote);
+          await applySyncState(next);
+          const loaded = await loadAll();
+          const sorted = loaded.texts.sort(
+            (a, b) => a.createdAt - b.createdAt || a.title.localeCompare(b.title),
+          );
+          textsRef.current = sorted;
+          setTexts(sorted);
+          setWords(new Map(loaded.words.map((w) => [w.hanzi, w])));
+          setSessions(loaded.sessions);
+          setSettings(loaded.settings);
+          next = packSnapshot({
+            words: loaded.words,
+            texts: sorted,
+            sessions: loaded.sessions,
+            settings: loaded.settings,
+          });
+        }
+      }
+      await pushSnapshot(tokens.idToken, next);
+    } catch {
+      /* stay on this browser */
+    } finally {
+      syncingRef.current = false;
+    }
+  }
+
+  function scheduleCloudPush() {
+    if (!authRef.current?.idToken) return;
+    if (syncTimerRef.current) window.clearTimeout(syncTimerRef.current);
+    syncTimerRef.current = window.setTimeout(() => {
+      void runCloudSync(false);
+    }, 1500);
+  }
 
   useEffect(() => {
     let cancelled = false;
@@ -168,6 +278,11 @@ export default function App() {
       cancelled = true;
     };
   }, []);
+
+  useEffect(() => {
+    if (!ready || !auth) return;
+    void runCloudSync(true);
+  }, [ready, auth]);
 
   const statuses = useMemo(() => {
     const map = new Map<string, WordStatus>();
@@ -348,6 +463,7 @@ export default function App() {
     const next = applyReadingTap(wordsRef.current.get(hanzi), hanzi, status);
     setWords((prev) => new Map(prev).set(hanzi, next));
     await putWord(next);
+    scheduleCloudPush();
   }
 
   async function onGrade(hanzi: string, grade: ReviewGrade) {
@@ -355,6 +471,7 @@ export default function App() {
     const next = applyReviewGrade(prev, grade);
     setWords((p) => new Map(p).set(hanzi, next));
     await putWord(next);
+    scheduleCloudPush();
   }
 
   async function saveText(next: LibraryText) {
@@ -366,6 +483,7 @@ export default function App() {
         );
     setTexts(textsRef.current);
     await putText(next);
+    scheduleCloudPush();
   }
 
   async function ensureSharedText(kind: ShareKind, key: string): Promise<LibraryText | null> {
@@ -434,6 +552,7 @@ export default function App() {
     textsRef.current = textsRef.current.map((t) => (t.id === id ? next : t));
     setTexts(textsRef.current);
     await putText(next);
+    scheduleCloudPush();
   }
 
   async function onDone(id: string, durationMs: number) {
@@ -453,6 +572,7 @@ export default function App() {
     };
     setSessions((prev) => [...prev, session]);
     await putSession(session);
+    scheduleCloudPush();
     navigate({ name: "home" });
   }
 
@@ -465,6 +585,7 @@ export default function App() {
   async function onSettings(next: ReaderSettings) {
     setSettings(next);
     await putSettings(next);
+    scheduleCloudPush();
   }
 
   async function onAdd(event: FormEvent) {
@@ -491,6 +612,7 @@ export default function App() {
     setPaste("");
     setTitle("");
     setPasteError(null);
+    scheduleCloudPush();
     navigate({ name: "reader", id: item.id });
   }
 
@@ -501,6 +623,7 @@ export default function App() {
     await deleteText(id);
     textsRef.current = textsRef.current.filter((t) => t.id !== id);
     setTexts(textsRef.current);
+    scheduleCloudPush();
     if (view.name === "reader" && view.id === id) navigate({ name: "home" });
   }
 
@@ -537,6 +660,7 @@ export default function App() {
       setWords(new Map(next.words.map((w) => [w.hanzi, w])));
       setSessions(next.sessions);
       setSettings(next.settings);
+      scheduleCloudPush();
     } catch (err) {
       setImportError(err instanceof Error ? err.message : "Could not import that file.");
     }
@@ -579,6 +703,22 @@ export default function App() {
           <button type="button" className="text-btn" onClick={onExport}>
             Export
           </button>
+          {auth ? (
+            <span className="auth-chip">
+              {auth.email ? (
+                <span className="auth-email" title={auth.email}>
+                  {auth.email}
+                </span>
+              ) : null}
+              <button type="button" className="text-btn" onClick={onSignOut}>
+                Sign out
+              </button>
+            </span>
+          ) : (
+            <button type="button" className="text-btn" onClick={() => void onSignIn()}>
+              Sign in
+            </button>
+          )}
           <label className="file-btn">
             Import
             <input

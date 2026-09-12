@@ -19,6 +19,9 @@ jobs:
       S3_BUCKET: chadm-duki
       CF_DISTRIBUTION_ID: E2C30FHOL2BUQ5
       VITE_DUKI_API: https://j251m3eof8.execute-api.us-east-2.amazonaws.com
+      VITE_COGNITO_DOMAIN: https://accounts.chadmurchison.com
+      VITE_COGNITO_CLIENT_ID: 34crk50b2obng6cdgh2mhp029s
+      VITE_COGNITO_USER_POOL_ID: us-east-2_y5IGDDBu4
 
     steps:
       - uses: actions/checkout@v4

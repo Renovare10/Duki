@@ -168,6 +168,48 @@ export async function putSettings(settings: ReaderSettings): Promise<void> {
   db.close();
 }
 
+/** Write a merged account snapshot without deleting catalog rows that aren't in it. */
+export async function applySyncState(input: {
+  words: WordRecord[];
+  texts: LibraryText[];
+  sessions: ReadingSession[];
+  settings: ReaderSettings | null;
+}): Promise<void> {
+  const db = await openDb();
+  const tx = db.transaction([...STORES], "readwrite");
+  const wordStore = tx.objectStore("words");
+  const textStore = tx.objectStore("texts");
+  const sessionStore = tx.objectStore("sessions");
+  const settingsStore = tx.objectStore("settings");
+  for (const word of input.words) {
+    if (word?.hanzi) wordStore.put(normalizeWord(word));
+  }
+  for (const incoming of input.texts) {
+    if (!incoming?.id) continue;
+    const existing = await reqToPromise(
+      textStore.get(incoming.id) as IDBRequest<LibraryText | undefined>,
+    );
+    const body = incoming.body?.trim() ? incoming.body : existing?.body || "";
+    textStore.put(
+      normalizeText({
+        ...(existing || incoming),
+        ...incoming,
+        body,
+        readAt: incoming.readAt ?? existing?.readAt ?? null,
+        bookmark: incoming.bookmark ?? existing?.bookmark ?? null,
+      }),
+    );
+  }
+  for (const session of input.sessions) {
+    if (session?.id && session.textId) sessionStore.put(session);
+  }
+  if (input.settings) {
+    settingsStore.put({ key: "reader", ...normalizeSettings(input.settings) });
+  }
+  await txDone(tx);
+  db.close();
+}
+
 export async function importBackup(
   backup: BackupFile,
   catalog: LibraryText[],
