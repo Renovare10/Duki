@@ -16,6 +16,7 @@ const STORES = ["words", "texts", "sessions", "settings"] as const;
 export const DEFAULT_SETTINGS: ReaderSettings = {
   fontFamily: "serif",
   fontSize: 28,
+  theme: "paper",
 };
 
 function openDb(): Promise<IDBDatabase> {
@@ -116,7 +117,7 @@ export async function loadAll(): Promise<{
   };
 }
 
-function normalizeSettings(raw: Partial<ReaderSettings> | undefined): ReaderSettings {
+export function normalizeSettings(raw: Partial<ReaderSettings> | undefined): ReaderSettings {
   const fontFamily =
     raw?.fontFamily === "sans" || raw?.fontFamily === "system" || raw?.fontFamily === "serif"
       ? raw.fontFamily
@@ -125,7 +126,8 @@ function normalizeSettings(raw: Partial<ReaderSettings> | undefined): ReaderSett
     typeof raw?.fontSize === "number"
       ? Math.min(42, Math.max(18, Math.round(raw.fontSize)))
       : DEFAULT_SETTINGS.fontSize;
-  return { fontFamily, fontSize };
+  const theme = raw?.theme === "night" || raw?.theme === "paper" ? raw.theme : DEFAULT_SETTINGS.theme;
+  return { fontFamily, fontSize, theme };
 }
 
 export async function putWord(record: WordRecord): Promise<void> {

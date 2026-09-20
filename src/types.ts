@@ -86,9 +86,12 @@ export type ReadingSession = {
   durationMs: number | null;
 };
 
+export type ReaderTheme = "paper" | "night";
+
 export type ReaderSettings = {
   fontFamily: "serif" | "sans" | "system";
   fontSize: number;
+  theme: ReaderTheme;
 };
 
 export type BackupFile = {

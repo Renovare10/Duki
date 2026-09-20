@@ -9,6 +9,7 @@ import type {
   WordStatus,
 } from "../types";
 import { FONT_LABELS, FONT_STACKS } from "../lib/fonts";
+import { ThemeToggle } from "./ThemeToggle";
 import { getGloss, hasWord, MAX_WORD_LEN } from "../lib/glossary";
 import { shareUrl } from "../lib/share";
 import { segment } from "../lib/segment";
@@ -258,6 +259,11 @@ export function Reader({
                 </option>
               ))}
             </select>
+            <ThemeToggle
+              className="theme-btn"
+              theme={settings.theme}
+              onChange={(theme) => onSettings({ ...settings, theme })}
+            />
             <button type="button" className="ghost" onClick={() => void onShare()}>
               Share
             </button>

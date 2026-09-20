@@ -4,6 +4,7 @@ import { Home } from "./components/Home";
 import { Reader } from "./components/Reader";
 import { Review } from "./components/Review";
 import { Stats } from "./components/Stats";
+import { ThemeToggle } from "./components/ThemeToggle";
 import { CATALOG } from "./data/catalog";
 import { findBook } from "./lib/books";
 import { parseShareHash, type ShareKind } from "./lib/share";
@@ -13,6 +14,7 @@ import { fetchWikisourcePage, searchWikisource, wsTextId, wikisourceStubs } from
 import {
   clearAuth,
   createPkce,
+  ensureFreshAuth,
   exchangeAuthCode,
   loadStoredAuth,
   logoutUrl,
@@ -27,6 +29,7 @@ import {
   applySyncState,
   deleteText,
   importBackup,
+  DEFAULT_SETTINGS,
   loadAll,
   parseBackup,
   putSession,
@@ -116,10 +119,7 @@ export default function App() {
   const [texts, setTexts] = useState<LibraryText[]>([]);
   const [words, setWords] = useState<Map<string, WordRecord>>(new Map());
   const [sessions, setSessions] = useState<ReadingSession[]>([]);
-  const [settings, setSettings] = useState<ReaderSettings>({
-    fontFamily: "serif",
-    fontSize: 28,
-  });
+  const [settings, setSettings] = useState<ReaderSettings>(DEFAULT_SETTINGS);
   const [paste, setPaste] = useState("");
   const [title, setTitle] = useState("");
   const [pasteError, setPasteError] = useState<string | null>(null);
@@ -155,6 +155,11 @@ export default function App() {
     window.addEventListener("hashchange", onHash);
     return () => window.removeEventListener("hashchange", onHash);
   }, []);
+
+  useEffect(() => {
+    const theme = settings.theme === "night" ? "night" : "paper";
+    document.documentElement.dataset.theme = theme;
+  }, [settings.theme]);
 
   useEffect(() => {
     const parsed = parseAuthCallback(window.location.search, window.location.hash);
@@ -198,33 +203,37 @@ export default function App() {
     });
   }
 
-  async function runCloudSync(pullFirst: boolean) {
-    const tokens = authRef.current;
-    if (!tokens?.idToken || syncingRef.current) return;
+  async function runCloudSync() {
+    const stored = authRef.current;
+    if (!stored?.idToken || syncingRef.current) return;
     syncingRef.current = true;
     try {
+      const tokens = await ensureFreshAuth(stored);
+      if (tokens !== stored) {
+        storeAuth(tokens);
+        authRef.current = tokens;
+        setAuth(tokens);
+      }
       let next = localSnapshot();
-      if (pullFirst) {
-        const remote = await pullSnapshot(tokens.idToken);
-        if (remote && (remote.updatedAt > 0 || remote.words.length > 0 || remote.texts.length > 0)) {
-          next = mergeSnapshots(next, remote);
-          await applySyncState(next);
-          const loaded = await loadAll();
-          const sorted = loaded.texts.sort(
-            (a, b) => a.createdAt - b.createdAt || a.title.localeCompare(b.title),
-          );
-          textsRef.current = sorted;
-          setTexts(sorted);
-          setWords(new Map(loaded.words.map((w) => [w.hanzi, w])));
-          setSessions(loaded.sessions);
-          setSettings(loaded.settings);
-          next = packSnapshot({
-            words: loaded.words,
-            texts: sorted,
-            sessions: loaded.sessions,
-            settings: loaded.settings,
-          });
-        }
+      const remote = await pullSnapshot(tokens.idToken);
+      if (remote) {
+        next = mergeSnapshots(next, remote);
+        await applySyncState(next);
+        const loaded = await loadAll();
+        const sorted = loaded.texts.sort(
+          (a, b) => a.createdAt - b.createdAt || a.title.localeCompare(b.title),
+        );
+        textsRef.current = sorted;
+        setTexts(sorted);
+        setWords(new Map(loaded.words.map((w) => [w.hanzi, w])));
+        setSessions(loaded.sessions);
+        setSettings(loaded.settings);
+        next = packSnapshot({
+          words: loaded.words,
+          texts: sorted,
+          sessions: loaded.sessions,
+          settings: loaded.settings,
+        });
       }
       await pushSnapshot(tokens.idToken, next);
     } catch {
@@ -238,7 +247,7 @@ export default function App() {
     if (!authRef.current?.idToken) return;
     if (syncTimerRef.current) window.clearTimeout(syncTimerRef.current);
     syncTimerRef.current = window.setTimeout(() => {
-      void runCloudSync(false);
+      void runCloudSync();
     }, 1500);
   }
 
@@ -287,7 +296,7 @@ export default function App() {
 
   useEffect(() => {
     if (!ready || !auth) return;
-    void runCloudSync(true);
+    void runCloudSync();
   }, [ready, auth]);
 
   const statuses = useMemo(() => {
@@ -652,6 +661,10 @@ export default function App() {
           </span>
         </button>
         <nav className="top-actions" aria-label="Main">
+          <ThemeToggle
+            theme={settings.theme}
+            onChange={(theme) => void onSettings({ ...settings, theme })}
+          />
           <button
             type="button"
             className={`text-btn${view.name === "review" ? " current" : ""}`}

@@ -141,3 +141,60 @@ export async function exchangeAuthCode(
     email: emailFromIdToken(json.id_token),
   };
 }
+
+const REFRESH_SKEW_MS = 60_000;
+
+export function idTokenExpiresAt(idToken: string): number | null {
+  const parts = idToken.split(".");
+  if (parts.length < 2) return null;
+  try {
+    const json = JSON.parse(base64UrlToJson(parts[1])) as { exp?: number };
+    return typeof json.exp === "number" ? json.exp * 1000 : null;
+  } catch {
+    return null;
+  }
+}
+
+export function idTokenIsFresh(idToken: string, now = Date.now(), skewMs = REFRESH_SKEW_MS): boolean {
+  const exp = idTokenExpiresAt(idToken);
+  return exp != null && exp - skewMs > now;
+}
+
+export async function refreshSession(
+  refreshToken: string,
+  fetchImpl: typeof fetch = fetch,
+): Promise<AuthTokens> {
+  const body = new URLSearchParams({
+    grant_type: "refresh_token",
+    client_id: AUTH_CLIENT_ID,
+    refresh_token: refreshToken,
+  });
+  const res = await fetchImpl(tokenUrl(), {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body,
+  });
+  if (!res.ok) throw new Error("Sign in expired.");
+  const json = (await res.json()) as {
+    access_token?: string;
+    id_token?: string;
+    refresh_token?: string;
+  };
+  if (!json.access_token || !json.id_token) throw new Error("Sign in expired.");
+  return {
+    accessToken: json.access_token,
+    idToken: json.id_token,
+    refreshToken: json.refresh_token || refreshToken,
+    email: emailFromIdToken(json.id_token),
+  };
+}
+
+export async function ensureFreshAuth(
+  tokens: AuthTokens,
+  fetchImpl: typeof fetch = fetch,
+  now = Date.now(),
+): Promise<AuthTokens> {
+  if (idTokenIsFresh(tokens.idToken, now)) return tokens;
+  if (!tokens.refreshToken) throw new Error("Sign in expired.");
+  return refreshSession(tokens.refreshToken, fetchImpl);
+}

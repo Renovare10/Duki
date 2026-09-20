@@ -39,35 +39,51 @@ function stripCatalogBody(text: LibraryText): LibraryText {
   return { ...text, body: "" };
 }
 
+export function knownWordCount(snapshot: SyncSnapshot): number {
+  let n = 0;
+  for (const word of snapshot.words) {
+    if (word?.status === "known") n += 1;
+  }
+  return n;
+}
+
+/** Richer lexicon wins; if tied, the more recently updated snapshot is the default. */
+export function preferSnapshot(a: SyncSnapshot, b: SyncSnapshot): SyncSnapshot {
+  const ka = knownWordCount(a);
+  const kb = knownWordCount(b);
+  if (ka !== kb) return ka > kb ? a : b;
+  return a.updatedAt >= b.updatedAt ? a : b;
+}
+
 export function mergeSnapshots(local: SyncSnapshot, remote: SyncSnapshot): SyncSnapshot {
+  const preferred = preferSnapshot(local, remote);
+  const other = preferred === local ? remote : local;
+
   const words = new Map<string, WordRecord>();
-  for (const word of remote.words) {
+  for (const word of preferred.words) {
     if (word?.hanzi) words.set(word.hanzi, normalizeWord(word));
   }
-  for (const word of local.words) {
+  for (const word of other.words) {
     if (!word?.hanzi) continue;
-    const other = words.get(word.hanzi);
-    if (!other || word.updatedAt >= other.updatedAt) words.set(word.hanzi, normalizeWord(word));
+    const have = words.get(word.hanzi);
+    if (!have || word.updatedAt > have.updatedAt) words.set(word.hanzi, normalizeWord(word));
   }
 
   const texts = new Map<string, LibraryText>();
-  for (const text of remote.texts) {
+  for (const text of preferred.texts) {
     if (text?.id) texts.set(text.id, mergeText(undefined, text));
   }
-  for (const text of local.texts) {
+  for (const text of other.texts) {
     if (!text?.id) continue;
     texts.set(text.id, mergeText(texts.get(text.id), text));
   }
 
   const sessions = new Map<string, ReadingSession>();
-  for (const session of [...remote.sessions, ...local.sessions]) {
+  for (const session of [...preferred.sessions, ...other.sessions]) {
     if (session?.id && session.textId) sessions.set(session.id, session);
   }
 
-  const settings =
-    (local.updatedAt >= remote.updatedAt ? local.settings : remote.settings) ||
-    local.settings ||
-    remote.settings;
+  const settings = preferred.settings || other.settings;
 
   return {
     v: 1,

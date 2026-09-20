@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { parseBackup } from "./db";
+import { normalizeSettings, parseBackup } from "./db";
+import type { ReaderSettings } from "../types";
 
 describe("parseBackup", () => {
   it("accepts a v1 Duki file and fills new word fields", () => {
@@ -42,5 +43,22 @@ describe("parseBackup", () => {
 
   it("rejects unrelated JSON", () => {
     expect(() => parseBackup({ foo: 1 })).toThrow(/Duki backup/);
+  });
+});
+
+describe("normalizeSettings", () => {
+  it("keeps theme night", () => {
+    expect(
+      normalizeSettings({ fontFamily: "serif", fontSize: 28, theme: "night" }).theme,
+    ).toBe("night");
+  });
+
+  it("falls back to paper for missing or invalid theme", () => {
+    expect(normalizeSettings(undefined).theme).toBe("paper");
+    expect(normalizeSettings({}).theme).toBe("paper");
+    expect(normalizeSettings({ fontFamily: "sans", fontSize: 20 }).theme).toBe("paper");
+    expect(
+      normalizeSettings({ theme: "dark" } as unknown as Partial<ReaderSettings>).theme,
+    ).toBe("paper");
   });
 });

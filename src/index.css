@@ -5,6 +5,7 @@
   --ink: #1b1410;
   --ink-soft: #5e554c;
   --rule: #d8c9b4;
+  --rule-hover: #c4b49a;
   --seal: #c4452b;
   --seal-deep: #9a2f1c;
   --new-wash: rgba(37, 99, 180, 0.16);
@@ -23,6 +24,60 @@
   --serif-zh: "Noto Serif SC", "Songti SC", "SimSun", serif;
   --serif-en: "Source Serif 4", "Iowan Old Style", "Palatino Linotype", serif;
   --sans: "Outfit", "Segoe UI", sans-serif;
+  --paper-glow: #f7f1e6;
+  --paper-raised: #fffaf3;
+  --paper-card: rgba(255, 250, 243, 0.72);
+  --paper-card-strong: rgba(255, 250, 243, 0.88);
+  --paper-card-hover: rgba(255, 250, 243, 0.95);
+  --paper-hero: rgba(255, 250, 243, 0.8);
+  --chrome: rgba(244, 234, 220, 0.88);
+  --chrome-reader: rgba(244, 234, 220, 0.94);
+  --hover-wash: rgba(27, 20, 16, 0.06);
+  --cream: #f4eadc;
+  --dock-bg: #1b1410;
+  --dock-fg: #f4eadc;
+  --dock-muted: #cbbdae;
+  --dock-pinyin: #f0d2b0;
+  --dock-en: #d9cfc3;
+  color-scheme: light;
+}
+
+[data-theme="night"] {
+  color-scheme: dark;
+  --paper: #1c1612;
+  --paper-2: #14110e;
+  --paper-3: #2c241c;
+  --ink: #ead9c4;
+  --ink-soft: #b5a089;
+  --rule: #3d3228;
+  --rule-hover: #5c4e40;
+  --seal-deep: #e07a62;
+  --new-wash: rgba(96, 156, 255, 0.22);
+  --new-line: #6ea4ff;
+  --new-ink: #c4dbff;
+  --unknown-wash: rgba(232, 96, 70, 0.28);
+  --unknown-line: #e87258;
+  --unknown-ink: #ffc0b0;
+  --hard-wash: rgba(232, 96, 70, 0.18);
+  --shaky-wash: rgba(214, 176, 64, 0.34);
+  --shaky-line: #e0b84a;
+  --ok: #6fb58a;
+  --shadow: 0 18px 40px rgba(0, 0, 0, 0.42);
+  --paper-glow: #211a15;
+  --paper-raised: #261e18;
+  --paper-card: rgba(44, 36, 28, 0.78);
+  --paper-card-strong: rgba(48, 38, 30, 0.9);
+  --paper-card-hover: rgba(54, 44, 36, 0.96);
+  --paper-hero: rgba(44, 36, 28, 0.85);
+  --chrome: rgba(22, 18, 14, 0.92);
+  --chrome-reader: rgba(22, 18, 14, 0.96);
+  --hover-wash: rgba(234, 217, 196, 0.08);
+  --cream: #ead9c4;
+  --dock-bg: #2a221c;
+  --dock-fg: #ead9c4;
+  --dock-muted: #c4b49e;
+  --dock-pinyin: #f0d2b0;
+  --dock-en: #d9cfc3;
 }
 
 * {
@@ -33,6 +88,7 @@ html,
 body,
 #root {
   min-height: 100%;
+  background-color: var(--paper);
 }
 
 body {
@@ -40,7 +96,7 @@ body {
   color: var(--ink);
   background:
     radial-gradient(1200px 420px at 50% -80px, rgba(196, 69, 43, 0.07), transparent 60%),
-    linear-gradient(180deg, #f7f1e6 0%, var(--paper) 28%, var(--paper-2) 100%);
+    linear-gradient(180deg, var(--paper-glow) 0%, var(--paper) 28%, var(--paper-2) 100%);
   font-family: var(--sans);
 }
 
@@ -67,7 +123,7 @@ button {
   gap: 1rem;
   padding: 0.9rem 1.25rem;
   border-bottom: 1px solid var(--rule);
-  background: rgba(244, 234, 220, 0.88);
+  background: var(--chrome);
   backdrop-filter: blur(8px);
   position: sticky;
   top: 0;
@@ -89,7 +145,7 @@ button {
   height: 2rem;
   border-radius: 0.35rem;
   background: var(--seal);
-  color: var(--paper);
+  color: var(--cream);
   display: grid;
   place-items: center;
   font-family: var(--serif-zh);
@@ -134,7 +190,7 @@ button {
 .text-btn:hover,
 .file-btn:hover,
 .text-btn.current {
-  background: rgba(27, 20, 16, 0.06);
+  background: var(--hover-wash);
   color: var(--ink);
 }
 
@@ -187,7 +243,7 @@ button {
 .home-search {
   width: 100%;
   border: 1px solid var(--rule);
-  background: #fffaf3;
+  background: var(--paper-raised);
   border-radius: 999px;
   padding: 0.65rem 1rem;
   margin-bottom: 0.7rem;
@@ -203,7 +259,7 @@ button {
   grid-template-columns: 180px 1fr;
   gap: 1.1rem;
   text-align: left;
-  background: rgba(255, 250, 243, 0.8);
+  background: var(--paper-hero);
   border: 1px solid rgba(196, 69, 43, 0.28);
   border-radius: 1.2rem;
   padding: 0.85rem;
@@ -248,7 +304,7 @@ button {
 .title-card {
   flex: 0 0 220px;
   scroll-snap-align: start;
-  background: rgba(255, 250, 243, 0.72);
+  background: var(--paper-card);
   border: 1px solid var(--rule);
   border-radius: 1rem;
   overflow: hidden;
@@ -416,7 +472,7 @@ button.badge {
   text-transform: uppercase;
   font-weight: 600;
   background: rgba(27, 20, 16, 0.72);
-  color: #f4eadc;
+  color: var(--cream);
   padding: 0.18rem 0.45rem;
   border-radius: 99px;
 }
@@ -520,7 +576,7 @@ button.badge {
 .paste-card,
 .suggest-card,
 .lib-card {
-  background: rgba(255, 250, 243, 0.72);
+  background: var(--paper-card);
   border: 1px solid var(--rule);
   box-shadow: var(--shadow);
 }
@@ -546,7 +602,7 @@ button.badge {
   min-height: 7.5rem;
   resize: vertical;
   border: 1px solid var(--rule);
-  background: #fffaf3;
+  background: var(--paper-raised);
   border-radius: 0.7rem;
   padding: 0.8rem 0.9rem;
   font-family: var(--serif-zh);
@@ -566,7 +622,7 @@ button.badge {
   flex: 1;
   min-width: 12rem;
   border: 1px solid var(--rule);
-  background: #fffaf3;
+  background: var(--paper-raised);
   border-radius: 999px;
   padding: 0.55rem 0.9rem;
 }
@@ -581,7 +637,7 @@ button.badge {
 }
 
 .primary:hover {
-  background: #000;
+  background: color-mix(in srgb, var(--ink) 82%, #000);
 }
 
 .paste-error {
@@ -649,7 +705,7 @@ button.badge {
 }
 
 .lib-card:hover {
-  border-color: #c4b49a;
+  border-color: var(--rule-hover);
 }
 
 .lib-card.suggested {
@@ -752,7 +808,7 @@ button.badge {
   position: sticky;
   top: var(--topbar-h);
   z-index: 4;
-  background: rgba(244, 234, 220, 0.94);
+  background: var(--chrome-reader);
   backdrop-filter: blur(8px);
   padding: 0.35rem 0 0.55rem;
   border-bottom: 1px solid var(--rule);
@@ -858,8 +914,8 @@ button.badge {
   bottom: 0.85rem;
   transform: translateX(-50%);
   width: min(860px, calc(100% - 1.2rem));
-  background: #1b1410;
-  color: var(--paper);
+  background: var(--dock-bg);
+  color: var(--dock-fg);
   border-radius: 1.1rem;
   padding: 0.9rem 1rem 1rem;
   display: grid;
@@ -878,7 +934,7 @@ button.badge {
 .dock-pinyin {
   font-family: var(--serif-en);
   font-size: 0.95rem;
-  color: #f0d2b0;
+  color: var(--dock-pinyin);
 }
 
 .dock-pinyin.hidden {
@@ -887,14 +943,14 @@ button.badge {
 
 .dock-en {
   grid-column: 1;
-  color: #d9cfc3;
+  color: var(--dock-en);
   font-size: 0.92rem;
   font-family: var(--serif-en);
 }
 
 .dock-hint {
   grid-column: 1 / -1;
-  color: #cbbdae;
+  color: var(--dock-muted);
   font-size: 0.9rem;
 }
 
@@ -908,9 +964,9 @@ button.badge {
 }
 
 .status-btn {
-  border: 1px solid rgba(244, 234, 220, 0.28);
+  border: 1px solid color-mix(in srgb, var(--dock-fg) 28%, transparent);
   background: transparent;
-  color: var(--paper);
+  color: var(--dock-fg);
   border-radius: 999px;
   padding: 0.48rem 0.7rem;
   min-height: 2.5rem;
@@ -929,20 +985,20 @@ button.badge {
 .status-btn.active.shaky {
   background: #c9a227;
   border-color: #c9a227;
-  color: #1b1410;
+  color: var(--dock-bg);
 }
 
 .status-btn.active.known {
-  background: var(--paper);
-  color: var(--ink);
-  border-color: var(--paper);
+  background: var(--cream);
+  color: var(--dock-bg);
+  border-color: var(--cream);
 }
 
 .tooltip {
   position: fixed;
   z-index: 20;
-  background: #1b1410;
-  color: var(--paper);
+  background: var(--dock-bg);
+  color: var(--dock-fg);
   padding: 0.5rem 0.7rem 0.55rem;
   border-radius: 0.65rem;
   pointer-events: none;
@@ -953,13 +1009,13 @@ button.badge {
 .tooltip .py {
   font-family: var(--serif-en);
   font-size: 0.95rem;
-  color: #f0d2b0;
+  color: var(--dock-pinyin);
 }
 
 .tooltip .en {
   font-family: var(--serif-en);
   font-size: 0.82rem;
-  color: #d9cfc3;
+  color: var(--dock-en);
   margin-top: 0.15rem;
 }
 
@@ -979,7 +1035,7 @@ button.badge {
 .dock-counts {
   grid-column: 1;
   font-size: 0.72rem;
-  color: #cbbdae;
+  color: var(--dock-muted);
 }
 
 .source-line a {
@@ -1025,12 +1081,17 @@ button.badge {
   width: 7rem;
 }
 
-.reader-tools select {
+.reader-tools select,
+.theme-btn {
   border: 1px solid var(--rule);
-  background: #fffaf3;
+  background: var(--paper-raised);
   border-radius: 999px;
   padding: 0.35rem 0.7rem;
   color: var(--ink);
+}
+
+.theme-btn {
+  font: inherit;
 }
 
 .done-btn {
@@ -1083,7 +1144,7 @@ button.badge {
 
 .chip {
   border: 1px solid var(--rule);
-  background: #fffaf3;
+  background: var(--paper-raised);
   color: var(--ink-soft);
   border-radius: 999px;
   padding: 0.28rem 0.7rem;
@@ -1141,7 +1202,7 @@ button.badge {
 
 .stat-card {
   width: 100%;
-  background: rgba(255, 250, 243, 0.72);
+  background: var(--paper-card);
   border: 1px solid var(--rule);
   border-radius: 1rem;
   padding: 0.9rem 1rem;
@@ -1152,8 +1213,8 @@ button.badge {
 }
 
 .stat-card:hover {
-  border-color: #c4b49a;
-  background: rgba(255, 250, 243, 0.95);
+  border-color: var(--rule-hover);
+  background: var(--paper-card-hover);
 }
 
 .miss-gloss {
@@ -1188,7 +1249,7 @@ button.badge {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(255, 250, 243, 0.72);
+  background: var(--paper-card);
   border: 1px solid var(--rule);
   border-radius: 0.75rem;
   padding: 0.55rem 0.8rem;
@@ -1244,7 +1305,7 @@ button.badge {
 .review-card {
   width: 100%;
   text-align: center;
-  background: rgba(255, 250, 243, 0.88);
+  background: var(--paper-card-strong);
   border: 1px solid var(--rule);
   border-radius: 1.2rem;
   padding: 2.2rem 1rem 1.6rem;
@@ -1314,7 +1375,7 @@ button.badge {
 }
 
 .empty-card {
-  background: rgba(255, 250, 243, 0.72);
+  background: var(--paper-card);
   border: 1px solid var(--rule);
   border-radius: 1rem;
   padding: 1.2rem 1rem;
