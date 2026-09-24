@@ -127,7 +127,8 @@ button {
   backdrop-filter: blur(8px);
   position: sticky;
   top: 0;
-  z-index: 5;
+  z-index: 8;
+  flex-wrap: nowrap;
 }
 
 .brand {
@@ -176,6 +177,46 @@ button {
   display: flex;
   align-items: center;
   gap: 0.45rem;
+}
+
+.menu-toggle {
+  display: none;
+}
+
+.menu-group {
+  display: contents;
+}
+
+.menu-group-label {
+  display: none;
+}
+
+.menu-action-theme {
+  order: 1;
+}
+
+.menu-action-review {
+  order: 2;
+}
+
+.menu-action-stats {
+  order: 3;
+}
+
+.menu-action-add {
+  order: 4;
+}
+
+.menu-action-export {
+  order: 5;
+}
+
+.menu-action-auth {
+  order: 6;
+}
+
+.menu-action-import {
+  order: 7;
 }
 
 .text-btn,
@@ -1385,7 +1426,7 @@ button.badge {
 @media (max-width: 720px) {
   :root {
     --dock-space: 15rem;
-    --topbar-h: 5.4rem;
+    --topbar-h: 4rem;
   }
 
   .reader-wrap {
@@ -1431,8 +1472,99 @@ button.badge {
     grid-template-columns: 1fr;
   }
 
+  .menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
   .top-actions {
-    flex-wrap: wrap;
-    justify-content: flex-end;
+    display: none;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    z-index: 6;
+    width: 100%;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+    text-align: left;
+    gap: 2rem;
+    background-color: var(--paper);
+    background-image: linear-gradient(var(--chrome), var(--chrome));
+    color: var(--ink);
+    border-bottom: 1px solid var(--rule);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(8px);
+    max-height: calc(100dvh - var(--topbar-h));
+    overflow: auto;
+    padding: 0.85rem 0 calc(1.1rem + env(safe-area-inset-bottom));
+  }
+
+  .topbar.menu-open .top-actions {
+    display: flex;
+  }
+
+  .menu-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+    width: 100%;
+  }
+
+  .menu-group-label {
+    display: block;
+    margin: 0;
+    padding: 0 1.25rem;
+    font-family: var(--sans);
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .menu-action-theme,
+  .menu-action-review,
+  .menu-action-stats,
+  .menu-action-add,
+  .menu-action-export,
+  .menu-action-auth,
+  .menu-action-import {
+    order: 0;
+    width: 100%;
+  }
+
+  .top-actions .text-btn,
+  .top-actions .file-btn {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    min-height: 2.75rem;
+    padding: 0.45rem 1.25rem;
+    border-radius: 0;
+    text-align: left;
+    box-sizing: border-box;
+  }
+
+  .top-actions .auth-chip {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+    width: 100%;
+  }
+
+  .top-actions .auth-email {
+    max-width: 100%;
+    width: 100%;
+    padding: 0.45rem 1.25rem;
+    text-align: left;
+    box-sizing: border-box;
   }
 }

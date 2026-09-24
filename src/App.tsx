@@ -39,6 +39,7 @@ import {
 } from "./lib/db";
 import { mergeSnapshots, packSnapshot, pullSnapshot, pushSnapshot } from "./lib/sync";
 import { hasWord, loadGlossary, MAX_WORD_LEN } from "./lib/glossary";
+import { MENU_ACTION_LABELS, MENU_GROUPS, type MenuActionId } from "./lib/menu";
 import { remainingUniques, scoreTokens } from "./lib/score";
 import { segment } from "./lib/segment";
 import { applyReadingTap, applyReviewGrade } from "./lib/word";
@@ -141,6 +142,13 @@ export default function App() {
   authRef.current = auth;
   const syncingRef = useRef(false);
   const syncTimerRef = useRef<number | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuToggleRef = useRef<HTMLButtonElement>(null);
+  const topbarRef = useRef<HTMLElement>(null);
+
+  function closeMenu() {
+    setMenuOpen(false);
+  }
 
   function navigate(next: View) {
     const hash = viewToHash(next);
@@ -155,6 +163,36 @@ export default function App() {
     window.addEventListener("hashchange", onHash);
     return () => window.removeEventListener("hashchange", onHash);
   }, []);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 720px)");
+    function onViewport() {
+      if (!mq.matches) setMenuOpen(false);
+    }
+    mq.addEventListener("change", onViewport);
+    return () => mq.removeEventListener("change", onViewport);
+  }, []);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    function onPointerDown(event: PointerEvent) {
+      const node = event.target;
+      if (!(node instanceof Node)) return;
+      if (topbarRef.current?.contains(node)) return;
+      setMenuOpen(false);
+    }
+    function onKey(event: KeyboardEvent) {
+      if (event.key !== "Escape") return;
+      setMenuOpen(false);
+      menuToggleRef.current?.focus();
+    }
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [menuOpen]);
 
   useEffect(() => {
     const theme = settings.theme === "night" ? "night" : "paper";
@@ -648,65 +686,113 @@ export default function App() {
     }
   }
 
-  return (
-    <div className="app">
-      <header className="topbar">
-        <button type="button" className="brand" onClick={() => navigate({ name: "home" })}>
-          <span className="seal" aria-hidden="true">
-            读
-          </span>
-          <span>
-            <span className="brand-name">Duki</span>
-            <span className="brand-sub">A library of stories</span>
-          </span>
-        </button>
-        <nav className="top-actions" aria-label="Main">
+  function renderMenuAction(id: MenuActionId) {
+    switch (id) {
+      case "theme":
+        return (
           <ThemeToggle
+            key={id}
+            className="text-btn menu-action-theme"
             theme={settings.theme}
             onChange={(theme) => void onSettings({ ...settings, theme })}
           />
+        );
+      case "review":
+        return (
           <button
+            key={id}
             type="button"
-            className={`text-btn${view.name === "review" ? " current" : ""}`}
-            onClick={() => navigate({ name: "review" })}
+            className={`text-btn menu-action-review${view.name === "review" ? " current" : ""}`}
+            onClick={() => {
+              closeMenu();
+              navigate({ name: "review" });
+            }}
           >
-            Review
+            {MENU_ACTION_LABELS.review}
           </button>
+        );
+      case "stats":
+        return (
           <button
+            key={id}
             type="button"
-            className={`text-btn${view.name === "stats" ? " current" : ""}`}
-            onClick={() => navigate({ name: "stats" })}
+            className={`text-btn menu-action-stats${view.name === "stats" ? " current" : ""}`}
+            onClick={() => {
+              closeMenu();
+              navigate({ name: "stats" });
+            }}
           >
-            Stats
+            {MENU_ACTION_LABELS.stats}
           </button>
+        );
+      case "add":
+        return (
           <button
+            key={id}
             type="button"
-            className={`text-btn${view.name === "add" ? " current" : ""}`}
-            onClick={() => navigate({ name: "add" })}
+            className={`text-btn menu-action-add${view.name === "add" ? " current" : ""}`}
+            onClick={() => {
+              closeMenu();
+              navigate({ name: "add" });
+            }}
           >
-            Add text
+            {MENU_ACTION_LABELS.add}
           </button>
-          <button type="button" className="text-btn" onClick={onExport}>
-            Export
+        );
+      case "export":
+        return (
+          <button
+            key={id}
+            type="button"
+            className="text-btn menu-action-export"
+            onClick={() => {
+              closeMenu();
+              onExport();
+            }}
+          >
+            {MENU_ACTION_LABELS.export}
           </button>
-          {auth ? (
-            <span className="auth-chip">
-              {auth.email ? (
-                <span className="auth-email" title={auth.email}>
-                  {auth.email}
-                </span>
-              ) : null}
-              <button type="button" className="text-btn" onClick={onSignOut}>
-                Sign out
-              </button>
-            </span>
-          ) : (
-            <button type="button" className="text-btn" onClick={() => void onSignIn()}>
-              Sign in
+        );
+      case "auth":
+        return auth ? (
+          <span key={id} className="auth-chip menu-action-auth">
+            {auth.email ? (
+              <span className="auth-email" title={auth.email}>
+                {auth.email}
+              </span>
+            ) : null}
+            <button
+              type="button"
+              className="text-btn"
+              onClick={() => {
+                closeMenu();
+                onSignOut();
+              }}
+            >
+              Sign out
             </button>
-          )}
-          <label className="file-btn">
-            Import
+          </span>
+        ) : (
+          <button
+            key={id}
+            type="button"
+            className="text-btn menu-action-auth"
+            onClick={() => {
+              closeMenu();
+              void onSignIn();
+            }}
+          >
+            Sign in
+          </button>
+        );
+      case "import":
+        return (
+          <label
+            key={id}
+            className="file-btn menu-action-import"
+            onClick={() => closeMenu()}
+          >
+            {MENU_ACTION_LABELS.import}
             <input
               type="file"
               accept="application/json,.json"
@@ -717,6 +803,46 @@ export default function App() {
               }}
             />
           </label>
+        );
+    }
+  }
+
+  return (
+    <div className="app">
+      <header className={`topbar${menuOpen ? " menu-open" : ""}`} ref={topbarRef}>
+        <button
+          type="button"
+          className="brand"
+          onClick={() => {
+            closeMenu();
+            navigate({ name: "home" });
+          }}
+        >
+          <span className="seal" aria-hidden="true">
+            读
+          </span>
+          <span>
+            <span className="brand-name">Duki</span>
+            <span className="brand-sub">A library of stories</span>
+          </span>
+        </button>
+        <button
+          type="button"
+          className="text-btn menu-toggle"
+          aria-expanded={menuOpen}
+          aria-controls="app-menu"
+          ref={menuToggleRef}
+          onClick={() => setMenuOpen((open) => !open)}
+        >
+          {menuOpen ? "Close" : "Menu"}
+        </button>
+        <nav id="app-menu" className="top-actions" aria-label="Main">
+          {MENU_GROUPS.map((group) => (
+            <div key={group.id} className={`menu-group menu-group-${group.id}`} data-group={group.id}>
+              <p className="menu-group-label">{group.label}</p>
+              {group.actions.map((actionId) => renderMenuAction(actionId))}
+            </div>
+          ))}
         </nav>
       </header>
 
