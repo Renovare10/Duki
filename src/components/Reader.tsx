@@ -13,8 +13,10 @@ import { ThemeToggle } from "./ThemeToggle";
 import { getGloss, hasWord, MAX_WORD_LEN } from "../lib/glossary";
 import { shareUrl } from "../lib/share";
 import { segment } from "../lib/segment";
+import { tokensInRange } from "../lib/speech";
 import { throttle } from "../lib/throttle";
 import { wordTint, type WordTint } from "../lib/tint";
+import { VoicePlayer } from "./VoicePlayer";
 
 type Props = {
   text: LibraryText;
@@ -79,6 +81,12 @@ export function Reader({
 
   const [resumeIndex, setResumeIndex] = useState<number | null>(null);
   const [toast, setToast] = useState<string | null>(null);
+  const [speaking, setSpeaking] = useState<{ start: number; end: number } | null>(null);
+  const speakingTokens = useMemo(() => {
+    if (!speaking) return null;
+    const range = tokensInRange(bodyTokens, speaking.start, speaking.end);
+    return range.from < 0 ? null : range;
+  }, [speaking, bodyTokens]);
 
   async function onShare() {
     const url = shareUrl(window.location.origin, text);
@@ -121,6 +129,11 @@ export function Reader({
       setHover(null);
     }
   }, [words, hover]);
+
+  useEffect(() => {
+    if (!speakingTokens) return;
+    document.querySelector(".article .speaking")?.scrollIntoView({ block: "nearest" });
+  }, [speakingTokens]);
 
   useEffect(() => {
     const last: Bookmark = text.bookmark
@@ -213,6 +226,7 @@ export function Reader({
                   resumeIndex: null,
                   setSelected,
                   setHover,
+                  speaking: null,
                 }),
               )}
             </h1>
@@ -291,6 +305,7 @@ export function Reader({
           </span>
           <span>Okay is plain text</span>
         </div>
+        <VoicePlayer body={text.body} onSpeaking={setSpeaking} />
       </div>
 
       <article
@@ -308,6 +323,7 @@ export function Reader({
             resumeIndex,
             setSelected,
             setHover,
+            speaking: speakingTokens,
           }),
         )}
       </article>
@@ -382,11 +398,21 @@ type RenderOpts = {
   resumeIndex: number | null;
   setSelected: (sel: Sel) => void;
   setHover: (hover: HoverState | null) => void;
+  speaking: { from: number; to: number } | null;
 };
 
 function renderToken(token: Token, zone: "title" | "body", opts: RenderOpts) {
+  const marked =
+    zone === "body" &&
+    opts.speaking != null &&
+    token.index >= opts.speaking.from &&
+    token.index < opts.speaking.to;
   if (!token.isWord) {
-    return <span key={`${zone}-${token.index}`}>{token.text}</span>;
+    return (
+      <span key={`${zone}-${token.index}`} className={marked ? "speaking" : undefined}>
+        {token.text}
+      </span>
+    );
   }
   const status = tintOf(opts.words, token.text);
   const isSelected =
@@ -396,7 +422,7 @@ function renderToken(token: Token, zone: "title" | "body", opts: RenderOpts) {
     <span
       key={`${zone}-${token.index}`}
       data-index={zone === "body" ? token.index : undefined}
-      className={`word ${status}${isSelected ? " selected" : ""}${isResume ? " resume" : ""}`}
+      className={`word ${status}${isSelected ? " selected" : ""}${isResume ? " resume" : ""}${marked ? " speaking" : ""}`}
       onClick={() => {
         opts.setSelected({ zone, index: token.index });
         opts.setHover(null);
