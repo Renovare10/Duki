@@ -8,6 +8,8 @@ import {
   type ShelfItem,
 } from "./books";
 import {
+  BAND_HI,
+  BAND_LO,
   REC_HARD_MAX,
   TARGET,
   isScored,
@@ -127,52 +129,115 @@ function inFilter(item: ShelfItem, filters: HomeFilters): boolean {
   return true;
 }
 
+export type RecommendedPicks = {
+  easy: ShelfItem | null;
+  justRight: ShelfItem | null;
+  hard: ShelfItem | null;
+  fresh: ShelfItem | null;
+};
+
+function isPasteItem(item: ShelfItem): boolean {
+  if (item.type === "text") return item.text.kind === "paste" || item.text.category === "paste";
+  return item.book.kind === "paste" || item.book.category === "paste";
+}
+
+function finished(item: ShelfItem): boolean {
+  if (item.type === "text") return Boolean(item.text.readAt);
+  return bookProgress(item.book.chapters) === "read";
+}
+
+function neverRead(item: ShelfItem): boolean {
+  if (item.type === "text") return !item.text.readAt && !isContinue(item.text);
+  return bookProgress(item.book.chapters) === "unread";
+}
+
+function loadOf(item: ShelfItem, scores: Map<string, TextScore>): number | null {
+  const src = scoreSource(item);
+  if (!src) return null;
+  const score = scores.get(src.id);
+  if (!score || !isScored(score)) return null;
+  return score.unknownLoad;
+}
+
+function recommendable(item: ShelfItem, scores: Map<string, TextScore>): boolean {
+  if (isPasteItem(item) || !itemTeaches(item, scores)) return false;
+  const load = loadOf(item, scores);
+  return load !== null && load > 0 && load <= REC_HARD_MAX;
+}
+
+function inRecBand(load: number, band: "easy" | "just-right" | "hard"): boolean {
+  if (band === "easy") return load < BAND_LO;
+  if (band === "just-right") return load >= BAND_LO && load <= BAND_HI;
+  return load > BAND_HI && load <= REC_HARD_MAX;
+}
+
+function pickInBand(
+  pool: ShelfItem[],
+  scores: Map<string, TextScore>,
+  band: "easy" | "just-right" | "hard",
+): ShelfItem | null {
+  const hits = pool.filter((item) => {
+    const load = loadOf(item, scores);
+    return load !== null && inRecBand(load, band);
+  });
+  hits.sort((a, b) => {
+    const read = Number(finished(b)) - Number(finished(a));
+    if (read !== 0) return read;
+    const la = loadOf(a, scores)!;
+    const lb = loadOf(b, scores)!;
+    const fit = band === "just-right" ? Math.abs(la - TARGET) - Math.abs(lb - TARGET) : la - lb;
+    if (fit !== 0) return fit;
+    return itemId(a).localeCompare(itemId(b));
+  });
+  return hits[0] ?? null;
+}
+
+/** A good unread story, or the easiest unread one when every unread story is a wall. */
+function pickFresh(
+  items: ShelfItem[],
+  scores: Map<string, TextScore>,
+  used: Set<string>,
+): ShelfItem | null {
+  const rows = items
+    .filter((item) => !isPasteItem(item) && neverRead(item) && !used.has(itemId(item)))
+    .map((item) => ({ item, load: loadOf(item, scores) }))
+    .filter((row): row is { item: ShelfItem; load: number } => row.load !== null && row.load > 0);
+  const good = rows.filter((row) => row.load <= REC_HARD_MAX);
+  const pool = good.length ? good : rows;
+  pool.sort((a, b) => {
+    const fit = good.length
+      ? Math.abs(a.load - TARGET) - Math.abs(b.load - TARGET)
+      : a.load - b.load;
+    if (fit !== 0) return fit;
+    return itemId(a.item).localeCompare(itemId(b.item));
+  });
+  return pool[0]?.item ?? null;
+}
+
 export function pickRecommendedItems(
   items: ShelfItem[],
   scores: Map<string, TextScore>,
-): { easy: ShelfItem | null; justRight: ShelfItem | null; hard: ShelfItem | null } {
-  const unread = items.filter((item) => {
-    if (!itemTeaches(item, scores)) return false;
-    const src = scoreSource(item);
-    if (!src) return false;
-    const load = scores.get(src.id)?.unknownLoad ?? -1;
-    if (load <= 0 || load > REC_HARD_MAX) return false;
-    if (item.type === "text") return !item.text.readAt;
-    return bookProgress(item.book.chapters) !== "read";
-  });
-
-  if (unread.length === 0) {
-    return { easy: null, justRight: null, hard: null };
-  }
-
-  const byLoad = [...unread].sort((a, b) => {
-    return (scores.get(scoreSource(a)!.id)!.unknownLoad - scores.get(scoreSource(b)!.id)!.unknownLoad);
-  });
-
-  const easy = byLoad[0];
-  const rest = byLoad.slice(1);
-  if (rest.length === 0) return { easy, justRight: null, hard: null };
-
-  const justRight = [...rest].sort((a, b) => {
-    const da = Math.abs(scores.get(scoreSource(a)!.id)!.unknownLoad - TARGET);
-    const db = Math.abs(scores.get(scoreSource(b)!.id)!.unknownLoad - TARGET);
-    return da - db;
-  })[0];
-  const after = rest.filter((item) => itemId(item) !== itemId(justRight));
-  const hard = after.length ? after[after.length - 1] : null;
-
-  return { easy, justRight, hard };
+): RecommendedPicks {
+  const pool = items.filter((item) => recommendable(item, scores));
+  const easy = pickInBand(pool, scores, "easy");
+  const justRight = pickInBand(pool, scores, "just-right");
+  const hard = pickInBand(pool, scores, "hard");
+  const used = new Set(
+    [easy, justRight, hard].filter((item): item is ShelfItem => item !== null).map((item) => itemId(item)),
+  );
+  return { easy, justRight, hard, fresh: pickFresh(items, scores, used) };
 }
 
 export function pickRecommendedTrio(
   texts: LibraryText[],
   scores: Map<string, TextScore>,
-): { easy: LibraryText | null; justRight: LibraryText | null; hard: LibraryText | null } {
-  const trio = pickRecommendedItems(collapseTexts(texts), scores);
+): { easy: LibraryText | null; justRight: LibraryText | null; hard: LibraryText | null; fresh: LibraryText | null } {
+  const picks = pickRecommendedItems(collapseTexts(texts), scores);
   return {
-    easy: trio.easy ? scoreSource(trio.easy) : null,
-    justRight: trio.justRight ? scoreSource(trio.justRight) : null,
-    hard: trio.hard ? scoreSource(trio.hard) : null,
+    easy: picks.easy ? scoreSource(picks.easy) : null,
+    justRight: picks.justRight ? scoreSource(picks.justRight) : null,
+    hard: picks.hard ? scoreSource(picks.hard) : null,
+    fresh: picks.fresh ? scoreSource(picks.fresh) : null,
   };
 }
 
@@ -214,13 +279,14 @@ export function buildShelves(
     return shelves;
   }
 
-  const trio = pickRecommendedItems(collapsed, scores);
-  const recItems = [trio.easy, trio.justRight, trio.hard].filter(Boolean) as ShelfItem[];
+  const picks = pickRecommendedItems(collapsed, scores);
+  const recItems = [picks.easy, picks.justRight, picks.hard, picks.fresh].filter(Boolean) as ShelfItem[];
   if (recItems.length) {
     const tags: Record<string, string> = {};
-    if (trio.easy) tags[itemId(trio.easy)] = "Easy";
-    if (trio.justRight) tags[itemId(trio.justRight)] = "Just right";
-    if (trio.hard) tags[itemId(trio.hard)] = "Harder";
+    if (picks.easy) tags[itemId(picks.easy)] = "Easy";
+    if (picks.justRight) tags[itemId(picks.justRight)] = "Just right";
+    if (picks.hard) tags[itemId(picks.hard)] = "Harder";
+    if (picks.fresh) tags[itemId(picks.fresh)] = "Unread";
     shelves.push({ id: "recommended", title: "Recommended", items: recItems, tags });
   }
 

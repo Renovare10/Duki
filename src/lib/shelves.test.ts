@@ -176,7 +176,7 @@ describe("buildShelves", () => {
     const shelves = buildShelves(texts, scores, [], { ...filters, level: "just-right" });
     expect(shelves.map((s) => s.id)).toContain("story");
     expect(shelves.map((s) => s.id)).toContain("wiki");
-    expect(shelves.find((s) => s.id === "recommended")).toBeUndefined();
+    expect(shelves.find((s) => s.id === "recommended")?.tags?.s).toBe("Unread");
     expect(shelves.find((s) => s.id === "gutenberg")).toBeUndefined();
   });
 });
@@ -199,6 +199,7 @@ describe("pickRecommendedTrio", () => {
     expect(trio.easy?.id).toBe("e");
     expect(trio.justRight?.id).toBe("j");
     expect(trio.hard?.id).toBe("h");
+    expect(trio.fresh).toBeNull();
   });
 
   it("does not recommend a 43% unknown text as Harder", () => {
@@ -211,30 +212,33 @@ describe("pickRecommendedTrio", () => {
       ["cap", sc(0.16)],
     ]);
     const trio = pickRecommendedTrio(texts, scores);
-    expect(trio.easy?.id).toBe("cap");
+    expect(trio.easy).toBeNull();
     expect(trio.justRight).toBeNull();
-    expect(trio.hard).toBeNull();
+    expect(trio.hard?.id).toBe("cap");
+    expect(trio.fresh?.id).toBe("too-hard");
   });
 
-  it("omits Harder rather than filling with a 43% text", () => {
+  it("keeps a 43% text out of the bands and still offers it as the unread slot", () => {
     const texts = [text({ id: "too-hard", title: "Too hard", category: "science" })];
     const scores = new Map([["too-hard", sc(0.43)]]);
     const trio = pickRecommendedTrio(texts, scores);
     expect(trio.easy).toBeNull();
     expect(trio.justRight).toBeNull();
     expect(trio.hard).toBeNull();
+    expect(trio.fresh?.id).toBe("too-hard");
   });
 
-  it("uses a lone 15% unread story as Easy rather than leaving Recommended empty", () => {
+  it("labels a lone 15% unread story Harder, not Easy", () => {
     const texts = [text({ id: "h", title: "H", category: "story" })];
     const scores = new Map([["h", sc(0.15)]]);
     const trio = pickRecommendedTrio(texts, scores);
-    expect(trio.easy?.id).toBe("h");
+    expect(trio.easy).toBeNull();
     expect(trio.justRight).toBeNull();
-    expect(trio.hard).toBeNull();
+    expect(trio.hard?.id).toBe("h");
+    expect(trio.fresh).toBeNull();
   });
 
-  it("fills Easy / Just right / Harder from unread stories at 17%, 32%, 35%", () => {
+  it("does not relabel 17%, 32%, and 35% as Easy / Just right / Harder", () => {
     const texts = [
       text({ id: "a", title: "A", category: "graded" }),
       text({ id: "b", title: "B", category: "story" }),
@@ -246,21 +250,23 @@ describe("pickRecommendedTrio", () => {
       ["c", sc(0.35)],
     ]);
     const trio = pickRecommendedTrio(texts, scores);
-    expect(trio.easy?.id).toBe("a");
-    expect(trio.justRight?.id).toBe("b");
-    expect(trio.hard?.id).toBe("c");
+    expect(trio.easy).toBeNull();
+    expect(trio.justRight).toBeNull();
+    expect(trio.hard?.id).toBe("a");
+    expect(trio.fresh?.id).toBe("b");
   });
 
-  it("omits a slot rather than recommending an already-read story", () => {
+  it("recommends a finished story that still fits Easy", () => {
     const texts = [text({ id: "e", title: "E", category: "graded", readAt: 1 })];
     const scores = new Map([["e", sc(0.03)]]);
     const trio = pickRecommendedTrio(texts, scores);
-    expect(trio.easy).toBeNull();
+    expect(trio.easy?.id).toBe("e");
     expect(trio.justRight).toBeNull();
     expect(trio.hard).toBeNull();
+    expect(trio.fresh).toBeNull();
   });
 
-  it("omits a band if the only match is already read", () => {
+  it("keeps a finished Easy beside an unread Just right", () => {
     const texts = [
       text({ id: "e-read", title: "Finished easy", category: "graded", readAt: 9 }),
       text({ id: "j", title: "Unread JR", category: "graded" }),
@@ -270,12 +276,13 @@ describe("pickRecommendedTrio", () => {
       ["j", sc(0.08)],
     ]);
     const trio = pickRecommendedTrio(texts, scores);
-    expect(trio.easy?.id).toBe("j");
-    expect(trio.justRight).toBeNull();
+    expect(trio.easy?.id).toBe("e-read");
+    expect(trio.justRight?.id).toBe("j");
     expect(trio.hard).toBeNull();
+    expect(trio.fresh).toBeNull();
   });
 
-  it("prefers an unread Easy over a finished one in the same band", () => {
+  it("puts the finished twin in Easy and the unread twin in the new slot", () => {
     const texts = [
       text({ id: "e-old", title: "Old easy", category: "graded", readAt: 2 }),
       text({ id: "e-new", title: "New easy", category: "graded" }),
@@ -284,7 +291,65 @@ describe("pickRecommendedTrio", () => {
       ["e-old", sc(0.03)],
       ["e-new", sc(0.03)],
     ]);
-    expect(pickRecommendedTrio(texts, scores).easy?.id).toBe("e-new");
+    const trio = pickRecommendedTrio(texts, scores);
+    expect(trio.easy?.id).toBe("e-old");
+    expect(trio.fresh?.id).toBe("e-new");
+  });
+
+  it("adds an unread slot when the bands are already filled with finished stories", () => {
+    const texts = [
+      text({ id: "e", title: "E", category: "graded", readAt: 1 }),
+      text({ id: "j", title: "J", category: "story", readAt: 2 }),
+      text({ id: "h", title: "H", category: "science", readAt: 3 }),
+      text({ id: "new", title: "New", category: "story" }),
+    ];
+    const scores = new Map([
+      ["e", sc(0.03)],
+      ["j", sc(0.08)],
+      ["h", sc(0.15)],
+      ["new", sc(0.09)],
+    ]);
+    const trio = pickRecommendedTrio(texts, scores);
+    expect(trio.easy?.id).toBe("e");
+    expect(trio.justRight?.id).toBe("j");
+    expect(trio.hard?.id).toBe("h");
+    expect(trio.fresh?.id).toBe("new");
+  });
+
+  it("does not repeat an unread story already sitting in a band", () => {
+    const texts = [
+      text({ id: "e", title: "E", category: "graded", readAt: 1 }),
+      text({ id: "j", title: "J", category: "story" }),
+    ];
+    const scores = new Map([
+      ["e", sc(0.03)],
+      ["j", sc(0.08)],
+    ]);
+    const trio = pickRecommendedTrio(texts, scores);
+    expect(trio.justRight?.id).toBe("j");
+    expect(trio.fresh).toBeNull();
+  });
+
+  it("does not use a paste or a started story as the unread slot", () => {
+    const texts = [
+      text({ id: "paste", title: "Mine", category: "paste", kind: "paste" }),
+      text({
+        id: "started",
+        title: "Started",
+        category: "story",
+        bookmark: { tokenIndex: 4, scrollY: 0 },
+      }),
+      text({ id: "fresh", title: "Fresh", category: "story" }),
+    ];
+    const scores = new Map([
+      ["paste", sc(0.08)],
+      ["started", sc(0.08)],
+      ["fresh", sc(0.09)],
+    ]);
+    const trio = pickRecommendedTrio(texts, scores);
+    expect(trio.justRight?.id).toBe("started");
+    expect(trio.fresh?.id).toBe("fresh");
+    expect(trio.easy).toBeNull();
   });
 
   it("does not recommend an unscored stub", () => {
@@ -302,6 +367,7 @@ describe("pickRecommendedTrio", () => {
     expect(trio.easy).toBeNull();
     expect(trio.justRight).toBeNull();
     expect(trio.hard).toBeNull();
+    expect(trio.fresh).toBeNull();
   });
 });
 

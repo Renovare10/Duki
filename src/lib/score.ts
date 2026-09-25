@@ -125,8 +125,8 @@ export function coveragePercents(score: TextScore): { known: number; unknown: nu
   return { known, unknown: 100 - known };
 }
 
-/** Recommended may stretch to ~35% unknown. 43% stays out. */
-export const REC_HARD_MAX = 0.38;
+/** Harder recommendations stop at ~20% unknown. Above that is a wall, not a rec. */
+export const REC_HARD_MAX = 0.2;
 
 export function isScored(score: TextScore): boolean {
   return score.total > 0;
