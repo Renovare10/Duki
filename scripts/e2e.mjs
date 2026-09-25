@@ -215,7 +215,7 @@ try {
     .first()
     .waitFor({ timeout: 20000 });
   if (!(await wikiCard.locator(".wiki-error").count())) {
-    await wikiCard.getByRole("button", { name: "Read", exact: true }).click();
+    await wikiCard.locator(".title-hit").click();
     await page.locator(".article .word").first().waitFor({ timeout: 20000 });
     await page.getByText(/From Wikipedia, CC BY-SA/).waitFor();
   }

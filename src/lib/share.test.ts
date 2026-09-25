@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseShareHash, shareHash, shareUrl } from "./share";
+import { parseShareHash, shareClipboard, shareHash, shareUrl } from "./share";
 
 describe("shareHash", () => {
   it("builds wiki, gutenberg, wikisource, and local hashes", () => {
@@ -23,6 +23,16 @@ describe("shareHash", () => {
     expect(url).toBe("https://read.example/#/r/local/sample-home");
     expect(url.includes("known")).toBe(false);
     expect(url.includes("bookmark")).toBe(false);
+  });
+
+  it("puts the title above the link so a paste is not a naked URL", () => {
+    expect(
+      shareClipboard("https://read.example", {
+        id: "sample-home",
+        kind: "sample",
+        title: "我的家",
+      }),
+    ).toBe("我的家\nhttps://read.example/#/r/local/sample-home");
   });
 });
 

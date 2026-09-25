@@ -11,6 +11,7 @@ type Props = {
 const RATE = 0.85;
 
 export function VoicePlayer({ body, onSpeaking }: Props) {
+  const chunks = speechChunks(body);
   const [support, setSupport] = useState<SpeakSupport>(() =>
     speakSupport(
       typeof window !== "undefined" && Boolean(window.speechSynthesis),
@@ -19,6 +20,7 @@ export function VoicePlayer({ body, onSpeaking }: Props) {
     ),
   );
   const [playing, setPlaying] = useState(false);
+  const [index, setIndex] = useState(0);
   const onSpeakingRef = useRef(onSpeaking);
   onSpeakingRef.current = onSpeaking;
   const playingRef = useRef(false);
@@ -35,6 +37,8 @@ export function VoicePlayer({ body, onSpeaking }: Props) {
   }, []);
 
   useEffect(() => {
+    indexRef.current = 0;
+    setIndex(0);
     return () => stop(true);
     // Fresh story, fresh place.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -44,9 +48,17 @@ export function VoicePlayer({ body, onSpeaking }: Props) {
     runRef.current += 1;
     playingRef.current = false;
     window.speechSynthesis?.cancel();
-    if (reset) indexRef.current = 0;
+    if (reset) {
+      indexRef.current = 0;
+      setIndex(0);
+    }
     setPlaying(false);
     onSpeakingRef.current(null);
+  }
+
+  function show(at: number) {
+    const chunk = speechChunks(body)[at];
+    onSpeakingRef.current(chunk ? { start: chunk.start, end: chunk.end } : null);
   }
 
   function play() {
@@ -57,9 +69,12 @@ export function VoicePlayer({ body, onSpeaking }: Props) {
       setSupport("none");
       return;
     }
-    const chunks = speechChunks(body);
-    if (!chunks.length) return;
-    if (indexRef.current >= chunks.length) indexRef.current = 0;
+    const pieces = speechChunks(body);
+    if (!pieces.length) return;
+    if (indexRef.current >= pieces.length) {
+      indexRef.current = 0;
+      setIndex(0);
+    }
     const run = runRef.current + 1;
     runRef.current = run;
     playingRef.current = true;
@@ -67,15 +82,17 @@ export function VoicePlayer({ body, onSpeaking }: Props) {
 
     const speak = () => {
       if (runRef.current !== run) return;
-      const index = indexRef.current;
-      const chunk = chunks[index];
+      const at = indexRef.current;
+      const chunk = pieces[at];
       if (!chunk) {
         indexRef.current = 0;
+        setIndex(0);
         playingRef.current = false;
         setPlaying(false);
         onSpeakingRef.current(null);
         return;
       }
+      setIndex(at);
       onSpeakingRef.current({ start: chunk.start, end: chunk.end });
       const utter = new SpeechSynthesisUtterance(chunk.text);
       utter.voice = voice;
@@ -83,7 +100,7 @@ export function VoicePlayer({ body, onSpeaking }: Props) {
       utter.rate = RATE;
       utter.onend = () => {
         if (runRef.current !== run) return;
-        indexRef.current = index + 1;
+        indexRef.current = at + 1;
         speak();
       };
       utter.onerror = (event) => {
@@ -98,7 +115,19 @@ export function VoicePlayer({ body, onSpeaking }: Props) {
     speak();
   }
 
-  if (support === "hidden" || speechChunks(body).length === 0) return null;
+  function skip(delta: number) {
+    const pieces = speechChunks(body);
+    if (!pieces.length) return;
+    const next = Math.min(pieces.length - 1, Math.max(0, indexRef.current + delta));
+    const wasPlaying = playingRef.current;
+    stop(false);
+    indexRef.current = next;
+    setIndex(next);
+    show(next);
+    if (wasPlaying) play();
+  }
+
+  if (support === "hidden" || chunks.length === 0) return null;
 
   if (support === "none") {
     return (
@@ -110,6 +139,9 @@ export function VoicePlayer({ body, onSpeaking }: Props) {
 
   return (
     <div className="voice-player">
+      <button type="button" className="voice-play" onClick={() => skip(-1)} disabled={index === 0}>
+        Back
+      </button>
       <button
         type="button"
         className="voice-play"
@@ -117,6 +149,17 @@ export function VoicePlayer({ body, onSpeaking }: Props) {
       >
         {playing ? "Pause" : "Play"}
       </button>
+      <button
+        type="button"
+        className="voice-play"
+        onClick={() => skip(1)}
+        disabled={index >= chunks.length - 1}
+      >
+        Ahead
+      </button>
+      <span className="voice-place">
+        {index + 1} / {chunks.length}
+      </span>
     </div>
   );
 }

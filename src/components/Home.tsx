@@ -373,11 +373,6 @@ function BookCard({
           <span className="cat-tag">{categoryLabel(book.category)}</span>
         </div>
       </div>
-      <div className="card-actions">
-        <button type="button" className="ghost" onClick={onOpen}>
-          Read
-        </button>
-      </div>
     </article>
   );
 }
@@ -443,9 +438,6 @@ export function TitleCard({
             Score
           </button>
         ) : null}
-        <button type="button" className="ghost" onClick={(e) => run("read", e)}>
-          Read
-        </button>
         {text.readAt ? (
           <button type="button" className="ghost" onClick={(e) => run("mark", e)}>
             Mark unread

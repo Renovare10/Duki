@@ -7,6 +7,7 @@ import { Stats } from "./components/Stats";
 import { ThemeToggle } from "./components/ThemeToggle";
 import { CATALOG } from "./data/catalog";
 import { findBook } from "./lib/books";
+import { documentTitle, themeColor } from "./lib/page";
 import { parseShareHash, type ShareKind } from "./lib/share";
 import { BookScreen } from "./components/Book";
 import { fetchWikiPage, randomWikipedia, searchWikipedia, wikiStub, wikiTextId } from "./lib/wiki";
@@ -143,14 +144,20 @@ export default function App() {
   const syncingRef = useRef(false);
   const syncTimerRef = useRef<number | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
+  const accountSlotRef = useRef<HTMLDivElement>(null);
+  const accountFaceRef = useRef<HTMLButtonElement>(null);
   const menuToggleRef = useRef<HTMLButtonElement>(null);
   const topbarRef = useRef<HTMLElement>(null);
 
   function closeMenu() {
     setMenuOpen(false);
+    setAccountOpen(false);
   }
 
   function navigate(next: View) {
+    setMenuOpen(false);
+    setAccountOpen(false);
     const hash = viewToHash(next);
     if (window.location.hash !== hash) window.location.hash = hash;
     else setView(next);
@@ -167,7 +174,10 @@ export default function App() {
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 720px)");
     function onViewport() {
-      if (!mq.matches) setMenuOpen(false);
+      if (!mq.matches) {
+        setMenuOpen(false);
+        setAccountOpen(false);
+      }
     }
     mq.addEventListener("change", onViewport);
     return () => mq.removeEventListener("change", onViewport);
@@ -195,9 +205,42 @@ export default function App() {
   }, [menuOpen]);
 
   useEffect(() => {
+    if (!accountOpen) return;
+    function onPointerDown(event: PointerEvent) {
+      const node = event.target;
+      if (!(node instanceof Node)) return;
+      if (accountSlotRef.current?.contains(node)) return;
+      setAccountOpen(false);
+    }
+    function onKey(event: KeyboardEvent) {
+      if (event.key !== "Escape") return;
+      setAccountOpen(false);
+      accountFaceRef.current?.focus();
+    }
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [accountOpen]);
+
+  useEffect(() => {
     const theme = settings.theme === "night" ? "night" : "paper";
     document.documentElement.dataset.theme = theme;
+    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", themeColor(theme));
   }, [settings.theme]);
+
+  useEffect(() => {
+    let page = "";
+    if (view.name === "reader") page = texts.find((item) => item.id === view.id)?.title ?? "";
+    else if (view.name === "book") {
+      page = texts.find((item) => item.seriesId === view.id)?.seriesTitle ?? "";
+    } else if (view.name === "review") page = "Review";
+    else if (view.name === "stats") page = "Stats";
+    else if (view.name === "add") page = "Add text";
+    document.title = documentTitle(page);
+  }, [view, texts]);
 
   useEffect(() => {
     const parsed = parseAuthCallback(window.location.search, window.location.hash);
@@ -809,7 +852,7 @@ export default function App() {
 
   return (
     <div className="app">
-      <header className={`topbar${menuOpen ? " menu-open" : ""}`} ref={topbarRef}>
+      <header className={`topbar${menuOpen ? " menu-open" : ""}${accountOpen ? " account-open" : ""}`} ref={topbarRef}>
         <button
           type="button"
           className="brand"
@@ -837,12 +880,49 @@ export default function App() {
           {menuOpen ? "Close" : "Menu"}
         </button>
         <nav id="app-menu" className="top-actions" aria-label="Main">
-          {MENU_GROUPS.map((group) => (
+          {MENU_GROUPS.filter((group) => group.id === "read" || group.id === "look").map((group) => (
             <div key={group.id} className={`menu-group menu-group-${group.id}`} data-group={group.id}>
               <p className="menu-group-label">{group.label}</p>
               {group.actions.map((actionId) => renderMenuAction(actionId))}
             </div>
           ))}
+          <div className="account-slot" ref={accountSlotRef}>
+            <button
+              type="button"
+              className="account-face"
+              aria-expanded={accountOpen}
+              aria-controls="account-panel"
+              aria-label={auth?.email ? `Account, ${auth.email}` : "Account"}
+              ref={accountFaceRef}
+              onClick={() => setAccountOpen((open) => !open)}
+            >
+              <svg className="account-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="8" r="3.1" fill="none" stroke="currentColor" strokeWidth="1.7" />
+                <path
+                  d="M5.6 19.2c1.15-3.05 3.35-4.5 6.4-4.5s5.25 1.45 6.4 4.5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.7"
+                  strokeLinecap="round"
+                />
+              </svg>
+              <span className="account-face-word">Account</span>
+            </button>
+            <div className="account-panel" id="account-panel">
+              {MENU_GROUPS.filter((group) => group.id === "account" || group.id === "backup").map(
+                (group) => (
+                  <div
+                    key={group.id}
+                    className={`menu-group menu-group-${group.id}`}
+                    data-group={group.id}
+                  >
+                    <p className="menu-group-label">{group.label}</p>
+                    {group.actions.map((actionId) => renderMenuAction(actionId))}
+                  </div>
+                ),
+              )}
+            </div>
+          </div>
         </nav>
       </header>
 

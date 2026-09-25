@@ -17,6 +17,16 @@ export function shareHash(
   return `#/r/local/${encodeURIComponent(text.id)}`;
 }
 
+export const SITE_DESCRIPTION =
+  "A library of Mandarin stories, colored by the words you know.";
+
+export function shareClipboard(
+  origin: string,
+  text: Pick<LibraryText, "id" | "kind" | "wikiTitle" | "wsTitle" | "gutenbergId" | "title">,
+): string {
+  return `${text.title}\n${shareUrl(origin, text)}`;
+}
+
 export function shareUrl(
   origin: string,
   text: Pick<LibraryText, "id" | "kind" | "wikiTitle" | "wsTitle" | "gutenbergId">,

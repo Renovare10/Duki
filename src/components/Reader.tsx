@@ -11,7 +11,7 @@ import type {
 import { FONT_LABELS, FONT_STACKS } from "../lib/fonts";
 import { ThemeToggle } from "./ThemeToggle";
 import { getGloss, hasWord, MAX_WORD_LEN } from "../lib/glossary";
-import { shareUrl } from "../lib/share";
+import { shareClipboard, shareUrl } from "../lib/share";
 import { segment } from "../lib/segment";
 import { tokensInRange } from "../lib/speech";
 import { throttle } from "../lib/throttle";
@@ -90,12 +90,13 @@ export function Reader({
 
   async function onShare() {
     const url = shareUrl(window.location.origin, text);
+    const copied = shareClipboard(window.location.origin, text);
     try {
-      await navigator.clipboard.writeText(url);
+      await navigator.clipboard.writeText(copied);
     } catch {
       try {
         const el = document.createElement("textarea");
-        el.value = url;
+        el.value = copied;
         el.setAttribute("readonly", "");
         el.style.position = "fixed";
         el.style.left = "-9999px";
@@ -216,6 +217,7 @@ export function Reader({
           <div>
             <h1
               className="reader-title"
+              lang="zh-CN"
               onMouseLeave={() => setHover(null)}
               style={{ fontFamily: FONT_STACKS[settings.fontFamily] }}
             >
@@ -310,6 +312,7 @@ export function Reader({
 
       <article
         className="article"
+        lang="zh-CN"
         onMouseLeave={() => setHover(null)}
         style={{
           fontFamily: FONT_STACKS[settings.fontFamily],

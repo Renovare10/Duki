@@ -176,7 +176,7 @@ describe("buildShelves", () => {
     const shelves = buildShelves(texts, scores, [], { ...filters, level: "just-right" });
     expect(shelves.map((s) => s.id)).toContain("story");
     expect(shelves.map((s) => s.id)).toContain("wiki");
-    expect(shelves.find((s) => s.id === "recommended")?.tags?.s).toBe("Unread");
+    expect(shelves.find((s) => s.id === "recommended")?.tags?.s).toBe("Steep");
     expect(shelves.find((s) => s.id === "gutenberg")).toBeUndefined();
   });
 });

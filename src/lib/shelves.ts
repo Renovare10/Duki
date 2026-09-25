@@ -214,6 +214,12 @@ function pickFresh(
   return pool[0]?.item ?? null;
 }
 
+function freshTag(item: ShelfItem, scores: Map<string, TextScore>): string {
+  const load = loadOf(item, scores);
+  if (load !== null && load > REC_HARD_MAX) return "Steep";
+  return "Unread";
+}
+
 export function pickRecommendedItems(
   items: ShelfItem[],
   scores: Map<string, TextScore>,
@@ -286,7 +292,7 @@ export function buildShelves(
     if (picks.easy) tags[itemId(picks.easy)] = "Easy";
     if (picks.justRight) tags[itemId(picks.justRight)] = "Just right";
     if (picks.hard) tags[itemId(picks.hard)] = "Harder";
-    if (picks.fresh) tags[itemId(picks.fresh)] = "Unread";
+    if (picks.fresh) tags[itemId(picks.fresh)] = freshTag(picks.fresh, scores);
     shelves.push({ id: "recommended", title: "Recommended", items: recItems, tags });
   }
 
