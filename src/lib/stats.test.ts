@@ -1,5 +1,16 @@
 import { describe, expect, it } from "vitest";
-import { lexiconCounts, textProgress, textsByProgress, topMisses, wordsByStatus } from "./stats";
+import {
+  countUnknownBuckets,
+  isMidBandLoad,
+  lexiconCounts,
+  midBandEmpty,
+  textProgress,
+  textsByProgress,
+  topMisses,
+  unknownLoadBucketKey,
+  wordsByStatus,
+} from "./stats";
+import type { TextScore } from "../types";
 import { normalizeText } from "./text";
 import { normalizeWord } from "./word";
 
@@ -55,5 +66,70 @@ describe("wordsByStatus", () => {
     ];
     expect(wordsByStatus(words, "known").map((w) => w.hanzi)).toEqual(["我"]);
     expect(wordsByStatus(words, "unknown").map((w) => w.hanzi)).toEqual(["难"]);
+  });
+});
+
+function sc(load: number, total = 20): TextScore {
+  return {
+    total,
+    known: Math.round((1 - load) * total),
+    shaky: 0,
+    unknown: Math.round(load * total),
+    knownPct: 1 - load,
+    unknownLoad: load,
+    unique: 10,
+    uniqueUnknown: load === 0 ? 0 : 3,
+    uniqueShaky: 0,
+  };
+}
+
+describe("unknownLoadBucketKey", () => {
+  it("places loads into inventory buckets", () => {
+    expect(unknownLoadBucketKey(0)).toBe("0-5%");
+    expect(unknownLoadBucketKey(0.049)).toBe("0-5%");
+    expect(unknownLoadBucketKey(0.05)).toBe("5-10%");
+    expect(unknownLoadBucketKey(0.1)).toBe("10-15%");
+    expect(unknownLoadBucketKey(0.149)).toBe("10-15%");
+    expect(unknownLoadBucketKey(0.15)).toBe("15-20%");
+    expect(unknownLoadBucketKey(0.2)).toBe("20%+");
+  });
+});
+
+describe("isMidBandLoad / midBandEmpty", () => {
+  it("treats 5–15% as the mid-band", () => {
+    expect(isMidBandLoad(0.05)).toBe(true);
+    expect(isMidBandLoad(0.149)).toBe(true);
+    expect(isMidBandLoad(0.03)).toBe(false);
+    expect(isMidBandLoad(0.15)).toBe(false);
+  });
+
+  it("is empty only when scored texts exist but none sit mid-band", () => {
+    expect(midBandEmpty([])).toBe(false);
+    expect(midBandEmpty([sc(0, 0)])).toBe(false);
+    expect(midBandEmpty([sc(0.03), sc(0.22)])).toBe(true);
+    expect(midBandEmpty([sc(0.03), sc(0.08)])).toBe(false);
+  });
+});
+
+describe("countUnknownBuckets", () => {
+  it("tallies scored inventory and mid-band count", () => {
+    const result = countUnknownBuckets([
+      sc(0.03),
+      sc(0.08),
+      sc(0.12),
+      sc(0.18),
+      sc(0.4),
+      sc(0, 0),
+    ]);
+    expect(result.scored).toBe(5);
+    expect(result.unscored).toBe(1);
+    expect(result.midBand).toBe(2);
+    expect(result.buckets.map((b) => [b.key, b.count])).toEqual([
+      ["0-5%", 1],
+      ["5-10%", 1],
+      ["10-15%", 1],
+      ["15-20%", 1],
+      ["20%+", 1],
+    ]);
   });
 });
