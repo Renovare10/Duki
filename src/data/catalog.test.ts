@@ -21,7 +21,7 @@ describe("catalog", () => {
     const band = CATALOG.filter((t) => t.id.startsWith("band-"));
     expect(band.length).toBeGreaterThanOrEqual(18);
     expect(band.every((t) => t.kind === "sample")).toBe(true);
-    expect(band.every((t) => ["children", "graded", "story"].includes(t.category))).toBe(true);
+    expect(band.every((t) => ["children", "graded", "story", "science"].includes(t.category))).toBe(true);
     expect(band.every((t) => t.body.trim().length > 0 && t.blurb.length > 0)).toBe(true);
     const titles = new Set(["坐火车", "河边的灯", "一只袜子"]);
     expect(band.some((t) => titles.has(t.title))).toBe(false);
