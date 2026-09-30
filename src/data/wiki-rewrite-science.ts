@@ -81,5 +81,81 @@ export const WIKI_REWRITE_SCIENCE: LibraryText[] = [
 
 眼睛闭着，你还能听见很多。声音告诉我们旁边有什么。
 `,
+  }),  entry({
+    id: "wr-sci-moon",
+    category: "science",
+    createdAt: 914,
+    title: "月亮为什么会变",
+    blurb: "The Moon stays the same; sunlight shows us more or less of it.",
+    wikiTitle: "月球",
+    source: cite("月球"),
+    sourceUrl: wikiUrl("月球"),
+    body: `我们看见的月亮，其实是太阳照到它。月亮自己不亮。
+
+月亮绕着我们走。有的时候我们看见很多亮的地方，它就很圆。
+
+有的时候只看见很少，它看起来细。它没有真的变小。
+
+这个星期我常看。昨天和今天可以不一样。
+
+以前的人也看。现在我们知道为什么，觉得更有意思。
+`,
+  }),  entry({
+    id: "wr-sci-water",
+    category: "science",
+    createdAt: 915,
+    title: "水一直在路上",
+    blurb: "Water changes place and form — river, cloud, rain — again and again.",
+    wikiTitle: "水循环",
+    source: cite("水循环"),
+    sourceUrl: wikiUrl("水循环"),
+    body: `水不会真的没有。水只是换地方，也换样子。
+
+太阳很热。河里的水往高处去。高处冷了，水又下来，成为下雨或者雪。
+
+落到地里的，有的进河。花和树也会用。
+
+人用完以后，很多还可以再回来。
+
+认识水的路，我们就更知道为什么要爱护干净的水。
+`,
+  }),  entry({
+    id: "wr-sci-cloud",
+    category: "science",
+    createdAt: 916,
+    title: "天上的云",
+    blurb: "Tiny water in the sky that gathers, drifts, and sometimes falls.",
+    wikiTitle: "云",
+    source: cite("云"),
+    sourceUrl: wikiUrl("云"),
+    body: `抬头看，天上常有云。云有白的，也有灰的。
+
+云是很小的水在一起。风来了，云会走。
+
+云很重的时候，可能会下雨。云不高的时候，也可能有雾。
+
+我喜欢看云。有的像动物，有的像船。
+
+认识云，能帮助我们知道天气可能怎么样。
+`,
+  }),  entry({
+    id: "wr-sci-earthquake",
+    category: "science",
+    createdAt: 917,
+    title: "地为什么会动",
+    blurb: "The ground can shake; stay calm, protect your head, move to safety.",
+    wikiTitle: "地震",
+    source: cite("地震"),
+    sourceUrl: wikiUrl("地震"),
+    body: `有的时候，地会突然动。桌子上的东西也可能动。人叫这地震。
+
+地动的时候，人要安静，先保护头。能离开房间就离开。
+
+老师告诉我们：不要用电梯。要听大人的话。
+
+过后，大家互相帮助。关心邻居也很重要。
+
+认识这些，不是为了害怕，是为了更安全。
+`,
   }),
 ];
