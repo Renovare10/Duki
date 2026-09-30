@@ -96,7 +96,7 @@ describe("unknownLoadBucketKey", () => {
 });
 
 describe("isMidBandLoad / midBandEmpty", () => {
-  it("treats 5–15% as the mid-band", () => {
+  it("treats 515% as the mid-band", () => {
     expect(isMidBandLoad(0.05)).toBe(true);
     expect(isMidBandLoad(0.149)).toBe(true);
     expect(isMidBandLoad(0.03)).toBe(false);

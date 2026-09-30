@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type { LibraryText, ReadingSession, TextCategory, TextScore } from "../types";
 import { coveragePercents, fitLabel } from "../lib/score";
+import { midBandEmpty } from "../lib/stats";
 import {
   buildShelves,
   type CategoryFilter,
@@ -120,6 +121,10 @@ export function Home({
     [texts, scores, sessions, level, read, category, query],
   );
 
+  const noMidBand = useMemo(() => midBandEmpty(scores.values()), [scores]);
+  const showMidEmpty =
+    !openShelf && !query.trim() && noMidBand && (level === "all" || level === "just-right");
+
   const active = openShelf
     ? buildShelves(texts, scores, sessions, { ...filters, category: "all" }).find(
         (s) => s.id === openShelf,
@@ -130,14 +135,14 @@ export function Home({
     <div className="home">
       <div className="home-hero-copy">
         <h1>Read Chinese stories at your level.</h1>
-        <p>Tap a word if you need it. Keep going if you don’t.</p>
+        <p>Tap a word if you need it. Keep going if you dont.</p>
       </div>
 
       <div className="home-controls">
         <input
           type="search"
           className="home-search"
-          placeholder="Search titles, Wikipedia, Wikisource…"
+          placeholder="Search titles, Wikipedia, Wikisource"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           aria-label="Search the library"
@@ -191,7 +196,7 @@ export function Home({
       {active ? (
         <section>
           <button type="button" className="ghost shelf-back" onClick={() => onOpenShelf(null)}>
-            ← Back
+             Back
           </button>
           <h2 className="shelf-title">{active.title}</h2>
           <div className="shelf-grid">
@@ -214,8 +219,29 @@ export function Home({
         </section>
       ) : (
         <>
-          {shelves.length === 0 ? (
-            <p className="fine-print">Nothing in this filter. Try All levels, or add your own text.</p>
+          {showMidEmpty ? (
+            <div className="empty-card" role="status">
+              <p>
+                No stories left in your ~515% unknown band. That is the sweet spot for learning new
+                words without hitting a wall.
+              </p>
+              <p>
+                Try Easy or Harder filters, keep reading so your lexicon shifts, or add a text you
+                already own.
+              </p>
+              <p>
+                <button type="button" className="ghost" onClick={onAddText}>
+                  Add your own
+                </button>
+              </p>
+            </div>
+          ) : null}
+          {shelves.length === 0 && !showMidEmpty ? (
+            <p className="fine-print">
+              {level === "just-right"
+                ? "Nothing in the just-right (~510% unknown) band for this filter. Try All levels, Easy, or Harder  or add your own text."
+                : "Nothing in this filter. Try All levels, or add your own text."}
+            </p>
           ) : null}
           {shelves.map((shelf) => (
             <Carousel
@@ -415,7 +441,7 @@ export function TitleCard({
         <div className="title-copy">
           <div className="title-card-name">{text.title}</div>
           {text.blurb ? <p className="title-blurb">{text.blurb}</p> : null}
-          {loading ? <p className="title-blurb">Scoring…</p> : null}
+          {loading ? <p className="title-blurb">Scoring</p> : null}
           {error ? <p className="wiki-error">{error}</p> : null}
         </div>
       </button>
@@ -478,7 +504,7 @@ function CardMeta({
       {label !== "unscored" ? (
         <span className={`badge ${label}`}>{DIFFICULTY[label]}</span>
       ) : loading ? (
-        <span className="badge new">Scoring…</span>
+        <span className="badge new">Scoring</span>
       ) : stub ? (
         <button type="button" className="badge new" onClick={(e) => onUnscored?.(e)}>
           Unscored
@@ -487,7 +513,7 @@ function CardMeta({
       <span className="cat-tag">{categoryLabel(text.category)}</span>
       {score && score.total > 0 ? <span>{score.uniqueUnknown} new</span> : null}
       {pct && score && score.total > 0 ? <span>{pct.unknown}% unknown</span> : null}
-      {progress != null && !text.readAt ? <span>Resume · {progress}%</span> : null}
+      {progress != null && !text.readAt ? <span>Resume  {progress}%</span> : null}
     </div>
   );
 }
