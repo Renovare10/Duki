@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CATALOG, SAMPLES } from "./catalog";
+import { CATALOG, SAMPLES } from "./library";
 
 const NEED = ["children", "story", "science", "history", "article", "graded"] as const;
 

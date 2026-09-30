@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CATALOG } from "../data/catalog";
+import { CATALOG } from "../data/library";
 import { bookProgress, bookTitleOf, collapseTexts, continueChapter, itemId } from "./books";
 import type { LibraryText } from "../types";
 

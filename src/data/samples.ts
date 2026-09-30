@@ -1,1 +1,1 @@
-export { CATALOG, SAMPLES } from "./catalog";
+export { CATALOG, SAMPLES } from "./library";
