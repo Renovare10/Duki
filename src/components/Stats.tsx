@@ -51,7 +51,7 @@ export function Stats({
     return (
       <div className="shell">
         <button type="button" className="ghost shelf-back" onClick={() => setPanel(null)}>
-           Back
+          ← Back
         </button>
         <h1>{panel.title}</h1>
         {list.length === 0 ? (
@@ -67,7 +67,7 @@ export function Stats({
                       <span className="miss-hanzi">{word.hanzi}</span>
                       <span className="miss-gloss">
                         {gloss.pinyin}
-                        {gloss.english && gloss.english !== "" ? `  ${gloss.english}` : ""}
+                        {gloss.english && gloss.english !== "—" ? ` · ${gloss.english}` : ""}
                       </span>
                     </span>
                     <span className="miss-n">{word.status}</span>
@@ -86,7 +86,7 @@ export function Stats({
     return (
       <div className="shell">
         <button type="button" className="ghost shelf-back" onClick={() => setPanel(null)}>
-           Back
+          ← Back
         </button>
         <h1>{panel.title}</h1>
         {list.length === 0 ? (
@@ -170,12 +170,12 @@ export function Stats({
         </button>
       </div>
 
-      <h2 className="section-label">Unknown load  library</h2>
+      <h2 className="section-label">Unknown load · library</h2>
       <p className="fine-print">
-        How scored texts sit relative to your lexicon (unknown %). Mid-band learning is ~515%.
-        {unknownHist.unscored > 0 ? `  ${unknownHist.unscored} unscored` : ""}
+        How scored texts sit relative to your lexicon (unknown %). Mid-band learning is ~5–15%.
+        {unknownHist.unscored > 0 ? ` · ${unknownHist.unscored} unscored` : ""}
         {unknownHist.midBand === 0 && unknownHist.scored > 0
-          ? "  none in ~515% right now"
+          ? " · none in ~5–15% right now"
           : ""}
       </p>
       {unknownHist.scored === 0 ? (
@@ -193,15 +193,15 @@ export function Stats({
         </ul>
       )}
 
-      <h2 className="section-label">Misses  Dont know</h2>
-      <MissList words={dontKnow} field="dontKnowCount" onReviewWord={onReviewWord} empty="No Dont know taps yet." />
+      <h2 className="section-label">Misses · Don’t know</h2>
+      <MissList words={dontKnow} field="dontKnowCount" onReviewWord={onReviewWord} empty="No Don’t know taps yet." />
 
-      <h2 className="section-label">Misses  Barely</h2>
+      <h2 className="section-label">Misses · Barely</h2>
       <MissList words={barely} field="barelyCount" onReviewWord={onReviewWord} empty="No Barely taps yet." />
 
       <h2 className="section-label">Unknown load after finishing</h2>
       {loads.length === 0 ? (
-        <p className="fine-print">Finish a text with Im done to record a session.</p>
+        <p className="fine-print">Finish a text with I’m done to record a session.</p>
       ) : (
         <ul className="session-list">
           {loads.map((row) => (
@@ -239,7 +239,7 @@ function MissList({
         <li key={word.hanzi}>
           <button type="button" className="miss-btn" onClick={() => onReviewWord(word.hanzi)}>
             <span className="miss-hanzi">{word.hanzi}</span>
-            <span className="miss-n">{word[field]}</span>
+            <span className="miss-n">{word[field]}×</span>
           </button>
         </li>
       ))}
