@@ -1,4 +1,5 @@
-import type { LibraryText, ReadingSession, WordRecord } from "../types";
+import type { LibraryText, ReadingSession, TextScore, WordRecord } from "../types";
+import { isScored } from "./score";
 
 export function wordsByStatus(
   words: Iterable<WordRecord>,
@@ -82,4 +83,76 @@ export function recentSessionLoads(
       remaining: s.uniqueUnknown + s.uniqueShaky,
       finishedAt: s.finishedAt,
     }));
+}
+
+/** Learner mid-band (~Just right through soft Harder): empty-state watches this. */
+export const MID_BAND_LO = 0.05;
+export const MID_BAND_HI = 0.15;
+
+export type UnknownBucket = {
+  key: string;
+  label: string;
+  lo: number;
+  hi: number;
+};
+
+/** Inventory buckets for Stats: how scored texts sit vs the learner's unknown-%. */
+export const UNKNOWN_BUCKETS: UnknownBucket[] = [
+  { key: "0-5%", label: "0–5% · easy", lo: 0, hi: 0.05 },
+  { key: "5-10%", label: "5–10% · just right", lo: 0.05, hi: 0.1 },
+  { key: "10-15%", label: "10–15%", lo: 0.1, hi: 0.15 },
+  { key: "15-20%", label: "15–20% · harder", lo: 0.15, hi: 0.2 },
+  { key: "20%+", label: "20%+ · steep", lo: 0.2, hi: Number.POSITIVE_INFINITY },
+];
+
+export function unknownLoadBucketKey(load: number): string {
+  for (const b of UNKNOWN_BUCKETS) {
+    if (load >= b.lo && load < b.hi) return b.key;
+  }
+  return "20%+";
+}
+
+export function isMidBandLoad(load: number): boolean {
+  return load >= MID_BAND_LO && load < MID_BAND_HI;
+}
+
+export type UnknownBucketCount = {
+  key: string;
+  label: string;
+  count: number;
+};
+
+export function countUnknownBuckets(
+  scores: Iterable<TextScore>,
+): { buckets: UnknownBucketCount[]; scored: number; unscored: number; midBand: number } {
+  const tallies = new Map<string, number>(UNKNOWN_BUCKETS.map((b) => [b.key, 0]));
+  let scored = 0;
+  let unscored = 0;
+  let midBand = 0;
+  for (const score of scores) {
+    if (!isScored(score)) {
+      unscored += 1;
+      continue;
+    }
+    scored += 1;
+    const key = unknownLoadBucketKey(score.unknownLoad);
+    tallies.set(key, (tallies.get(key) ?? 0) + 1);
+    if (isMidBandLoad(score.unknownLoad)) midBand += 1;
+  }
+  return {
+    buckets: UNKNOWN_BUCKETS.map((b) => ({
+      key: b.key,
+      label: b.label,
+      count: tallies.get(b.key) ?? 0,
+    })),
+    scored,
+    unscored,
+    midBand,
+  };
+}
+
+/** True when the learner has scored texts but none in the ~5–15% unknown band. */
+export function midBandEmpty(scores: Iterable<TextScore>): boolean {
+  const { scored, midBand } = countUnknownBuckets(scores);
+  return scored > 0 && midBand === 0;
 }
