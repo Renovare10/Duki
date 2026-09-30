@@ -135,14 +135,14 @@ export function Home({
     <div className="home">
       <div className="home-hero-copy">
         <h1>Read Chinese stories at your level.</h1>
-        <p>Tap a word if you need it. Keep going if you don\u2019t.</p>
+        <p>Tap a word if you need it. Keep going if you need it. Keep going if you don’t.</p>
       </div>
 
       <div className="home-controls">
         <input
           type="search"
           className="home-search"
-          placeholder="Search titles, Wikipedia, Wikisource\u2026"
+          placeholder="Search titles, Wikipedia, Wikisource…"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           aria-label="Search the library"
@@ -196,7 +196,7 @@ export function Home({
       {active ? (
         <section>
           <button type="button" className="ghost shelf-back" onClick={() => onOpenShelf(null)}>
-            \u2190 Back
+            ← Back
           </button>
           <h2 className="shelf-title">{active.title}</h2>
           <div className="shelf-grid">
@@ -222,7 +222,7 @@ export function Home({
           {showMidEmpty ? (
             <div className="empty-card" role="status">
               <p>
-                No stories left in your ~5\u201315% unknown band. That is the sweet spot for learning new
+                No stories left in your ~5–15% unknown band. That is the sweet spot for learning new
                 words without hitting a wall.
               </p>
               <p>
@@ -239,7 +239,7 @@ export function Home({
           {shelves.length === 0 && !showMidEmpty ? (
             <p className="fine-print">
               {level === "just-right"
-                ? "Nothing in the just-right (~5\u201310% unknown) band for this filter. Try All levels, Easy, or Harder \u2014 or add your own text."
+                ? "Nothing in the just-right (~5–10% unknown) band for this filter. Try All levels, Easy, or Harder — or add your own text."
                 : "Nothing in this filter. Try All levels, or add your own text."}
             </p>
           ) : null}
@@ -441,7 +441,7 @@ export function TitleCard({
         <div className="title-copy">
           <div className="title-card-name">{text.title}</div>
           {text.blurb ? <p className="title-blurb">{text.blurb}</p> : null}
-          {loading ? <p className="title-blurb">Scoring\u2026</p> : null}
+          {loading ? <p className="title-blurb">Scoring…</p> : null}
           {error ? <p className="wiki-error">{error}</p> : null}
         </div>
       </button>
@@ -504,7 +504,7 @@ function CardMeta({
       {label !== "unscored" ? (
         <span className={`badge ${label}`}>{DIFFICULTY[label]}</span>
       ) : loading ? (
-        <span className="badge new">Scoring\u2026</span>
+        <span className="badge new">Scoring…</span>
       ) : stub ? (
         <button type="button" className="badge new" onClick={(e) => onUnscored?.(e)}>
           Unscored
@@ -513,7 +513,7 @@ function CardMeta({
       <span className="cat-tag">{categoryLabel(text.category)}</span>
       {score && score.total > 0 ? <span>{score.uniqueUnknown} new</span> : null}
       {pct && score && score.total > 0 ? <span>{pct.unknown}% unknown</span> : null}
-      {progress != null && !text.readAt ? <span>Resume \u00b7 {progress}%</span> : null}
+      {progress != null && !text.readAt ? <span>Resume · {progress}%</span> : null}
     </div>
   );
 }
