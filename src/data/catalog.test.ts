@@ -47,4 +47,22 @@ describe("catalog", () => {
       true,
     );
   });
+
+  it("adds wiki-rewrite originals for animals and science", () => {
+    const wr = CATALOG.filter((t) => t.id.startsWith("wr-"));
+    expect(wr.length).toBeGreaterThanOrEqual(16);
+    expect(wr.every((t) => t.kind === "sample")).toBe(true);
+    expect(wr.every((t) => t.category === "science")).toBe(true);
+    expect(wr.every((t) => t.body.trim().length > 0 && t.blurb.length > 0)).toBe(true);
+    expect(wr.every((t) => /CC BY-SA/i.test(t.source || ""))).toBe(true);
+    expect(wr.every((t) => Boolean(t.sourceUrl?.includes("wikipedia.org")))).toBe(true);
+    expect(wr.some((t) => t.id.startsWith("wr-animal-"))).toBe(true);
+    expect(wr.some((t) => t.id.startsWith("wr-sci-"))).toBe(true);
+    for (const text of wr) {
+      const han = (text.body.match(/[\u3400-\u9fff]/g) || []).length;
+      expect(han).toBeGreaterThanOrEqual(80);
+      expect(han).toBeLessThanOrEqual(220);
+    }
+  });
+
 });

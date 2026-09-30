@@ -35,3 +35,15 @@ Open http://localhost:5173
 Live: https://duki.chadmurchison.com (guest / this-browser storage).
 
 Glosses are derived from [CC-CEDICT](https://www.mdbg.net/chinese/dictionary?page=cc-cedict) (CC BY-SA 4.0).
+
+## Offline wiki rewrites (static catalog)
+
+Animal/science mid-band shorts live in `src/data/wiki-rewrites.ts` (original Mandarin; Wikipedia CC BY-SA topic cited in `source`). Generation is **offline only** — not wired into the app or lambdas ($0 runtime LLM).
+
+```bash
+node scripts/wiki-rewrite-offline.mjs --list-defaults
+node scripts/wiki-rewrite-offline.mjs --topics 猫,雨 --fetch --out /tmp/wiki-scaffold.json
+# author original Mandarin bodies, then merge into src/data/wiki-rewrites.ts
+node scripts/wiki-rewrite-offline.mjs --score /tmp/wiki-drafts.json
+node scripts/catalog-unknown-histogram.mjs
+```
