@@ -108,12 +108,17 @@ function loadOwnedTexts() {
   const ownedMatch = src.match(/const OWNED: LibraryText\[] = \[([\s\S]*?)\];\s*\n\s*export const CATALOG/);
   if (!ownedMatch) throw new Error("Could not find OWNED array in catalog.ts");
   const texts = extractEntries(ownedMatch[1]);
-  const ladderPath = path.join(root, "src/data/band-ladder.ts");
-  if (fs.existsSync(ladderPath)) {
-    const ladder = fs.readFileSync(ladderPath, "utf8");
-    const ladderMatch = ladder.match(/export const BAND_LADDER: LibraryText\[] = \[([\s\S]*?)\];\s*$/m)
-      || ladder.match(/export const BAND_LADDER[^=]*= \[([\s\S]*?)\];/);
-    if (ladderMatch) texts.push(...extractEntries(ladderMatch[1]));
+  const packFiles = [
+    ["src/data/band-ladder.ts", /export const BAND_LADDER: LibraryText\[] = \[([\s\S]*?)\];\s*$/m, /export const BAND_LADDER[^=]*= \[([\s\S]*?)\];/],
+    ["src/data/wiki-rewrite-animals.ts", /export const WIKI_REWRITE_ANIMALS: LibraryText\[] = \[([\s\S]*?)\];\s*$/m, /export const WIKI_REWRITE_ANIMALS[^=]*= \[([\s\S]*?)\];/],
+    ["src/data/wiki-rewrite-science.ts", /export const WIKI_REWRITE_SCIENCE: LibraryText\[] = \[([\s\S]*?)\];\s*$/m, /export const WIKI_REWRITE_SCIENCE[^=]*= \[([\s\S]*?)\];/],
+  ];
+  for (const [rel, re1, re2] of packFiles) {
+    const packPath = path.join(root, rel);
+    if (!fs.existsSync(packPath)) continue;
+    const pack = fs.readFileSync(packPath, "utf8");
+    const packMatch = pack.match(re1) || pack.match(re2);
+    if (packMatch) texts.push(...extractEntries(packMatch[1]));
   }
   return texts;
 }
