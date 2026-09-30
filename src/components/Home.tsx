@@ -135,7 +135,7 @@ export function Home({
     <div className="home">
       <div className="home-hero-copy">
         <h1>Read Chinese stories at your level.</h1>
-        <p>Tap a word if you need it. Keep going if you need it. Keep going if you don’t.</p>
+        <p>Tap a word if you need it. Keep going if you don’t.</p>
       </div>
 
       <div className="home-controls">
