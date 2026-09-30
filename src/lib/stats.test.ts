@@ -17,10 +17,10 @@ import { normalizeWord } from "./word";
 describe("lexiconCounts", () => {
   it("counts unique words by status", () => {
     const words = [
-      normalizeWord({ hanzi: "我", status: "known" }),
-      normalizeWord({ hanzi: "你", status: "known" }),
-      normalizeWord({ hanzi: "他", status: "shaky" }),
-      normalizeWord({ hanzi: "她", status: "unknown" }),
+      normalizeWord({ hanzi: "\u6211", status: "known" }),
+      normalizeWord({ hanzi: "\u4f60", status: "known" }),
+      normalizeWord({ hanzi: "\u4ed6", status: "shaky" }),
+      normalizeWord({ hanzi: "\u5979", status: "unknown" }),
     ];
     expect(lexiconCounts(words)).toEqual({ known: 2, shaky: 1, unknown: 1 });
   });
@@ -29,27 +29,27 @@ describe("lexiconCounts", () => {
 describe("topMisses", () => {
   it("orders by the requested count", () => {
     const words = [
-      normalizeWord({ hanzi: "难", status: "unknown", dontKnowCount: 5 }),
-      normalizeWord({ hanzi: "易", status: "shaky", dontKnowCount: 1, barelyCount: 8 }),
-      normalizeWord({ hanzi: "好", status: "known", okayCount: 4 }),
+      normalizeWord({ hanzi: "\u96be", status: "unknown", dontKnowCount: 5 }),
+      normalizeWord({ hanzi: "\u6613", status: "shaky", dontKnowCount: 1, barelyCount: 8 }),
+      normalizeWord({ hanzi: "\u597d", status: "known", okayCount: 4 }),
     ];
-    expect(topMisses(words, "dontKnowCount", 2).map((w) => w.hanzi)).toEqual(["难", "易"]);
-    expect(topMisses(words, "barelyCount", 2).map((w) => w.hanzi)).toEqual(["易"]);
+    expect(topMisses(words, "dontKnowCount", 2).map((w) => w.hanzi)).toEqual(["\u96be", "\u6613"]);
+    expect(topMisses(words, "barelyCount", 2).map((w) => w.hanzi)).toEqual(["\u6613"]);
   });
 });
 
 describe("textProgress", () => {
   it("separates read, in-progress, and untouched", () => {
     const texts = [
-      normalizeText({ id: "a", body: "一", readAt: 1, createdAt: 1 }),
+      normalizeText({ id: "a", body: "\u4e00", readAt: 1, createdAt: 1 }),
       normalizeText({
         id: "b",
-        body: "二",
+        body: "\u4e8c",
         readAt: null,
         bookmark: { tokenIndex: 4, scrollY: 200 },
         createdAt: 2,
       }),
-      normalizeText({ id: "c", body: "三", createdAt: 3 }),
+      normalizeText({ id: "c", body: "\u4e09", createdAt: 3 }),
     ];
     expect(textProgress(texts)).toEqual({ finished: 1, inProgress: 1, untouched: 1 });
     expect(textsByProgress(texts, "finished").map((t) => t.id)).toEqual(["a"]);
@@ -61,11 +61,11 @@ describe("textProgress", () => {
 describe("wordsByStatus", () => {
   it("lists lexicon words of one status", () => {
     const words = [
-      normalizeWord({ hanzi: "我", status: "known", okayCount: 1 }),
-      normalizeWord({ hanzi: "难", status: "unknown", dontKnowCount: 2 }),
+      normalizeWord({ hanzi: "\u6211", status: "known", okayCount: 1 }),
+      normalizeWord({ hanzi: "\u96be", status: "unknown", dontKnowCount: 2 }),
     ];
-    expect(wordsByStatus(words, "known").map((w) => w.hanzi)).toEqual(["我"]);
-    expect(wordsByStatus(words, "unknown").map((w) => w.hanzi)).toEqual(["难"]);
+    expect(wordsByStatus(words, "known").map((w) => w.hanzi)).toEqual(["\u6211"]);
+    expect(wordsByStatus(words, "unknown").map((w) => w.hanzi)).toEqual(["\u96be"]);
   });
 });
 
@@ -96,7 +96,7 @@ describe("unknownLoadBucketKey", () => {
 });
 
 describe("isMidBandLoad / midBandEmpty", () => {
-  it("treats 515% as the mid-band", () => {
+  it("treats 5\u201315% as the mid-band", () => {
     expect(isMidBandLoad(0.05)).toBe(true);
     expect(isMidBandLoad(0.149)).toBe(true);
     expect(isMidBandLoad(0.03)).toBe(false);
