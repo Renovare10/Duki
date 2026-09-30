@@ -100,5 +100,100 @@ export const WIKI_REWRITE_ANIMALS: LibraryText[] = [
 
 鱼需要干净的水。水不好，鱼也就不高兴。
 `,
+  }),  entry({
+    id: "wr-animal-rabbit",
+    category: "science",
+    createdAt: 905,
+    title: "长耳朵的兔子",
+    blurb: "Long ears, quick steps, and careful little garden guests.",
+    wikiTitle: "兔",
+    source: cite("兔"),
+    sourceUrl: wikiUrl("兔"),
+    body: `兔子的耳朵很长。它听声音很清楚。
+
+它喜欢吃草和菜。它的牙一直在长，所以要吃东西。
+
+兔子走路很快。害怕的时候，它会马上离开。
+
+有的人家有兔子。要给它干净的地方，也要给它水。
+
+我看见兔子，觉得它很小心。小动物也有办法。
+`,
+  }),  entry({
+    id: "wr-animal-bee",
+    category: "science",
+    createdAt: 906,
+    title: "花上的蜜蜂",
+    blurb: "Bees visit flowers and help fruit grow — watch from farther away.",
+    wikiTitle: "蜜蜂",
+    source: cite("蜜蜂"),
+    sourceUrl: wikiUrl("蜜蜂"),
+    body: `花园里有花。有很小的动物在花上忙。那是蜜蜂。
+
+蜜蜂找甜的东西。腿上有黄色。花给了它这些。
+
+它回自己的家。以后可以做成甜的吃的。
+
+这种小动物帮助花。没有它，有的水果会长得慢。
+
+看见它，我站远一些。它在工作，我们别去找它。
+`,
+  }),  entry({
+    id: "wr-animal-horse",
+    category: "science",
+    createdAt: 907,
+    title: "会跑的马",
+    blurb: "Long legs, fast runs, and practice that should stay slow at first.",
+    wikiTitle: "马",
+    source: cite("马"),
+    sourceUrl: wikiUrl("马"),
+    body: `马很高，腿也很长。马跑步又快又好。
+
+以前人常常骑马去很远的地方。马也帮助人带东西。
+
+马吃草。马的眼睛在两边，可以看很大的地方。
+
+现在很多人还喜欢看马，或者学骑马。开始要慢，别害怕。
+
+马和人可以做朋友。对马好，马也会听你的话。
+`,
+  }),  entry({
+    id: "wr-animal-dolphin",
+    category: "science",
+    createdAt: 908,
+    title: "聪明的海豚",
+    blurb: "Smart swimmers that breathe air and like company.",
+    wikiTitle: "海豚",
+    source: cite("海豚"),
+    sourceUrl: wikiUrl("海豚"),
+    body: `有一种动物在很远的水里。人叫它海豚。
+
+海豚不是鱼。它要到上面呼吸。它游泳很快，也喜欢一起玩。
+
+它很聪明。人教以后，它会做简单的动作。
+
+我在电视上看过它。它很高，大家都很高兴。
+
+它也需要干净的水。我们要关心水里的动物。
+`,
+  }),  entry({
+    id: "wr-animal-penguin",
+    category: "science",
+    createdAt: 909,
+    title: "冷地方的企鹅",
+    blurb: "Birds that swim better than they walk, living where it is very cold.",
+    wikiTitle: "企鹅",
+    source: cite("企鹅"),
+    sourceUrl: wikiUrl("企鹅"),
+    body: `有一种鸟住在很冷的地方。人叫它企鹅。
+
+企鹅不太会到天上去。它更会游泳。很多企鹅站在一起，会更暖和。
+
+它走路比较慢。进到水里，就快多了。
+
+企鹅爸爸给孩子东西吃。孩子在一个地方等。
+
+企鹅很可爱。认识它，也是认识动物。
+`,
   }),
 ];
