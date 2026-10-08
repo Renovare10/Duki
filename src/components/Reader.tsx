@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type {
   Bookmark,
   Gloss,
@@ -17,6 +17,8 @@ import { tokensInRange } from "../lib/speech";
 import { throttle } from "../lib/throttle";
 import { wordTint, type WordTint } from "../lib/tint";
 import { VoicePlayer } from "./VoicePlayer";
+import { useScrollHide } from "./useScrollHide";
+import { SCROLL_HIDE_MEDIA } from "../lib/scroll-hide";
 
 type Props = {
   text: LibraryText;
@@ -172,6 +174,19 @@ export function Reader({
     };
   }, [text.id]);
 
+  // Mobile/touch: reading forward tucks the word sheet away; scrolling back up
+  // or tapping a word brings it back. Called after the bookmark-restore effect
+  // so the restore scroll is anchored, not counted as reading.
+  const sheet = useScrollHide({ media: SCROLL_HIDE_MEDIA, resetKey: text.id });
+  const revealSheet = sheet.reveal;
+  const selectWord = useCallback(
+    (sel: Sel) => {
+      setSelected(sel);
+      revealSheet();
+    },
+    [revealSheet],
+  );
+
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
       if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) {
@@ -226,7 +241,7 @@ export function Reader({
                   words,
                   selected,
                   resumeIndex: null,
-                  setSelected,
+                  setSelected: selectWord,
                   setHover,
                   speaking: null,
                 }),
@@ -324,14 +339,20 @@ export function Reader({
             words,
             selected,
             resumeIndex,
-            setSelected,
+            setSelected: selectWord,
             setHover,
             speaking: speakingTokens,
           }),
         )}
       </article>
 
-      <div className="dock" role="region" aria-label="Word status">
+      <div
+        className={`dock${sheet.hidden ? " dock-hidden" : ""}`}
+        role="region"
+        aria-label="Word status"
+        aria-hidden={sheet.hidden || undefined}
+        inert={sheet.hidden}
+      >
         {selectedToken?.isWord && selectedGloss && selectedTint ? (
           <>
             <div className="dock-word">{selectedToken.text}</div>
