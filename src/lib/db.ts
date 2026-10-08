@@ -3,15 +3,19 @@ import type {
   LibraryText,
   ReaderSettings,
   ReadingSession,
+  WordEvent,
   WordRecord,
 } from "../types";
+import { normalizeEvent } from "./history";
 import { normalizeText } from "./text";
 import { normalizeWord } from "./word";
 
 const DB_NAME = "duki";
-export const DB_VERSION = 5;
+export const DB_VERSION = 6;
 
 const STORES = ["words", "texts", "sessions", "settings"] as const;
+/** v6: append-only word history for Stats. Kept out of STORES so sync/import paths are unchanged. */
+const EVENTS = "events";
 
 export const DEFAULT_SETTINGS: ReaderSettings = {
   fontFamily: "serif",
@@ -37,6 +41,9 @@ function openDb(): Promise<IDBDatabase> {
       }
       if (!db.objectStoreNames.contains("settings")) {
         db.createObjectStore("settings", { keyPath: "key" });
+      }
+      if (!db.objectStoreNames.contains(EVENTS)) {
+        db.createObjectStore(EVENTS, { keyPath: "id" });
       }
       if (event.oldVersion < 2) {
         migrateStore(tx.objectStore("words"), (value) => {
@@ -92,9 +99,10 @@ export async function loadAll(): Promise<{
   texts: LibraryText[];
   sessions: ReadingSession[];
   settings: ReaderSettings;
+  events: WordEvent[];
 }> {
   const db = await openDb();
-  const tx = db.transaction([...STORES], "readonly");
+  const tx = db.transaction([...STORES, EVENTS], "readonly");
   const wordsRaw = await reqToPromise(
     tx.objectStore("words").getAll() as IDBRequest<WordRecord[]>,
   );
@@ -107,6 +115,9 @@ export async function loadAll(): Promise<{
   const settingsRow = await reqToPromise(
     tx.objectStore("settings").get("reader") as IDBRequest<{ key: string } & ReaderSettings | undefined>,
   );
+  const eventsRaw = await reqToPromise(
+    tx.objectStore(EVENTS).getAll() as IDBRequest<unknown[]>,
+  );
   await txDone(tx);
   db.close();
   return {
@@ -114,6 +125,10 @@ export async function loadAll(): Promise<{
     texts: textsRaw.map((t) => normalizeText(t)),
     sessions: (sessionsRaw || []).filter((s) => s?.id && s.textId),
     settings: normalizeSettings(settingsRow),
+    events: (eventsRaw || [])
+      .map((e) => normalizeEvent(e))
+      .filter((e): e is WordEvent => e !== null)
+      .sort((a, b) => a.at - b.at),
   };
 }
 
@@ -134,6 +149,15 @@ export async function putWord(record: WordRecord): Promise<void> {
   const db = await openDb();
   const tx = db.transaction("words", "readwrite");
   tx.objectStore("words").put(normalizeWord(record));
+  await txDone(tx);
+  db.close();
+}
+
+/** Append one Stats history row. Never synced; safe to lose. */
+export async function putEvent(event: WordEvent): Promise<void> {
+  const db = await openDb();
+  const tx = db.transaction(EVENTS, "readwrite");
+  tx.objectStore(EVENTS).put(event);
   await txDone(tx);
   db.close();
 }
@@ -220,6 +244,7 @@ export async function importBackup(
   texts: LibraryText[];
   sessions: ReadingSession[];
   settings: ReaderSettings;
+  events: WordEvent[];
 }> {
   const db = await openDb();
   const tx = db.transaction([...STORES], "readwrite");

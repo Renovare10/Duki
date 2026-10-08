@@ -1,6 +1,21 @@
 import { describe, expect, it } from "vitest";
 import {
+  activityByDay,
+  activityStreaks,
+  addDays,
+  cardStateCounts,
   countUnknownBuckets,
+  dayKey,
+  firstActivityAt,
+  hardestWords,
+  intervalDistribution,
+  learningTransitions,
+  progressSeries,
+  rangeStart,
+  reviewDays,
+  reviewForecast,
+  startOfDay,
+  summarizePeriod,
   isMidBandLoad,
   lexiconCounts,
   midBandEmpty,
@@ -10,7 +25,7 @@ import {
   unknownLoadBucketKey,
   wordsByStatus,
 } from "./stats";
-import type { TextScore } from "../types";
+import type { ReadingSession, TextScore, WordEvent, WordStatus } from "../types";
 import { normalizeText } from "./text";
 import { normalizeWord } from "./word";
 
@@ -130,6 +145,221 @@ describe("countUnknownBuckets", () => {
       ["10-15%", 1],
       ["15-20%", 1],
       ["20%+", 1],
+    ]);
+  });
+});
+
+// ---- Progress over time ----
+
+const NOW = new Date(2026, 9, 7, 15, 0, 0).getTime(); // Oct 7 2026, 3pm local
+const day = (offset: number, hour = 10) => addDays(startOfDay(NOW), offset) + hour * 3600_000;
+let seq = 0;
+function ev(
+  hanzi: string,
+  at: number,
+  prevStatus: WordStatus | null,
+  status: WordStatus,
+  source: WordEvent["source"] = "read",
+  grade?: WordEvent["grade"],
+): WordEvent {
+  return {
+    id: `e${seq++}`,
+    hanzi,
+    at,
+    source,
+    grade,
+    prevStatus,
+    status,
+    prevIntervalDays: 0,
+    intervalDays: 0,
+  };
+}
+
+describe("learningTransitions", () => {
+  it("marks seen, first learned, forgotten, and relearned", () => {
+    const events = [
+      ev("猫", day(-5), null, "unknown"),
+      ev("猫", day(-4), "unknown", "shaky", "review", "hard"),
+      ev("猫", day(-3), "shaky", "known", "review", "good"),
+      ev("猫", day(-2), "known", "shaky", "review", "hard"),
+      ev("猫", day(-1), "shaky", "unknown", "review", "again"),
+      ev("猫", day(0), "unknown", "known", "review", "good"),
+    ];
+    expect(learningTransitions(events).map((t) => t.kind)).toEqual([
+      "seen",
+      "learned",
+      "forgotten",
+      "relearned",
+    ]);
+  });
+
+  it("treats words already known before history as baseline, not learned", () => {
+    const events = [
+      ev("狗", day(-2), "known", "known"),
+      ev("狗", day(-1), "known", "unknown", "review", "again"),
+      ev("狗", day(0), "unknown", "known", "review", "good"),
+    ];
+    expect(learningTransitions(events).map((t) => t.kind)).toEqual(["forgotten", "relearned"]);
+  });
+
+  it("does not double count repeated Okay taps", () => {
+    const events = [
+      ev("好", day(-2), null, "known"),
+      ev("好", day(-1), "known", "known"),
+      ev("好", day(0), "known", "known"),
+    ];
+    expect(learningTransitions(events).map((t) => t.kind)).toEqual(["seen", "learned"]);
+  });
+});
+
+describe("progressSeries", () => {
+  const events = [
+    ev("一", day(-40), null, "known"), // learned before the 1-month window
+    ev("二", day(-2), null, "unknown"),
+    ev("二", day(-2, 11), "unknown", "known", "review", "good"),
+    ev("三", day(-1), null, "shaky"),
+    ev("一", day(0), "known", "unknown", "review", "again"),
+    ev("三", day(0), "shaky", "known", "review", "easy"),
+  ];
+  const words = [
+    normalizeWord({ hanzi: "一", status: "unknown" }),
+    normalizeWord({ hanzi: "二", status: "known" }),
+    normalizeWord({ hanzi: "三", status: "known" }),
+    normalizeWord({ hanzi: "四", status: "known" }), // no history: constant baseline
+  ];
+  const sessions: ReadingSession[] = [
+    { id: "s", textId: "t", finishedAt: day(-1), uniqueUnknown: 0, uniqueShaky: 0, durationMs: 600000 },
+  ];
+
+  it("buckets per day with all-time cumulative totals", () => {
+    const series = progressSeries({
+      words,
+      events,
+      sessions,
+      now: NOW,
+      from: rangeStart("1m", NOW, null),
+      granularity: "day",
+    });
+    expect(series).toHaveLength(30);
+    expect(series[29].key).toBe(dayKey(NOW));
+    const byKey = new Map(series.map((b) => [b.key, b]));
+    const d2 = byKey.get(dayKey(day(-2)))!;
+    expect(d2.seen).toBe(1);
+    expect(d2.learned).toBe(1);
+    expect(d2.reviews).toBe(1);
+    expect(d2.cumLearned).toBe(2); // 一 (before range) + 二
+    const d1 = byKey.get(dayKey(day(-1)))!;
+    expect(d1.finished).toBe(1);
+    expect(d1.minutes).toBe(10);
+    expect(d1.taps).toBe(1);
+    const today = series[29];
+    expect(today.forgotten).toBe(1);
+    expect(today.learned).toBe(1);
+    expect(today.reviews).toBe(2);
+    expect(today.again).toBe(1);
+    expect(today.retentionReviews).toBe(1);
+    expect(today.retained).toBe(0);
+    expect(today.cumLearned).toBe(3);
+    expect(today.cumForgotten).toBe(1);
+    // Lexicon over time: day -3 has 一 (known) + 四 (no history).
+    const d3 = byKey.get(dayKey(day(-3)))!;
+    expect([d3.known, d3.shaky, d3.unknown]).toEqual([2, 0, 0]);
+    expect(series[0].knownBefore).toBe(2);
+    expect(today.knownBefore).toBe(3);
+    expect([d1.known, d1.shaky, d1.unknown]).toEqual([3, 1, 0]);
+    expect([today.known, today.shaky, today.unknown, today.total]).toEqual([3, 0, 1, 4]);
+  });
+
+  it("groups by month", () => {
+    const series = progressSeries({
+      words,
+      events,
+      sessions,
+      now: NOW,
+      from: rangeStart("3m", NOW, null),
+      granularity: "month",
+    });
+    expect(series.map((b) => b.key)).toEqual(["2026-07", "2026-08", "2026-09", "2026-10"]);
+    const aug = series[1];
+    expect(aug.learned).toBe(1); // 一 on Aug 28
+    const oct = series[3];
+    expect(oct.learned).toBe(2);
+    expect(oct.forgotten).toBe(1);
+    const sum = summarizePeriod(series);
+    expect(sum.learned).toBe(3);
+    expect(sum.forgotten).toBe(1);
+    expect(sum.reviews).toBe(3);
+    expect(sum.accuracy).toBeCloseTo(2 / 3);
+    expect(sum.retention).toBe(0);
+    expect(reviewDays(events, series[0].start, series[series.length - 1].end)).toBe(2);
+  });
+
+  it("covers all history for the All range", () => {
+    const first = firstActivityAt(events, sessions)!;
+    expect(first).toBe(day(-40));
+    expect(rangeStart("all", NOW, first)).toBe(startOfDay(day(-40)));
+    expect(rangeStart("all", NOW, null)).toBe(rangeStart("1m", NOW, null));
+  });
+});
+
+describe("activityStreaks", () => {
+  it("counts the current run through yesterday and the longest run", () => {
+    const events = [-10, -9, -8, -7, -3, -2, -1].map((d) => ev("x", day(d), "known", "known"));
+    const activity = activityByDay(events, []);
+    expect(activityStreaks(activity, NOW)).toEqual({ current: 3, longest: 4, activeDays: 7 });
+  });
+
+  it("drops to zero after a missed day", () => {
+    const activity = activityByDay([ev("x", day(-2), "known", "known")], []);
+    expect(activityStreaks(activity, NOW).current).toBe(0);
+  });
+});
+
+describe("snapshot stats", () => {
+  const DAY = 86_400_000;
+  const words = [
+    normalizeWord({ hanzi: "新", status: "unknown" }),
+    normalizeWord({ hanzi: "读", status: "known" }),
+    normalizeWord({ hanzi: "学", status: "shaky", repetitions: 0, intervalDays: 1, dueAt: NOW + DAY }),
+    normalizeWord({ hanzi: "幼", status: "known", repetitions: 2, intervalDays: 6, dueAt: NOW + 3 * DAY }),
+    normalizeWord({ hanzi: "熟", status: "known", repetitions: 5, intervalDays: 40, dueAt: NOW - DAY }),
+  ];
+
+  it("splits card states", () => {
+    expect(cardStateCounts(words)).toEqual({ fresh: 1, readKnown: 1, learning: 1, young: 1, mature: 1 });
+  });
+
+  it("forecasts scheduled cards with overdue in today and unknown/shaky as queued", () => {
+    const f = reviewForecast(words, NOW, 7);
+    expect(f.days.map((d) => d.count)).toEqual([1, 0, 0, 1, 0, 0, 0]);
+    expect(f.queued).toBe(2);
+  });
+
+  it("buckets intervals for reviewed cards only", () => {
+    const dist = intervalDistribution(words);
+    expect(dist.find((b) => b.label === "1d")!.count).toBe(1);
+    expect(dist.find((b) => b.label === "2–6d")!.count).toBe(1);
+    expect(dist.find((b) => b.label === "3w–2m")!.count).toBe(1);
+    expect(dist.reduce((n, b) => n + b.count, 0)).toBe(3);
+  });
+
+  it("ranks hardest words by lapses then misses", () => {
+    const hard = hardestWords(
+      [
+        normalizeWord({ hanzi: "甲", status: "unknown", dontKnowCount: 6 }),
+        normalizeWord({ hanzi: "乙", status: "known", dontKnowCount: 2 }),
+        normalizeWord({ hanzi: "丙", status: "known" }),
+      ],
+      [
+        ev("乙", day(-3), null, "known"),
+        ev("乙", day(-2), "known", "unknown", "review", "again"),
+        ev("乙", day(-1), "unknown", "known", "review", "good"),
+        ev("乙", day(0), "known", "unknown", "review", "again"),
+      ],
+    );
+    expect(hard.map((h) => [h.hanzi, h.lapses])).toEqual([
+      ["乙", 2],
+      ["甲", 0],
     ]);
   });
 });

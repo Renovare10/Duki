@@ -15,6 +15,23 @@ export type WordRecord = {
   dueAt: number | null;
 };
 
+/**
+ * One graded interaction with a word, appended for Stats history (local IndexedDB only;
+ * not part of cloud sync or JSON backups). `source: "review"` is an SM-2 grade;
+ * `source: "read"` is a reader tap (1/2/3). `prevStatus: null` means the word was new.
+ */
+export type WordEvent = {
+  id: string;
+  hanzi: string;
+  at: number;
+  source: "review" | "read";
+  grade?: ReviewGrade;
+  prevStatus: WordStatus | null;
+  status: WordStatus;
+  prevIntervalDays: number;
+  intervalDays: number;
+};
+
 export type TextKind = "sample" | "paste" | "wiki" | "wikisource" | "gutenberg";
 
 export type TextCategory =

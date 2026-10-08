@@ -34,10 +34,12 @@ import {
   loadAll,
   parseBackup,
   putSession,
+  putEvent,
   putSettings,
   putText,
   putWord,
 } from "./lib/db";
+import { makeWordEvent } from "./lib/history";
 import { mergeSnapshots, packSnapshot, pullSnapshot, pushSnapshot } from "./lib/sync";
 import { hasWord, loadGlossary, MAX_WORD_LEN } from "./lib/glossary";
 import { MENU_ACTION_LABELS, MENU_GROUPS, type MenuActionId } from "./lib/menu";
@@ -52,6 +54,7 @@ import type {
   ReadingSession,
   ReviewGrade,
   TextScore,
+  WordEvent,
   WordRecord,
   WordStatus,
 } from "./types";
@@ -101,7 +104,7 @@ function hashToView(hash: string): View {
   if (path.startsWith("/book/")) {
     return { name: "book", id: decodeURIComponent(path.slice("/book/".length)) };
   }
-  if (path === "/stats") return { name: "stats" };
+  if (path === "/stats" || path.startsWith("/stats?")) return { name: "stats" };
   if (path === "/review") return { name: "review" };
   if (path.startsWith("/review/")) {
     return { name: "review", focus: decodeURIComponent(path.slice("/review/".length)) };
@@ -121,6 +124,7 @@ export default function App() {
   const [texts, setTexts] = useState<LibraryText[]>([]);
   const [words, setWords] = useState<Map<string, WordRecord>>(new Map());
   const [sessions, setSessions] = useState<ReadingSession[]>([]);
+  const [wordEvents, setWordEvents] = useState<WordEvent[]>([]);
   const [settings, setSettings] = useState<ReaderSettings>(DEFAULT_SETTINGS);
   const [paste, setPaste] = useState("");
   const [title, setTitle] = useState("");
@@ -363,6 +367,7 @@ export default function App() {
         );
         setWords(new Map(loaded.words.map((w) => [w.hanzi, w])));
         setSessions(loaded.sessions);
+        setWordEvents(loaded.events);
         setSettings(loaded.settings);
         setReady(true);
         void hydrateRemote(byId);
@@ -541,17 +546,29 @@ export default function App() {
     };
   }, [ready, view]);
 
+  /** Stats history: local-only, best effort — a failed write never blocks reading or review. */
+  function logWordEvent(event: WordEvent) {
+    setWordEvents((prev) => [...prev, event]);
+    void putEvent(event).catch(() => {
+      /* history is optional */
+    });
+  }
+
   async function setStatus(hanzi: string, status: WordStatus) {
-    const next = applyReadingTap(wordsRef.current.get(hanzi), hanzi, status);
-    setWords((prev) => new Map(prev).set(hanzi, next));
+    const prev = wordsRef.current.get(hanzi);
+    const next = applyReadingTap(prev, hanzi, status);
+    setWords((p) => new Map(p).set(hanzi, next));
+    logWordEvent(makeWordEvent(prev, next, "read"));
     await putWord(next);
     scheduleCloudPush();
   }
 
   async function onGrade(hanzi: string, grade: ReviewGrade) {
-    const prev = wordsRef.current.get(hanzi) ?? applyReadingTap(undefined, hanzi, "unknown");
+    const existing = wordsRef.current.get(hanzi);
+    const prev = existing ?? applyReadingTap(undefined, hanzi, "unknown");
     const next = applyReviewGrade(prev, grade);
     setWords((p) => new Map(p).set(hanzi, next));
+    logWordEvent(makeWordEvent(existing, next, "review", grade));
     await putWord(next);
     scheduleCloudPush();
   }
@@ -1051,6 +1068,7 @@ export default function App() {
           words={words}
           texts={texts}
           sessions={sessions}
+          events={wordEvents}
           scores={scores}
           onReviewWord={(hanzi) => navigate({ name: "review", focus: hanzi })}
           onOpen={(id) => void onOpen(id)}
