@@ -7,11 +7,7 @@
  * Prints distribution tables. Exits 1 when a target is missed.
  * Levels and glossary tokens use the same segmenter as the reader.
  */
-import { PACKS } from "../src/data/library/index.ts";
-import { TOPICS } from "../src/data/topics.ts";
-import { validateEntries } from "../src/lib/library-entry.ts";
 import { analyze, importTs, loadGlossary, root } from "./lib/corpus.mjs";
-import fs from "node:fs";
 import path from "node:path";
 
 const app = await importTs(`
@@ -19,6 +15,13 @@ export { CATALOG } from ${JSON.stringify(path.join(root, "src/data/library.ts"))
 export { segment } from ${JSON.stringify(path.join(root, "src/lib/segment.ts"))};
 export * as difficulty from ${JSON.stringify(path.join(root, "src/lib/difficulty.ts"))};
 `);
+
+const lib = await importTs(`
+export { PACKS } from ${JSON.stringify(path.join(root, "src/data/library/index.ts"))};
+export { TOPICS } from ${JSON.stringify(path.join(root, "src/data/topics.ts"))};
+export { validateEntries } from ${JSON.stringify(path.join(root, "src/lib/library-entry.ts"))};
+`);
+const { PACKS, TOPICS, validateEntries } = lib;
 
 const topicIds = new Set(TOPICS.map((t) => t.id));
 const entries = PACKS.flatMap((p) => p.texts);
@@ -45,7 +48,9 @@ for (const entry of entries) {
   for (const [word] of a.counts) if (!g.hasWord(word)) missing.push(word);
   if (missing.length) errors.push(`${entry.id}: not in glossary: ${missing.slice(0, 8).join("、")}`);
   if (a.level !== entry.level) errors.push(`${entry.id}: declared L${entry.level}, measured L${a.level} (${a.chars} 字)`);
-  const prevUnknown = a.level <= 1 ? 0 : 1 - (a.coverage[a.level - 2] ?? 0);
+  // L1 is all HSK 1. L2–L6 step off the list just below the level.
+  // L7+ has no list of its own: the step is the share of tokens outside HSK 1–6.
+  const prevUnknown = stepOf(a);
   byLevel.get(a.level)?.push({ id: entry.id, chars: a.chars, prevUnknown, topics: entry.topics });
 }
 
@@ -63,6 +68,13 @@ function median(nums) {
   if (!nums.length) return null;
   const s = [...nums].sort((a, b) => a - b);
   return s[Math.floor(s.length / 2)];
+}
+
+/** Share of tokens that are new at this measured level (0–1). */
+function stepOf(info) {
+  if (info.level <= 1) return 0;
+  if (info.level >= 7) return 1 - (info.coverage[5] ?? 0);
+  return 1 - (info.coverage[info.level - 2] ?? 0);
 }
 
 console.log("\nNew texts by measured level");

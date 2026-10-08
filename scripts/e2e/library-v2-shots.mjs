@@ -14,8 +14,9 @@ const ORIGIN = process.argv[2] || "http://127.0.0.1:4174";
 const OUT = process.argv[3] || "screenshots";
 fs.mkdirSync(OUT, { recursive: true });
 
-// A learner who knows HSK 1–3 (about 600 words).
-const known = [1, 2, 3].flatMap((n) => JSON.parse(fs.readFileSync(`scripts/hsk-${n}.json`, "utf8")).map((w) => w.hanzi));
+// A learner who knows HSK 1–4 plus the start of HSK 5 (about 1,500 words).
+const known = [1, 2, 3, 4].flatMap((n) => JSON.parse(fs.readFileSync(`scripts/hsk-${n}.json`, "utf8")).map((w) => w.hanzi));
+known.push(...JSON.parse(fs.readFileSync("scripts/hsk-5.json", "utf8")).slice(0, 320).map((w) => w.hanzi));
 const NOW = Date.now();
 const MIN = 60000;
 
@@ -78,6 +79,13 @@ for (const [w, h] of [[1280, 900], [390, 844]]) {
     await page.waitForSelector('[data-row="continue"]', { timeout: 30000 });
     await page.waitForTimeout(1500);
     await shot("home");
+    await page.waitForSelector('[data-row="recommended"]', { timeout: 20000 });
+    await page.$eval('[data-row="recommended"]', (el) => el.scrollIntoView({ block: "center" }));
+    await shot("recommended", { el: '[data-row="recommended"]' });
+    await page.$eval('[data-row="classics"]', (el) => el.scrollIntoView({ block: "center" }));
+    await shot("classics", { el: '[data-row="classics"]' });
+    await page.$eval('[data-row="wiki"]', (el) => el.scrollIntoView({ block: "center" }));
+    await shot("wiki", { el: '[data-row="wiki"]' });
     await page.$eval('[data-row="level-elementary"]', (el) => el.scrollIntoView({ block: "center" }));
     await shot("cards", { el: '[data-row="level-elementary"]' });
 
@@ -107,6 +115,21 @@ for (const [w, h] of [[1280, 900], [390, 844]]) {
     await page.waitForSelector(".article .word", { timeout: 20000 });
     await page.evaluate(() => window.scrollTo(0, 0));
     await shot("nahan-chapter");
+
+    await page.goto(ORIGIN + "/#/read/" + encodeURIComponent("ws-道德經"));
+    await page.waitForSelector(".article .word", { timeout: 30000 });
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await shot("classic-simplified");
+    await page.click('button:has-text("Traditional")');
+    await page.waitForTimeout(400);
+    await shot("classic-traditional");
+
+    for (const id of ["lib-p01-01-daily-life", "lib-p03-river-1", "lib-p08-01-history", "lib-p13-01-letters"]) {
+      await page.goto(ORIGIN + "/#/read/" + encodeURIComponent(id));
+      await page.waitForSelector(".article .word", { timeout: 20000 });
+      await page.evaluate(() => window.scrollTo(0, 0));
+      await shot(`text-${id}`);
+    }
     await ctx.close();
   }
 }
