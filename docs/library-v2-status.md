@@ -122,7 +122,7 @@ Headless Chrome screenshots (throwaway profile, HSK 1–4 plus the first 320 wor
 - `d619b56` — validator in `npm test`, screenshot script, content tools
 - `78c2e37` — 402 graded texts and regenerated `text-meta`
 
-The commit that adds this file is the child of `78c2e37`. Its hash is filled in by the following commit.
+Status note: `5da514963019de309348d6ce46b2f899f3ea1613` (this file, parent `78c2e37`). The tip of `library-v2` is the commit that records that hash.
 
 ## Left over
 
