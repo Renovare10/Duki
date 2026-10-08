@@ -3,7 +3,9 @@ import type { LibraryText, ReadingSession, TextCategory, TextScore, WordStatus }
 import { WORKS, workStats } from "../data/works";
 import { TOPICS, topicLabel } from "../data/topics";
 import { LEVEL_BANDS, type LevelBand } from "../lib/difficulty";
-import { buildShelves, pickRecommendedItems, type LevelFilter } from "../lib/shelves";
+import { buildShelves, daySeed, pickRecommendedItems, type LevelFilter } from "../lib/shelves";
+import { adaptTarget } from "../lib/score";
+import { hasRemoteMeta } from "../lib/remote-meta";
 import { bookProgress, collapseTexts, itemId, type Book, type ShelfItem } from "../lib/books";
 import { cardHitAction } from "../lib/card-hit";
 import { stillTeaches } from "../lib/score";
@@ -14,6 +16,7 @@ import {
   filterEntries,
   filtersActive,
   formatKnown,
+  isClassicEntry,
   LENGTHS,
   lengthLabel,
   NO_FILTERS,
@@ -185,28 +188,11 @@ export function Home({
 
   const rows = useMemo<Row[]>(() => {
     const out: Row[] = [];
-    // Continue reading: half-read texts and books, plus started works.
-    const cont: { entry: Entry; at: number }[] = [];
-    for (const e of entries) {
-      if (e.type === "text" && isContinue(e.text)) {
-        const score = scores.get(e.text.id);
-        if (score ? stillTeaches(score) || score.total === 0 : Boolean(e.text.body.trim())) {
-          cont.push({ entry: e, at: e.text.openedAt ?? 0 });
-        }
-      } else if (e.type === "book" && e.book.chapters.some((c) => isContinue(c))) {
-        cont.push({ entry: e, at: Math.max(0, ...e.book.chapters.map((c) => c.openedAt ?? 0)) });
-      } else if (e.type === "work") {
-        const w = workInfo.get(e.work.id);
-        if (w?.cont) cont.push({ entry: e, at: w.lastTouched });
-      }
-    }
-    cont.sort((a, b) => b.at - a.at);
-    if (cont.length) out.push({ id: "continue", title: "Continue reading", entries: cont.map((c) => c.entry) });
-
-    const books = entries.filter((e) => e.type === "work" || e.type === "book");
-    out.push({ id: "books", title: "Books", hint: "Long reads with chapters", entries: books });
-
-    const picks = pickRecommendedItems(collapsed, scores);
+    const recent = [...sessions].sort((a, b) => b.finishedAt - a.finishedAt).slice(0, 8);
+    const recentLoads = recent
+      .map((s) => scores.get(s.textId)?.unknownLoad)
+      .filter((n): n is number => typeof n === "number");
+    const picks = pickRecommendedItems(collapsed, scores, { seed: daySeed(new Date()), target: adaptTarget(recentLoads) });
     const tags: Record<string, string> = {};
     const recItems: ShelfItem[] = [];
     for (const [item, tag] of [
@@ -225,21 +211,40 @@ export function Home({
       out.push({ id: "recommended", title: "Recommended for you", entries: recEntries, tags });
     }
 
-    const graded = entries.filter(
-      (e) => e.type !== "work" && e.info.level !== null,
-    );
+    // Continue reading: half-read texts and books, plus started works.
+    const cont: { entry: Entry; at: number }[] = [];
+    for (const e of entries) {
+      if (e.type === "text" && isContinue(e.text)) {
+        const score = scores.get(e.text.id);
+        if (score ? stillTeaches(score) || score.total === 0 : Boolean(e.text.body.trim())) {
+          cont.push({ entry: e, at: e.text.openedAt ?? 0 });
+        }
+      } else if (e.type === "book" && e.book.chapters.some((c) => isContinue(c))) {
+        cont.push({ entry: e, at: Math.max(0, ...e.book.chapters.map((c) => c.openedAt ?? 0)) });
+      } else if (e.type === "work") {
+        const w = workInfo.get(e.work.id);
+        if (w?.cont) cont.push({ entry: e, at: w.lastTouched });
+      }
+    }
+    cont.sort((a, b) => b.at - a.at);
+    if (cont.length) out.push({ id: "continue", title: "Continue reading", entries: cont.map((c) => c.entry) });
+
+    const books = entries.filter((e) => (e.type === "work" || e.type === "book") && !isClassicEntry(e));
+    out.push({ id: "books", title: "Books", hint: "Long reads with chapters", entries: books });
+
+    const graded = entries.filter((e) => e.type !== "work" && e.info.level !== null && !isClassicEntry(e));
     for (const band of LEVEL_BANDS) {
       const inBand = sortByLevel(graded.filter((e) => e.info.band === band.id));
       out.push({ id: `level-${band.id}`, title: band.label, entries: inBand });
     }
     const wiki = entries.filter((e) => e.type === "text" && (e.text.kind === "wiki" || e.text.category === "wiki"));
     if (wiki.length) out.push({ id: "wiki", title: "Wikipedia · native Chinese", entries: wiki });
-    const ws = entries.filter((e) => e.type === "text" && (e.text.kind === "wikisource" || e.text.category === "wikisource"));
-    if (ws.length) out.push({ id: "wikisource", title: "Wikisource · classics", entries: ws });
+    const classics = entries.filter((e) => isClassicEntry(e));
+    if (classics.length) out.push({ id: "classics", title: "Classics", hint: "Simplified, with the original traditional text", entries: classics });
     const yours = entries.filter((e) => e.type === "text" && e.text.kind === "paste");
     if (yours.length) out.push({ id: "yours", title: "Yours", entries: yours });
     return out;
-  }, [entries, collapsed, scores, workInfo]);
+  }, [entries, collapsed, scores, sessions, workInfo]);
 
   const shelfRow = openShelf ? rows.find((r) => r.id === openShelf) ?? legacyRow(openShelf) : null;
 
@@ -341,6 +346,39 @@ export function Home({
             onChange={(v) => set({ status: v as StatusFilter })}
             options={STATUSES}
           />
+          <Pick
+            label="Sort"
+            value={filters.sort}
+            onChange={(v) => set({ sort: v === "unknown" ? "unknown" : "level" })}
+            options={[
+              { id: "level", label: "Easiest level" },
+              { id: "unknown", label: "Unknown %" },
+            ]}
+          />
+          <label className={`pick unk-range${filters.unknownMin != null || filters.unknownMax != null ? " on" : ""}`}>
+            <span className="pick-label">Unknown %</span>
+            <input
+              aria-label="Minimum unknown percent"
+              type="number"
+              min={0}
+              max={100}
+              inputMode="numeric"
+              placeholder="min"
+              value={filters.unknownMin ?? ""}
+              onChange={(e) => set({ unknownMin: parsePct(e.target.value) })}
+            />
+            <span aria-hidden="true">–</span>
+            <input
+              aria-label="Maximum unknown percent"
+              type="number"
+              min={0}
+              max={100}
+              inputMode="numeric"
+              placeholder="max"
+              value={filters.unknownMax ?? ""}
+              onChange={(e) => set({ unknownMax: parsePct(e.target.value) })}
+            />
+          </label>
           {active ? (
             <button
               type="button"
@@ -368,7 +406,7 @@ export function Home({
         <section>
           <h2 className="shelf-title">
             {results.length} {results.length === 1 ? "match" : "matches"}
-            <span className="shelf-sub"> · easiest first</span>
+            <span className="shelf-sub">{filters.sort === "unknown" ? " · least unknown first" : " · easiest first"}</span>
           </h2>
           {results.length ? (
             <div className="shelf-grid">{results.map((e) => card(e))}</div>
@@ -383,11 +421,18 @@ export function Home({
         rows.map((row) =>
           row.entries.length ? (
             <section className="shelf" key={row.id} data-row={row.id}>
-              <button type="button" className="shelf-title-btn" onClick={() => onOpenShelf(row.id)}>
-                {row.title}
-                <span className="shelf-count">{row.entries.length}</span>
-                {row.hint ? <span className="shelf-sub">{row.hint}</span> : null}
-              </button>
+              <div className="shelf-head">
+                <button type="button" className="shelf-title-btn" onClick={() => onOpenShelf(row.id)}>
+                  {row.title}
+                  <span className="shelf-count">{row.entries.length}</span>
+                  {row.hint ? <span className="shelf-sub">{row.hint}</span> : null}
+                </button>
+                {row.id === "recommended" ? (
+                  <button type="button" className="shelf-see" onClick={() => set({ fit: "just-right", sort: "unknown" })}>
+                    See all just right
+                  </button>
+                ) : null}
+              </div>
               <div className="shelf-track">{row.entries.slice(0, 24).map((e) => card(e, row.tags?.[e.id]))}</div>
             </section>
           ) : row.id.startsWith("level-") ? (
@@ -409,6 +454,13 @@ export function Home({
       </p>
     </div>
   );
+}
+
+function parsePct(raw: string): number | null {
+  if (raw.trim() === "") return null;
+  const n = Number(raw);
+  if (!Number.isFinite(n)) return null;
+  return Math.min(100, Math.max(0, n));
 }
 
 function Pick({
@@ -631,8 +683,9 @@ export function TitleCard({
   onDelete?: (id: string) => void;
   onMarkRead?: (id: string, read: boolean) => void;
 }) {
-  // Work chapters keep no body in storage; they are not "unscored" stubs.
-  const stub = !(text.body || "").trim() && !isWorkRowId(text.id);
+  // Work chapters keep no body in storage; precomputed wiki/classics scores are not stubs.
+  const scored = Boolean(score && score.total > 0) || hasRemoteMeta(text.id);
+  const stub = !(text.body || "").trim() && !isWorkRowId(text.id) && !scored;
   const info = describeText(text);
   const known = personal ? textKnownShare(score) : null;
   function run(surface: Parameters<typeof cardHitAction>[0], event?: { stopPropagation: () => void }) {
@@ -699,7 +752,8 @@ function CardMeta({
 }) {
   const fit = scoreFit(score);
   const progress = score ? bookmarkProgress(text.bookmark, score.total) : null;
-  const stub = !(text.body || "").trim() && !isWorkRowId(text.id);
+  const scored = Boolean(score && score.total > 0) || hasRemoteMeta(text.id);
+  const stub = !(text.body || "").trim() && !isWorkRowId(text.id) && !scored;
   const topic = info.topics[0];
   return (
     <div className="lib-meta">

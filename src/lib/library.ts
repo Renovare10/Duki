@@ -5,7 +5,9 @@
  */
 import type { LibraryText, TextScore } from "../types";
 import { TEXT_META } from "../data/text-meta";
+import { LIBRARY_TOPICS } from "../data/library/index";
 import { TEXT_TOPICS } from "../data/topics";
+import { REMOTE_META } from "../data/remote-meta.generated";
 import type { Book } from "./books";
 import { scoreSource } from "./books";
 import {
@@ -18,7 +20,7 @@ import {
   type LevelBand,
   type VocabProfile,
 } from "./difficulty";
-import { BAND_HI, BAND_LO, isFullyKnown, type LevelFilter } from "./score";
+import { BAND_HI, BAND_LO, isFullyKnown, roundLoad, type LevelFilter } from "./score";
 import type { WorkMeta, WorkStats } from "./works";
 
 export type LengthBucket = "short" | "medium" | "long";
@@ -69,14 +71,25 @@ function measured(level: number, levelMax: number | null, score: number, chars: 
   };
 }
 
+function topicTags(text: LibraryText, topics: Record<string, string[]>): string[] {
+  const listed = topics[text.id] ?? LIBRARY_TOPICS[text.id] ?? [];
+  if (listed.length) return listed;
+  if (text.kind === "wiki" || text.category === "wiki") return ["encyclopedia"];
+  if (text.kind === "wikisource" || text.category === "wikisource") return ["classics"];
+  return [];
+}
+
 export function describeText(
   text: LibraryText,
   meta: Record<string, readonly [number, number, number]> = TEXT_META,
   topics: Record<string, string[]> = TEXT_TOPICS,
+  remote: Record<string, readonly [number, number, number, number]> = REMOTE_META.meta,
 ): EntryInfo {
+  const tags = topicTags(text, topics);
   const m = meta[text.id];
-  const tags = topics[text.id] ?? [];
   if (m) return measured(m[0], null, m[1] / 100, m[2], tags);
+  const pre = remote[text.id];
+  if (pre) return measured(pre[0], null, pre[1] / 100, pre[2], tags);
   const chars = text.body.trim() ? hanCount(text.body) : null;
   const unmeasured = (badge: string, badgeTitle: string, band: LevelBand | null, t: string[]): EntryInfo => ({
     level: null,
@@ -90,12 +103,17 @@ export function describeText(
     topics: t,
   });
   if (text.kind === "wiki" || text.category === "wiki") {
-    return unmeasured("Native", "Native Chinese — Wikipedia, written for adults", "native", ["encyclopedia"]);
+    return unmeasured("Native", "Native Chinese — Wikipedia, written for adults", "native", tags);
   }
   if (text.kind === "wikisource" || text.category === "wikisource") {
-    return unmeasured("Classical", "Classical or early modern Chinese from Wikisource", "native", ["classics"]);
+    return unmeasured("Classical", "Classical or early modern Chinese from Wikisource", "native", tags);
   }
   return unmeasured("", "", null, tags);
+}
+
+export function isClassicText(text: LibraryText): boolean {
+  if (text.kind === "wikisource" || text.category === "wikisource") return true;
+  return (TEXT_TOPICS[text.id] ?? LIBRARY_TOPICS[text.id] ?? []).includes("classics");
 }
 
 export function describeBook(book: Book, meta = TEXT_META, topics = TEXT_TOPICS): EntryInfo {
@@ -152,7 +170,7 @@ export function formatKnown(share: number): string {
 export type Fit = "easy" | "just-right" | "hard" | "known";
 
 export function fitOfShare(share: number): Fit {
-  const load = 1 - share;
+  const load = roundLoad(1 - share);
   if (load <= 0) return "known";
   if (load < BAND_LO) return "easy";
   if (load <= BAND_HI) return "just-right";
@@ -175,6 +193,8 @@ export function scoreFit(score: TextScore | undefined): Fit | null {
 
 export type StatusFilter = "all" | "unread" | "started" | "read";
 
+export type SortKey = "level" | "unknown";
+
 export type BrowseFilters = {
   query: string;
   topic: string;
@@ -182,19 +202,62 @@ export type BrowseFilters = {
   length: LengthBucket | "all";
   fit: LevelFilter;
   status: StatusFilter;
+  sort: SortKey;
+  /** Inclusive unknown-% bounds. Null means that side is open. */
+  unknownMin: number | null;
+  unknownMax: number | null;
 };
 
-export const NO_FILTERS: BrowseFilters = { query: "", topic: "all", band: "all", length: "all", fit: "all", status: "all" };
+export const NO_FILTERS: BrowseFilters = {
+  query: "",
+  topic: "all",
+  band: "all",
+  length: "all",
+  fit: "all",
+  status: "all",
+  sort: "level",
+  unknownMin: null,
+  unknownMax: null,
+};
 
 export function filtersActive(f: BrowseFilters): boolean {
-  return Boolean(f.query.trim()) || f.topic !== "all" || f.band !== "all" || f.length !== "all" || f.fit !== "all" || f.status !== "all";
+  return (
+    Boolean(f.query.trim()) ||
+    f.topic !== "all" ||
+    f.band !== "all" ||
+    f.length !== "all" ||
+    f.fit !== "all" ||
+    f.status !== "all" ||
+    f.sort !== "level" ||
+    f.unknownMin != null ||
+    f.unknownMax != null
+  );
 }
 
 export type EntryStatus = "unread" | "started" | "read";
 
 export type Entry =
-  | { type: "text"; id: string; text: LibraryText; info: EntryInfo; fit: Fit | null; status: EntryStatus; searchText: string }
-  | { type: "book"; id: string; book: Book; info: EntryInfo; fit: Fit | null; status: EntryStatus; searchText: string }
+  | {
+      type: "text";
+      id: string;
+      text: LibraryText;
+      info: EntryInfo;
+      fit: Fit | null;
+      status: EntryStatus;
+      searchText: string;
+      /** Share of running words not yet known, 0–1. Null when unscored. */
+      unknownLoad: number | null;
+    }
+  | {
+      type: "book";
+      id: string;
+      book: Book;
+      info: EntryInfo;
+      fit: Fit | null;
+      status: EntryStatus;
+      searchText: string;
+      unknownLoad: number | null;
+    }
   | {
       type: "work";
       id: string;
@@ -205,6 +268,7 @@ export type Entry =
       searchText: string;
       /** Personal known share from the work's vocabulary profile. */
       known: number | null;
+      unknownLoad: number | null;
     };
 
 export function textStatus(text: LibraryText): EntryStatus {
@@ -230,6 +294,7 @@ export function textEntry(text: LibraryText, score: TextScore | undefined): Entr
     fit: scoreFit(score),
     status: textStatus(text),
     searchText: [text.title, text.blurb, text.author, text.seriesTitle].filter(Boolean).join(" ").toLowerCase(),
+    unknownLoad: score && score.total > 0 ? score.unknownLoad : null,
   };
 }
 
@@ -243,6 +308,7 @@ export function bookEntry(book: Book, scores: Map<string, TextScore>): Entry {
     fit: src ? scoreFit(scores.get(src.id)) : null,
     status: bookStatus(book),
     searchText: [book.title, book.blurb, book.author, ...book.chapters.map((c) => c.title)].filter(Boolean).join(" ").toLowerCase(),
+    unknownLoad: src && scores.get(src.id)?.total ? scores.get(src.id)!.unknownLoad : null,
   };
 }
 
@@ -261,6 +327,7 @@ export function workEntry(
     info: describeWork(work, stats),
     fit: known === null ? null : fitOfShare(known),
     known,
+    unknownLoad: known === null ? null : 1 - known,
     status,
     searchText: [work.title, work.english, work.author, work.blurb, work.year].join(" ").toLowerCase(),
   };
@@ -286,6 +353,12 @@ export function matchesFilters(entry: Entry, f: BrowseFilters): boolean {
   }
   if (!fitMatches(entry.fit, f.fit)) return false;
   if (f.status !== "all" && entry.status !== f.status) return false;
+  if (f.unknownMin != null || f.unknownMax != null) {
+    if (entry.unknownLoad == null) return false;
+    const pct = entry.unknownLoad * 100;
+    if (f.unknownMin != null && pct < f.unknownMin) return false;
+    if (f.unknownMax != null && pct > f.unknownMax) return false;
+  }
   return true;
 }
 
@@ -299,8 +372,25 @@ export function sortByLevel(entries: Entry[]): Entry[] {
   );
 }
 
+/** Least unknown first. Unscored cards go last. */
+export function sortByUnknown(entries: Entry[]): Entry[] {
+  return [...entries].sort(
+    (a, b) => (a.unknownLoad ?? 2) - (b.unknownLoad ?? 2) || a.info.sortScore - b.info.sortScore || a.id.localeCompare(b.id),
+  );
+}
+
+export function sortEntries(entries: Entry[], sort: SortKey): Entry[] {
+  return sort === "unknown" ? sortByUnknown(entries) : sortByLevel(entries);
+}
+
 export function filterEntries(entries: Entry[], f: BrowseFilters): Entry[] {
-  return sortByLevel(entries.filter((e) => matchesFilters(e, f)));
+  return sortEntries(entries.filter((e) => matchesFilters(e, f)), f.sort);
+}
+
+export function isClassicEntry(entry: Entry): boolean {
+  if (entry.type === "work") return false;
+  if (entry.type === "book") return entry.book.kind === "wikisource" || entry.book.category === "wikisource";
+  return isClassicText(entry.text);
 }
 
 /** Topics that actually have entries, in taxonomy order, with counts. */

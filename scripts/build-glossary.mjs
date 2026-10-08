@@ -3,6 +3,7 @@ import path from "node:path";
 import zlib from "node:zlib";
 import { fileURLToPath } from "node:url";
 import OpenCC from "opencc-js";
+import { keepSenses } from "./gloss-senses.mjs";
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const outFile = path.join(root, "..", "public", "glossary.json");
@@ -81,22 +82,6 @@ function cleanGloss(parts) {
   return out.join("; ");
 }
 
-/**
- * Senses removed from specific words. 黄 / 黄色 mean "yellow" in ordinary texts;
- * the slang "pornographic / vulgar / lewd" sense is dropped from their glosses.
- * Words whose only meaning is that slang (黄片, 黄书 …) are left as they are.
- */
-export const DROP_SENSES = {
-  黄: /porn|obscen|lewd|vulgar|erotic|sexual/i,
-  黄色: /porn|obscen|lewd|vulgar|erotic|sexual/i,
-};
-
-function keepSenses(hanzi, parts) {
-  const drop = DROP_SENSES[hanzi];
-  if (!drop) return parts;
-  return parts.flatMap((p) => String(p).split(/;\s*/)).filter((p) => !drop.test(p));
-}
-
 function isHanWord(s) {
   return /^[\u3400-\u9fff\uf900-\ufaff]{1,8}$/.test(s);
 }
@@ -158,6 +143,28 @@ for (const ch of [...tradChars].sort()) {
   if (!isHanWord(ch)) continue;
   const simp = toSimp(ch);
   if (simp !== ch && [...simp].length === 1 && isHanWord(simp)) t2s += ch + simp;
+}
+
+// Classical texts still meet words CEDICT only glosses as "surname" / "see …",
+// which the main pass drops, plus a few variant characters. Fill those gaps
+// from scripts/classical-glosses.json (CC BY-SA, same license as CC-CEDICT).
+const extraPath = path.join(root, "classical-glosses.json");
+if (fs.existsSync(extraPath)) {
+  const extra = JSON.parse(fs.readFileSync(extraPath, "utf8"));
+  for (const [hanzi, pair] of Object.entries(extra)) {
+    if (!isHanWord(hanzi) || !Array.isArray(pair)) continue;
+    const [py, en] = pair;
+    if (!en) continue;
+    const pinyin = /[1-5]/.test(String(py)) ? pinyinMarks(String(py)) : String(py || "");
+    const prev = entries.get(hanzi);
+    if (!prev) {
+      if (!pinyin) continue;
+      entries.set(hanzi, { pinyin, english: en, hsk: null });
+      maxLen = Math.max(maxLen, [...hanzi].length);
+    } else if (!prev.english) {
+      prev.english = en;
+    }
+  }
 }
 
 const packed = {};

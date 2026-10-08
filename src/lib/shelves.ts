@@ -12,12 +12,15 @@ import {
   BAND_LO,
   REC_HARD_MAX,
   TARGET,
+  roundLoad,
   isScored,
   stillTeaches,
   matchesLevel,
   type LevelFilter,
 } from "./score";
 import { isContinue } from "./text";
+import { LIBRARY_TOPICS } from "../data/library/index";
+import { TEXT_TOPICS } from "../data/topics";
 
 export type { LevelFilter };
 
@@ -156,14 +159,54 @@ function loadOf(item: ShelfItem, scores: Map<string, TextScore>): number | null 
   if (!src) return null;
   const score = scores.get(src.id);
   if (!score || !isScored(score)) return null;
-  return score.unknownLoad;
+  return roundLoad(score.unknownLoad);
+}
+
+function topicIds(id: string): string[] {
+  return TEXT_TOPICS[id] ?? LIBRARY_TOPICS[id] ?? [];
+}
+
+/** Wikisource and anything tagged classical. Never recommended. */
+export function isClassicItem(item: ShelfItem): boolean {
+  if (item.type === "book") return item.book.kind === "wikisource" || item.book.category === "wikisource";
+  const text = item.text;
+  if (text.kind === "wikisource" || text.category === "wikisource") return true;
+  return topicIds(text.id).includes("classics");
 }
 
 function recommendable(item: ShelfItem, scores: Map<string, TextScore>): boolean {
-  if (isPasteItem(item) || !itemTeaches(item, scores)) return false;
+  if (isPasteItem(item) || isClassicItem(item) || !itemTeaches(item, scores)) return false;
   const load = loadOf(item, scores);
   return load !== null && load > 0 && load <= REC_HARD_MAX;
 }
+
+/** 0 unread, 1 started, 2 finished. Unread wins, then in-progress. */
+function readRank(item: ShelfItem): number {
+  if (neverRead(item)) return 0;
+  if (finished(item)) return 2;
+  return 1;
+}
+
+/** Daily seed so the same shelf rotates once a day. */
+export function daySeed(now = new Date()): number {
+  return now.getFullYear() * 10000 + (now.getMonth() + 1) * 100 + now.getDate();
+}
+
+export function mixHash(seed: number, id: string): number {
+  let h = (seed + 1) >>> 0;
+  for (let i = 0; i < id.length; i++) {
+    h ^= id.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
+  }
+  return h >>> 0;
+}
+
+export type RecOptions = {
+  /** When set, picks rotate inside a priority tier. Omit for a stable order. */
+  seed?: number;
+  /** Center of Just right. Defaults to TARGET. */
+  target?: number;
+};
 
 function inRecBand(load: number, band: "easy" | "just-right" | "hard"): boolean {
   if (band === "easy") return load < BAND_LO;
@@ -171,47 +214,65 @@ function inRecBand(load: number, band: "easy" | "just-right" | "hard"): boolean 
   return load > BAND_HI && load <= REC_HARD_MAX;
 }
 
+function byPriority(
+  items: ShelfItem[],
+  seed: number | undefined,
+  salt: string,
+  fit: (item: ShelfItem) => number,
+): ShelfItem | null {
+  if (!items.length) return null;
+  const best = Math.min(...items.map(readRank));
+  const pool = items.filter((item) => readRank(item) === best);
+  pool.sort((a, b) => {
+    if (seed !== undefined) {
+      const h = mixHash(seed, `${salt}:${itemId(a)}`) - mixHash(seed, `${salt}:${itemId(b)}`);
+      if (h !== 0) return h;
+    }
+    const d = fit(a) - fit(b);
+    if (d !== 0) return d;
+    return itemId(a).localeCompare(itemId(b));
+  });
+  return pool[0] ?? null;
+}
+
 function pickInBand(
   pool: ShelfItem[],
   scores: Map<string, TextScore>,
   band: "easy" | "just-right" | "hard",
+  options: RecOptions,
 ): ShelfItem | null {
+  const target = options.target ?? TARGET;
   const hits = pool.filter((item) => {
     const load = loadOf(item, scores);
     return load !== null && inRecBand(load, band);
   });
-  hits.sort((a, b) => {
-    const read = Number(finished(b)) - Number(finished(a));
-    if (read !== 0) return read;
-    const la = loadOf(a, scores)!;
-    const lb = loadOf(b, scores)!;
-    const fit = band === "just-right" ? Math.abs(la - TARGET) - Math.abs(lb - TARGET) : la - lb;
-    if (fit !== 0) return fit;
-    return itemId(a).localeCompare(itemId(b));
+  return byPriority(hits, options.seed, band, (item) => {
+    const load = loadOf(item, scores)!;
+    return band === "just-right" ? Math.abs(load - target) : load;
   });
-  return hits[0] ?? null;
 }
 
-/** A good unread story, or the easiest unread one when every unread story is a wall. */
+/**
+ * Unread story in the just-right range, or the lowest-difficulty unread left.
+ * Classics and unscored items are already out. Never repeats a band pick.
+ */
 function pickFresh(
   items: ShelfItem[],
   scores: Map<string, TextScore>,
   used: Set<string>,
+  options: RecOptions,
 ): ShelfItem | null {
+  const target = options.target ?? TARGET;
   const rows = items
-    .filter((item) => !isPasteItem(item) && neverRead(item) && !used.has(itemId(item)))
+    .filter((item) => !isPasteItem(item) && !isClassicItem(item) && neverRead(item) && !used.has(itemId(item)))
     .map((item) => ({ item, load: loadOf(item, scores) }))
     .filter((row): row is { item: ShelfItem; load: number } => row.load !== null && row.load > 0);
-  const good = rows.filter((row) => row.load <= REC_HARD_MAX);
-  const pool = good.length ? good : rows;
-  pool.sort((a, b) => {
-    const fit = good.length
-      ? Math.abs(a.load - TARGET) - Math.abs(b.load - TARGET)
-      : a.load - b.load;
-    if (fit !== 0) return fit;
-    return itemId(a.item).localeCompare(itemId(b.item));
+  const inBand = rows.filter((row) => row.load >= BAND_LO && row.load <= BAND_HI);
+  const pool = (inBand.length ? inBand : rows).map((row) => row.item);
+  return byPriority(pool, options.seed, "fresh", (item) => {
+    const load = loadOf(item, scores)!;
+    return inBand.length ? Math.abs(load - target) : load;
   });
-  return pool[0]?.item ?? null;
 }
 
 function freshTag(item: ShelfItem, scores: Map<string, TextScore>): string {
@@ -223,22 +284,24 @@ function freshTag(item: ShelfItem, scores: Map<string, TextScore>): string {
 export function pickRecommendedItems(
   items: ShelfItem[],
   scores: Map<string, TextScore>,
+  options: RecOptions = {},
 ): RecommendedPicks {
   const pool = items.filter((item) => recommendable(item, scores));
-  const easy = pickInBand(pool, scores, "easy");
-  const justRight = pickInBand(pool, scores, "just-right");
-  const hard = pickInBand(pool, scores, "hard");
+  const easy = pickInBand(pool, scores, "easy", options);
+  const justRight = pickInBand(pool, scores, "just-right", options);
+  const hard = pickInBand(pool, scores, "hard", options);
   const used = new Set(
     [easy, justRight, hard].filter((item): item is ShelfItem => item !== null).map((item) => itemId(item)),
   );
-  return { easy, justRight, hard, fresh: pickFresh(items, scores, used) };
+  return { easy, justRight, hard, fresh: pickFresh(items, scores, used, options) };
 }
 
 export function pickRecommendedTrio(
   texts: LibraryText[],
   scores: Map<string, TextScore>,
+  options: RecOptions = {},
 ): { easy: LibraryText | null; justRight: LibraryText | null; hard: LibraryText | null; fresh: LibraryText | null } {
-  const picks = pickRecommendedItems(collapseTexts(texts), scores);
+  const picks = pickRecommendedItems(collapseTexts(texts), scores, options);
   return {
     easy: picks.easy ? scoreSource(picks.easy) : null,
     justRight: picks.justRight ? scoreSource(picks.justRight) : null,

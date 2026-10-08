@@ -24,6 +24,7 @@ import { BookScreen } from "./components/Book";
 import { WorkScreen } from "./components/Work";
 import { findWork } from "./data/works";
 import { personalReady } from "./lib/library";
+import type { VocabProfile } from "./lib/difficulty";
 import {
   isWorkRowId,
   loadChapter,
@@ -69,8 +70,11 @@ import { makeWordEvent } from "./lib/history";
 import { mergeSnapshots, packSnapshot, pullSnapshot, pushSnapshot } from "./lib/sync";
 import { dukiApiBase } from "./lib/gutenberg";
 import { hasWord, loadGlossary, MAX_WORD_LEN } from "./lib/glossary";
+import { loadClassic, type ClassicBody } from "./lib/classics";
+import { loadScriptChoice, saveScriptChoice, type ScriptChoice } from "./lib/script";
+import { profilesFrom, type WordSetFile } from "./lib/word-sets";
 import { MENU_ACTION_LABELS, MENU_GROUPS, type MenuActionId } from "./lib/menu";
-import { remainingUniques, scoreTokens } from "./lib/score";
+import { remainingUniques, scoreCounts, scoreTokens } from "./lib/score";
 import { segment } from "./lib/segment";
 import { applyReadingTap, applyReviewGrade } from "./lib/word";
 import type {
@@ -165,6 +169,10 @@ export default function App() {
   const [importError, setImportError] = useState<string | null>(null);
   const [wikiErrors, setWikiErrors] = useState<Record<string, string>>({});
   const [wikiLoading, setWikiLoading] = useState<string | null>(null);
+  const [classicPair, setClassicPair] = useState<ClassicBody | null>(null);
+  const [scriptChoice, setScriptChoice] = useState<ScriptChoice>(() => loadScriptChoice());
+  const [profileTick, setProfileTick] = useState(0);
+  const profilesRef = useRef<Map<string, VocabProfile> | null>(null);
   const [shareTextId, setShareTextId] = useState<string | null>(null);
   const [shareMissing, setShareMissing] = useState(false);
   /** Chapter bodies of long works, fetched on open; never persisted. */
@@ -511,6 +519,23 @@ export default function App() {
     void runCloudSync();
   }, [ready, auth]);
 
+  useEffect(() => {
+    let cancel = false;
+    fetch("/meta/word-sets.json")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data: WordSetFile | null) => {
+        if (cancel || !data?.vocab || !data.texts) return;
+        profilesRef.current = profilesFrom(data);
+        setProfileTick((n) => n + 1);
+      })
+      .catch(() => {
+        /* cards stay unscored until a fetch */
+      });
+    return () => {
+      cancel = true;
+    };
+  }, []);
+
   const statuses = useMemo(() => {
     const map = new Map<string, WordStatus>();
     for (const [hanzi, rec] of words) map.set(hanzi, rec.status);
@@ -519,12 +544,20 @@ export default function App() {
 
   const scores = useMemo(() => {
     const map = new Map<string, TextScore>();
+    const profiles = profilesRef.current;
     for (const text of texts) {
-      const tokens = segment(text.body, hasWord, MAX_WORD_LEN);
-      map.set(text.id, scoreTokens(tokens, statuses));
+      if (text.body.trim()) {
+        map.set(text.id, scoreTokens(segment(text.body, hasWord, MAX_WORD_LEN), statuses));
+      } else {
+        const profile = profiles?.get(text.id);
+        map.set(
+          text.id,
+          profile ? scoreCounts(profile.words, profile.counts, statuses) : scoreTokens([], statuses),
+        );
+      }
     }
     return map;
-  }, [texts, statuses]);
+  }, [texts, statuses, profileTick]);
 
   const currentRow =
     view.name === "reader"
@@ -611,16 +644,31 @@ export default function App() {
           sourceUrl: page.url,
           preview: mode === "score",
         };
-      } else if (text.wsTitle) {
-        const page = await fetchWikisourcePage(text.wsTitle);
-        next = {
-          ...text,
-          title: text.title || page.title,
-          body: page.extract,
-          source: "From Wikisource (public domain / CC BY-SA)",
-          sourceUrl: page.url,
-          preview: false,
-        };
+      } else if (text.wsTitle || text.kind === "wikisource") {
+        const classic = await loadClassic(text.id);
+        if (classic) {
+          setClassicPair(classic);
+          if (text.body.trim()) return text;
+          next = {
+            ...text,
+            body: classic.simplified,
+            source: text.source || "From Wikisource (public domain / CC BY-SA)",
+            sourceUrl: text.sourceUrl || classic.url,
+            preview: false,
+          };
+        } else if (text.wsTitle) {
+          const page = await fetchWikisourcePage(text.wsTitle);
+          next = {
+            ...text,
+            title: text.title || page.title,
+            body: page.extract,
+            source: "From Wikisource (public domain / CC BY-SA)",
+            sourceUrl: page.url,
+            preview: false,
+          };
+        } else {
+          return text;
+        }
       } else {
         return text;
       }
@@ -692,9 +740,13 @@ export default function App() {
     const ref = parseWorkRowId(view.id);
     const id = view.id;
     if (!ref) {
-      // Plain texts: remember when they were last opened (for "Continue reading" order).
       const text = textsRef.current.find((t) => t.id === id);
-      if (text) void saveText({ ...text, openedAt: Date.now() });
+      if (text && (text.kind === "wikisource" || text.wsTitle)) {
+        void openClassic(text);
+      } else {
+        setClassicPair(null);
+        if (text) void saveText({ ...text, openedAt: Date.now() });
+      }
       return;
     }
     const work = findWork(ref.workId);
@@ -749,6 +801,27 @@ export default function App() {
     logWordEvent(makeWordEvent(existing, next, "review", grade));
     await putWord(next);
     scheduleCloudPush();
+  }
+
+  async function openClassic(text: LibraryText) {
+    const classic = await loadClassic(text.id);
+    const current = textsRef.current.find((t) => t.id === text.id) ?? text;
+    if (classic) setClassicPair(classic);
+    else setClassicPair(null);
+    if (!current.body.trim() && classic) {
+      await saveText({
+        ...current,
+        body: classic.simplified,
+        sourceUrl: current.sourceUrl || classic.url,
+        openedAt: Date.now(),
+      });
+      return;
+    }
+    if (!current.body.trim()) {
+      await fillRemote(current.id, "read");
+      return;
+    }
+    await saveText({ ...current, openedAt: Date.now() });
   }
 
   async function saveText(next: LibraryText) {
@@ -1287,6 +1360,12 @@ export default function App() {
           onBookmark={(bookmark) => void onBookmark(current.id, bookmark)}
           onDone={(durationMs) => void onDone(current.id, durationMs)}
           onSettings={onReaderSettings}
+          classic={classicPair && current.id === classicPair.id ? classicPair : null}
+          script={scriptChoice}
+          onScript={(next) => {
+            setScriptChoice(next);
+            saveScriptChoice(next);
+          }}
           footer={readingWork ? (elapsed) => chapterFooter(readingWork.workId, readingWork.key, elapsed) : undefined}
         />
       ) : null}

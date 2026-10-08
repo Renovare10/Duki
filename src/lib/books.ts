@@ -70,9 +70,12 @@ export function itemId(item: ShelfItem): string {
 
 export function itemTeaches(item: ShelfItem, scores: Map<string, TextScore>): boolean {
   const src = scoreSource(item);
-  if (!src?.body.trim()) return false;
+  if (!src) return false;
   const score = scores.get(src.id);
-  return Boolean(score && isScored(score) && stillTeaches(score));
+  if (!score || !isScored(score) || !stillTeaches(score)) return false;
+  if (src.body.trim()) return true;
+  // Wikipedia cards are scored from a precomputed word set before the article is fetched.
+  return src.kind === "wiki" || src.category === "wiki";
 }
 
 export function collapseTexts(texts: LibraryText[]): ShelfItem[] {

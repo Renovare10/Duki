@@ -40,9 +40,14 @@ export function scoreTokens(
   };
 }
 
-export const TARGET = 0.075;
-export const BAND_LO = 0.05;
-export const BAND_HI = 0.1;
+/**
+ * Personal bands, from the reader's own word records.
+ * Just right ≈ 8–14% unknown (center 11%). Easy is under 8% (about 2–7%).
+ * Hard recommendations stop at 25%; above that is a wall, not a rec.
+ */
+export const TARGET = 0.11;
+export const BAND_LO = 0.08;
+export const BAND_HI = 0.14;
 
 export function isFullyKnown(score: TextScore): boolean {
   if (score.total === 0) return false;
@@ -125,16 +130,79 @@ export function coveragePercents(score: TextScore): { known: number; unknown: nu
   return { known, unknown: 100 - known };
 }
 
-/** Harder recommendations stop at ~20% unknown. Above that is a wall, not a rec. */
-export const REC_HARD_MAX = 0.2;
+/** Harder recommendations stop at 25% unknown. Above that is a wall, not a rec. */
+export const REC_HARD_MAX = 0.25;
+
+/**
+ * Nudge the Just-right center toward the unknown-% of recent reads.
+ * Stays inside the Just-right band. Fewer than three recent scores: no change.
+ */
+export function adaptTarget(recentLoads: number[], base = TARGET): number {
+  const useful = recentLoads.filter((load) => load > 0.02 && load < 0.4);
+  if (useful.length < 3) return base;
+  const sorted = [...useful].sort((a, b) => a - b);
+  const mid = sorted[Math.floor(sorted.length / 2)];
+  const mixed = base * 0.7 + mid * 0.3;
+  return Math.min(BAND_HI, Math.max(BAND_LO, mixed));
+}
+
+/** Score a precomputed word→count profile (Wikipedia / Wikisource cards, no body in the bundle). */
+export function scoreCounts(
+  words: string[],
+  counts: number[],
+  statuses: Map<string, WordStatus>,
+): TextScore {
+  let known = 0;
+  let shaky = 0;
+  let unknown = 0;
+  let total = 0;
+  const unique = new Set<string>();
+  const uniqueUnknown = new Set<string>();
+  const uniqueShaky = new Set<string>();
+  const n = Math.min(words.length, counts.length);
+  for (let i = 0; i < n; i++) {
+    const count = counts[i];
+    if (!(count > 0)) continue;
+    const word = words[i];
+    total += count;
+    unique.add(word);
+    const status = statuses.get(word);
+    if (status === "known") known += count;
+    else if (status === "shaky") {
+      shaky += count;
+      uniqueShaky.add(word);
+    } else {
+      unknown += count;
+      uniqueUnknown.add(word);
+    }
+  }
+  const knownPct = total === 0 ? 0 : known / total;
+  return {
+    total,
+    known,
+    shaky,
+    unknown,
+    knownPct,
+    unknownLoad: total === 0 ? 0 : 1 - knownPct,
+    unique: unique.size,
+    uniqueUnknown: uniqueUnknown.size,
+    uniqueShaky: uniqueShaky.size,
+  };
+}
 
 export function isScored(score: TextScore): boolean {
   return score.total > 0;
 }
 
+/** Percent-level loads, so 8% stays 8% instead of 0.079999. */
+export function roundLoad(load: number): number {
+  return Math.round(load * 1000) / 1000;
+}
+
 export function fitLabel(score: TextScore): "just-right" | "easy" | "hard" | "unscored" {
   if (score.total === 0) return "unscored";
-  if (score.unknownLoad < BAND_LO) return "easy";
-  if (score.unknownLoad <= BAND_HI) return "just-right";
+  const load = roundLoad(score.unknownLoad);
+  if (load < BAND_LO) return "easy";
+  if (load <= BAND_HI) return "just-right";
   return "hard";
 }

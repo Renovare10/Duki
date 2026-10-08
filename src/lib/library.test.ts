@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { LibraryText, TextScore } from "../types";
 import { CATALOG } from "../data/library";
 import { TEXT_META } from "../data/text-meta";
+import { LIBRARY_TOPICS } from "../data/library/index";
 import { isTopic, TEXT_TOPICS } from "../data/topics";
 import { WORKS } from "../data/works";
 import { WORK_STATS } from "../data/works.generated";
@@ -66,7 +67,7 @@ describe("precomputed catalog metadata", () => {
 
   it("every built-in text has 1–3 valid topics", () => {
     for (const text of owned) {
-      const topics = TEXT_TOPICS[text.id];
+      const topics = TEXT_TOPICS[text.id] ?? LIBRARY_TOPICS[text.id];
       expect(topics?.length, text.id).toBeGreaterThan(0);
       expect(topics.length).toBeLessThanOrEqual(3);
       for (const topic of topics) expect(isTopic(topic), `${text.id}: ${topic}`).toBe(true);
@@ -92,6 +93,18 @@ describe("describeText", () => {
       chars: null,
     });
     expect(describeText(t({ id: "ws:x", kind: "wikisource", category: "wikisource" }), {}, {}).badge).toBe("Classical");
+  });
+
+  it("uses precomputed scores for Wikipedia and Wikisource", () => {
+    const cat = describeText(t({ id: "wiki-猫", kind: "wiki", category: "wiki", title: "猫" }));
+    expect(cat.level).toBeGreaterThanOrEqual(6);
+    expect(cat.badge).toMatch(/^L\d+$/);
+    expect(cat.chars).toBeGreaterThan(100);
+    expect(cat.topics).toContain("encyclopedia");
+    const dao = describeText(t({ id: "ws-道德經", kind: "wikisource", category: "wikisource", title: "道德经" }));
+    expect(dao.level).toBeGreaterThanOrEqual(7);
+    expect(dao.topics).toContain("classics");
+    expect(dao.minutes).toBeGreaterThan(0);
   });
 
   it("measures length of the reader's own texts but claims no level", () => {
@@ -177,6 +190,16 @@ describe("browse filters", () => {
   it("filters by personal fit", () => {
     expect(filterEntries(all, { ...NO_FILTERS, fit: "easy" }).map((e) => e.id)).toEqual(["sample-home"]);
     expect(filterEntries(all, { ...NO_FILTERS, fit: "just-right" }).map((e) => e.id)).toEqual(["hist-silk"]);
+  });
+
+  it("filters and sorts by unknown percent", () => {
+    const low = textEntry(t({ id: "low" }), score(0.95));
+    const mid = textEntry(t({ id: "mid" }), score(0.89));
+    const high = textEntry(t({ id: "high" }), score(0.7));
+    const rows = [high, low, mid];
+    expect(filterEntries(rows, { ...NO_FILTERS, sort: "unknown" }).map((e) => e.id)).toEqual(["low", "mid", "high"]);
+    expect(filterEntries(rows, { ...NO_FILTERS, unknownMin: 8, unknownMax: 14 }).map((e) => e.id)).toEqual(["mid"]);
+    expect(filterEntries(rows, { ...NO_FILTERS, unknownMin: 20 }).map((e) => e.id)).toEqual(["high"]);
   });
 
   it("filters by status and search", () => {

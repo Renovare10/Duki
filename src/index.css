@@ -2432,6 +2432,44 @@ button.badge {
   font-size: 0.8rem;
 }
 
+.unk-range input {
+  width: 3.2rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  padding: 0.15rem 0.1rem;
+}
+
+.unk-range input::placeholder {
+  color: var(--ink-soft);
+}
+
+.shelf-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.8rem;
+  margin: 0 0 0.7rem;
+}
+
+.shelf-head .shelf-title-btn {
+  margin: 0;
+}
+
+.shelf-see {
+  all: unset;
+  cursor: pointer;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.shelf-see:hover {
+  color: var(--ink);
+}
+
 .shelf-sub {
   font-family: var(--sans);
   font-size: 0.78rem;
