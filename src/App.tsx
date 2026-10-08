@@ -7,7 +7,18 @@ import { Stats } from "./components/Stats";
 import { ThemeToggle } from "./components/ThemeToggle";
 import { CATALOG } from "./data/catalog";
 import { findBook } from "./lib/books";
-import { documentTitle, themeColor } from "./lib/page";
+import { documentTitle } from "./lib/page";
+import {
+  accountThemeKey,
+  applyDocumentTheme,
+  BOOT_THEME,
+  legacyDeviceTheme,
+  readThemeCache,
+  rememberAccountTheme,
+  rememberDeviceTheme,
+  resolveTheme,
+  writeThemeCache,
+} from "./lib/theme";
 import { parseShareHash, type ShareKind } from "./lib/share";
 import { BookScreen } from "./components/Book";
 import { fetchWikiPage, randomWikipedia, searchWikipedia, wikiStub, wikiTextId } from "./lib/wiki";
@@ -23,6 +34,7 @@ import {
   PKCE_VERIFIER_KEY,
   storeAuth,
   stripAuthQuery,
+  subjectFromIdToken,
   type AuthTokens,
   authorizeUrl,
 } from "./lib/auth";
@@ -32,6 +44,7 @@ import {
   importBackup,
   DEFAULT_SETTINGS,
   loadAll,
+  loadSettings,
   parseBackup,
   putSession,
   putEvent,
@@ -41,6 +54,7 @@ import {
 } from "./lib/db";
 import { makeWordEvent } from "./lib/history";
 import { mergeSnapshots, packSnapshot, pullSnapshot, pushSnapshot } from "./lib/sync";
+import { dukiApiBase } from "./lib/gutenberg";
 import { hasWord, loadGlossary, MAX_WORD_LEN } from "./lib/glossary";
 import { MENU_ACTION_LABELS, MENU_GROUPS, type MenuActionId } from "./lib/menu";
 import { remainingUniques, scoreTokens } from "./lib/score";
@@ -51,6 +65,7 @@ import type {
   Bookmark,
   LibraryText,
   ReaderSettings,
+  ReaderTheme,
   ReadingSession,
   ReviewGrade,
   TextScore,
@@ -135,6 +150,18 @@ export default function App() {
   const [shareTextId, setShareTextId] = useState<string | null>(null);
   const [shareMissing, setShareMissing] = useState(false);
   const [auth, setAuth] = useState<AuthTokens | null>(() => loadStoredAuth());
+  /** A `?code=` sign-in exchange is in flight, so we don't know who this is yet. */
+  const [authPending, setAuthPending] = useState(
+    () =>
+      parseAuthCallback(window.location.search, window.location.hash) !== null &&
+      Boolean(window.sessionStorage.getItem(PKCE_VERIFIER_KEY)),
+  );
+  /** IndexedDB settings have been read (fast path, ahead of the glossary). */
+  const [settingsLoaded, setSettingsLoaded] = useState(false);
+  const settingsLoadedRef = useRef(false);
+  /** The signed-in account's snapshot has been pulled (or that failed / timed out). */
+  const [accountSettled, setAccountSettled] = useState(false);
+  const [themeCache, setThemeCache] = useState(() => readThemeCache());
   const wordsRef = useRef(words);
   wordsRef.current = words;
   const textsRef = useRef(texts);
@@ -229,11 +256,76 @@ export default function App() {
     };
   }, [accountOpen]);
 
+  const accountKey = auth
+    ? accountThemeKey(subjectFromIdToken(auth.idToken), auth.email ?? null)
+    : null;
+  const resolvedTheme = resolveTheme({
+    authPending,
+    signedIn: Boolean(auth),
+    deviceTheme: themeCache.device,
+    deviceMigrated: themeCache.migrated,
+    accountTheme: accountKey ? themeCache.accounts[accountKey] ?? null : null,
+    settings: settingsLoaded ? settings : null,
+    accountSettled,
+  });
+  /** What's on screen: night (the boot theme) until the preference is known. */
+  const displayTheme = resolvedTheme ?? BOOT_THEME;
+
   useEffect(() => {
-    const theme = settings.theme === "night" ? "night" : "paper";
-    document.documentElement.dataset.theme = theme;
-    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", themeColor(theme));
-  }, [settings.theme]);
+    if (resolvedTheme) applyDocumentTheme(resolvedTheme, { fade: true });
+  }, [resolvedTheme]);
+
+  // Fast settings read so the theme doesn't wait on the glossary download.
+  useEffect(() => {
+    let cancelled = false;
+    loadSettings()
+      .then((loaded) => {
+        if (!cancelled && !settingsLoadedRef.current) setSettings(loaded);
+      })
+      .catch(() => {
+        /* fall back to defaults */
+      })
+      .finally(() => {
+        if (cancelled) return;
+        settingsLoadedRef.current = true;
+        setSettingsLoaded(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // Signed in: no API configured → nothing to wait for; otherwise don't hold
+  // the boot theme forever if the pull is slow.
+  useEffect(() => {
+    if (!auth || accountSettled) return;
+    if (!dukiApiBase()) {
+      setAccountSettled(true);
+      return;
+    }
+    const timer = window.setTimeout(() => setAccountSettled(true), 6000);
+    return () => window.clearTimeout(timer);
+  }, [auth, accountSettled]);
+
+  // Remember the account's synced theme for an instant, flicker-free next load.
+  useEffect(() => {
+    if (!accountKey || !accountSettled || !settingsLoaded) return;
+    if (themeCache.accounts[accountKey] === settings.theme) return;
+    setThemeCache(rememberAccountTheme(accountKey, settings.theme));
+  }, [accountKey, accountSettled, settingsLoaded, settings.theme, themeCache]);
+
+  // One-time: a guest who picked night before this device cache existed keeps it.
+  useEffect(() => {
+    if (auth || authPending || !settingsLoaded || themeCache.migrated) return;
+    const legacy = legacyDeviceTheme(settings);
+    setThemeCache(
+      writeThemeCache((c) => ({
+        ...c,
+        device: c.device ?? (legacy === "night" ? "night" : null),
+        migrated: true,
+      })),
+    );
+  }, [auth, authPending, settingsLoaded, settings, themeCache.migrated]);
 
   useEffect(() => {
     let page = "";
@@ -255,16 +347,21 @@ export default function App() {
       stripAuthQuery(window.location.pathname, window.location.hash),
     );
     const verifier = window.sessionStorage.getItem(PKCE_VERIFIER_KEY);
-    if (!verifier) return;
+    if (!verifier) {
+      setAuthPending(false);
+      return;
+    }
     void exchangeAuthCode(parsed.code, verifier, window.location.origin)
       .then((tokens) => {
         storeAuth(tokens);
+        setAccountSettled(false);
         setAuth(tokens);
         window.sessionStorage.removeItem(PKCE_VERIFIER_KEY);
       })
       .catch(() => {
         /* stay a guest */
-      });
+      })
+      .finally(() => setAuthPending(false));
   }, []);
 
   async function onSignIn() {
@@ -320,9 +417,11 @@ export default function App() {
           settings: loaded.settings,
         });
       }
+      setAccountSettled(true);
       await pushSnapshot(tokens.idToken, next);
     } catch {
       /* stay on this browser */
+      setAccountSettled(true);
     } finally {
       syncingRef.current = false;
     }
@@ -369,6 +468,8 @@ export default function App() {
         setSessions(loaded.sessions);
         setWordEvents(loaded.events);
         setSettings(loaded.settings);
+        settingsLoadedRef.current = true;
+        setSettingsLoaded(true);
         setReady(true);
         void hydrateRemote(byId);
       } catch (err) {
@@ -668,6 +769,30 @@ export default function App() {
     scheduleCloudPush();
   }
 
+  /**
+   * Toggle. Signed in: saved to the account's synced settings (stamped so the
+   * newest choice wins a merge) and to the local per-account cache. Signed out:
+   * this device only, so it never rewrites an account's preference.
+   */
+  function onThemeChange(theme: ReaderTheme) {
+    if (auth) {
+      if (accountKey) setThemeCache(rememberAccountTheme(accountKey, theme));
+      void onSettings({ ...settingsRef.current, theme, themeSetAt: Date.now() });
+    } else {
+      setThemeCache(rememberDeviceTheme(theme));
+    }
+  }
+
+  /** Reader shows the on-screen theme; its font changes keep the stored theme. */
+  function onReaderSettings(next: ReaderSettings) {
+    if (next.theme !== displayTheme) {
+      onThemeChange(next.theme);
+      return;
+    }
+    const stored = settingsRef.current;
+    void onSettings({ ...next, theme: stored.theme, themeSetAt: stored.themeSetAt });
+  }
+
   async function onAdd(event: FormEvent) {
     event.preventDefault();
     const body = paste.trim();
@@ -753,8 +878,8 @@ export default function App() {
           <ThemeToggle
             key={id}
             className="text-btn menu-action-theme"
-            theme={settings.theme}
-            onChange={(theme) => void onSettings({ ...settings, theme })}
+            theme={displayTheme}
+            onChange={onThemeChange}
           />
         );
       case "review":
@@ -1022,11 +1147,11 @@ export default function App() {
         <Reader
           text={current}
           words={words}
-          settings={settings}
+          settings={{ ...settings, theme: displayTheme }}
           onSetStatus={(hanzi, status) => void setStatus(hanzi, status)}
           onBookmark={(bookmark) => void onBookmark(current.id, bookmark)}
           onDone={(durationMs) => void onDone(current.id, durationMs)}
-          onSettings={(next) => void onSettings(next)}
+          onSettings={onReaderSettings}
         />
       ) : null}
 

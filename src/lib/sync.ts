@@ -1,6 +1,7 @@
 import type { LibraryText, ReaderSettings, ReadingSession, WordRecord } from "../types";
 import { dukiApiBase } from "./gutenberg";
 import { normalizeText } from "./text";
+import { themeChoiceRank } from "./theme";
 import { normalizeWord } from "./word";
 
 export const SYNC_MAX_BYTES = 8 * 1024 * 1024;
@@ -83,7 +84,7 @@ export function mergeSnapshots(local: SyncSnapshot, remote: SyncSnapshot): SyncS
     if (session?.id && session.textId) sessions.set(session.id, session);
   }
 
-  const settings = preferred.settings || other.settings;
+  const settings = mergeSettings(preferred.settings, other.settings);
 
   return {
     v: 1,
@@ -93,6 +94,24 @@ export function mergeSnapshots(local: SyncSnapshot, remote: SyncSnapshot): SyncS
     sessions: [...sessions.values()].sort((a, b) => b.finishedAt - a.finishedAt).slice(0, 200),
     settings,
   };
+}
+
+/**
+ * Font settings follow the preferred (richer) snapshot as before; the theme
+ * follows whichever side picked it most recently, so a toggle on one device
+ * isn't undone by a sync from a device with more words.
+ */
+export function mergeSettings(
+  preferred: ReaderSettings | null,
+  other: ReaderSettings | null,
+): ReaderSettings | null {
+  const base = preferred || other;
+  if (!base || !preferred || !other) return base;
+  if (themeChoiceRank(other) <= themeChoiceRank(preferred)) return base;
+  const merged: ReaderSettings = { ...base, theme: other.theme };
+  if (other.themeSetAt) merged.themeSetAt = other.themeSetAt;
+  else delete merged.themeSetAt;
+  return merged;
 }
 
 function mergeText(a: LibraryText | undefined, b: LibraryText): LibraryText {

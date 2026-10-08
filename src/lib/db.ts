@@ -132,6 +132,18 @@ export async function loadAll(): Promise<{
   };
 }
 
+/** Just the reader settings row: fast, so the theme doesn't wait for the full load. */
+export async function loadSettings(): Promise<ReaderSettings> {
+  const db = await openDb();
+  const tx = db.transaction("settings", "readonly");
+  const row = await reqToPromise(
+    tx.objectStore("settings").get("reader") as IDBRequest<{ key: string } & ReaderSettings | undefined>,
+  );
+  await txDone(tx);
+  db.close();
+  return normalizeSettings(row);
+}
+
 export function normalizeSettings(raw: Partial<ReaderSettings> | undefined): ReaderSettings {
   const fontFamily =
     raw?.fontFamily === "sans" || raw?.fontFamily === "system" || raw?.fontFamily === "serif"
@@ -142,7 +154,11 @@ export function normalizeSettings(raw: Partial<ReaderSettings> | undefined): Rea
       ? Math.min(42, Math.max(18, Math.round(raw.fontSize)))
       : DEFAULT_SETTINGS.fontSize;
   const theme = raw?.theme === "night" || raw?.theme === "paper" ? raw.theme : DEFAULT_SETTINGS.theme;
-  return { fontFamily, fontSize, theme };
+  const out: ReaderSettings = { fontFamily, fontSize, theme };
+  if (typeof raw?.themeSetAt === "number" && Number.isFinite(raw.themeSetAt) && raw.themeSetAt > 0) {
+    out.themeSetAt = raw.themeSetAt;
+  }
+  return out;
 }
 
 export async function putWord(record: WordRecord): Promise<void> {

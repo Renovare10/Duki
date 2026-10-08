@@ -1,11 +1,22 @@
 <!doctype html>
-<html lang="en" data-theme="paper">
+<html lang="en" data-theme="night">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="color-scheme" content="light dark" />
-    <meta name="theme-color" content="#f4eadc" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#16120e" />
+    <!--
+      Dark first paint, before the stylesheet or any JS arrives. Duki starts in
+      night and the app switches to the reader's preference once it knows it
+      (src/lib/theme.ts). Inline <style> is allowed by the production CSP;
+      inline <script> is not, so the boot theme is static markup.
+    -->
+    <style>
+      html { background-color: #1c1612; color: #ead9c4; color-scheme: dark; }
+      html[data-theme="paper"] { background-color: #f4eadc; color: #1b1410; color-scheme: light; }
+      body { margin: 0; }
+    </style>
     <meta
       name="description"
       content="A library of Mandarin stories, colored by the words you know."

@@ -7,6 +7,7 @@ import {
   ensureFreshAuth,
   parseAuthCallback,
   stripAuthQuery,
+  subjectFromIdToken,
 } from "./auth";
 
 function jwtWithExp(expSeconds: number): string {
@@ -91,5 +92,19 @@ describe("ensureFreshAuth", () => {
     expect(next.accessToken).toBe("new-a");
     expect(next.idToken).toBe(fresh);
     expect(next.refreshToken).toBe("r1");
+  });
+});
+
+describe("subjectFromIdToken", () => {
+  it("reads sub from the payload", () => {
+    const payload = Buffer.from(JSON.stringify({ sub: "u-123", email: "a@b.c" })).toString(
+      "base64url",
+    );
+    expect(subjectFromIdToken(`h.${payload}.s`)).toBe("u-123");
+  });
+
+  it("returns null for malformed tokens", () => {
+    expect(subjectFromIdToken("nope")).toBeNull();
+    expect(subjectFromIdToken("a.%%%.c")).toBeNull();
   });
 });

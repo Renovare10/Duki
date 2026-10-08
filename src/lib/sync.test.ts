@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  mergeSettings,
   mergeSnapshots,
   packSnapshot,
   parseSnapshot,
@@ -142,5 +143,54 @@ describe("sync snapshot", () => {
       settings: { fontFamily: "serif", fontSize: 28, theme: "paper" },
     });
     expect(snapshotBytes(packed)).toBeGreaterThan(20);
+  });
+});
+
+describe("mergeSettings (theme)", () => {
+  const base = { fontFamily: "serif" as const, fontSize: 28, theme: "paper" as const };
+
+  it("keeps the preferred side's fonts but the newest theme choice", () => {
+    const preferred = { ...base, fontSize: 32, theme: "paper" as const, themeSetAt: 100 };
+    const other = { ...base, fontSize: 20, theme: "night" as const, themeSetAt: 200 };
+    expect(mergeSettings(preferred, other)).toEqual({
+      ...base,
+      fontSize: 32,
+      theme: "night",
+      themeSetAt: 200,
+    });
+    expect(mergeSettings(other, preferred)).toEqual(other);
+  });
+
+  it("a legacy night beats a never-chosen default, but not a stamped choice", () => {
+    const legacyNight = { ...base, theme: "night" as const };
+    expect(mergeSettings(base, legacyNight)?.theme).toBe("night");
+    expect(mergeSettings({ ...base, themeSetAt: 50 }, legacyNight)?.theme).toBe("paper");
+  });
+
+  it("handles missing sides", () => {
+    expect(mergeSettings(null, base)).toBe(base);
+    expect(mergeSettings(base, null)).toBe(base);
+    expect(mergeSettings(null, null)).toBeNull();
+  });
+
+  it("mergeSnapshots carries the newest theme even from the thinner snapshot", () => {
+    const rich: SyncSnapshot = {
+      v: 1,
+      updatedAt: 10,
+      words: [word("你", 1), word("好", 1)],
+      texts: [],
+      sessions: [],
+      settings: { ...base, theme: "paper", themeSetAt: 100 },
+    };
+    const thin: SyncSnapshot = {
+      v: 1,
+      updatedAt: 5,
+      words: [],
+      texts: [],
+      sessions: [],
+      settings: { ...base, theme: "night", themeSetAt: 300 },
+    };
+    expect(mergeSnapshots(rich, thin).settings?.theme).toBe("night");
+    expect(mergeSnapshots(thin, rich).settings?.theme).toBe("night");
   });
 });

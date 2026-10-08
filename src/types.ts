@@ -122,6 +122,12 @@ export type ReaderSettings = {
   fontFamily: "serif" | "sans" | "system";
   fontSize: number;
   theme: ReaderTheme;
+  /**
+   * When the reader last picked `theme` with the toggle (ms). Absent on
+   * settings written before this field existed; older clients drop it, which
+   * just makes the choice look older during a merge.
+   */
+  themeSetAt?: number | null;
 };
 
 export type BackupFile = {

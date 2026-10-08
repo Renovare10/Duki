@@ -74,6 +74,18 @@ export function emailFromIdToken(idToken: string): string | null {
   }
 }
 
+/** Cognito `sub` (stable per account). Used only as a local cache key, never trusted. */
+export function subjectFromIdToken(idToken: string): string | null {
+  const parts = idToken.split(".");
+  if (parts.length < 2) return null;
+  try {
+    const json = JSON.parse(base64UrlToJson(parts[1])) as { sub?: string };
+    return typeof json.sub === "string" && json.sub ? json.sub : null;
+  } catch {
+    return null;
+  }
+}
+
 function base64UrlToJson(part: string): string {
   const padded = part.replace(/-/g, "+").replace(/_/g, "/") + "===".slice((part.length + 3) % 4);
   return atob(padded);

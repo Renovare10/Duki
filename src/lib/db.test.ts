@@ -47,6 +47,16 @@ describe("parseBackup", () => {
 });
 
 describe("normalizeSettings", () => {
+  it("keeps a valid themeSetAt and drops junk", () => {
+    expect(normalizeSettings({ theme: "night", themeSetAt: 1234 }).themeSetAt).toBe(1234);
+    expect("themeSetAt" in normalizeSettings({ theme: "night" })).toBe(false);
+    expect(
+      "themeSetAt" in
+        normalizeSettings({ theme: "night", themeSetAt: "x" } as unknown as Partial<ReaderSettings>),
+    ).toBe(false);
+    expect("themeSetAt" in normalizeSettings({ theme: "night", themeSetAt: null })).toBe(false);
+  });
+
   it("keeps theme night", () => {
     expect(
       normalizeSettings({ fontFamily: "serif", fontSize: 28, theme: "night" }).theme,

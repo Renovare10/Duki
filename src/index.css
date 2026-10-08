@@ -2250,3 +2250,19 @@ button.badge {
     box-sizing: border-box;
   }
 }
+
+/* ---- Theme switch: a veil in the old background fades out over the new theme ---- */
+
+.theme-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  pointer-events: none;
+  opacity: 1;
+  transition-property: opacity;
+  transition-timing-function: ease-out;
+}
+
+.theme-veil-out {
+  opacity: 0;
+}
