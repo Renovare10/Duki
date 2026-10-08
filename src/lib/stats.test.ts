@@ -21,7 +21,6 @@ import {
   midBandEmpty,
   textProgress,
   textsByProgress,
-  topMisses,
   unknownLoadBucketKey,
   wordsByStatus,
 } from "./stats";
@@ -38,18 +37,6 @@ describe("lexiconCounts", () => {
       normalizeWord({ hanzi: "她", status: "unknown" }),
     ];
     expect(lexiconCounts(words)).toEqual({ known: 2, shaky: 1, unknown: 1 });
-  });
-});
-
-describe("topMisses", () => {
-  it("orders by the requested count", () => {
-    const words = [
-      normalizeWord({ hanzi: "难", status: "unknown", dontKnowCount: 5 }),
-      normalizeWord({ hanzi: "易", status: "shaky", dontKnowCount: 1, barelyCount: 8 }),
-      normalizeWord({ hanzi: "好", status: "known", okayCount: 4 }),
-    ];
-    expect(topMisses(words, "dontKnowCount", 2).map((w) => w.hanzi)).toEqual(["难", "易"]);
-    expect(topMisses(words, "barelyCount", 2).map((w) => w.hanzi)).toEqual(["易"]);
   });
 });
 
@@ -320,22 +307,23 @@ describe("snapshot stats", () => {
   const words = [
     normalizeWord({ hanzi: "新", status: "unknown" }),
     normalizeWord({ hanzi: "读", status: "known" }),
-    normalizeWord({ hanzi: "学", status: "shaky", repetitions: 0, intervalDays: 1, dueAt: NOW + DAY }),
-    normalizeWord({ hanzi: "幼", status: "known", repetitions: 2, intervalDays: 6, dueAt: NOW + 3 * DAY }),
-    normalizeWord({ hanzi: "熟", status: "known", repetitions: 5, intervalDays: 40, dueAt: NOW - DAY }),
+    normalizeWord({ hanzi: "学", status: "shaky", phase: "learning", step: 1, dueAt: NOW + 10 * 60_000 }),
+    normalizeWord({ hanzi: "忘", status: "unknown", phase: "relearning", intervalDays: 1, dueAt: NOW + 60_000 }),
+    normalizeWord({ hanzi: "幼", status: "known", phase: "review", intervalDays: 6, dueAt: NOW + 3 * DAY }),
+    normalizeWord({ hanzi: "熟", status: "shaky", phase: "review", intervalDays: 40, dueAt: NOW - DAY }),
   ];
 
-  it("splits card states", () => {
-    expect(cardStateCounts(words)).toEqual({ fresh: 1, readKnown: 1, learning: 1, young: 1, mature: 1 });
+  it("splits card states by phase", () => {
+    expect(cardStateCounts(words)).toEqual({ fresh: 1, readKnown: 1, learning: 2, young: 1, mature: 1 });
   });
 
-  it("forecasts scheduled cards with overdue in today and unknown/shaky as queued", () => {
+  it("forecasts scheduled cards (overdue and learning in today) and counts new cards waiting", () => {
     const f = reviewForecast(words, NOW, 7);
-    expect(f.days.map((d) => d.count)).toEqual([1, 0, 0, 1, 0, 0, 0]);
-    expect(f.queued).toBe(2);
+    expect(f.days.map((d) => d.count)).toEqual([3, 0, 0, 1, 0, 0, 0]);
+    expect(f.newWaiting).toBe(1);
   });
 
-  it("buckets intervals for reviewed cards only", () => {
+  it("buckets intervals for review and relearning cards only", () => {
     const dist = intervalDistribution(words);
     expect(dist.find((b) => b.label === "1d")!.count).toBe(1);
     expect(dist.find((b) => b.label === "2–6d")!.count).toBe(1);

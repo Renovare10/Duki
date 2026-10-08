@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { LibraryText, ReadingSession, TextScore, WordEvent, WordRecord } from "../types";
 import { getGloss } from "../lib/glossary";
 import type { DemoData } from "../lib/demo";
+import { NEW_CARDS_PER_DAY } from "../lib/review";
 import {
   activityByDay,
   activityStreaks,
@@ -14,13 +15,11 @@ import {
   progressSeries,
   RANGE_OPTIONS,
   rangeStart,
-  recentSessionLoads,
   reviewDays,
   reviewForecast,
   summarizePeriod,
   textProgress,
   textsByProgress,
-  topMisses,
   wordsByStatus,
   type Granularity,
   type ProgressBucket,
@@ -198,10 +197,6 @@ export function Stats({
 
   const lexicon = lexiconCounts(words.values());
   const progress = textProgress(texts);
-  const dontKnow = topMisses(words.values(), "dontKnowCount");
-  const barely = topMisses(words.values(), "barelyCount");
-  const loads = recentSessionLoads(sessions, texts);
-  const maxRemaining = Math.max(1, ...loads.map((s) => s.remaining));
   const unknownHist = countUnknownBuckets(scores.values());
 
   if (panel?.kind === "words") {
@@ -276,7 +271,7 @@ export function Stats({
     <div className="shell stats-shell">
       <section className="hero">
         <h1>Stats</h1>
-        <p>Progress over time, your lexicon, the words you miss, and how hard recent finishes still were.</p>
+        <p>Progress over time: what you’ve learned and forgotten, how reviews are going, and what’s coming up.</p>
       </section>
 
       {demo ? (
@@ -392,63 +387,7 @@ export function Stats({
           )}
         </>
       )}
-
-      <h2 className="section-label">Misses · Don’t know</h2>
-      <MissList words={dontKnow} field="dontKnowCount" onReviewWord={onReviewWord} empty="No Don’t know taps yet." />
-
-      <h2 className="section-label">Misses · Barely</h2>
-      <MissList words={barely} field="barelyCount" onReviewWord={onReviewWord} empty="No Barely taps yet." />
-
-      <h2 className="section-label">Unknown load after finishing</h2>
-      {loads.length === 0 ? (
-        <p className="fine-print">Finish a text with I’m done to record a session.</p>
-      ) : (
-        <ul className="session-list">
-          {loads.map((row) => (
-            <li key={row.id}>
-              <div className="session-row">
-                <span className="session-title">{row.title}</span>
-                <span className="session-n">{row.remaining} still unknown or shaky</span>
-              </div>
-              <div className="load-bar" aria-hidden="true">
-                <span style={{ width: `${Math.round((row.remaining / maxRemaining) * 100)}%` }} />
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
     </div>
-  );
-}
-
-function MissList({
-  words,
-  field,
-  onReviewWord,
-  empty,
-}: {
-  words: WordRecord[];
-  field: "dontKnowCount" | "barelyCount";
-  onReviewWord?: (hanzi: string) => void;
-  empty: string;
-}) {
-  if (words.length === 0) return <p className="fine-print">{empty}</p>;
-  return (
-    <ul className="miss-list">
-      {words.map((word) => (
-        <li key={word.hanzi}>
-          <button
-            type="button"
-            className="miss-btn"
-            disabled={!onReviewWord}
-            onClick={() => onReviewWord?.(word.hanzi)}
-          >
-            <span className="miss-hanzi">{word.hanzi}</span>
-            <span className="miss-n">{word[field]}×</span>
-          </button>
-        </li>
-      ))}
-    </ul>
   );
 }
 
@@ -500,7 +439,7 @@ function ProgressDashboard({
   const activity = useMemo(() => activityByDay(events, sessions), [events, sessions]);
   const streak = useMemo(() => activityStreaks(activity, now), [activity, now]);
   const states = useMemo(() => cardStateCounts(words.values()), [words]);
-  const { days: forecast, queued } = useMemo(() => reviewForecast(words.values(), now, 30), [words, now]);
+  const { days: forecast, newWaiting } = useMemo(() => reviewForecast(words.values(), now, 30), [words, now]);
   const intervals = useMemo(() => intervalDistribution(words.values()), [words]);
   const hardest = useMemo(() => hardestWords(words.values(), events, 8), [words, events]);
   const { full, ticks } = useMemo(() => bucketLabels(buckets, granularity), [buckets, granularity]);
@@ -608,7 +547,7 @@ function ProgressDashboard({
         <Kpi
           value={compact(forecast[0]?.count ?? 0)}
           label="Due today"
-          sub={`${compact(dueWeek)} this week · +${compact(queued)} queued`}
+          sub={`${compact(dueWeek)} this week · ${compact(newWaiting)} new waiting`}
         />
         <Kpi
           value={minutesLabel(period.minutes)}
@@ -738,19 +677,21 @@ function ProgressDashboard({
           <Heatmap counts={activity} now={now} />
         </ChartCard>
 
-        <ChartCard title="Card states" note="Mature = reviewed and known with an SM-2 interval of 21+ days.">
+        <ChartCard title="Card states" note="Mature = review cards with an interval of 21+ days. Young = under 21 days.">
           <StackBar
             parts={[
               { key: "mature", label: "Mature", hint: "21d+", color: C.known, value: states.mature },
-              { key: "young", label: "Young", hint: "known, <21d", color: "var(--chart-young)", value: states.young },
-              { key: "learning", label: "Learning", hint: "reviewed, not known", color: C.shaky, value: states.learning },
+              { key: "young", label: "Young", hint: "<21d", color: "var(--chart-young)", value: states.young },
+              { key: "learning", label: "Learning", hint: "minute steps", color: C.shaky, value: states.learning },
               { key: "readKnown", label: "Known from reading", hint: "never reviewed", color: C.relearned, value: states.readKnown },
-              { key: "fresh", label: "New", hint: "not reviewed yet", color: C.fresh, value: states.fresh },
+              { key: "fresh", label: "New", hint: `waiting, ${NEW_CARDS_PER_DAY}/day`, color: C.fresh, value: states.fresh },
             ]}
           />
         </ChartCard>
 
-        <ChartCard title="Upcoming reviews" note={`Scheduled SM-2 reviews for the next 30 days (overdue counts as today). Plus ${compact(queued)} Don’t know / Barely words that stay in the queue every day.`}>
+        <ChartCard title="Upcoming reviews" note={`Scheduled cards for the next 30 days (overdue counts as today).${
+            newWaiting ? ` Plus ${compact(newWaiting)} new Don’t know / Barely words waiting, introduced up to ${NEW_CARDS_PER_DAY} a day.` : ""
+          }`}>
           <BarChart
             labels={forecastLabels}
             tickLabels={forecastTicks}

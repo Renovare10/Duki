@@ -6,7 +6,7 @@
 import type { ReadingSession, ReviewGrade, WordEvent, WordRecord, WordStatus } from "../types";
 import { DEMO_VOCAB } from "../data/demo-vocab";
 import { makeWordEvent } from "./history";
-import { buildReviewQueue } from "./review";
+import { buildReviewQueue, pickNext } from "./review";
 import { addDays, startOfDay } from "./stats";
 import { applyReadingTap, applyReviewGrade } from "./word";
 
@@ -88,7 +88,7 @@ export function generateDemoData(options: {
     }
 
     // Reading: meet new words and re-tap some old ones.
-    const reads = rand() < 0.7 ? (rand() < 0.3 ? 2 : 1) : 0;
+    const reads = d === 0 ? 1 : rand() < 0.7 ? (rand() < 0.3 ? 2 : 1) : 0;
     for (let r = 0; r < reads; r += 1) {
       const start = t;
       const fresh = 3 + Math.floor(rand() * 7);
@@ -121,28 +121,38 @@ export function generateDemoData(options: {
       if (t - start > 3 * 3600_000) break;
     }
 
-    // Review: work through part of the SM-2 queue.
-    if (rand() < 0.88) {
-      const queue = buildReviewQueue(words.values(), t);
-      const cap = 25 + Math.floor(rand() * 45);
-      for (const card of queue.slice(0, cap)) {
+    // Review: a real session — due cards, learning steps re-shown within minutes, new-card cap.
+    // Today’s session is left undone so the example has cards due.
+    if (d > 0 && rand() < 0.88) {
+      const order = buildReviewQueue(words.values(), t).map((w) => w.hanzi);
+      let budget = 80 + Math.floor(rand() * 60);
+      for (let next = pickNext(order, words, t); next && budget > 0; next = pickNext(order, words, t)) {
+        budget -= 1;
+        const card = words.get(next)!;
         let pAgain: number;
         let pHard: number;
-        if (card.status === "unknown") {
-          pAgain = 0.3;
-          pHard = 0.16;
-        } else if (card.status === "shaky") {
-          pAgain = 0.14;
-          pHard = 0.12;
+        if (card.phase === "new" || card.phase === "learning") {
+          pAgain = 0.22 - Math.min(0.12, card.step * 0.08);
+          pHard = 0.14;
+        } else if (card.phase === "relearning") {
+          pAgain = 0.12;
+          pHard = 0.1;
         } else {
-          pAgain = 0.04 + 0.1 / Math.max(1, card.intervalDays / 2) + (2.5 - card.ease) * 0.04;
-          pHard = 0.06;
+          pAgain = 0.04 + 0.08 / Math.max(1, card.intervalDays / 3) + (2.5 - card.ease) * 0.05;
+          pHard = 0.07;
         }
         const roll = rand();
         const g: ReviewGrade =
-          roll < pAgain ? "again" : roll < pAgain + pHard ? "hard" : roll < 0.93 ? "good" : "easy";
+          roll < pAgain ? "again" : roll < pAgain + pHard ? "hard" : roll < 0.94 ? "good" : "easy";
         grade(card.hanzi, g, t);
-        t += 6_000 + rand() * 14_000;
+        order.splice(order.indexOf(next), 1);
+        order.push(next);
+        t += 8_000 + rand() * 16_000;
+        // If only learning cards are left, wait for the next step like a real learner would.
+        const peek = pickNext(order, words, t);
+        if (peek && words.get(peek)!.dueAt != null && words.get(peek)!.dueAt! > t) {
+          t = Math.max(t, words.get(peek)!.dueAt!);
+        }
       }
     }
   }

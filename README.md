@@ -16,9 +16,9 @@ Unknown is red, shaky is yellow, known is plain. Hover pinyin only on unknown/sh
 
 ## Review and stats
 
-SM-2 cards for unknown, shaky, and due words.
+Spaced repetition (SM-2 as Anki runs it). Words you mark Don’t know or Barely become **new cards**, introduced up to 20 a day. New cards step through 1 min → 10 min, then graduate to 1 day; after that Good multiplies the interval by the card’s ease (≈ 1 → 3 → 8 → 20 → 50 days), Hard ×1.2, Easy ×ease×1.3. Again on a review card is a lapse: ease −0.2, the interval resets to 1 day, and the card relearns at 10 min. Cards are shown only when due (review cards from midnight of their due day). Grade buttons preview the next interval. Reader taps never reschedule a card, except Don’t know on a scheduled card, which makes it due now without touching its interval or ease. Older saved cards keep their interval and due date; never-reviewed misses join the new-card queue (20/day), so nothing floods one day.
 
-**Stats** (`#/stats`) is an Anki-style dashboard: learned & forgotten per day/month, cumulative totals, words over time (known/shaky/unknown), reviews and retention, new words met, reading time, a daily-activity heatmap, streaks, card states (new / learning / young / mature), a 30-day review forecast, interval spread, and hardest words — with 1 month / 3 months / 1 year / All and By day / By month toggles. Misses and recent unknown load are still below.
+**Stats** (`#/stats`) is an Anki-style dashboard: learned & forgotten per day/month, cumulative totals, words over time (known/shaky/unknown), reviews and retention, new words met, reading time, a daily-activity heatmap, streaks, card states (new / learning / young / mature), a 30-day review forecast, interval spread, and hardest words — with 1 month / 3 months / 1 year / All and By day / By month toggles.
 
 - *Learned* = the first time a word reaches Known (Okay in the reader, Good/Easy in review). *Forgotten* = a learned word dropping back to Don’t know (Again / Don’t know); Barely/Hard is not a lapse. *Relearned* = a forgotten word reaching Known again.
 - History comes from an `events` IndexedDB store (DB v6) that logs every reader tap and review grade. It is local to this browser — not synced or exported yet — and starts when you first run this version.

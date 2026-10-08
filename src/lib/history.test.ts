@@ -25,7 +25,7 @@ describe("makeWordEvent", () => {
     expect(ev.grade).toBe("good");
     expect(ev.prevStatus).toBe("shaky");
     expect(ev.status).toBe("known");
-    expect(ev.intervalDays).toBe(1);
+    expect(ev.intervalDays).toBe(0); // first Good on a new card is a 10-minute learning step
     expect(ev.at).toBe(2000);
   });
 });

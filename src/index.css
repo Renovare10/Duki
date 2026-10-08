@@ -1452,19 +1452,6 @@ button.badge {
   font-size: 0.8rem;
 }
 
-.load-bar {
-  height: 0.28rem;
-  background: var(--paper-3);
-  border-radius: 99px;
-  overflow: hidden;
-  margin: 0.3rem 0 0.45rem;
-}
-
-.load-bar > span {
-  display: block;
-  height: 100%;
-  background: var(--seal);
-}
 
 /* ---- Stats: progress dashboard ---- */
 
@@ -1964,6 +1951,58 @@ button.badge {
 .review-meta {
   color: var(--ink-soft);
   margin: 0 0 0.8rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.3rem 0.9rem;
+  font-size: 0.9rem;
+}
+
+.review-count {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.review-count.new {
+  color: var(--new-ink);
+}
+
+.review-count.learning {
+  color: var(--unknown-ink);
+}
+
+.review-count.due {
+  color: var(--ok);
+}
+
+.review-note {
+  margin-left: auto;
+  font-size: 0.8rem;
+}
+
+.grade {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+}
+
+.grade-when {
+  font-size: 0.74rem;
+  font-weight: 500;
+  opacity: 0.85;
+  font-variant-numeric: tabular-nums;
+}
+
+.review-done p {
+  margin: 0.35rem 0 0;
+  line-height: 1.45;
+}
+
+.review-done .review-done-title {
+  margin-top: 0;
+  color: var(--ink);
+  font-weight: 600;
 }
 
 .review-card {
@@ -2027,7 +2066,7 @@ button.badge {
 
 .grade.hard {
   background: #c9a227;
-  color: var(--ink);
+  color: #1b1410;
 }
 
 .grade.good {

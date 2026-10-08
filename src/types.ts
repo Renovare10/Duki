@@ -2,6 +2,12 @@ export type WordStatus = "unknown" | "shaky" | "known";
 
 export type ReviewGrade = "again" | "hard" | "good" | "easy";
 
+/**
+ * Spaced-repetition phase (Anki-style SM-2):
+ * new → learning (minute steps) → review (day intervals) ⇄ relearning (after a lapse).
+ */
+export type CardPhase = "new" | "learning" | "review" | "relearning";
+
 export type WordRecord = {
   hanzi: string;
   status: WordStatus;
@@ -13,6 +19,13 @@ export type WordRecord = {
   intervalDays: number;
   repetitions: number;
   dueAt: number | null;
+  phase: CardPhase;
+  /** Index into the learning / relearning steps while in those phases. */
+  step: number;
+  /** Times a review card was forgotten (Again in the review phase). */
+  lapses: number;
+  /** First time the card was graded in Review (for the new-cards-per-day limit). */
+  introducedAt: number | null;
 };
 
 /**

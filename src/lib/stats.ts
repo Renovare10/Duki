@@ -7,6 +7,7 @@ import type {
   WordStatus,
 } from "../types";
 import { isScored } from "./score";
+import { addDays, addMonths, dayDiff, dayKey, monthKey, startOfDay, startOfMonth } from "./dates";
 
 export function wordsByStatus(
   words: Iterable<WordRecord>,
@@ -47,17 +48,6 @@ export function lexiconCounts(words: Iterable<WordRecord>): {
   return { known, shaky, unknown };
 }
 
-export function topMisses(
-  words: Iterable<WordRecord>,
-  field: "dontKnowCount" | "barelyCount",
-  limit = 8,
-): WordRecord[] {
-  return [...words]
-    .filter((w) => w[field] > 0)
-    .sort((a, b) => b[field] - a[field] || a.hanzi.localeCompare(b.hanzi, "zh"))
-    .slice(0, limit);
-}
-
 export function textProgress(texts: LibraryText[]): {
   finished: number;
   inProgress: number;
@@ -73,23 +63,6 @@ export function textProgress(texts: LibraryText[]): {
     } else untouched += 1;
   }
   return { finished, inProgress, untouched };
-}
-
-export function recentSessionLoads(
-  sessions: ReadingSession[],
-  texts: LibraryText[],
-  limit = 12,
-): { id: string; title: string; remaining: number; finishedAt: number }[] {
-  const titles = new Map(texts.map((t) => [t.id, t.title]));
-  return [...sessions]
-    .sort((a, b) => b.finishedAt - a.finishedAt)
-    .slice(0, limit)
-    .map((s) => ({
-      id: s.id,
-      title: titles.get(s.textId) || "Text",
-      remaining: s.uniqueUnknown + s.uniqueShaky,
-      finishedAt: s.finishedAt,
-    }));
 }
 
 /** Learner mid-band (~Just right through soft Harder): empty-state watches this. */
@@ -176,7 +149,7 @@ export function midBandEmpty(scores: Iterable<TextScore>): boolean {
  *  - retention: share of reviews of learned (`known`) cards not graded Again.
  * ---------------------------------------------------------------------------------------- */
 
-export const DAY_MS = 24 * 60 * 60 * 1000;
+export { DAY_MS } from "./dates";
 /** Anki’s threshold: a card with an interval of 21+ days is mature. */
 export const MATURE_DAYS = 21;
 
@@ -190,51 +163,15 @@ export const RANGE_OPTIONS: { key: RangeKey; label: string }[] = [
   { key: "all", label: "All" },
 ];
 
-export function startOfDay(ts: number): number {
-  const d = new Date(ts);
-  d.setHours(0, 0, 0, 0);
-  return d.getTime();
-}
-
-export function startOfMonth(ts: number): number {
-  const d = new Date(ts);
-  d.setHours(0, 0, 0, 0);
-  d.setDate(1);
-  return d.getTime();
-}
-
-/** Calendar-day arithmetic (DST-safe). */
-export function addDays(ts: number, n: number): number {
-  const d = new Date(ts);
-  d.setDate(d.getDate() + n);
-  return d.getTime();
-}
-
-export function addMonths(ts: number, n: number): number {
-  const d = new Date(ts);
-  d.setMonth(d.getMonth() + n);
-  return d.getTime();
-}
-
-function pad2(n: number): string {
-  return n < 10 ? `0${n}` : String(n);
-}
-
-/** Local calendar day, e.g. 2026-10-07. */
-export function dayKey(ts: number): string {
-  const d = new Date(ts);
-  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
-}
-
-export function monthKey(ts: number): string {
-  const d = new Date(ts);
-  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}`;
-}
-
-/** Whole calendar days from a to b (b later → positive). */
-export function dayDiff(a: number, b: number): number {
-  return Math.round((startOfDay(b) - startOfDay(a)) / DAY_MS);
-}
+export {
+  addDays,
+  addMonths,
+  dayDiff,
+  dayKey,
+  monthKey,
+  startOfDay,
+  startOfMonth,
+} from "./dates";
 
 export type TransitionKind = "seen" | "learned" | "relearned" | "forgotten";
 export type Transition = { at: number; hanzi: string; kind: TransitionKind };
@@ -577,26 +514,25 @@ export function activityStreaks(
 }
 
 export type CardStates = {
-  /** Unknown/shaky, never reviewed in SM-2. */
+  /** Don’t know / Barely words waiting to be introduced in Review. */
   fresh: number;
-  /** Marked Okay while reading, never reviewed. */
+  /** Marked Okay while reading, never studied in Review. */
   readKnown: number;
-  /** Reviewed, currently unknown/shaky. */
+  /** In minute-long learning or relearning steps. */
   learning: number;
-  /** Reviewed, known, interval < 21 days. */
+  /** Review cards with an interval under 21 days. */
   young: number;
-  /** Reviewed, known, interval ≥ 21 days. */
+  /** Review cards with an interval of 21+ days. */
   mature: number;
 };
 
 export function cardStateCounts(words: Iterable<WordRecord>): CardStates {
   const out: CardStates = { fresh: 0, readKnown: 0, learning: 0, young: 0, mature: 0 };
   for (const w of words) {
-    const reviewed = w.dueAt != null || w.repetitions > 0;
-    if (!reviewed) {
+    if (w.phase === "new") {
       if (w.status === "known") out.readKnown += 1;
       else out.fresh += 1;
-    } else if (w.status !== "known") out.learning += 1;
+    } else if (w.phase === "learning" || w.phase === "relearning") out.learning += 1;
     else if (w.intervalDays >= MATURE_DAYS) out.mature += 1;
     else out.young += 1;
   }
@@ -604,28 +540,27 @@ export function cardStateCounts(words: Iterable<WordRecord>): CardStates {
 }
 
 /**
- * Scheduled SM-2 reviews for each of the next `days` days (index 0 = today, overdue folded in).
- * Unknown/shaky words sit in the review queue every day regardless of schedule, so they are
- * reported separately as `queued` instead of swamping today’s bar.
+ * Scheduled cards (learning, relearning, review) due on each of the next `days` days
+ * (index 0 = today, overdue folded in). New cards aren’t scheduled yet; `newWaiting` is how
+ * many Don’t know / Barely words are waiting to be introduced (NEW_CARDS_PER_DAY at a time).
  */
 export function reviewForecast(
   words: Iterable<WordRecord>,
   now: number,
   days = 30,
-): { days: { start: number; count: number }[]; queued: number } {
+): { days: { start: number; count: number }[]; newWaiting: number } {
   const today = startOfDay(now);
   const out = Array.from({ length: Math.max(0, days) }, (_, i) => ({ start: addDays(today, i), count: 0 }));
-  let queued = 0;
+  let newWaiting = 0;
   for (const w of words) {
-    if (w.status !== "known") {
-      queued += 1;
+    if (w.phase === "new") {
+      if (w.status !== "known") newWaiting += 1;
       continue;
     }
-    if (w.dueAt == null) continue;
-    const i = Math.max(0, dayDiff(today, w.dueAt));
+    const i = w.dueAt == null ? 0 : Math.max(0, dayDiff(today, w.dueAt));
     if (i < out.length) out[i].count += 1;
   }
-  return { days: out, queued };
+  return { days: out, newWaiting };
 }
 
 export const INTERVAL_BUCKETS: { label: string; lo: number; hi: number }[] = [
@@ -638,11 +573,11 @@ export const INTERVAL_BUCKETS: { label: string; lo: number; hi: number }[] = [
   { label: "6m+", lo: 181, hi: Number.POSITIVE_INFINITY },
 ];
 
-/** SM-2 interval spread across reviewed cards. */
+/** SM-2 interval spread across review (and relearning) cards. */
 export function intervalDistribution(words: Iterable<WordRecord>): { label: string; count: number }[] {
   const counts = INTERVAL_BUCKETS.map(() => 0);
   for (const w of words) {
-    if (w.dueAt == null && w.repetitions === 0) continue;
+    if (w.phase !== "review" && w.phase !== "relearning") continue;
     const i = INTERVAL_BUCKETS.findIndex((b) => w.intervalDays >= b.lo && w.intervalDays < b.hi);
     if (i >= 0) counts[i] += 1;
   }
@@ -672,7 +607,7 @@ export function hardestWords(
   return [...words]
     .map((w) => ({
       hanzi: w.hanzi,
-      lapses: lapses.get(w.hanzi) ?? 0,
+      lapses: Math.max(lapses.get(w.hanzi) ?? 0, w.lapses),
       misses: w.dontKnowCount,
       barely: w.barelyCount,
       ease: w.ease,
