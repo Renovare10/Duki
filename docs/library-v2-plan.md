@@ -316,7 +316,7 @@ The Wikisource pages come through the zh-hans display variant, which the importe
 | `public/works/` total | 4.02 MB in 1,236 files (≈1.66 MB gzipped as a tarball) | Static files served on demand. Nothing is precached. |
 | Bible | 3.55 MB in 1,191 files: 1,189 chapters + `toc.json` 96 KB + `profile.json` 46 KB | About 3 KB per chapter fetch |
 | 吶喊 / 朝花夕拾 / 朱自清 | 259 KB / 168 KB / 46 KB | |
-| JS bundle | 407.7 → 441.2 KB (+33.5 KB raw, **+10.8 KB gzip**: 132.0 → 142.8 KB) | Mostly `text-meta`, topics and the new UI. Work bodies are not in the bundle. |
-| CSS | 29.9 → 36.4 KB (+6.5 KB raw, +1.3 KB gzip) | |
+| JS bundle | 407.7 → 441.3 KB (+33.6 KB raw, **+10.9 KB gzip**: 132.0 → 142.9 KB) | Mostly `text-meta`, topics and the new UI. Work bodies are not in the bundle. |
+| CSS | 29.9 → 36.6 KB (+6.7 KB raw, +1.4 KB gzip) | |
 | Opening a Bible chapter | toc 96 KB once + about 3 KB per chapter (+ profile 46 KB if known-% is shown) | |
 | User storage | about 200 bytes per opened chapter row (no body) | |
