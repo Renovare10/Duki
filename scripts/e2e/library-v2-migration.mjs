@@ -38,9 +38,24 @@ const check = (ok, label) => {
 };
 
 async function serve(dir) {
-  const proc = spawn("python3", ["-m", "http.server", String(PORT), "--bind", "127.0.0.1", "--directory", dir], {
-    stdio: "ignore",
-  });
+  try {
+    await fetch(ORIGIN + "/");
+    throw new Error(`port ${PORT} is already in use — stop the stale server first`);
+  } catch (err) {
+    if (String(err.message).startsWith("port")) throw err;
+  }
+  // Like `python3 -m http.server`, but with no-store so switching builds on
+  // the same origin never serves the previous build's cached index.html.
+  const py = [
+    "import functools, http.server, sys",
+    "class H(http.server.SimpleHTTPRequestHandler):",
+    "    def end_headers(self):",
+    "        self.send_header('Cache-Control', 'no-store')",
+    "        super().end_headers()",
+    "    def log_message(self, *a): pass",
+    "http.server.ThreadingHTTPServer(('127.0.0.1', int(sys.argv[1])), functools.partial(H, directory=sys.argv[2])).serve_forever()",
+  ].join("\n");
+  const proc = spawn("python3", ["-c", py, String(PORT), dir], { stdio: "ignore" });
   for (let i = 0; i < 50; i++) {
     try {
       const res = await fetch(ORIGIN + "/");
@@ -53,11 +68,26 @@ async function serve(dir) {
   throw new Error("server did not start");
 }
 
-const stop = (proc) =>
-  new Promise((r) => {
-    proc.once("exit", r);
-    proc.kill();
-  });
+async function stop(proc) {
+  // Keep the event loop alive while the server shuts down and the port frees.
+  const keepAlive = setInterval(() => {}, 1000);
+  if (proc.exitCode === null && proc.signalCode === null) {
+    await new Promise((r) => {
+      proc.once("exit", r);
+      proc.kill();
+      setTimeout(r, 3000);
+    });
+  }
+  for (let i = 0; i < 30; i++) {
+    try {
+      await fetch(ORIGIN + "/");
+    } catch {
+      break;
+    }
+    await new Promise((r) => setTimeout(r, 100));
+  }
+  clearInterval(keepAlive);
+}
 
 async function waitBoot(page) {
   await page.waitForSelector(".home, .boot-error", { timeout: 30000 });
@@ -160,50 +190,64 @@ function seedData() {
 async function seed(page) {
   const data = seedData();
   await page.evaluate(
-    ({ data, NOW }) =>
+    ({ data, NOW, DAY }) =>
       new Promise((resolve, reject) => {
         const req = indexedDB.open("duki");
         req.onerror = () => reject(req.error);
+        req.onblocked = () => reject(new Error("open blocked"));
         req.onsuccess = () => {
           const db = req.result;
-          const tx = db.transaction(["words", "texts", "sessions", "settings", "events"], "readwrite");
-          for (const w of data.words) tx.objectStore("words").put(w);
-          for (const e of data.events) tx.objectStore("events").put(e);
-          for (const s of data.sessions) tx.objectStore("sessions").put(s);
-          tx.objectStore("settings").put({ key: "reader", fontFamily: "kai", fontSize: 32, theme: "night", themeSetAt: NOW - 1000 });
-          tx.objectStore("texts").put({
-            id: "my-paste-1",
-            title: "我的日记",
-            blurb: "Added by you.",
-            body: "今天我和朋友去学校。我们喝茶，看书。老师说中国很大。",
-            kind: "paste",
-            category: "paste",
-            featured: false,
-            createdAt: NOW - 3 * DAY,
-            readAt: NOW - 2 * DAY,
-            bookmark: null,
-            preview: false,
-          });
-          const texts = tx.objectStore("texts");
-          const patch = (id, fn) => {
-            const g = texts.get(id);
-            g.onsuccess = () => g.result && texts.put(fn(g.result));
-          };
-          patch("sample-home", (t) => ({ ...t, readAt: NOW - 5 * DAY }));
-          patch("novel-lamp-1", (t) => ({ ...t, bookmark: { tokenIndex: 41, scrollY: 640 } }));
-          patch("hist-silk", (t) => ({ ...t, bookmark: { tokenIndex: 12, scrollY: 180 } }));
+          let tx;
+          try {
+            tx = db.transaction(["words", "texts", "sessions", "settings", "events"], "readwrite");
+          } catch (e) {
+            reject(e);
+            return;
+          }
+          tx.onabort = () => reject(tx.error || new Error("seed aborted"));
+          tx.onerror = () => reject(tx.error);
           tx.oncomplete = () => {
             db.close();
             resolve();
           };
-          tx.onerror = () => reject(tx.error);
+          setTimeout(() => reject(new Error("seed timed out")), 90000);
+          try {
+            for (const w of data.words) tx.objectStore("words").put(w);
+            for (const e of data.events) tx.objectStore("events").put(e);
+            for (const s of data.sessions) tx.objectStore("sessions").put(s);
+            tx.objectStore("settings").put({ key: "reader", fontFamily: "kai", fontSize: 32, theme: "night", themeSetAt: NOW - 1000 });
+            tx.objectStore("texts").put({
+              id: "my-paste-1",
+              title: "我的日记",
+              blurb: "Added by you.",
+              body: "今天我和朋友去学校。我们喝茶，看书。老师说中国很大。",
+              kind: "paste",
+              category: "paste",
+              featured: false,
+              createdAt: NOW - 3 * DAY,
+              readAt: NOW - 2 * DAY,
+              bookmark: null,
+              preview: false,
+            });
+            const texts = tx.objectStore("texts");
+            const patch = (id, fn) => {
+              const g = texts.get(id);
+              g.onsuccess = () => g.result && texts.put(fn(g.result));
+            };
+            patch("sample-home", (t) => ({ ...t, readAt: NOW - 5 * DAY }));
+            patch("novel-lamp-1", (t) => ({ ...t, bookmark: { tokenIndex: 41, scrollY: 640 } }));
+            patch("hist-silk", (t) => ({ ...t, bookmark: { tokenIndex: 12, scrollY: 180 } }));
+          } catch (e) {
+            reject(e);
+          }
         };
       }),
-    { data, NOW },
+    { data, NOW, DAY },
   );
 }
 
 async function main() {
+  const alive = setInterval(() => {}, 1000);
   const profile = fs.mkdtempSync(path.join(os.tmpdir(), "duki-mig-"));
   const launch = (dir) =>
     chromium.launchPersistentContext(dir, {
@@ -220,7 +264,9 @@ async function main() {
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto(ORIGIN + "/#/");
   await waitBoot(page);
+  const t0 = Date.now();
   await seed(page);
+  console.log(`  (seeded in ${Date.now() - t0} ms)`);
   await page.reload();
   await waitBoot(page);
   const before = await dump(page);
@@ -239,11 +285,12 @@ async function main() {
   const afterBoot = await dump(page);
   check(afterBoot.version === 6, `new build keeps database at v${afterBoot.version} (no schema change)`);
   compareStores(before, afterBoot, "new build boot");
+  await page.screenshot({ path: path.join(outDir, "library-v2-migration-2-new.png") });
   const homeText = await page.textContent(".home");
+  console.log("  rows:", (await page.$$eval("[data-row]", (els) => els.map((e) => e.dataset.row))).join(", "));
   check(/Continue reading/.test(homeText) && /旧灯/.test(homeText), "Continue reading shows the half-read 旧灯 chapter");
   check(/丝绸之路/.test(await page.textContent('[data-row="continue"]')), "Continue reading shows half-read 丝绸之路");
   check(/我的日记/.test(homeText), "pasted text still on the shelves");
-  await page.screenshot({ path: path.join(outDir, "library-v2-migration-2-new.png") });
 
   // Stats and review still see the same lexicon.
   await page.goto(ORIGIN + "/#/stats");
@@ -302,7 +349,7 @@ async function main() {
   await page.goto(ORIGIN + "/favicon.svg");
   const data = seedData();
   await page.evaluate(
-    ({ data, NOW }) =>
+    ({ data, NOW, DAY }) =>
       new Promise((resolve, reject) => {
         const req = indexedDB.open("duki", 5);
         req.onupgradeneeded = () => {
@@ -313,6 +360,7 @@ async function main() {
           db.createObjectStore("settings", { keyPath: "key" });
         };
         req.onerror = () => reject(req.error);
+        setTimeout(() => reject(new Error("v5 seed timed out")), 30000);
         req.onsuccess = () => {
           const db = req.result;
           const tx = db.transaction(["words", "texts", "sessions", "settings"], "readwrite");
@@ -332,7 +380,7 @@ async function main() {
           };
         };
       }),
-    { data, NOW },
+    { data, NOW, DAY },
   );
   await page.goto(ORIGIN + "/#/");
   await waitBoot(page);
@@ -348,6 +396,7 @@ async function main() {
 
   check(errors.length === 0, `new build: no script errors${errors.length ? ": " + errors.join(" | ") : ""}`);
   console.log(failures ? `\n${failures} check(s) failed` : "\nAll data-safety checks passed");
+  clearInterval(alive);
   process.exit(failures ? 1 : 0);
 }
 
