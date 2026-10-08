@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import zlib from "node:zlib";
 import { fileURLToPath } from "node:url";
+import OpenCC from "opencc-js";
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const outFile = path.join(root, "..", "public", "glossary.json");
@@ -80,6 +81,22 @@ function cleanGloss(parts) {
   return out.join("; ");
 }
 
+/**
+ * Senses removed from specific words. 黄 / 黄色 mean "yellow" in ordinary texts;
+ * the slang "pornographic / vulgar / lewd" sense is dropped from their glosses.
+ * Words whose only meaning is that slang (黄片, 黄书 …) are left as they are.
+ */
+export const DROP_SENSES = {
+  黄: /porn|obscen|lewd|vulgar|erotic|sexual/i,
+  黄色: /porn|obscen|lewd|vulgar|erotic|sexual/i,
+};
+
+function keepSenses(hanzi, parts) {
+  const drop = DROP_SENSES[hanzi];
+  if (!drop) return parts;
+  return parts.flatMap((p) => String(p).split(/;\s*/)).filter((p) => !drop.test(p));
+}
+
 function isHanWord(s) {
   return /^[\u3400-\u9fff\uf900-\ufaff]{1,8}$/.test(s);
 }
@@ -112,11 +129,12 @@ for (let level = 1; level <= 6; level++) {
     const pinyin = String(item.pinyin || "")
       .trim()
       .replace(/\s+/g, " ");
-    const english = cleanGloss(item.translations || []);
+    const english = cleanGloss(keepSenses(hanzi, item.translations || []));
     upsert(hanzi, pinyin, english, level);
   }
 }
 
+const tradChars = new Set();
 const gz = fs.readFileSync(path.join(root, "cedict.txt.gz"));
 const cedict = zlib.gunzipSync(gz).toString("utf8");
 const lineRe = /^(\S+)\s+(\S+)\s+\[([^\]]+)\]\s+\/(.+)\/\s*$/;
@@ -126,8 +144,20 @@ for (const line of cedict.split(/\n/)) {
   if (!m) continue;
   const simplified = m[2];
   const pinyin = pinyinMarks(m[3].replace(/u:/g, "ü"));
-  const english = cleanGloss(m[4].split("/"));
+  const english = cleanGloss(keepSenses(simplified, m[4].split("/")));
   upsert(simplified, pinyin, english, null);
+  for (const ch of m[1]) tradChars.add(ch);
+}
+
+// Traditional → Simplified character map (OpenCC, single characters), used by
+// the app to match word records across scripts and to show classical texts in
+// Simplified. Stored as a string of pairs: "學学發发…".
+const toSimp = OpenCC.Converter({ from: "t", to: "cn" });
+let t2s = "";
+for (const ch of [...tradChars].sort()) {
+  if (!isHanWord(ch)) continue;
+  const simp = toSimp(ch);
+  if (simp !== ch && [...simp].length === 1 && isHanWord(simp)) t2s += ch + simp;
 }
 
 const packed = {};
@@ -135,8 +165,8 @@ for (const [hanzi, val] of entries) {
   packed[hanzi] = [val.pinyin, val.english];
 }
 
-const payload = { maxLen, count: entries.size, entries: packed };
+const payload = { maxLen, count: entries.size, t2s, entries: packed };
 fs.mkdirSync(path.dirname(outFile), { recursive: true });
 fs.writeFileSync(outFile, JSON.stringify(payload));
 const kb = Math.round(fs.statSync(outFile).size / 1024);
-console.log(`glossary: ${entries.size} words, maxLen=${maxLen}, ${kb} KB -> ${outFile}`);
+console.log(`glossary: ${entries.size} words, ${t2s.length / 2} trad→simp chars, maxLen=${maxLen}, ${kb} KB -> ${outFile}`);
