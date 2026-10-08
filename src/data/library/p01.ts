@@ -5,352 +5,488 @@ const pack: LibraryPack = {
   texts: [
     {
       id: "lib-p01-01-daily-life",
-      title: "灯关了",
-      blurb: "Homework, a wash, and lights out.",
-      topics: ["daily-life","family"],
+      title: "我想睡觉",
+      blurb: "After school and rice, the house goes quiet.",
+      topics: ["daily-life", "family"],
       level: 1,
-      body: "爸爸喜欢书。爸爸吃米饭。爸爸喝茶。\n\n爸爸很高兴。爸爸回家。中午老师回家。\n\n下午同学回家。明天朋友回家。昨天小月回家。\n\n今天老师回家。老师在家里。老师看见朋友。\n\n朋友很高兴。老师看书。",
+      body: `今天上午我在学校看书，写字。我写了十个字。老师看见我，他很高兴。
+
+中午我回家。爸爸和妈妈都在家。我们吃米饭，喝茶。
+
+下午我看电视。现在我睡觉。家里没有人说话。`,
       aiGenerated: true,
       category: "children",
       license: "Original (Duki)",
     },
     {
       id: "lib-p01-02-daily-life",
-      title: "晒衣服",
-      blurb: "Clothes are hung where the sun can reach them.",
-      topics: ["daily-life","school"],
+      title: "同学的书",
+      blurb: "She has no book until a classmate shares his.",
+      topics: ["daily-life", "school"],
       level: 1,
-      body: "妈妈看衣服。妈妈喜欢衣服。妈妈吃米饭。\n\n妈妈喝茶。妈妈很高兴。妈妈回家。\n\n中午爸爸回家。下午老师回家。明天同学回家。\n\n昨天朋友回家。今天小月回家。今天爸爸回家。\n\n爸爸在家里。",
+      body: `今天我去学校。我没有书。同学有三本书，书在桌子上。
+
+老师看我们。我读同学的书，同学写字。书里的字很大。
+
+现在我能看书了。我读了五个字。老师很高兴。`,
       aiGenerated: true,
       category: "children",
       license: "Original (Duki)",
     },
     {
       id: "lib-p01-03-daily-life",
-      title: "没有电的一小时",
-      blurb: "The power is out, and the family waits together.",
-      topics: ["daily-life","work"],
+      title: "爸爸工作",
+      blurb: "Dad is at work until noon brings him home.",
+      topics: ["daily-life", "work"],
       level: 1,
-      body: "朋友：\n\n我喝茶。我很高兴。我回家。\n\n今天妈妈回家。妈妈在家里。妈妈看见朋友。\n\n妈妈吃米饭。妈妈喝茶。妈妈很高兴。\n\n妈妈回家。上午爸爸回家。爸爸在家里。\n\n爸爸看见朋友。爸爸吃米饭。爸爸喝茶。\n\n再见。",
+      body: `今天爸爸去工作。他是老师，他去学校。我和妈妈在家喝茶。
+
+我想爸爸。中午爸爸回家了。他坐在椅子上。
+
+他看见我，他很高兴。我们吃米饭。爸爸现在在家。`,
       aiGenerated: true,
       category: "children",
       license: "Original (Duki)",
     },
     {
       id: "lib-p01-04-daily-life",
-      title: "星期六打扫",
-      blurb: "Saturday cleaning in a small home.",
-      topics: ["daily-life","health"],
+      title: "妈妈去医院",
+      blurb: "Mom sees the doctor and comes home well.",
+      topics: ["daily-life", "health"],
       level: 1,
-      body: "今天爸爸回家。爸爸在家里。爸爸看见朋友。\n\n朋友很高兴。爸爸看桌子。爸爸喜欢桌子。\n\n桌子很好。爸爸吃米饭。爸爸喝茶。\n\n爸爸很高兴。爸爸回家。上午老师回家。\n\n老师在家里。老师看见朋友。",
+      body: `今天妈妈去医院。我不高兴。医生在医院看妈妈。
+
+医生很好。妈妈喝茶，她坐在医院。下午妈妈回家。
+
+我看见妈妈。我们吃苹果。妈妈好了，我很高兴。`,
       aiGenerated: true,
       category: "children",
       license: "Original (Duki)",
     },
     {
       id: "lib-p01-05-daily-life",
-      title: "等车",
-      blurb: "A late bus, then a ride across town.",
-      topics: ["daily-life","nature"],
+      title: "下雨的狗",
+      blurb: "The dog is out in the rain until she finds it.",
+      topics: ["daily-life", "nature"],
       level: 1,
-      body: "同学很高兴。同学回家。朋友看见老师。\n\n朋友吃米饭。朋友喝茶。朋友回家。\n\n小月看见朋友。小月吃米饭。小月喝茶。\n\n小月很高兴。小月回家。朋友很高兴。\n\n请看书。请写字。请喝茶。\n\n我看见朋友。",
+      body: `今天下雨了。狗不在家。我在学校后面看狗。
+
+狗在那里。下雨了，狗很冷。我叫狗，狗来我家。
+
+我们回家。狗不喝茶。我喝茶，狗在椅子上睡觉。`,
       aiGenerated: true,
       category: "children",
       license: "Original (Duki)",
     },
     {
       id: "lib-p01-06-daily-life",
-      title: "给家里打电话",
-      blurb: "A phone call to a grandparent in another city.",
-      topics: ["daily-life","science"],
+      title: "给妈妈打电话",
+      blurb: "A phone call reaches Mom while she is in Beijing.",
+      topics: ["daily-life", "science"],
       level: 1,
-      body: "朋友在家里。朋友看见老师。朋友吃米饭。\n\n朋友喝茶。朋友回家。中午小月回家。\n\n明天我回家。昨天妈妈回家。猫看见狗。\n\n狗很大，猫很小。狗不想一个人吃。朋友很好。\n\n今天小月回家。小月在家里。",
+      body: `我打电话。妈妈在北京，她不在家。我说话，我听妈妈说话。
+
+妈妈很好。她在北京工作。妈妈说话：你看书吗？我说话：我看书。
+
+我想妈妈。下午我看电脑。明天妈妈回家。`,
       aiGenerated: true,
       category: "children",
       license: "Original (Duki)",
     },
     {
       id: "lib-p01-07-daily-life",
-      title: "闹钟响了",
-      blurb: "The alarm is late, but they still get out the door.",
-      topics: ["daily-life","biography"],
+      title: "我们的老师",
+      blurb: "Who the teacher is: Beijing, a daughter, and books.",
+      topics: ["daily-life", "biography"],
       level: 1,
-      body: "老师很高兴。老师回家。上午同学回家。\n\n同学在家里。同学看见朋友。同学看书。\n\n同学喜欢书。同学吃米饭。同学喝茶。\n\n同学很高兴。同学回家。中午朋友回家。\n\n朋友在家里。朋友看见老师。",
+      body: `我认识一个老师。他在北京住，他在学校工作。学生都喜欢他。
+
+他有一个女儿。女儿十岁，她是学生。她学习汉语。老师喜欢她。
+
+老师喜欢书。他看书，他写字。我们都喜欢这个老师。`,
       aiGenerated: true,
       category: "children",
       license: "Original (Duki)",
     },
     {
       id: "lib-p01-08-daily-life",
-      title: "出门以前",
-      blurb: "Washing, breakfast, and packing a bag.",
-      topics: ["daily-life","arts"],
+      title: "一个电影",
+      blurb: "A film about a young woman who likes tea.",
+      topics: ["daily-life", "arts"],
       level: 1,
-      body: "老师很高兴。老师回家。今天同学回家。\n\n同学在家里。同学看见朋友。同学看杯子。\n\n同学喜欢杯子。同学吃米饭。同学喝茶。\n\n同学很高兴。同学回家。上午朋友回家。\n\n朋友在家里。朋友看见老师。",
+      body: `下午我和妈妈去看电影。电影里有一个小姐。她很漂亮。
+
+小姐在北京住。她喜欢茶，她看书。我喜欢这个小姐。
+
+我们看了这个电影。我们回家吃苹果。我很高兴。`,
       aiGenerated: true,
       category: "children",
       license: "Original (Duki)",
     },
     {
       id: "lib-p01-09-daily-life",
-      title: "灯关了",
-      blurb: "Homework, a wash, and lights out.",
-      topics: ["daily-life","news"],
+      title: "北京今天下雨",
+      blurb: "The class hears Beijing is rainy, so they stay.",
+      topics: ["daily-life", "news"],
       level: 1,
-      body: "中午朋友回家。下午小月回家。朋友很高兴。\n\n书很好。“你在家里吗？”“我在家里。”“你喜欢书吗？”“我喜欢书。”上午我回家。我在家里。\n\n我看见朋友。我看书。我喜欢书。\n\n我吃米饭。我喝茶。我很高兴。",
+      body: `今天老师说话。我们都听。北京今天下雨了。
+
+我们今天不去北京。北京很大，我们不坐飞机。
+
+我们在学校看书。下午我们回家。我想明天去北京。`,
       aiGenerated: true,
       category: "children",
       license: "Original (Duki)",
     },
     {
       id: "lib-p01-10-daily-life",
-      title: "晒衣服",
-      blurb: "Clothes are hung where the sun can reach them.",
-      topics: ["daily-life","humor"],
+      title: "杯子太小",
+      blurb: "A cat tries a teacup and does not fit.",
+      topics: ["daily-life", "humor"],
       level: 1,
-      body: "妈妈很高兴。妈妈回家。昨天爸爸回家。\n\n爸爸在家里。爸爸看见朋友。爸爸看衣服。\n\n爸爸喜欢衣服。爸爸吃米饭。爸爸喝茶。\n\n爸爸很高兴。爸爸回家。今天老师回家。\n\n老师在家里。老师看见朋友。",
+      body: `我在家喝茶。猫看我的杯子。杯子很小，猫很大。
+
+猫想坐在杯子里吗？杯子太小。猫坐在椅子上，不坐杯子。
+
+我喝茶。猫不喝茶。猫看我，我看猫。我们都高兴。`,
       aiGenerated: true,
       category: "children",
       license: "Original (Duki)",
     },
     {
       id: "lib-p01-11-daily-life",
-      title: "没有电的一小时",
-      blurb: "The power is out, and the family waits together.",
-      topics: ["daily-life","adventure"],
+      title: "火车站",
+      blurb: "They lose the teacher in the station, then find him.",
+      topics: ["daily-life", "adventure"],
       level: 1,
-      body: "朋友：\n\n妈妈喝茶。妈妈很高兴。妈妈回家。\n\n明天爸爸回家。爸爸在家里。爸爸看见朋友。\n\n爸爸吃米饭。爸爸喝茶。爸爸很高兴。\n\n爸爸回家。昨天老师回家。老师在家里。\n\n老师看见朋友。老师吃米饭。\n\n再见。",
+      body: `今天我去火车站。妈妈在火车站。火车站很大，人很多。
+
+我没有看见老师。妈妈叫：老师！老师在那里。他看我们。
+
+我们看见老师了。他很高兴。我们坐出租车回家。`,
       aiGenerated: true,
       category: "children",
       license: "Original (Duki)",
     },
     {
       id: "lib-p01-12-daily-life",
-      title: "星期六打扫",
-      blurb: "Saturday cleaning in a small home.",
-      topics: ["daily-life","poetry"],
+      title: "热茶",
+      blurb: "A few lines about tea that is too hot to drink.",
+      topics: ["daily-life", "poetry"],
       level: 1,
-      body: "朋友回家。上午小月回家。小月在家里。\n\n小月看见朋友。小月看桌子。小月喜欢桌子。\n\n小月吃米饭。小月喝茶。小月很高兴。\n\n小月回家。下午我回家。我在家里。\n\n我看见朋友。我看桌子。我喜欢桌子。",
+      body: `茶太热，我不喝。
+妈妈看茶，她不喝。
+
+水不热，我喝水。
+爸爸喝水，我喝水。
+
+现在茶好了，我喝茶。
+茶很好。妈妈喝茶，我喝茶。
+我们都高兴。`,
       aiGenerated: true,
       category: "children",
       license: "Original (Duki)",
     },
     {
       id: "lib-p01-13-daily-life",
-      title: "等车",
-      blurb: "A late bus, then a ride across town.",
-      topics: ["daily-life","faith"],
+      title: "说谢谢",
+      blurb: "She says thank you before anyone eats.",
+      topics: ["daily-life", "faith"],
       level: 1,
-      body: "同学看见朋友。同学吃米饭。同学喝茶。\n\n同学很高兴。同学回家。朋友看见老师。\n\n朋友吃米饭。朋友喝茶。朋友回家。\n\n小月看见朋友。小月吃米饭。小月喝茶。\n\n小月很高兴。小月回家。我看见朋友。",
+      body: `我们坐在桌子前面。桌子上有米饭，有菜，有茶。
+
+我想吃。妈妈看我。我说话：谢谢妈妈，谢谢爸爸。
+
+爸爸很高兴。我们吃米饭，喝茶。米饭很好，茶很好。`,
       aiGenerated: true,
       category: "children",
       license: "Original (Duki)",
     },
     {
       id: "lib-p01-14-daily-life",
-      title: "给家里打电话",
-      blurb: "A phone call to a grandparent in another city.",
-      topics: ["daily-life","school"],
+      title: "五个字",
+      blurb: "She writes five characters until they look right.",
+      topics: ["daily-life", "school"],
       level: 1,
-      body: "我喝茶。我很高兴。我回家。\n\n中午妈妈回家。妈妈在家里。妈妈看见朋友。\n\n妈妈吃米饭。妈妈喝茶。妈妈很高兴。\n\n妈妈回家。下午爸爸回家。爸爸在家里。\n\n爸爸看见朋友。爸爸吃米饭。爸爸喝茶。",
+      body: `今天我在学校学习汉语。老师写五个字。字很大。
+
+我写五个字。一个字不好。我看老师的字，我写这个字。
+
+现在五个字都好。老师看见我的字，他很高兴。`,
       aiGenerated: true,
       category: "children",
       license: "Original (Duki)",
     },
     {
       id: "lib-p01-15-daily-life",
-      title: "闹钟响了",
-      blurb: "The alarm is late, but they still get out the door.",
-      topics: ["daily-life","food"],
+      title: "茶太热",
+      blurb: "Lunch is ready, but the tea needs a minute.",
+      topics: ["daily-life", "food"],
       level: 1,
-      body: "小月吃米饭。小月喝茶。小月很高兴。\n\n小月回家。中午我回家。下午妈妈回家。\n\n明天爸爸回家。昨天老师回家。朋友很高兴。\n\n书很好。今天我回家。我在家里。\n\n我看见朋友。我看书。我喜欢书。",
+      body: `中午我们吃米饭和菜。菜很好。妈妈的茶太热。
+
+妈妈不喝茶。我喝水。水不热，水很好。我想喝茶。
+
+现在茶不热了。我喝茶，妈妈喝茶。我们都高兴。`,
       aiGenerated: true,
       category: "children",
       license: "Original (Duki)",
     },
     {
       id: "lib-p01-16-daily-life",
-      title: "出门以前",
-      blurb: "Washing, breakfast, and packing a bag.",
-      topics: ["daily-life","shopping"],
+      title: "八块钱",
+      blurb: "Eight yuan is not enough until Mom pays.",
+      topics: ["daily-life", "shopping"],
       level: 1,
-      body: "小月很高兴。小月回家。昨天我回家。\n\n我在家里。我看见朋友。我看杯子。\n\n我喜欢杯子。我吃米饭。我喝茶。\n\n我很高兴。我回家。今天妈妈回家。\n\n妈妈在家里。妈妈看见朋友。妈妈看杯子。\n\n妈妈喜欢杯子。",
+      body: `我和妈妈去商店。商店有苹果，苹果很漂亮。
+
+一个苹果十块钱。我有八块。我不能买。
+
+妈妈有钱。她买三个苹果。我们回家吃。苹果很好。`,
       aiGenerated: true,
       category: "children",
       license: "Original (Duki)",
     },
     {
       id: "lib-p01-17-daily-life",
-      title: "灯关了",
-      blurb: "Homework, a wash, and lights out.",
-      topics: ["daily-life","travel"],
+      title: "去北京",
+      blurb: "A first flight, then a big afternoon in Beijing.",
+      topics: ["daily-life", "travel"],
       level: 1,
-      body: "同学喜欢书。同学吃米饭。同学喝茶。\n\n同学很高兴。同学回家。下午朋友回家。\n\n朋友在家里。朋友看见老师。朋友看书。\n\n朋友喜欢书。朋友吃米饭。朋友喝茶。\n\n朋友回家。明天小月回家。小月在家里。",
+      body: `今天我们去北京。我们坐飞机。飞机很大。我看妈妈。
+
+妈妈高兴，我高兴。北京很大。中午我们吃米饭，喝茶。
+
+下午我们坐出租车看北京。现在我们回家。我喜欢北京。`,
       aiGenerated: true,
       category: "children",
       license: "Original (Duki)",
     },
     {
       id: "lib-p01-18-daily-life",
-      title: "晒衣服",
-      blurb: "Clothes are hung where the sun can reach them.",
-      topics: ["daily-life","feelings"],
+      title: "朋友不在",
+      blurb: "A friend misses school, and tomorrow is the hope.",
+      topics: ["daily-life", "feelings"],
       level: 1,
-      body: "今天朋友回家。朋友在家里。朋友看见老师。\n\n老师很高兴。朋友看衣服。朋友喜欢衣服。\n\n衣服很好。朋友吃米饭。朋友喝茶。\n\n朋友很高兴。朋友回家。上午小月回家。\n\n小月在家里。小月看见朋友。",
+      body: `今天朋友不在学校。我没有看见他。我不高兴。
+
+我回家。我想朋友。妈妈在家，我们喝茶。妈妈说话：明天他来。
+
+我想明天。明天我在学校看见朋友。我现在高兴了。`,
       aiGenerated: true,
       category: "children",
       license: "Original (Duki)",
     },
     {
       id: "lib-p01-19-daily-life",
-      title: "没有电的一小时",
-      blurb: "The power is out, and the family waits together.",
-      topics: ["daily-life","weather"],
+      title: "太热了",
+      blurb: "Noon is too hot, then rain cools the house.",
+      topics: ["daily-life", "weather"],
       level: 1,
-      body: "朋友：\n\n小月回家。今天我回家。我在家里。\n\n我看见朋友。我吃米饭。我喝茶。\n\n我很高兴。我回家。上午妈妈回家。\n\n妈妈在家里。妈妈看见朋友。妈妈吃米饭。\n\n妈妈喝茶。妈妈很高兴。妈妈回家。\n\n中午爸爸回家。\n\n再见。",
+      body: `中午天气太热。我不想去学校。我和妈妈在家。
+
+下午下雨了。我们看下雨。家里不热了。
+
+狗在椅子上睡觉。我们喝茶，吃苹果。我喜欢这个下午。`,
       aiGenerated: true,
       category: "children",
       license: "Original (Duki)",
     },
     {
       id: "lib-p01-20-daily-life",
-      title: "星期六打扫",
-      blurb: "Saturday cleaning in a small home.",
-      topics: ["daily-life","history"],
+      title: "中国的书",
+      blurb: "A book shows Beijing and the people of China.",
+      topics: ["daily-life", "history"],
       level: 1,
-      body: "小月在家里。小月看见朋友。小月看桌子。\n\n小月喜欢桌子。小月吃米饭。小月喝茶。\n\n小月很高兴。小月回家。中午我回家。\n\n下午妈妈回家。明天爸爸回家。昨天老师回家。\n\n朋友很高兴。桌子很好。",
+      body: `老师有一本书。这是中国的书。书里有北京，有很多人。
+
+我们看书。老师说话，我们听。北京很大，中国很大。
+
+我喜欢这本书。我想明天读。我想认识书里的人。`,
       aiGenerated: true,
       category: "children",
       license: "Original (Duki)",
     },
     {
       id: "lib-p01-21-daily-life",
-      title: "等车",
-      blurb: "A late bus, then a ride across town.",
-      topics: ["daily-life","culture"],
+      title: "请喝茶",
+      blurb: "A guest comes, and the family offers tea and rice.",
+      topics: ["daily-life", "culture"],
       level: 1,
-      body: "请喝茶。我看见朋友。我吃米饭。\n\n我喝茶。我很高兴。我回家。\n\n妈妈看见朋友。妈妈吃米饭。妈妈喝茶。\n\n妈妈很高兴。妈妈回家。爸爸看见朋友。\n\n爸爸吃米饭。爸爸喝茶。爸爸很高兴。\n\n爸爸回家。",
+      body: `朋友来我家。他不是中国人。他是我们的朋友。
+
+我们请他喝茶。中国人喜欢茶。朋友喝茶，他喜欢。
+
+我们吃米饭和菜。朋友说话：谢谢。今天我们都高兴。`,
       aiGenerated: true,
       category: "children",
       license: "Original (Duki)",
     },
     {
       id: "lib-p01-22-daily-life",
-      title: "给家里打电话",
-      blurb: "A phone call to a grandparent in another city.",
-      topics: ["daily-life","sports"],
+      title: "学校后面",
+      blurb: "After class they exercise behind the school.",
+      topics: ["daily-life", "sports"],
       level: 1,
-      body: "老师在家里。老师看见朋友。老师吃米饭。\n\n老师喝茶。老师很高兴。老师回家。\n\n今天同学回家。同学在家里。同学看见朋友。\n\n同学吃米饭。同学喝茶。同学很高兴。\n\n同学回家。上午朋友回家。",
+      body: `下午我在学校。同学和我去学校后面。那里人不多。
+
+同学运动，我看。老师看见我们。他很高兴。
+
+现在我们喝水。我喜欢学校后面。明天我来。`,
       aiGenerated: true,
       category: "children",
       license: "Original (Duki)",
     },
     {
       id: "lib-p01-23-daily-life",
-      title: "闹钟响了",
-      blurb: "The alarm is late, but they still get out the door.",
-      topics: ["daily-life","how-to"],
+      title: "请写这个字",
+      blurb: "Look, write, and read one character until it is right.",
+      topics: ["daily-life", "how-to"],
       level: 1,
-      body: "妈妈喝茶。妈妈很高兴。妈妈回家。\n\n下午爸爸回家。爸爸在家里。爸爸看见朋友。\n\n爸爸看书。爸爸喜欢书。爸爸吃米饭。\n\n爸爸喝茶。爸爸很高兴。爸爸回家。\n\n明天老师回家。老师在家里。老师看见朋友。",
+      body: `你想写字吗？请看老师。老师写一个字，字很大。
+
+请写这个字。字不好吗？请看老师的字。请写这个字。
+
+现在请读这个字。字好了。你学习了。老师高兴。`,
       aiGenerated: true,
       category: "children",
       license: "Original (Duki)",
     },
     {
       id: "lib-p01-24-daily-life",
-      title: "出门以前",
-      blurb: "Washing, breakfast, and packing a bag.",
-      topics: ["daily-life","folk-tales"],
+      title: "狗和猫",
+      blurb: "A big dog sees that the little cat has no rice.",
+      topics: ["daily-life", "folk-tales"],
       level: 1,
-      body: "我看见朋友。我看杯子。我喜欢杯子。\n\n我吃米饭。我喝茶。我很高兴。\n\n我回家。上午妈妈回家。妈妈在家里。\n\n妈妈看见朋友。妈妈看杯子。妈妈喜欢杯子。\n\n妈妈吃米饭。妈妈喝茶。妈妈很高兴。",
+      body: `狗很大，猫很小。狗有很多米饭。猫没有米饭。
+
+猫看狗。狗看见猫没有米饭。狗不吃了。
+
+现在米饭是猫的。猫吃米饭。狗看猫，狗在家。狗和猫都睡觉了。`,
       aiGenerated: true,
       category: "children",
       license: "Original (Duki)",
     },
     {
       id: "lib-p01-25-daily-life",
-      title: "灯关了",
-      blurb: "Homework, a wash, and lights out.",
-      topics: ["daily-life","letters"],
+      title: "朋友，你好",
+      blurb: "A short letter asking a friend to come on Saturday.",
+      topics: ["daily-life", "letters"],
       level: 1,
-      body: "朋友：\n\n妈妈吃米饭。妈妈喝茶。妈妈很高兴。\n\n妈妈回家。昨天爸爸回家。爸爸在家里。\n\n爸爸看见朋友。爸爸看书。爸爸喜欢书。\n\n爸爸吃米饭。爸爸喝茶。爸爸很高兴。\n\n爸爸回家。今天老师回家。老师在家里。\n\n再见。",
+      body: `朋友：
+
+你好。我在家。今天我看书，我写了八个字。
+
+明天是星期六。你来我家吗？我们吃苹果，喝茶。妈妈在家。她想你。
+
+我想你。请来。
+
+再见。`,
       aiGenerated: true,
       category: "children",
       license: "Original (Duki)",
     },
     {
       id: "lib-p01-26-daily-life",
-      title: "晒衣服",
-      blurb: "Clothes are hung where the sun can reach them.",
-      topics: ["daily-life","literature"],
+      title: "书里的小姐",
+      blurb: "She reads a book and stays for the last page.",
+      topics: ["daily-life", "literature"],
       level: 1,
-      body: "朋友回家。中午小月回家。小月在家里。\n\n小月看见朋友。小月看衣服。小月喜欢衣服。\n\n小月吃米饭。小月喝茶。小月很高兴。\n\n小月回家。明天我回家。昨天妈妈回家。\n\n今天爸爸回家。上午老师回家。",
+      body: `我有一本书。书里有一个小姐。她在北京住，她喜欢茶。
+
+她去商店买苹果。她的朋友在火车站。小姐在火车站看见朋友。
+
+她和朋友回家。我看了这本书。我喜欢这本书。`,
       aiGenerated: true,
       category: "children",
       license: "Original (Duki)",
     },
     {
       id: "lib-p01-27-family",
-      title: "新家的第一天",
-      blurb: "Moving day: boxes, a lost shoe, dinner on the floor.",
-      topics: ["family","encyclopedia"],
+      title: "我家",
+      blurb: "The first day she names everyone in the new home.",
+      topics: ["family", "encyclopedia"],
       level: 1,
-      body: "朋友：\n\n朋友回家。上午小月回家。小月在家里。\n\n小月看见朋友。小月吃米饭。小月喝茶。\n\n小月很高兴。小月回家。下午我回家。\n\n明天妈妈回家。昨天爸爸回家。今天老师回家。\n\n上午同学回家。中午朋友回家。\n\n再见。",
+      body: `今天我在我家。家有爸爸，有妈妈，有我。我是女儿。
+
+我们的家在中国。家不大。家里有桌子，有椅子，有一个电视。
+
+中午我们吃米饭，喝茶。我喜欢我家。爸爸和妈妈都高兴。`,
       aiGenerated: true,
       category: "children",
       license: "Original (Duki)",
     },
     {
       id: "lib-p01-28-family",
-      title: "一张照片",
-      blurb: "A family photo takes a long time because the baby cries.",
-      topics: ["family","shopping"],
+      title: "买杯子",
+      blurb: "Mom and daughter buy apples and a cup for Dad.",
+      topics: ["family", "shopping"],
       level: 1,
-      body: "我回家。下午妈妈回家。妈妈在家里。\n\n妈妈看见朋友。妈妈吃米饭。妈妈喝茶。\n\n妈妈很高兴。妈妈回家。明天爸爸回家。\n\n爸爸在家里。爸爸看见朋友。爸爸吃米饭。\n\n爸爸喝茶。爸爸很高兴。爸爸回家。",
+      body: `妈妈和我去商店。我们买苹果。苹果十块，妈妈有钱。
+
+我看见一个杯子。杯子很漂亮。我想：这是爸爸的杯子。
+
+妈妈买杯子。我们回家。爸爸看见杯子，他喝茶。他很高兴。`,
       aiGenerated: true,
       category: "children",
       license: "Original (Duki)",
     },
     {
       id: "lib-p01-29-family",
-      title: "生日",
-      blurb: "Children quietly plan a parent's birthday.",
-      topics: ["family","school"],
+      title: "我是学生",
+      blurb: "Her first school day ends when Mom comes back.",
+      topics: ["family", "school"],
       level: 1,
-      body: "妈妈很高兴。妈妈回家。下午爸爸回家。\n\n爸爸在家里。爸爸看见朋友。爸爸吃米饭。\n\n爸爸喝茶。爸爸很高兴。爸爸回家。\n\n明天老师回家。老师在家里。老师看见朋友。\n\n老师吃米饭。老师喝茶。",
+      body: `今天我去学校。我是学生。我学习汉语，我写字。老师很好。
+
+中午妈妈来学校。她看见我。我读五个字。她很高兴。
+
+下午我们回家。我吃苹果，喝茶。我想明天去学校。`,
       aiGenerated: true,
       category: "children",
       license: "Original (Duki)",
     },
     {
       id: "lib-p01-30-family",
-      title: "去亲戚家",
-      blurb: "Three days with relatives in the countryside.",
-      topics: ["family","work"],
+      title: "爸爸是老师",
+      blurb: "She visits the school where her father works.",
+      topics: ["family", "work"],
       level: 1,
-      body: "苹果很好。昨天我回家。我在家里。\n\n我看见朋友。我看苹果。我喜欢苹果。\n\n我吃米饭。我喝茶。我很高兴。\n\n我回家。今天妈妈回家。妈妈在家里。\n\n妈妈看见朋友。妈妈看苹果。妈妈喜欢苹果。\n\n妈妈吃米饭。",
+      body: `爸爸是老师。他在学校工作。今天我去学校看爸爸。
+
+学校很大。爸爸的学生很多。学生看书，写字。爸爸看学生。
+
+爸爸看见我，他很高兴。中午我们回家吃米饭。我喜欢爸爸的学校。`,
       aiGenerated: true,
       category: "children",
       license: "Original (Duki)",
     },
     {
       id: "lib-p01-31-family",
-      title: "修自行车",
-      blurb: "A parent and child fix a bicycle together.",
-      topics: ["family","health"],
+      title: "去医院",
+      blurb: "She will not eat, sees a doctor, then wants an apple.",
+      topics: ["family", "health"],
       level: 1,
-      body: "上午老师回家。老师在家里。老师看见朋友。\n\n老师吃米饭。老师喝茶。老师很高兴。\n\n老师回家。中午同学回家。同学在家里。\n\n同学看见朋友。同学吃米饭。同学喝茶。\n\n同学很高兴。同学回家。",
+      body: `今天我不想吃米饭。我不高兴。妈妈和我去医院。
+
+医生看我。医生很好。他有水，我喝水。我喝茶。
+
+下午我回家。现在我想吃苹果。我吃一个苹果。妈妈高兴，我好了。`,
       aiGenerated: true,
       category: "children",
       license: "Original (Duki)",
     },
     {
       id: "lib-p01-32-family",
-      title: "剥豆子",
-      blurb: "A child helps shell peas in the courtyard.",
-      topics: ["family","nature"],
+      title: "看下雨",
+      blurb: "Rain keeps Dad, the child, and the dog inside.",
+      topics: ["family", "nature"],
       level: 1,
-      body: "老师吃米饭。老师喝茶。老师回家。\n\n上午同学回家。同学在家里。同学看见朋友。\n\n同学吃米饭。同学喝茶。同学很高兴。\n\n同学回家。中午朋友回家。下午小月回家。\n\n昨天我回家。今天朋友回家。",
+      body: `今天下雨了。天气很冷。爸爸和我在家。狗在家里。
+
+狗不去学校后面。爸爸看书。我看电视。狗在椅子上睡觉。
+
+我们看下雨。我们喝茶。我喜欢狗，我喜欢爸爸。`,
       aiGenerated: true,
       category: "children",
       license: "Original (Duki)",
