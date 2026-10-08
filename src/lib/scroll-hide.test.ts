@@ -1,88 +1,116 @@
 import { describe, expect, it } from "vitest";
 import {
-  initialScrollHide,
-  rebaseScrollHide,
-  SCROLL_HIDE_THRESHOLD,
-  stepScrollHide,
-  type ScrollHideState,
+  initialSheetScroll,
+  rebaseSheetScroll,
+  revealSheetScroll,
+  SHEET_SHADOW_ALLOWANCE,
+  sheetHideDistance,
+  stepSheetScroll,
+  type SheetScrollState,
 } from "./scroll-hide";
 
 const MAX = 5000;
+const D = 200; // hide distance used in most cases
 
-function run(start: number, ys: number[], maxY = MAX, opts = {}): ScrollHideState {
-  let s = initialScrollHide(start, maxY);
-  for (const y of ys) s = stepScrollHide(s, y, maxY, opts);
+function run(start: number, ys: number[], distance = D, maxY = MAX): SheetScrollState {
+  let s = initialSheetScroll(start, maxY);
+  for (const y of ys) s = stepSheetScroll(s, y, maxY, distance);
   return s;
 }
 
-describe("stepScrollHide", () => {
-  it("uses a ~32px threshold", () => {
-    expect(SCROLL_HIDE_THRESHOLD).toBeGreaterThanOrEqual(24);
-    expect(SCROLL_HIDE_THRESHOLD).toBeLessThanOrEqual(40);
+describe("sheetHideDistance", () => {
+  it("is the sheet's own height plus room for its shadow", () => {
+    expect(sheetHideDistance(182)).toBe(182 + SHEET_SHADOW_ALLOWANCE);
+    expect(sheetHideDistance(69.6)).toBe(70 + SHEET_SHADOW_ALLOWANCE);
   });
 
-  it("hides after cumulative downward travel reaches the threshold", () => {
-    expect(run(100, [110, 120, 130]).hidden).toBe(false); // 30px
-    expect(run(100, [110, 120, 132]).hidden).toBe(true); // 32px
-    expect(run(100, [200]).hidden).toBe(true); // one big fling
+  it("never collapses to nothing", () => {
+    expect(sheetHideDistance(0)).toBe(48 + SHEET_SHADOW_ALLOWANCE);
+    expect(sheetHideDistance(Number.NaN)).toBe(48 + SHEET_SHADOW_ALLOWANCE);
+  });
+});
+
+describe("stepSheetScroll", () => {
+  it("pushes the sheet down 1:1 with downward scroll", () => {
+    expect(run(100, [130]).offset).toBe(30);
+    expect(run(100, [110, 125, 160]).offset).toBe(60);
+    expect(run(100, [130]).latched).toBe(false);
   });
 
-  it("ignores jitter: direction changes restart the count", () => {
-    const s = run(100, [120, 110, 130, 115, 135, 120, 140]);
-    expect(s.hidden).toBe(false);
+  it("follows back up while only partly hidden", () => {
+    const s = run(100, [220, 170]);
+    expect(s.offset).toBe(70);
+    expect(s.latched).toBe(false);
+    expect(run(100, [220, 50]).offset).toBe(0); // can't go above its resting place
   });
 
-  it("scrolling up never hides", () => {
-    expect(run(1000, [990, 950, 900, 600, 100]).hidden).toBe(false);
+  it("scrolling up from rest does nothing", () => {
+    const s = run(1000, [900, 400]);
+    expect(s.offset).toBe(0);
+    expect(s.latched).toBe(false);
   });
 
-  it("scrolling up past the threshold reveals again; small nudges don't", () => {
-    const hidden = run(100, [300]);
-    expect(hidden.hidden).toBe(true);
-    expect(stepScrollHide(hidden, 280, MAX).hidden).toBe(true); // 20px up
-    expect(stepScrollHide(stepScrollHide(hidden, 280, MAX), 260, MAX).hidden).toBe(false); // 40px up
+  it("latches once fully off and stays hidden through any scrolling up", () => {
+    const gone = run(100, [250, 300]);
+    expect(gone.offset).toBe(D);
+    expect(gone.latched).toBe(true);
+    const after = [250, 100, 0, 600, 0].reduce((s, y) => stepSheetScroll(s, y, MAX, D), gone);
+    expect(after.latched).toBe(true);
+    expect(after.offset).toBe(D);
+    expect(after.lastY).toBe(0);
   });
 
-  it("can keep it hidden on the way up when revealOnUp is off", () => {
-    expect(run(100, [300, 0], MAX, { revealOnUp: false }).hidden).toBe(true);
+  it("a single fling past the distance clamps and latches", () => {
+    const s = run(0, [900]);
+    expect(s).toEqual({ lastY: 900, offset: D, latched: true });
   });
 
   it("treats iOS rubber-banding at the top as no movement", () => {
-    // Pulled past the top (negative scrollY) and bounced back to 0.
     const s = run(0, [-40, -80, -20, 0]);
-    expect(s.hidden).toBe(false);
+    expect(s.offset).toBe(0);
     expect(s.lastY).toBe(0);
   });
 
-  it("treats overshoot past the bottom as no movement, so the bounce doesn't reveal", () => {
-    const atBottom = run(4800, [MAX]); // hidden reaching the end
-    expect(atBottom.hidden).toBe(true);
+  it("treats overshoot past the bottom as no movement", () => {
+    const partial = run(MAX - 50, [MAX]); // 50px down at the very end
     const bounced = [MAX + 60, MAX + 90, MAX + 30, MAX].reduce(
-      (s, y) => stepScrollHide(s, y, MAX),
-      atBottom,
+      (s, y) => stepSheetScroll(s, y, MAX, D),
+      partial,
     );
-    expect(bounced.hidden).toBe(true);
+    expect(bounced.offset).toBe(50);
     expect(bounced.lastY).toBe(MAX);
   });
 
-  it("rebase anchors a programmatic jump without hiding", () => {
-    let s = initialScrollHide(0, MAX);
-    s = rebaseScrollHide(s, 2400, MAX); // bookmark restore / viewport resize
-    expect(stepScrollHide(s, 2400, MAX).hidden).toBe(false);
-    expect(stepScrollHide(s, 2410, MAX).hidden).toBe(false);
-  });
-
-  it("rebase keeps visibility and clears partial travel", () => {
-    let s = run(100, [125]); // 25px pending
-    s = rebaseScrollHide(s, 125, MAX);
-    expect(s.travel).toBe(0);
-    expect(stepScrollHide(s, 140, MAX).hidden).toBe(false); // only 15px since rebase
-    expect(rebaseScrollHide(run(0, [500]), 500, MAX).hidden).toBe(true);
+  it("clamps to a smaller distance when the sheet shrinks", () => {
+    const s = run(0, [150]); // 150 of 200
+    const shrunk = stepSheetScroll(s, 160, MAX, 100);
+    expect(shrunk.offset).toBe(100);
+    expect(shrunk.latched).toBe(true);
   });
 
   it("is a no-op for an unchanged position and survives NaN", () => {
-    const s = run(100, [300]);
-    expect(stepScrollHide(s, 300, MAX)).toBe(s);
-    expect(initialScrollHide(Number.NaN).lastY).toBe(0);
+    const s = run(100, [150]);
+    expect(stepSheetScroll(s, 150, MAX, D)).toBe(s);
+    expect(initialSheetScroll(Number.NaN).lastY).toBe(0);
+  });
+});
+
+describe("rebase and reveal", () => {
+  it("rebase anchors a programmatic jump without moving the sheet", () => {
+    let s = initialSheetScroll(0, MAX);
+    s = rebaseSheetScroll(s, 2400, MAX); // bookmark restore / address-bar resize
+    expect(stepSheetScroll(s, 2400, MAX, D).offset).toBe(0);
+    expect(stepSheetScroll(s, 2410, MAX, D).offset).toBe(10);
+  });
+
+  it("rebase keeps a partial offset and the latch", () => {
+    expect(rebaseSheetScroll(run(0, [60]), 900, MAX).offset).toBe(60);
+    expect(rebaseSheetScroll(run(0, [900]), 100, MAX).latched).toBe(true);
+  });
+
+  it("reveal puts it back in place and tracking starts fresh from there", () => {
+    const shown = revealSheetScroll(1200, MAX);
+    expect(shown).toEqual({ lastY: 1200, offset: 0, latched: false });
+    expect(stepSheetScroll(shown, 1230, MAX, D).offset).toBe(30);
   });
 });

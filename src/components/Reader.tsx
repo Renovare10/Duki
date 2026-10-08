@@ -174,10 +174,11 @@ export function Reader({
     };
   }, [text.id]);
 
-  // Mobile/touch: reading forward tucks the word sheet away; scrolling back up
-  // or tapping a word brings it back. Called after the bookmark-restore effect
-  // so the restore scroll is anchored, not counted as reading.
-  const sheet = useScrollHide({ media: SCROLL_HIDE_MEDIA, resetKey: text.id });
+  // Mobile/touch: scrolling down pushes the word sheet off 1:1 with the page;
+  // once fully off it stays hidden until a word is tapped. Called after the
+  // bookmark-restore effect so the restore scroll isn't counted as reading.
+  const sheetRef = useRef<HTMLDivElement>(null);
+  const sheet = useScrollHide({ media: SCROLL_HIDE_MEDIA, resetKey: text.id, sheetRef });
   const revealSheet = sheet.reveal;
   const selectWord = useCallback(
     (sel: Sel) => {
@@ -347,6 +348,7 @@ export function Reader({
       </article>
 
       <div
+        ref={sheetRef}
         className={`dock${sheet.hidden ? " dock-hidden" : ""}`}
         role="region"
         aria-label="Word status"
