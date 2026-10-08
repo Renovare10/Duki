@@ -1,6 +1,7 @@
 import type { LibraryText, TextCategory, TextKind, TextScore } from "../types";
 import { isContinue } from "./text";
 import { isScored, stillTeaches } from "./score";
+import { isWorkRowId } from "./works";
 
 export type BookProgress = "read" | "in-progress" | "unread";
 
@@ -75,7 +76,8 @@ export function itemTeaches(item: ShelfItem, scores: Map<string, TextScore>): bo
 }
 
 export function collapseTexts(texts: LibraryText[]): ShelfItem[] {
-  const visible = texts.filter((t) => !isGutenberg(t));
+  // Chapter-progress rows of long works (w:…) have their own screen, not shelf cards.
+  const visible = texts.filter((t) => !isGutenberg(t) && !isWorkRowId(t.id));
   const groups = new Map<string, LibraryText[]>();
   const singles: LibraryText[] = [];
   for (const text of visible) {

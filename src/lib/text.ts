@@ -62,6 +62,7 @@ export function normalizeText(
     seriesTitle: raw.seriesTitle,
     chapter: typeof raw.chapter === "number" ? raw.chapter : undefined,
     preview: Boolean(raw.preview),
+    ...(typeof raw.openedAt === "number" && raw.openedAt > 0 ? { openedAt: raw.openedAt } : {}),
   };
 }
 

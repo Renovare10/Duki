@@ -1,0 +1,2558 @@
+{
+  "generatedAt": "2026-10-08T01:56:58.027Z",
+  "catalog": {
+    "total": 478,
+    "byKind": {
+      "sample/graded": 27,
+      "sample/children": 21,
+      "sample/story": 13,
+      "sample/science": 27,
+      "sample/history": 6,
+      "sample/article": 5,
+      "sample/novel": 8,
+      "wiki/wiki": 297,
+      "wikisource/wikisource": 74
+    },
+    "owned": 107
+  },
+  "owned": {
+    "chars": {
+      "total": 11908,
+      "min": 18,
+      "median": 97,
+      "max": 452
+    },
+    "over300": 6,
+    "over1000": 0,
+    "levels": {
+      "1": 1,
+      "2": 10,
+      "3": 21,
+      "4": 30,
+      "5": 32,
+      "6": 6,
+      "7": 5,
+      "9": 1,
+      "10": 1
+    },
+    "vocabulary": 1223,
+    "hskCovered": [
+      "133/150",
+      "109/147",
+      "154/298",
+      "101/598",
+      "86/1300",
+      "23/2500"
+    ],
+    "jumpUnknownForPreviousLevel": {
+      "2": {
+        "texts": 10,
+        "medianUnknownForPrev": 0.102
+      },
+      "3": {
+        "texts": 21,
+        "medianUnknownForPrev": 0.211
+      },
+      "4": {
+        "texts": 30,
+        "medianUnknownForPrev": 0.097
+      },
+      "5": {
+        "texts": 32,
+        "medianUnknownForPrev": 0.079
+      },
+      "6": {
+        "texts": 6,
+        "medianUnknownForPrev": 0.066
+      },
+      "7": {
+        "texts": 5,
+        "medianUnknownForPrev": 0.07
+      },
+      "9": {
+        "texts": 1,
+        "medianUnknownForPrev": 0.176
+      },
+      "10": {
+        "texts": 1,
+        "medianUnknownForPrev": 0.438
+      }
+    },
+    "noveltyMedianByLevel": {
+      "1": 1,
+      "2": 0.277,
+      "3": 0.254,
+      "4": 0.156,
+      "5": 0.124,
+      "6": 0.138,
+      "7": 0.145,
+      "9": 0.676,
+      "10": 0.75
+    }
+  },
+  "texts": [
+    {
+      "id": "sample-tea",
+      "title": "请喝茶",
+      "category": "graded",
+      "level": 1,
+      "score": 1.04,
+      "chars": 38,
+      "unique": 20,
+      "coverage": [
+        0.96,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "sample-weekend",
+      "title": "星期六",
+      "category": "graded",
+      "level": 2,
+      "score": 2.3,
+      "chars": 65,
+      "unique": 31,
+      "coverage": [
+        0.929,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "child-friend",
+      "title": "我的朋友",
+      "category": "children",
+      "level": 2,
+      "score": 2.3,
+      "chars": 56,
+      "unique": 24,
+      "coverage": [
+        0.941,
+        0.971,
+        0.971,
+        0.971,
+        0.971,
+        1
+      ]
+    },
+    {
+      "id": "sample-shop",
+      "title": "去商店买东西",
+      "category": "graded",
+      "level": 2,
+      "score": 2.45,
+      "chars": 62,
+      "unique": 29,
+      "coverage": [
+        0.909,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "sample-home",
+      "title": "我的家",
+      "category": "graded",
+      "level": 2,
+      "score": 2.49,
+      "chars": 58,
+      "unique": 30,
+      "coverage": [
+        0.925,
+        0.975,
+        0.975,
+        0.975,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "child-rain",
+      "title": "下雨了",
+      "category": "children",
+      "level": 2,
+      "score": 2.54,
+      "chars": 44,
+      "unique": 22,
+      "coverage": [
+        0.889,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "sample-school",
+      "title": "我的学校",
+      "category": "graded",
+      "level": 2,
+      "score": 2.61,
+      "chars": 58,
+      "unique": 23,
+      "coverage": [
+        0.868,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "child-cat",
+      "title": "小猫",
+      "category": "children",
+      "level": 2,
+      "score": 2.69,
+      "chars": 42,
+      "unique": 18,
+      "coverage": [
+        0.906,
+        0.969,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "child-birthday",
+      "title": "妈妈的生日",
+      "category": "children",
+      "level": 2,
+      "score": 2.74,
+      "chars": 52,
+      "unique": 24,
+      "coverage": [
+        0.8,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "graded-restaurant",
+      "title": "在饭馆",
+      "category": "graded",
+      "level": 2,
+      "score": 2.87,
+      "chars": 54,
+      "unique": 27,
+      "coverage": [
+        0.775,
+        0.975,
+        0.975,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "graded-day",
+      "title": "我的一天",
+      "category": "graded",
+      "level": 2,
+      "score": 2.89,
+      "chars": 55,
+      "unique": 27,
+      "coverage": [
+        0.765,
+        0.971,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "graded-phone",
+      "title": "打电话",
+      "category": "graded",
+      "level": 3,
+      "score": 3.1,
+      "chars": 53,
+      "unique": 24,
+      "coverage": [
+        0.722,
+        0.944,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wr-animal-cat",
+      "title": "家里的猫",
+      "category": "science",
+      "level": 3,
+      "score": 3.27,
+      "chars": 83,
+      "unique": 42,
+      "coverage": [
+        0.552,
+        0.931,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wr-animal-dog",
+      "title": "门口的狗",
+      "category": "science",
+      "level": 3,
+      "score": 3.48,
+      "chars": 80,
+      "unique": 46,
+      "coverage": [
+        0.565,
+        0.903,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "graded-park",
+      "title": "去公园",
+      "category": "graded",
+      "level": 3,
+      "score": 3.61,
+      "chars": 58,
+      "unique": 29,
+      "coverage": [
+        0.684,
+        0.868,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "band-snow-day",
+      "title": "下雪的早上",
+      "category": "story",
+      "level": 3,
+      "score": 3.7,
+      "chars": 101,
+      "unique": 54,
+      "coverage": [
+        0.448,
+        0.866,
+        0.985,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "band-morning-milk",
+      "title": "早上的牛奶",
+      "category": "children",
+      "level": 3,
+      "score": 3.73,
+      "chars": 102,
+      "unique": 48,
+      "coverage": [
+        0.514,
+        0.889,
+        0.972,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "band-park-bench",
+      "title": "公园的椅子",
+      "category": "children",
+      "level": 3,
+      "score": 3.79,
+      "chars": 102,
+      "unique": 54,
+      "coverage": [
+        0.548,
+        0.808,
+        0.986,
+        0.986,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wr-animal-bird",
+      "title": "早上的鸟",
+      "category": "science",
+      "level": 3,
+      "score": 3.81,
+      "chars": 80,
+      "unique": 47,
+      "coverage": [
+        0.459,
+        0.721,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "band-class-helper",
+      "title": "帮忙的一天",
+      "category": "children",
+      "level": 3,
+      "score": 3.83,
+      "chars": 96,
+      "unique": 45,
+      "coverage": [
+        0.524,
+        0.778,
+        0.984,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wr-animal-panda",
+      "title": "爱吃竹子的熊猫",
+      "category": "science",
+      "level": 3,
+      "score": 3.83,
+      "chars": 84,
+      "unique": 44,
+      "coverage": [
+        0.532,
+        0.774,
+        0.984,
+        0.984,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wr-animal-fish",
+      "title": "水里的鱼",
+      "category": "science",
+      "level": 3,
+      "score": 3.87,
+      "chars": 80,
+      "unique": 37,
+      "coverage": [
+        0.417,
+        0.833,
+        0.967,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "band-doctor-day",
+      "title": "看医生",
+      "category": "graded",
+      "level": 3,
+      "score": 3.87,
+      "chars": 91,
+      "unique": 44,
+      "coverage": [
+        0.578,
+        0.813,
+        0.969,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wr-animal-horse",
+      "title": "会跑的马",
+      "category": "science",
+      "level": 3,
+      "score": 3.88,
+      "chars": 93,
+      "unique": 47,
+      "coverage": [
+        0.408,
+        0.676,
+        0.986,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "child-moon",
+      "title": "月亮船",
+      "category": "children",
+      "level": 3,
+      "score": 3.89,
+      "chars": 49,
+      "unique": 24,
+      "coverage": [
+        0.487,
+        0.744,
+        0.974,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "band-quiet-night",
+      "title": "安静的晚上",
+      "category": "graded",
+      "level": 3,
+      "score": 3.89,
+      "chars": 95,
+      "unique": 52,
+      "coverage": [
+        0.439,
+        0.773,
+        0.97,
+        0.985,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wr-sci-light",
+      "title": "有光才能看",
+      "category": "science",
+      "level": 3,
+      "score": 3.94,
+      "chars": 118,
+      "unique": 46,
+      "coverage": [
+        0.432,
+        0.757,
+        0.959,
+        0.959,
+        0.986,
+        1
+      ]
+    },
+    {
+      "id": "band-late-bus",
+      "title": "晚到的公共汽车",
+      "category": "graded",
+      "level": 3,
+      "score": 3.94,
+      "chars": 105,
+      "unique": 58,
+      "coverage": [
+        0.451,
+        0.789,
+        0.958,
+        0.972,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wr-sci-sound",
+      "title": "我们怎么听见",
+      "category": "science",
+      "level": 3,
+      "score": 3.95,
+      "chars": 102,
+      "unique": 45,
+      "coverage": [
+        0.458,
+        0.75,
+        0.958,
+        0.986,
+        0.986,
+        1
+      ]
+    },
+    {
+      "id": "band-upstairs-cat",
+      "title": "楼上的猫",
+      "category": "children",
+      "level": 3,
+      "score": 3.96,
+      "chars": 90,
+      "unique": 48,
+      "coverage": [
+        0.424,
+        0.818,
+        0.955,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "band-tea-guest",
+      "title": "客人来喝茶",
+      "category": "graded",
+      "level": 3,
+      "score": 3.96,
+      "chars": 107,
+      "unique": 53,
+      "coverage": [
+        0.478,
+        0.739,
+        0.957,
+        0.986,
+        0.986,
+        1
+      ]
+    },
+    {
+      "id": "wr-animal-bee",
+      "title": "花上的蜜蜂",
+      "category": "science",
+      "level": 3,
+      "score": 3.97,
+      "chars": 90,
+      "unique": 48,
+      "coverage": [
+        0.47,
+        0.727,
+        0.955,
+        0.97,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "band-teacher-note",
+      "title": "给老师的话",
+      "category": "graded",
+      "level": 4,
+      "score": 4.16,
+      "chars": 93,
+      "unique": 50,
+      "coverage": [
+        0.6,
+        0.871,
+        0.943,
+        0.986,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "band-library-rain",
+      "title": "雨天去图书馆",
+      "category": "graded",
+      "level": 4,
+      "score": 4.2,
+      "chars": 104,
+      "unique": 56,
+      "coverage": [
+        0.592,
+        0.789,
+        0.947,
+        0.961,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "band-fruit-shop",
+      "title": "去买水果",
+      "category": "graded",
+      "level": 4,
+      "score": 4.27,
+      "chars": 108,
+      "unique": 50,
+      "coverage": [
+        0.565,
+        0.841,
+        0.942,
+        0.971,
+        0.986,
+        1
+      ]
+    },
+    {
+      "id": "band-because-rain",
+      "title": "因为下雨",
+      "category": "graded",
+      "level": 4,
+      "score": 4.36,
+      "chars": 102,
+      "unique": 54,
+      "coverage": [
+        0.648,
+        0.859,
+        0.93,
+        0.986,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "article-bike",
+      "title": "自行车的城市",
+      "category": "article",
+      "level": 4,
+      "score": 4.54,
+      "chars": 132,
+      "unique": 72,
+      "coverage": [
+        0.438,
+        0.698,
+        0.927,
+        0.969,
+        0.99,
+        1
+      ]
+    },
+    {
+      "id": "band-exam",
+      "title": "今天有考试",
+      "category": "graded",
+      "level": 4,
+      "score": 4.54,
+      "chars": 95,
+      "unique": 51,
+      "coverage": [
+        0.522,
+        0.821,
+        0.925,
+        0.97,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "band-moon-change",
+      "title": "月亮在变",
+      "category": "science",
+      "level": 4,
+      "score": 4.55,
+      "chars": 106,
+      "unique": 55,
+      "coverage": [
+        0.411,
+        0.685,
+        0.904,
+        0.986,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "band-cook",
+      "title": "我想学做饭",
+      "category": "graded",
+      "level": 4,
+      "score": 4.56,
+      "chars": 88,
+      "unique": 47,
+      "coverage": [
+        0.5,
+        0.773,
+        0.924,
+        0.97,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "band-dumplings",
+      "title": "奶奶包饺子",
+      "category": "children",
+      "level": 4,
+      "score": 4.56,
+      "chars": 94,
+      "unique": 52,
+      "coverage": [
+        0.413,
+        0.73,
+        0.905,
+        0.984,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "band-hot-soup",
+      "title": "一碗热汤",
+      "category": "graded",
+      "level": 4,
+      "score": 4.57,
+      "chars": 97,
+      "unique": 53,
+      "coverage": [
+        0.535,
+        0.704,
+        0.901,
+        0.986,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "band-backpack",
+      "title": "新书包",
+      "category": "children",
+      "level": 4,
+      "score": 4.58,
+      "chars": 94,
+      "unique": 48,
+      "coverage": [
+        0.523,
+        0.662,
+        0.923,
+        0.969,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "band-station",
+      "title": "车站的早晨",
+      "category": "graded",
+      "level": 4,
+      "score": 4.6,
+      "chars": 97,
+      "unique": 51,
+      "coverage": [
+        0.463,
+        0.746,
+        0.896,
+        0.985,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wr-sci-earthquake",
+      "title": "地为什么会动",
+      "category": "science",
+      "level": 4,
+      "score": 4.61,
+      "chars": 94,
+      "unique": 51,
+      "coverage": [
+        0.379,
+        0.586,
+        0.897,
+        0.983,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "article-library",
+      "title": "城市里的图书馆",
+      "category": "article",
+      "level": 4,
+      "score": 4.67,
+      "chars": 124,
+      "unique": 58,
+      "coverage": [
+        0.506,
+        0.658,
+        0.899,
+        0.975,
+        0.987,
+        1
+      ]
+    },
+    {
+      "id": "wr-sci-seed",
+      "title": "种子怎样长",
+      "category": "science",
+      "level": 4,
+      "score": 4.69,
+      "chars": 104,
+      "unique": 53,
+      "coverage": [
+        0.542,
+        0.764,
+        0.931,
+        0.958,
+        0.986,
+        1
+      ]
+    },
+    {
+      "id": "story-night-bus",
+      "title": "夜班车",
+      "category": "story",
+      "level": 4,
+      "score": 4.71,
+      "chars": 108,
+      "unique": 58,
+      "coverage": [
+        0.475,
+        0.675,
+        0.888,
+        0.975,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "band-sister-sleep",
+      "title": "妹妹还不睡",
+      "category": "children",
+      "level": 4,
+      "score": 4.73,
+      "chars": 101,
+      "unique": 52,
+      "coverage": [
+        0.526,
+        0.842,
+        0.921,
+        0.961,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wr-sci-moon",
+      "title": "月亮为什么会变",
+      "category": "science",
+      "level": 4,
+      "score": 4.73,
+      "chars": 105,
+      "unique": 49,
+      "coverage": [
+        0.47,
+        0.712,
+        0.894,
+        0.97,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "band-borrow-salt",
+      "title": "邻居借盐",
+      "category": "story",
+      "level": 4,
+      "score": 4.74,
+      "chars": 99,
+      "unique": 54,
+      "coverage": [
+        0.521,
+        0.732,
+        0.845,
+        0.986,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "band-walk",
+      "title": "晚饭后散步",
+      "category": "graded",
+      "level": 4,
+      "score": 4.78,
+      "chars": 94,
+      "unique": 53,
+      "coverage": [
+        0.477,
+        0.754,
+        0.877,
+        0.969,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wr-animal-dolphin",
+      "title": "聪明的海豚",
+      "category": "science",
+      "level": 4,
+      "score": 4.79,
+      "chars": 90,
+      "unique": 45,
+      "coverage": [
+        0.456,
+        0.779,
+        0.926,
+        0.956,
+        0.971,
+        0.971
+      ]
+    },
+    {
+      "id": "child-socks",
+      "title": "一只袜子",
+      "category": "children",
+      "level": 4,
+      "score": 4.79,
+      "chars": 65,
+      "unique": 32,
+      "coverage": [
+        0.583,
+        0.75,
+        0.833,
+        0.979,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "band-lost-key",
+      "title": "钥匙在哪里",
+      "category": "story",
+      "level": 4,
+      "score": 4.81,
+      "chars": 105,
+      "unique": 48,
+      "coverage": [
+        0.548,
+        0.712,
+        0.849,
+        0.973,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "band-bee-help",
+      "title": "蜜蜂来了",
+      "category": "science",
+      "level": 4,
+      "score": 4.81,
+      "chars": 99,
+      "unique": 50,
+      "coverage": [
+        0.521,
+        0.732,
+        0.915,
+        0.958,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "band-orange-share",
+      "title": "分橘子",
+      "category": "story",
+      "level": 4,
+      "score": 4.82,
+      "chars": 103,
+      "unique": 47,
+      "coverage": [
+        0.543,
+        0.814,
+        0.914,
+        0.957,
+        0.957,
+        0.957
+      ]
+    },
+    {
+      "id": "story-lantern",
+      "title": "河边的灯",
+      "category": "story",
+      "level": 4,
+      "score": 4.83,
+      "chars": 97,
+      "unique": 49,
+      "coverage": [
+        0.382,
+        0.671,
+        0.895,
+        0.961,
+        0.987,
+        0.987
+      ]
+    },
+    {
+      "id": "article-trees",
+      "title": "公园里的新树",
+      "category": "article",
+      "level": 4,
+      "score": 4.88,
+      "chars": 118,
+      "unique": 64,
+      "coverage": [
+        0.461,
+        0.684,
+        0.868,
+        0.961,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "story-fox",
+      "title": "狐狸和葡萄",
+      "category": "story",
+      "level": 4,
+      "score": 4.9,
+      "chars": 88,
+      "unique": 45,
+      "coverage": [
+        0.403,
+        0.597,
+        0.896,
+        0.955,
+        0.97,
+        0.97
+      ]
+    },
+    {
+      "id": "graded-train",
+      "title": "坐火车",
+      "category": "graded",
+      "level": 4,
+      "score": 4.93,
+      "chars": 61,
+      "unique": 36,
+      "coverage": [
+        0.6,
+        0.778,
+        0.867,
+        0.956,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "sci-moon",
+      "title": "月亮为什么会变",
+      "category": "science",
+      "level": 4,
+      "score": 4.94,
+      "chars": 107,
+      "unique": 46,
+      "coverage": [
+        0.38,
+        0.606,
+        0.817,
+        0.958,
+        0.972,
+        1
+      ]
+    },
+    {
+      "id": "band-see-sea",
+      "title": "我要去看海",
+      "category": "graded",
+      "level": 5,
+      "score": 5.02,
+      "chars": 98,
+      "unique": 54,
+      "coverage": [
+        0.474,
+        0.744,
+        0.872,
+        0.949,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "band-metro",
+      "title": "第一次坐地铁",
+      "category": "story",
+      "level": 5,
+      "score": 5.05,
+      "chars": 104,
+      "unique": 56,
+      "coverage": [
+        0.474,
+        0.724,
+        0.895,
+        0.947,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "band-umbrella",
+      "title": "一把伞两个人",
+      "category": "graded",
+      "level": 5,
+      "score": 5.09,
+      "chars": 99,
+      "unique": 53,
+      "coverage": [
+        0.534,
+        0.74,
+        0.904,
+        0.945,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "band-library-card",
+      "title": "办借书证",
+      "category": "graded",
+      "level": 5,
+      "score": 5.11,
+      "chars": 99,
+      "unique": 47,
+      "coverage": [
+        0.62,
+        0.803,
+        0.915,
+        0.944,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "band-rabbit-garden",
+      "title": "花园里的兔子",
+      "category": "children",
+      "level": 5,
+      "score": 5.15,
+      "chars": 97,
+      "unique": 47,
+      "coverage": [
+        0.507,
+        0.69,
+        0.915,
+        0.944,
+        0.986,
+        0.986
+      ]
+    },
+    {
+      "id": "article-night",
+      "title": "夜里的便利店",
+      "category": "article",
+      "level": 5,
+      "score": 5.17,
+      "chars": 122,
+      "unique": 62,
+      "coverage": [
+        0.506,
+        0.723,
+        0.867,
+        0.94,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "band-bike-learn",
+      "title": "学骑自行车",
+      "category": "children",
+      "level": 5,
+      "score": 5.18,
+      "chars": 101,
+      "unique": 51,
+      "coverage": [
+        0.42,
+        0.681,
+        0.913,
+        0.942,
+        0.986,
+        1
+      ]
+    },
+    {
+      "id": "wr-sci-water",
+      "title": "水一直在路上",
+      "category": "science",
+      "level": 5,
+      "score": 5.2,
+      "chars": 93,
+      "unique": 54,
+      "coverage": [
+        0.441,
+        0.632,
+        0.897,
+        0.941,
+        0.985,
+        1
+      ]
+    },
+    {
+      "id": "wr-sci-cloud",
+      "title": "天上的云",
+      "category": "science",
+      "level": 5,
+      "score": 5.22,
+      "chars": 84,
+      "unique": 40,
+      "coverage": [
+        0.516,
+        0.726,
+        0.919,
+        0.935,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "band-bread",
+      "title": "面包还是热的",
+      "category": "graded",
+      "level": 5,
+      "score": 5.27,
+      "chars": 86,
+      "unique": 43,
+      "coverage": [
+        0.534,
+        0.741,
+        0.879,
+        0.931,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "band-seed-watch",
+      "title": "看种子长大",
+      "category": "science",
+      "level": 5,
+      "score": 5.32,
+      "chars": 98,
+      "unique": 52,
+      "coverage": [
+        0.537,
+        0.761,
+        0.896,
+        0.94,
+        0.97,
+        1
+      ]
+    },
+    {
+      "id": "article-market",
+      "title": "周末的市场",
+      "category": "article",
+      "level": 5,
+      "score": 5.33,
+      "chars": 129,
+      "unique": 67,
+      "coverage": [
+        0.471,
+        0.644,
+        0.839,
+        0.931,
+        0.989,
+        1
+      ]
+    },
+    {
+      "id": "novel-river-1",
+      "title": "河上的孩子 · 一",
+      "category": "novel",
+      "level": 5,
+      "score": 5.37,
+      "chars": 313,
+      "unique": 137,
+      "coverage": [
+        0.405,
+        0.616,
+        0.828,
+        0.935,
+        0.974,
+        1
+      ]
+    },
+    {
+      "id": "band-baozi",
+      "title": "放学买包子",
+      "category": "children",
+      "level": 5,
+      "score": 5.4,
+      "chars": 94,
+      "unique": 50,
+      "coverage": [
+        0.563,
+        0.746,
+        0.873,
+        0.915,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "band-recess",
+      "title": "课间十分钟",
+      "category": "children",
+      "level": 5,
+      "score": 5.45,
+      "chars": 89,
+      "unique": 52,
+      "coverage": [
+        0.438,
+        0.766,
+        0.875,
+        0.922,
+        0.984,
+        1
+      ]
+    },
+    {
+      "id": "story-mountain",
+      "title": "山上的风",
+      "category": "story",
+      "level": 5,
+      "score": 5.46,
+      "chars": 80,
+      "unique": 44,
+      "coverage": [
+        0.37,
+        0.685,
+        0.778,
+        0.907,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "band-radio",
+      "title": "爷爷的收音机",
+      "category": "children",
+      "level": 5,
+      "score": 5.46,
+      "chars": 102,
+      "unique": 57,
+      "coverage": [
+        0.486,
+        0.722,
+        0.875,
+        0.931,
+        0.972,
+        1
+      ]
+    },
+    {
+      "id": "wr-sci-rain",
+      "title": "雨是怎么来的",
+      "category": "science",
+      "level": 5,
+      "score": 5.48,
+      "chars": 95,
+      "unique": 46,
+      "coverage": [
+        0.563,
+        0.704,
+        0.887,
+        0.93,
+        0.972,
+        1
+      ]
+    },
+    {
+      "id": "wr-animal-rabbit",
+      "title": "长耳朵的兔子",
+      "category": "science",
+      "level": 5,
+      "score": 5.57,
+      "chars": 89,
+      "unique": 42,
+      "coverage": [
+        0.371,
+        0.694,
+        0.903,
+        0.903,
+        0.984,
+        1
+      ]
+    },
+    {
+      "id": "band-window-flowers",
+      "title": "窗台上的花",
+      "category": "story",
+      "level": 5,
+      "score": 5.59,
+      "chars": 90,
+      "unique": 50,
+      "coverage": [
+        0.453,
+        0.703,
+        0.797,
+        0.875,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "novel-south-1",
+      "title": "南风镇 · 一",
+      "category": "novel",
+      "level": 5,
+      "score": 5.62,
+      "chars": 292,
+      "unique": 137,
+      "coverage": [
+        0.44,
+        0.684,
+        0.844,
+        0.911,
+        0.973,
+        0.978
+      ]
+    },
+    {
+      "id": "band-wet-dog",
+      "title": "小狗湿了",
+      "category": "children",
+      "level": 5,
+      "score": 5.67,
+      "chars": 94,
+      "unique": 52,
+      "coverage": [
+        0.486,
+        0.694,
+        0.847,
+        0.903,
+        0.972,
+        1
+      ]
+    },
+    {
+      "id": "novel-river-3",
+      "title": "河上的孩子 · 三",
+      "category": "novel",
+      "level": 5,
+      "score": 5.69,
+      "chars": 417,
+      "unique": 168,
+      "coverage": [
+        0.404,
+        0.648,
+        0.798,
+        0.896,
+        0.974,
+        0.993
+      ]
+    },
+    {
+      "id": "story-well",
+      "title": "井边的兔子",
+      "category": "story",
+      "level": 5,
+      "score": 5.73,
+      "chars": 97,
+      "unique": 55,
+      "coverage": [
+        0.434,
+        0.618,
+        0.816,
+        0.921,
+        0.961,
+        1
+      ]
+    },
+    {
+      "id": "sci-rain",
+      "title": "雨从哪里来",
+      "category": "science",
+      "level": 5,
+      "score": 5.77,
+      "chars": 105,
+      "unique": 50,
+      "coverage": [
+        0.5,
+        0.679,
+        0.859,
+        0.91,
+        0.962,
+        1
+      ]
+    },
+    {
+      "id": "sci-space",
+      "title": "我们去太空",
+      "category": "science",
+      "level": 5,
+      "score": 5.78,
+      "chars": 144,
+      "unique": 69,
+      "coverage": [
+        0.448,
+        0.676,
+        0.781,
+        0.905,
+        0.962,
+        1
+      ]
+    },
+    {
+      "id": "novel-river-2",
+      "title": "河上的孩子 · 二",
+      "category": "novel",
+      "level": 5,
+      "score": 5.83,
+      "chars": 403,
+      "unique": 168,
+      "coverage": [
+        0.362,
+        0.538,
+        0.771,
+        0.897,
+        0.96,
+        0.98
+      ]
+    },
+    {
+      "id": "novel-south-3",
+      "title": "南风镇 · 三",
+      "category": "novel",
+      "level": 5,
+      "score": 5.84,
+      "chars": 452,
+      "unique": 191,
+      "coverage": [
+        0.377,
+        0.583,
+        0.78,
+        0.878,
+        0.962,
+        0.983
+      ]
+    },
+    {
+      "id": "hist-wall",
+      "title": "长城",
+      "category": "history",
+      "level": 5,
+      "score": 5.85,
+      "chars": 135,
+      "unique": 62,
+      "coverage": [
+        0.412,
+        0.67,
+        0.763,
+        0.897,
+        0.959,
+        0.99
+      ]
+    },
+    {
+      "id": "hist-paper",
+      "title": "纸的故事",
+      "category": "history",
+      "level": 5,
+      "score": 5.85,
+      "chars": 114,
+      "unique": 58,
+      "coverage": [
+        0.418,
+        0.648,
+        0.835,
+        0.912,
+        0.956,
+        1
+      ]
+    },
+    {
+      "id": "hist-compass",
+      "title": "指南针",
+      "category": "history",
+      "level": 5,
+      "score": 5.85,
+      "chars": 122,
+      "unique": 66,
+      "coverage": [
+        0.354,
+        0.537,
+        0.732,
+        0.866,
+        0.963,
+        0.988
+      ]
+    },
+    {
+      "id": "novel-lamp-2",
+      "title": "旧灯 · 二",
+      "category": "novel",
+      "level": 5,
+      "score": 5.94,
+      "chars": 362,
+      "unique": 146,
+      "coverage": [
+        0.447,
+        0.629,
+        0.782,
+        0.902,
+        0.953,
+        0.989
+      ]
+    },
+    {
+      "id": "novel-lamp-1",
+      "title": "旧灯 · 一",
+      "category": "novel",
+      "level": 6,
+      "score": 6.21,
+      "chars": 349,
+      "unique": 135,
+      "coverage": [
+        0.438,
+        0.651,
+        0.803,
+        0.912,
+        0.94,
+        0.988
+      ]
+    },
+    {
+      "id": "hist-silk",
+      "title": "丝绸之路",
+      "category": "history",
+      "level": 6,
+      "score": 6.22,
+      "chars": 123,
+      "unique": 59,
+      "coverage": [
+        0.366,
+        0.61,
+        0.768,
+        0.854,
+        0.939,
+        0.988
+      ]
+    },
+    {
+      "id": "novel-south-2",
+      "title": "南风镇 · 二",
+      "category": "novel",
+      "level": 6,
+      "score": 6.25,
+      "chars": 266,
+      "unique": 130,
+      "coverage": [
+        0.415,
+        0.636,
+        0.826,
+        0.887,
+        0.944,
+        0.969
+      ]
+    },
+    {
+      "id": "sci-seed",
+      "title": "一粒种子",
+      "category": "science",
+      "level": 6,
+      "score": 6.36,
+      "chars": 103,
+      "unique": 50,
+      "coverage": [
+        0.296,
+        0.521,
+        0.648,
+        0.817,
+        0.93,
+        0.986
+      ]
+    },
+    {
+      "id": "hist-zhenghe",
+      "title": "郑和出海",
+      "category": "history",
+      "level": 6,
+      "score": 6.41,
+      "chars": 143,
+      "unique": 66,
+      "coverage": [
+        0.52,
+        0.696,
+        0.794,
+        0.824,
+        0.922,
+        0.99
+      ]
+    },
+    {
+      "id": "sci-magnet",
+      "title": "磁铁的秘密",
+      "category": "science",
+      "level": 6,
+      "score": 6.63,
+      "chars": 115,
+      "unique": 59,
+      "coverage": [
+        0.397,
+        0.615,
+        0.731,
+        0.846,
+        0.885,
+        0.987
+      ]
+    },
+    {
+      "id": "hist-oracle",
+      "title": "骨头上的字",
+      "category": "history",
+      "level": 7,
+      "score": 7.2,
+      "chars": 122,
+      "unique": 58,
+      "coverage": [
+        0.47,
+        0.687,
+        0.855,
+        0.867,
+        0.916,
+        0.94
+      ]
+    },
+    {
+      "id": "story-jingyesi",
+      "title": "静夜思",
+      "category": "story",
+      "level": 7,
+      "score": 7.33,
+      "chars": 20,
+      "unique": 14,
+      "coverage": [
+        0.067,
+        0.267,
+        0.533,
+        0.733,
+        0.867,
+        0.933
+      ]
+    },
+    {
+      "id": "story-market-thief",
+      "title": "市场里的橘子",
+      "category": "story",
+      "level": 7,
+      "score": 7.4,
+      "chars": 100,
+      "unique": 45,
+      "coverage": [
+        0.507,
+        0.662,
+        0.803,
+        0.901,
+        0.93,
+        0.93
+      ]
+    },
+    {
+      "id": "wr-animal-penguin",
+      "title": "冷地方的企鹅",
+      "category": "science",
+      "level": 7,
+      "score": 7.56,
+      "chars": 88,
+      "unique": 46,
+      "coverage": [
+        0.453,
+        0.734,
+        0.891,
+        0.922,
+        0.922,
+        0.922
+      ]
+    },
+    {
+      "id": "sci-ant",
+      "title": "蚂蚁的家",
+      "category": "science",
+      "level": 7,
+      "score": 7.62,
+      "chars": 111,
+      "unique": 53,
+      "coverage": [
+        0.486,
+        0.622,
+        0.784,
+        0.865,
+        0.905,
+        0.919
+      ]
+    },
+    {
+      "id": "child-three-char",
+      "title": "三字经（节选）",
+      "category": "children",
+      "level": 9,
+      "score": 9.52,
+      "chars": 36,
+      "unique": 29,
+      "coverage": [
+        0.118,
+        0.265,
+        0.353,
+        0.588,
+        0.765,
+        0.824
+      ]
+    },
+    {
+      "id": "child-goose",
+      "title": "咏鹅",
+      "category": "children",
+      "level": 10,
+      "score": 10.29,
+      "chars": 18,
+      "unique": 14,
+      "coverage": [
+        0,
+        0.188,
+        0.313,
+        0.375,
+        0.563,
+        0.563
+      ]
+    }
+  ],
+  "novelty": [
+    {
+      "id": "sample-tea",
+      "level": 1,
+      "score": 1.04,
+      "newShare": 1
+    },
+    {
+      "id": "sample-weekend",
+      "level": 2,
+      "score": 2.3,
+      "newShare": 0.762
+    },
+    {
+      "id": "child-friend",
+      "level": 2,
+      "score": 2.3,
+      "newShare": 0.265
+    },
+    {
+      "id": "sample-shop",
+      "level": 2,
+      "score": 2.45,
+      "newShare": 0.386
+    },
+    {
+      "id": "sample-home",
+      "level": 2,
+      "score": 2.49,
+      "newShare": 0.25
+    },
+    {
+      "id": "child-rain",
+      "level": 2,
+      "score": 2.54,
+      "newShare": 0.407
+    },
+    {
+      "id": "sample-school",
+      "level": 2,
+      "score": 2.61,
+      "newShare": 0.289
+    },
+    {
+      "id": "child-cat",
+      "level": 2,
+      "score": 2.69,
+      "newShare": 0.438
+    },
+    {
+      "id": "child-birthday",
+      "level": 2,
+      "score": 2.74,
+      "newShare": 0.2
+    },
+    {
+      "id": "graded-restaurant",
+      "level": 2,
+      "score": 2.87,
+      "newShare": 0.225
+    },
+    {
+      "id": "graded-day",
+      "level": 2,
+      "score": 2.89,
+      "newShare": 0.147
+    },
+    {
+      "id": "graded-phone",
+      "level": 3,
+      "score": 3.1,
+      "newShare": 0.194
+    },
+    {
+      "id": "wr-animal-cat",
+      "level": 3,
+      "score": 3.27,
+      "newShare": 0.5
+    },
+    {
+      "id": "wr-animal-dog",
+      "level": 3,
+      "score": 3.48,
+      "newShare": 0.306
+    },
+    {
+      "id": "graded-park",
+      "level": 3,
+      "score": 3.61,
+      "newShare": 0.237
+    },
+    {
+      "id": "band-snow-day",
+      "level": 3,
+      "score": 3.7,
+      "newShare": 0.433
+    },
+    {
+      "id": "band-morning-milk",
+      "level": 3,
+      "score": 3.73,
+      "newShare": 0.278
+    },
+    {
+      "id": "band-park-bench",
+      "level": 3,
+      "score": 3.79,
+      "newShare": 0.205
+    },
+    {
+      "id": "wr-animal-bird",
+      "level": 3,
+      "score": 3.81,
+      "newShare": 0.295
+    },
+    {
+      "id": "band-class-helper",
+      "level": 3,
+      "score": 3.83,
+      "newShare": 0.254
+    },
+    {
+      "id": "wr-animal-panda",
+      "level": 3,
+      "score": 3.83,
+      "newShare": 0.258
+    },
+    {
+      "id": "wr-animal-fish",
+      "level": 3,
+      "score": 3.87,
+      "newShare": 0.317
+    },
+    {
+      "id": "band-doctor-day",
+      "level": 3,
+      "score": 3.87,
+      "newShare": 0.219
+    },
+    {
+      "id": "wr-animal-horse",
+      "level": 3,
+      "score": 3.88,
+      "newShare": 0.31
+    },
+    {
+      "id": "child-moon",
+      "level": 3,
+      "score": 3.89,
+      "newShare": 0.256
+    },
+    {
+      "id": "band-quiet-night",
+      "level": 3,
+      "score": 3.89,
+      "newShare": 0.227
+    },
+    {
+      "id": "wr-sci-light",
+      "level": 3,
+      "score": 3.94,
+      "newShare": 0.257
+    },
+    {
+      "id": "band-late-bus",
+      "level": 3,
+      "score": 3.94,
+      "newShare": 0.239
+    },
+    {
+      "id": "wr-sci-sound",
+      "level": 3,
+      "score": 3.95,
+      "newShare": 0.194
+    },
+    {
+      "id": "band-upstairs-cat",
+      "level": 3,
+      "score": 3.96,
+      "newShare": 0.197
+    },
+    {
+      "id": "band-tea-guest",
+      "level": 3,
+      "score": 3.96,
+      "newShare": 0.232
+    },
+    {
+      "id": "wr-animal-bee",
+      "level": 3,
+      "score": 3.97,
+      "newShare": 0.152
+    },
+    {
+      "id": "band-teacher-note",
+      "level": 4,
+      "score": 4.16,
+      "newShare": 0.243
+    },
+    {
+      "id": "band-library-rain",
+      "level": 4,
+      "score": 4.2,
+      "newShare": 0.118
+    },
+    {
+      "id": "band-fruit-shop",
+      "level": 4,
+      "score": 4.27,
+      "newShare": 0.13
+    },
+    {
+      "id": "band-because-rain",
+      "level": 4,
+      "score": 4.36,
+      "newShare": 0.127
+    },
+    {
+      "id": "article-bike",
+      "level": 4,
+      "score": 4.54,
+      "newShare": 0.25
+    },
+    {
+      "id": "band-exam",
+      "level": 4,
+      "score": 4.54,
+      "newShare": 0.164
+    },
+    {
+      "id": "band-moon-change",
+      "level": 4,
+      "score": 4.55,
+      "newShare": 0.192
+    },
+    {
+      "id": "band-cook",
+      "level": 4,
+      "score": 4.56,
+      "newShare": 0.197
+    },
+    {
+      "id": "band-dumplings",
+      "level": 4,
+      "score": 4.56,
+      "newShare": 0.286
+    },
+    {
+      "id": "band-hot-soup",
+      "level": 4,
+      "score": 4.57,
+      "newShare": 0.155
+    },
+    {
+      "id": "band-backpack",
+      "level": 4,
+      "score": 4.58,
+      "newShare": 0.2
+    },
+    {
+      "id": "band-station",
+      "level": 4,
+      "score": 4.6,
+      "newShare": 0.194
+    },
+    {
+      "id": "wr-sci-earthquake",
+      "level": 4,
+      "score": 4.61,
+      "newShare": 0.207
+    },
+    {
+      "id": "article-library",
+      "level": 4,
+      "score": 4.67,
+      "newShare": 0.152
+    },
+    {
+      "id": "wr-sci-seed",
+      "level": 4,
+      "score": 4.69,
+      "newShare": 0.139
+    },
+    {
+      "id": "story-night-bus",
+      "level": 4,
+      "score": 4.71,
+      "newShare": 0.175
+    },
+    {
+      "id": "band-sister-sleep",
+      "level": 4,
+      "score": 4.73,
+      "newShare": 0.053
+    },
+    {
+      "id": "wr-sci-moon",
+      "level": 4,
+      "score": 4.73,
+      "newShare": 0.045
+    },
+    {
+      "id": "band-borrow-salt",
+      "level": 4,
+      "score": 4.74,
+      "newShare": 0.085
+    },
+    {
+      "id": "band-walk",
+      "level": 4,
+      "score": 4.78,
+      "newShare": 0.077
+    },
+    {
+      "id": "wr-animal-dolphin",
+      "level": 4,
+      "score": 4.79,
+      "newShare": 0.103
+    },
+    {
+      "id": "child-socks",
+      "level": 4,
+      "score": 4.79,
+      "newShare": 0.146
+    },
+    {
+      "id": "band-lost-key",
+      "level": 4,
+      "score": 4.81,
+      "newShare": 0.219
+    },
+    {
+      "id": "band-bee-help",
+      "level": 4,
+      "score": 4.81,
+      "newShare": 0.085
+    },
+    {
+      "id": "band-orange-share",
+      "level": 4,
+      "score": 4.82,
+      "newShare": 0.157
+    },
+    {
+      "id": "story-lantern",
+      "level": 4,
+      "score": 4.83,
+      "newShare": 0.145
+    },
+    {
+      "id": "article-trees",
+      "level": 4,
+      "score": 4.88,
+      "newShare": 0.224
+    },
+    {
+      "id": "story-fox",
+      "level": 4,
+      "score": 4.9,
+      "newShare": 0.269
+    },
+    {
+      "id": "graded-train",
+      "level": 4,
+      "score": 4.93,
+      "newShare": 0.111
+    },
+    {
+      "id": "sci-moon",
+      "level": 4,
+      "score": 4.94,
+      "newShare": 0.197
+    },
+    {
+      "id": "band-see-sea",
+      "level": 5,
+      "score": 5.02,
+      "newShare": 0.115
+    },
+    {
+      "id": "band-metro",
+      "level": 5,
+      "score": 5.05,
+      "newShare": 0.197
+    },
+    {
+      "id": "band-umbrella",
+      "level": 5,
+      "score": 5.09,
+      "newShare": 0.068
+    },
+    {
+      "id": "band-library-card",
+      "level": 5,
+      "score": 5.11,
+      "newShare": 0.07
+    },
+    {
+      "id": "band-rabbit-garden",
+      "level": 5,
+      "score": 5.15,
+      "newShare": 0.056
+    },
+    {
+      "id": "article-night",
+      "level": 5,
+      "score": 5.17,
+      "newShare": 0.205
+    },
+    {
+      "id": "band-bike-learn",
+      "level": 5,
+      "score": 5.18,
+      "newShare": 0.174
+    },
+    {
+      "id": "wr-sci-water",
+      "level": 5,
+      "score": 5.2,
+      "newShare": 0.118
+    },
+    {
+      "id": "wr-sci-cloud",
+      "level": 5,
+      "score": 5.22,
+      "newShare": 0.21
+    },
+    {
+      "id": "band-bread",
+      "level": 5,
+      "score": 5.27,
+      "newShare": 0.086
+    },
+    {
+      "id": "band-seed-watch",
+      "level": 5,
+      "score": 5.32,
+      "newShare": 0.015
+    },
+    {
+      "id": "article-market",
+      "level": 5,
+      "score": 5.33,
+      "newShare": 0.241
+    },
+    {
+      "id": "novel-river-1",
+      "level": 5,
+      "score": 5.37,
+      "newShare": 0.203
+    },
+    {
+      "id": "band-baozi",
+      "level": 5,
+      "score": 5.4,
+      "newShare": 0.014
+    },
+    {
+      "id": "band-recess",
+      "level": 5,
+      "score": 5.45,
+      "newShare": 0.125
+    },
+    {
+      "id": "story-mountain",
+      "level": 5,
+      "score": 5.46,
+      "newShare": 0.222
+    },
+    {
+      "id": "band-radio",
+      "level": 5,
+      "score": 5.46,
+      "newShare": 0.111
+    },
+    {
+      "id": "wr-sci-rain",
+      "level": 5,
+      "score": 5.48,
+      "newShare": 0.042
+    },
+    {
+      "id": "wr-animal-rabbit",
+      "level": 5,
+      "score": 5.57,
+      "newShare": 0.048
+    },
+    {
+      "id": "band-window-flowers",
+      "level": 5,
+      "score": 5.59,
+      "newShare": 0.188
+    },
+    {
+      "id": "novel-south-1",
+      "level": 5,
+      "score": 5.62,
+      "newShare": 0.187
+    },
+    {
+      "id": "band-wet-dog",
+      "level": 5,
+      "score": 5.67,
+      "newShare": 0.125
+    },
+    {
+      "id": "novel-river-3",
+      "level": 5,
+      "score": 5.69,
+      "newShare": 0.117
+    },
+    {
+      "id": "story-well",
+      "level": 5,
+      "score": 5.73,
+      "newShare": 0.105
+    },
+    {
+      "id": "sci-rain",
+      "level": 5,
+      "score": 5.77,
+      "newShare": 0.103
+    },
+    {
+      "id": "sci-space",
+      "level": 5,
+      "score": 5.78,
+      "newShare": 0.181
+    },
+    {
+      "id": "novel-river-2",
+      "level": 5,
+      "score": 5.83,
+      "newShare": 0.123
+    },
+    {
+      "id": "novel-south-3",
+      "level": 5,
+      "score": 5.84,
+      "newShare": 0.119
+    },
+    {
+      "id": "hist-wall",
+      "level": 5,
+      "score": 5.85,
+      "newShare": 0.165
+    },
+    {
+      "id": "hist-paper",
+      "level": 5,
+      "score": 5.85,
+      "newShare": 0.176
+    },
+    {
+      "id": "hist-compass",
+      "level": 5,
+      "score": 5.85,
+      "newShare": 0.268
+    },
+    {
+      "id": "novel-lamp-2",
+      "level": 5,
+      "score": 5.94,
+      "newShare": 0.149
+    },
+    {
+      "id": "novel-lamp-1",
+      "level": 6,
+      "score": 6.21,
+      "newShare": 0.08
+    },
+    {
+      "id": "hist-silk",
+      "level": 6,
+      "score": 6.22,
+      "newShare": 0.183
+    },
+    {
+      "id": "novel-south-2",
+      "level": 6,
+      "score": 6.25,
+      "newShare": 0.067
+    },
+    {
+      "id": "sci-seed",
+      "level": 6,
+      "score": 6.36,
+      "newShare": 0.155
+    },
+    {
+      "id": "hist-zhenghe",
+      "level": 6,
+      "score": 6.41,
+      "newShare": 0.147
+    },
+    {
+      "id": "sci-magnet",
+      "level": 6,
+      "score": 6.63,
+      "newShare": 0.128
+    },
+    {
+      "id": "hist-oracle",
+      "level": 7,
+      "score": 7.2,
+      "newShare": 0.145
+    },
+    {
+      "id": "story-jingyesi",
+      "level": 7,
+      "score": 7.33,
+      "newShare": 0.467
+    },
+    {
+      "id": "story-market-thief",
+      "level": 7,
+      "score": 7.4,
+      "newShare": 0.028
+    },
+    {
+      "id": "wr-animal-penguin",
+      "level": 7,
+      "score": 7.56,
+      "newShare": 0.109
+    },
+    {
+      "id": "sci-ant",
+      "level": 7,
+      "score": 7.62,
+      "newShare": 0.176
+    },
+    {
+      "id": "child-three-char",
+      "level": 9,
+      "score": 9.52,
+      "newShare": 0.676
+    },
+    {
+      "id": "child-goose",
+      "level": 10,
+      "score": 10.29,
+      "newShare": 0.75
+    }
+  ]
+}

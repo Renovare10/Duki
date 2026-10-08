@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import type {
   Bookmark,
   Gloss,
@@ -28,6 +28,8 @@ type Props = {
   onBookmark: (bookmark: Bookmark) => void;
   onDone: (durationMs: number) => void;
   onSettings: (settings: ReaderSettings) => void;
+  /** Optional block after the text (chapter navigation in long works); gets the time spent reading. */
+  footer?: (elapsedMs: () => number) => ReactNode;
 };
 
 type HoverState = {
@@ -52,6 +54,7 @@ export function Reader({
   onBookmark,
   onDone,
   onSettings,
+  footer,
 }: Props) {
   const titleTokens = useMemo(
     () => segment(text.title, hasWord, MAX_WORD_LEN),
@@ -327,7 +330,7 @@ export function Reader({
       </div>
 
       <article
-        className="article"
+        className={`article${footer ? " has-footer" : ""}`}
         lang="zh-CN"
         onMouseLeave={() => setHover(null)}
         style={{
@@ -346,6 +349,7 @@ export function Reader({
           }),
         )}
       </article>
+      {footer ? <div className="reader-footer">{footer(() => Date.now() - openedAt.current)}</div> : null}
 
       <div
         ref={sheetRef}
@@ -436,7 +440,7 @@ function renderToken(token: Token, zone: "title" | "body", opts: RenderOpts) {
   if (!token.isWord) {
     return (
       <span key={`${zone}-${token.index}`} className={marked ? "speaking" : undefined}>
-        {token.text}
+        {VERSE_NUM.test(token.text) ? withVerseNumbers(token.text) : token.text}
       </span>
     );
   }
@@ -472,6 +476,21 @@ function renderToken(token: Token, zone: "title" | "body", opts: RenderOpts) {
       {isResume ? <span className="resume-flag">resume here</span> : null}
       {token.text}
     </span>
+  );
+}
+
+/** Bible chapters carry verse numbers as superscript digits (¹²³); show them quietly. */
+const VERSE_NUM = /[⁰¹²³⁴⁵⁶⁷⁸⁹]/;
+
+function withVerseNumbers(text: string): ReactNode[] {
+  return text.split(/([⁰¹²³⁴⁵⁶⁷⁸⁹]+)/).map((part, i) =>
+    i % 2 === 1 ? (
+      <span key={i} className="verse-num" aria-hidden="true">
+        {part}
+      </span>
+    ) : (
+      part
+    ),
   );
 }
 
