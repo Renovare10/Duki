@@ -242,3 +242,18 @@ describe("built works on disk", () => {
     expect(psa119.body).toContain("¹⁷⁶");
   });
 });
+
+describe("card wording", () => {
+  it("pluralizes section nouns", async () => {
+    const { countNoun } = await import("./works");
+    expect(countNoun(15, "Story")).toBe("15 stories");
+    expect(countNoun(66, "Book")).toBe("66 books");
+    expect(countNoun(1, "Essay")).toBe("1 essay");
+    expect(countNoun(1189, "Chapter")).toBe("1,189 chapters");
+  });
+  it("drops edition notes from cover titles", async () => {
+    const { coverTitle } = await import("./works");
+    expect(coverTitle("圣经（和合本）")).toBe("圣经");
+    expect(coverTitle("吶喊")).toBe("吶喊");
+  });
+});

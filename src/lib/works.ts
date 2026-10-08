@@ -237,3 +237,16 @@ export function workChapterRow(
     openedAt: now,
   };
 }
+
+/** "Story" → "stories", "Book" → "books" (lowercase, for meta lines). */
+export function countNoun(n: number, noun: string): string {
+  const word = noun.toLowerCase();
+  if (n === 1) return `1 ${word}`;
+  const plural = /[^aeiou]y$/.test(word) ? word.slice(0, -1) + "ies" : word + "s";
+  return `${n.toLocaleString("en-US")} ${plural}`;
+}
+
+/** Cover art drops a parenthetical edition note: 圣经（和合本） → 圣经. */
+export function coverTitle(title: string): string {
+  return title.replace(/[（(][^）)]*[）)]/g, "").trim() || title;
+}

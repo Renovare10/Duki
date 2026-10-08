@@ -2406,6 +2406,7 @@ button.badge {
 }
 
 .pick-label {
+  white-space: nowrap;
   font-weight: 600;
   font-size: 0.72rem;
   letter-spacing: 0.04em;
@@ -2763,5 +2764,23 @@ button.badge {
   .chapter-nav .primary {
     flex: 1 1 100%;
     order: 3;
+  }
+}
+
+@media (max-width: 520px) {
+  .pick-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .pick {
+    min-width: 0;
+  }
+  .pick select {
+    min-width: 0;
+    width: 100%;
+  }
+  .pick-clear {
+    grid-column: 1 / -1;
+    justify-self: start;
   }
 }

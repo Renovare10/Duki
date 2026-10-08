@@ -32,7 +32,7 @@ import {
   type LengthBucket,
   type StatusFilter,
 } from "../lib/library";
-import { isWorkRowId, workProgress, workRowId, workRows, workRowSummary, type WorkMeta } from "../lib/works";
+import { countNoun, coverTitle, isWorkRowId, workProgress, workRowId, workRows, workRowSummary, type WorkMeta } from "../lib/works";
 import { useWorkProfiles, useWorkTocs } from "./useWorks";
 
 type Props = {
@@ -158,7 +158,7 @@ export function Home({
           cont = {
             title: p.next.title,
             open: () => onOpen(workRowId(work.id, p.next.key)),
-            progress: `${p.read}/${p.total} chapters`,
+            progress: `${p.read} / ${p.total.toLocaleString("en-US")} read`,
           };
         }
       } else if (summary.last && !summary.last.readAt) {
@@ -568,8 +568,8 @@ function WorkCard({
           {stats ? (
             <span>
               {stats.sections > 1 && stats.sections !== stats.chapters
-                ? `${stats.sections} ${work.sectionNoun.toLowerCase()}s · ${stats.chapters.toLocaleString("en-US")} chapters`
-                : `${stats.chapters} ${work.sectionNoun.toLowerCase()}s`}
+                ? countNoun(stats.sections, work.sectionNoun)
+                : countNoun(stats.chapters, work.sectionNoun)}
             </span>
           ) : null}
         </div>
@@ -738,7 +738,7 @@ export function Cover({
       <span className="blob a" />
       <span className="blob b" />
       <span className="blob c" />
-      {title ? <span className="cover-title" lang="zh-CN">{title}</span> : null}
+      {title ? <span className="cover-title" lang="zh-CN">{coverTitle(title)}</span> : null}
       {tag ? <span className="cover-tag">{tag}</span> : null}
     </div>
   );
