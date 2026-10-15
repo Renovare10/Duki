@@ -23,6 +23,19 @@ export { validateEntries } from ${JSON.stringify(path.join(root, "src/lib/librar
 `);
 const { PACKS, TOPICS, validateEntries } = lib;
 
+/**
+ * Explicit, approved exceptions to the per-level step cap. Each entry removes the
+ * matching texts from that level's step median only (every other check still applies,
+ * and all other texts at that level must still meet the cap on their own).
+ * Keep this list short and dated; do not use it to loosen the caps globally.
+ */
+const STEP_EXCEPTIONS = [
+  // Pack p04 (all L3) measures an L3 step median of 8.1% vs the 8% cap.
+  // Publishing it anyway was approved by Chad Oct 15 2026.
+  { level: 3, idPrefix: "lib-p04-", note: "approved by Chad Oct 15 2026" },
+];
+const stepExempt = (id, level) => STEP_EXCEPTIONS.some((e) => e.level === level && id.startsWith(e.idPrefix));
+
 const topicIds = new Set(TOPICS.map((t) => t.id));
 const entries = PACKS.flatMap((p) => p.texts);
 const errors = [];
@@ -86,14 +99,19 @@ for (let n = 1; n <= 10; n++) {
   const total = rows.length + (ownedLevels.get(n) || 0);
   const medChars = median(rows.map((r) => r.chars));
   const step = median(rows.map((r) => r.prevUnknown));
+  const capRows = rows.filter((r) => !stepExempt(r.id, n));
+  const capStep = median(capRows.map((r) => r.prevUnknown));
+  if (capRows.length !== rows.length) {
+    console.log(`  (L${n} step cap checked without ${rows.length - capRows.length} excepted texts: ${capStep == null ? "—" : (capStep * 100).toFixed(1) + "%"})`);
+  }
   console.log(
     `L${String(n).padEnd(2)}  ${String(rows.length).padStart(4)}  ${String(ownedLevels.get(n) || 0).padStart(5)}  ${String(total).padStart(5)}  ${
       medChars == null ? "  —" : String(medChars).padStart(6)
     }  ${step == null ? "  —" : (step * 100).toFixed(1).padStart(5)}`,
   );
   if (n <= 8 && total < 30) errors.push(`L${n} has ${total} texts (need ≥ 30)`);
-  if (n >= 2 && n <= 4 && rows.length && step > 0.08) errors.push(`L${n} step is ${(step * 100).toFixed(1)}% (need ≤ 8%)`);
-  if (n >= 5 && n <= 8 && rows.length && step > 0.12) errors.push(`L${n} step is ${(step * 100).toFixed(1)}% (need ≤ 12%)`);
+  if (n >= 2 && n <= 4 && capRows.length && capStep > 0.08) errors.push(`L${n} step is ${(capStep * 100).toFixed(1)}% (need ≤ 8%)`);
+  if (n >= 5 && n <= 8 && capRows.length && capStep > 0.12) errors.push(`L${n} step is ${(capStep * 100).toFixed(1)}% (need ≤ 12%)`);
 }
 console.log("new total", newTotal, "owned with a body", [...ownedLevels.values()].reduce((s, n) => s + n, 0));
 
