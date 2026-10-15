@@ -21,6 +21,20 @@ import {
 } from "./lib/theme";
 import { parseShareHash, type ShareKind } from "./lib/share";
 import { BookScreen } from "./components/Book";
+import { WorkScreen } from "./components/Work";
+import { findWork } from "./data/works";
+import { personalReady } from "./lib/library";
+import type { VocabProfile } from "./lib/difficulty";
+import {
+  isWorkRowId,
+  loadChapter,
+  loadToc,
+  neighbors,
+  parseWorkRowId,
+  workChapterRow,
+  workRowId,
+  type WorkToc,
+} from "./lib/works";
 import { fetchWikiPage, randomWikipedia, searchWikipedia, wikiStub, wikiTextId } from "./lib/wiki";
 import { fetchWikisourcePage, searchWikisource, wsTextId, wikisourceStubs } from "./lib/wikisource";
 import {
@@ -65,8 +79,11 @@ import { makeWordEvent } from "./lib/history";
 import { mergeSnapshots, packSnapshot, pullSnapshot, pushSnapshot } from "./lib/sync";
 import { dukiApiBase } from "./lib/gutenberg";
 import { hasWord, loadGlossary, MAX_WORD_LEN } from "./lib/glossary";
+import { loadClassic, type ClassicBody } from "./lib/classics";
+import { loadScriptChoice, saveScriptChoice, type ScriptChoice } from "./lib/script";
+import { profilesFrom, type WordSetFile } from "./lib/word-sets";
 import { MENU_ACTION_LABELS, MENU_GROUPS, type MenuActionId } from "./lib/menu";
-import { remainingUniques, scoreTokens } from "./lib/score";
+import { remainingUniques, scoreCounts, scoreTokens } from "./lib/score";
 import { segment } from "./lib/segment";
 import { applyReadingTap, applyReviewGrade } from "./lib/word";
 import type {
@@ -88,6 +105,7 @@ type View =
   | { name: "add" }
   | { name: "reader"; id: string }
   | { name: "book"; id: string }
+  | { name: "work"; id: string }
   | { name: "share"; kind: ShareKind; key: string }
   | { name: "review"; focus?: string }
   | { name: "stats" };
@@ -107,6 +125,7 @@ function viewToHash(view: View): string {
   }
   if (view.name === "add") return "#/add";
   if (view.name === "book") return `#/book/${encodeURIComponent(view.id)}`;
+  if (view.name === "work") return `#/work/${encodeURIComponent(view.id)}`;
   if (view.name === "stats") return "#/stats";
   if (view.name === "share") {
     return `#/r/${view.kind}/${encodeURIComponent(view.key)}`;
@@ -127,6 +146,9 @@ function hashToView(hash: string): View {
   if (path === "/add") return { name: "add" };
   if (path.startsWith("/book/")) {
     return { name: "book", id: decodeURIComponent(path.slice("/book/".length)) };
+  }
+  if (path.startsWith("/work/")) {
+    return { name: "work", id: decodeURIComponent(path.slice("/work/".length)) };
   }
   if (path === "/stats" || path.startsWith("/stats?")) return { name: "stats" };
   if (path === "/review") return { name: "review" };
@@ -156,8 +178,18 @@ export default function App() {
   const [importError, setImportError] = useState<string | null>(null);
   const [wikiErrors, setWikiErrors] = useState<Record<string, string>>({});
   const [wikiLoading, setWikiLoading] = useState<string | null>(null);
+  const [classicPair, setClassicPair] = useState<ClassicBody | null>(null);
+  const [scriptChoice, setScriptChoice] = useState<ScriptChoice>(() => loadScriptChoice());
+  const [profileTick, setProfileTick] = useState(0);
+  const profilesRef = useRef<Map<string, VocabProfile> | null>(null);
   const [shareTextId, setShareTextId] = useState<string | null>(null);
   const [shareMissing, setShareMissing] = useState(false);
+  /** Chapter bodies of long works, fetched on open; never persisted. */
+  const [workBodies, setWorkBodies] = useState<Map<string, string>>(new Map());
+  const workBodiesRef = useRef(workBodies);
+  workBodiesRef.current = workBodies;
+  const [workTocs, setWorkTocs] = useState<Map<string, WorkToc>>(new Map());
+  const [workError, setWorkError] = useState<string | null>(null);
   const [auth, setAuth] = useState<AuthTokens | null>(() => loadStoredAuth());
   /** A `?code=` sign-in exchange is in flight, so we don't know who this is yet. */
   const [authPending, setAuthPending] = useState(
@@ -314,7 +346,8 @@ export default function App() {
     if (view.name === "reader") page = texts.find((item) => item.id === view.id)?.title ?? "";
     else if (view.name === "book") {
       page = texts.find((item) => item.seriesId === view.id)?.seriesTitle ?? "";
-    } else if (view.name === "review") page = "Review";
+    } else if (view.name === "work") page = findWork(view.id)?.title ?? "";
+    else if (view.name === "review") page = "Review";
     else if (view.name === "stats") page = "Stats";
     else if (view.name === "add") page = "Add text";
     document.title = documentTitle(page);
@@ -531,6 +564,23 @@ export default function App() {
     void runCloudSync();
   }, [ready, auth]);
 
+  useEffect(() => {
+    let cancel = false;
+    fetch("/meta/word-sets.json")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data: WordSetFile | null) => {
+        if (cancel || !data?.vocab || !data.texts) return;
+        profilesRef.current = profilesFrom(data);
+        setProfileTick((n) => n + 1);
+      })
+      .catch(() => {
+        /* cards stay unscored until a fetch */
+      });
+    return () => {
+      cancel = true;
+    };
+  }, []);
+
   const statuses = useMemo(() => {
     const map = new Map<string, WordStatus>();
     for (const [hanzi, rec] of words) map.set(hanzi, rec.status);
@@ -539,19 +589,36 @@ export default function App() {
 
   const scores = useMemo(() => {
     const map = new Map<string, TextScore>();
+    const profiles = profilesRef.current;
     for (const text of texts) {
-      const tokens = segment(text.body, hasWord, MAX_WORD_LEN);
-      map.set(text.id, scoreTokens(tokens, statuses));
+      if (text.body.trim()) {
+        map.set(text.id, scoreTokens(segment(text.body, hasWord, MAX_WORD_LEN), statuses));
+      } else {
+        const profile = profiles?.get(text.id);
+        map.set(
+          text.id,
+          profile ? scoreCounts(profile.words, profile.counts, statuses) : scoreTokens([], statuses),
+        );
+      }
     }
     return map;
-  }, [texts, statuses]);
+  }, [texts, statuses, profileTick]);
 
-  const current =
+  const currentRow =
     view.name === "reader"
       ? texts.find((t) => t.id === view.id)
       : view.name === "share" && shareTextId
         ? texts.find((t) => t.id === shareTextId)
         : undefined;
+  const readingWork = view.name === "reader" ? parseWorkRowId(view.id) : null;
+  // Work chapters: the stored row has no body; attach the fetched one for reading.
+  const current =
+    currentRow && isWorkRowId(currentRow.id)
+      ? workBodies.has(currentRow.id)
+        ? { ...currentRow, body: workBodies.get(currentRow.id)! }
+        : undefined
+      : currentRow;
+  const personal = useMemo(() => personalReady(statuses), [statuses]);
 
   function mergeIncoming(incoming: LibraryText[]) {
     if (incoming.length === 0) return;
@@ -622,16 +689,31 @@ export default function App() {
           sourceUrl: page.url,
           preview: mode === "score",
         };
-      } else if (text.wsTitle) {
-        const page = await fetchWikisourcePage(text.wsTitle);
-        next = {
-          ...text,
-          title: text.title || page.title,
-          body: page.extract,
-          source: "From Wikisource (public domain / CC BY-SA)",
-          sourceUrl: page.url,
-          preview: false,
-        };
+      } else if (text.wsTitle || text.kind === "wikisource") {
+        const classic = await loadClassic(text.id);
+        if (classic) {
+          setClassicPair(classic);
+          if (text.body.trim()) return text;
+          next = {
+            ...text,
+            body: classic.simplified,
+            source: text.source || "From Wikisource (public domain / CC BY-SA)",
+            sourceUrl: text.sourceUrl || classic.url,
+            preview: false,
+          };
+        } else if (text.wsTitle) {
+          const page = await fetchWikisourcePage(text.wsTitle);
+          next = {
+            ...text,
+            title: text.title || page.title,
+            body: page.extract,
+            source: "From Wikisource (public domain / CC BY-SA)",
+            sourceUrl: page.url,
+            preview: false,
+          };
+        } else {
+          return text;
+        }
       } else {
         return text;
       }
@@ -653,6 +735,10 @@ export default function App() {
   }
 
   async function onOpen(id: string) {
+    if (isWorkRowId(id)) {
+      navigate({ name: "reader", id });
+      return;
+    }
     const text = textsRef.current.find((t) => t.id === id);
     if (!text) return;
     if (!text.body.trim() || text.preview) {
@@ -692,6 +778,49 @@ export default function App() {
     };
   }, [ready, view]);
 
+  // Opening a work chapter: fetch its body (and the work's contents for
+  // prev/next), then save/refresh the progress row with openedAt.
+  useEffect(() => {
+    if (!ready || view.name !== "reader") return;
+    const ref = parseWorkRowId(view.id);
+    const id = view.id;
+    if (!ref) {
+      const text = textsRef.current.find((t) => t.id === id);
+      if (text && (text.kind === "wikisource" || text.wsTitle)) {
+        void openClassic(text);
+      } else {
+        setClassicPair(null);
+        if (text) void saveText({ ...text, openedAt: Date.now() });
+      }
+      return;
+    }
+    const work = findWork(ref.workId);
+    if (!work) {
+      setWorkError("That book isn’t in this version of Duki.");
+      return;
+    }
+    let cancelled = false;
+    setWorkError(null);
+    (async () => {
+      try {
+        const [toc, chapter] = await Promise.all([loadToc(ref.workId), loadChapter(ref.workId, ref.key)]);
+        if (cancelled) return;
+        setWorkTocs((prev) => (prev.has(ref.workId) ? prev : new Map(prev).set(ref.workId, toc)));
+        setWorkBodies((prev) => new Map(prev).set(id, chapter.body));
+        const existing = textsRef.current.find((t) => t.id === id);
+        await saveText(workChapterRow(work, chapter, existing, Date.now()));
+        // Warm the next chapter so "next" opens instantly.
+        const next = neighbors(toc, ref.key).next;
+        if (next) void loadChapter(ref.workId, next.key).catch(() => {});
+      } catch (err) {
+        if (!cancelled) setWorkError(err instanceof Error ? err.message : "Could not load this chapter.");
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [ready, view]);
+
   /** Stats history: local-only, best effort — a failed write never blocks reading or review. */
   function logWordEvent(event: WordEvent) {
     setWordEvents((prev) => [...prev, event]);
@@ -717,6 +846,27 @@ export default function App() {
     logWordEvent(makeWordEvent(existing, next, "review", grade));
     await putWord(next);
     scheduleCloudPush();
+  }
+
+  async function openClassic(text: LibraryText) {
+    const classic = await loadClassic(text.id);
+    const current = textsRef.current.find((t) => t.id === text.id) ?? text;
+    if (classic) setClassicPair(classic);
+    else setClassicPair(null);
+    if (!current.body.trim() && classic) {
+      await saveText({
+        ...current,
+        body: classic.simplified,
+        sourceUrl: current.sourceUrl || classic.url,
+        openedAt: Date.now(),
+      });
+      return;
+    }
+    if (!current.body.trim()) {
+      await fillRemote(current.id, "read");
+      return;
+    }
+    await saveText({ ...current, openedAt: Date.now() });
   }
 
   async function saveText(next: LibraryText) {
@@ -780,12 +930,13 @@ export default function App() {
     scheduleCloudPush();
   }
 
-  async function onDone(id: string, durationMs: number) {
+  async function onDone(id: string, durationMs: number, then?: string) {
     const text = textsRef.current.find((t) => t.id === id);
     if (!text) return;
     const next = { ...text, readAt: text.readAt ?? Date.now() };
     await saveText(next);
-    const tokens = segment(text.body, hasWord, MAX_WORD_LEN);
+    const body = isWorkRowId(id) ? workBodiesRef.current.get(id) ?? "" : text.body;
+    const tokens = segment(body, hasWord, MAX_WORD_LEN);
     const remaining = remainingUniques(tokens, statusesFrom(wordsRef.current));
     const session: ReadingSession = {
       id: crypto.randomUUID(),
@@ -798,7 +949,11 @@ export default function App() {
     setSessions((prev) => [...prev, session]);
     await putSession(session);
     scheduleCloudPush();
-    if (text.seriesId) navigate({ name: "book", id: text.seriesId });
+    const work = parseWorkRowId(id);
+    if (work) {
+      if (then) navigate({ name: "reader", id: workRowId(work.workId, then) });
+      else navigate({ name: "work", id: work.workId });
+    } else if (text.seriesId) navigate({ name: "book", id: text.seriesId });
     else navigate({ name: "home" });
   }
 
@@ -875,6 +1030,36 @@ export default function App() {
     setTexts(textsRef.current);
     scheduleCloudPush();
     if (view.name === "reader" && view.id === id) navigate({ name: "home" });
+  }
+
+  /** Prev / contents / done-and-next under a work chapter. */
+  function chapterFooter(workId: string, key: string, elapsed: () => number) {
+    const toc = workTocs.get(workId);
+    const nav = toc ? neighbors(toc, key) : null;
+    const id = workRowId(workId, key);
+    return (
+      <nav className="chapter-nav" aria-label="Chapters">
+        {nav?.prev ? (
+          <button type="button" className="ghost" onClick={() => navigate({ name: "reader", id: workRowId(workId, nav.prev!.key) })}>
+            ← {nav.prev.label}
+          </button>
+        ) : (
+          <span />
+        )}
+        <button type="button" className="ghost" onClick={() => navigate({ name: "work", id: workId })}>
+          Contents
+        </button>
+        {nav?.next ? (
+          <button type="button" className="primary" onClick={() => void onDone(id, elapsed(), nav.next!.key)}>
+            Done · next: {nav.next.label} →
+          </button>
+        ) : (
+          <button type="button" className="primary" onClick={() => void onDone(id, elapsed())}>
+            Done · finished
+          </button>
+        )}
+      </nav>
+    );
   }
 
   function onExport() {
@@ -1164,6 +1349,7 @@ export default function App() {
         <Home
           texts={texts}
           scores={scores}
+          statuses={statuses}
           sessions={sessions}
           openShelf={view.shelf ?? null}
           wikiErrors={wikiErrors}
@@ -1171,6 +1357,7 @@ export default function App() {
           onOpenShelf={(id) => navigate(id ? { name: "home", shelf: id } : { name: "home" })}
           onOpen={(id) => void onOpen(id)}
           onOpenBook={(seriesId) => navigate({ name: "book", id: seriesId })}
+          onOpenWork={(workId) => navigate({ name: "work", id: workId })}
           onScore={(id) => void onScoreCard(id)}
           onDelete={(id) => void onDelete(id)}
           onMarkRead={(id, readFlag) => void onMarkRead(id, readFlag)}
@@ -1184,6 +1371,7 @@ export default function App() {
           <BookScreen
             book={findBook(texts, view.id)!}
             scores={scores}
+            personal={personal}
             wikiErrors={wikiErrors}
             wikiLoading={wikiLoading}
             onBack={() => navigate({ name: "home" })}
@@ -1194,6 +1382,26 @@ export default function App() {
         ) : (
           <div className="shell">
             <p>That book is gone.</p>
+            <button className="primary" type="button" onClick={() => navigate({ name: "home" })}>
+              Back to the shelves
+            </button>
+          </div>
+        )
+      ) : null}
+
+      {ready && view.name === "work" ? (
+        findWork(view.id) ? (
+          <WorkScreen
+            work={findWork(view.id)!}
+            texts={texts}
+            statuses={statuses}
+            personal={personal}
+            onBack={() => navigate({ name: "home" })}
+            onOpenChapter={(key) => navigate({ name: "reader", id: workRowId(view.id, key) })}
+          />
+        ) : (
+          <div className="shell">
+            <p>That book isn’t in the library.</p>
             <button className="primary" type="button" onClick={() => navigate({ name: "home" })}>
               Back to the shelves
             </button>
@@ -1225,7 +1433,27 @@ export default function App() {
           onBookmark={(bookmark) => void onBookmark(current.id, bookmark)}
           onDone={(durationMs) => void onDone(current.id, durationMs)}
           onSettings={onReaderSettings}
+          classic={classicPair && current.id === classicPair.id ? classicPair : null}
+          script={scriptChoice}
+          onScript={(next) => {
+            setScriptChoice(next);
+            saveScriptChoice(next);
+          }}
+          footer={readingWork ? (elapsed) => chapterFooter(readingWork.workId, readingWork.key, elapsed) : undefined}
         />
+      ) : null}
+
+      {ready && readingWork && !current ? (
+        <div className="shell">
+          {workError ? <p className="wiki-error">{workError}</p> : <p>Opening the chapter…</p>}
+          <button
+            className="primary"
+            type="button"
+            onClick={() => navigate(findWork(readingWork.workId) ? { name: "work", id: readingWork.workId } : { name: "home" })}
+          >
+            {findWork(readingWork.workId) ? "Back to contents" : "Back to the shelves"}
+          </button>
+        </div>
       ) : null}
 
       {ready && view.name === "share" && !current?.body.trim() ? (
@@ -1243,7 +1471,7 @@ export default function App() {
         </div>
       ) : null}
 
-      {ready && view.name === "reader" && !current ? (
+      {ready && view.name === "reader" && !current && !readingWork ? (
         <div className="shell">
           <p>That text is gone.</p>
           <button className="primary" type="button" onClick={() => navigate({ name: "home" })}>

@@ -8,6 +8,7 @@ import type {
 } from "../types";
 import { normalizeEvent } from "./history";
 import { normalizeText } from "./text";
+import { isWorkRowId } from "./works";
 import { normalizeWord } from "./word";
 
 const DB_NAME = "duki";
@@ -279,8 +280,9 @@ export async function importBackup(
 
   const incoming = new Map<string, LibraryText>();
   for (const text of backup.texts || []) {
-    if (!text?.id || !text.body) continue;
-    incoming.set(text.id, normalizeText(text));
+    // Work-chapter progress rows have no body by design; keep them.
+    if (!text?.id || (!text.body && !isWorkRowId(text.id))) continue;
+    incoming.set(text.id, normalizeText({ ...text, body: text.body ?? "" }));
   }
   for (const sample of catalog) {
     const existing = incoming.get(sample.id);
@@ -324,8 +326,8 @@ export function parseBackup(raw: unknown): BackupFile {
     exportedAt: typeof data.exportedAt === "string" ? data.exportedAt : new Date().toISOString(),
     words: data.words.map((w) => normalizeWord(w)),
     texts: data.texts
-      .filter((t) => t?.id && t.body)
-      .map((t) => normalizeText(t)),
+      .filter((t) => t?.id && (t.body || isWorkRowId(t.id)))
+      .map((t) => normalizeText({ ...t, body: t.body ?? "" })),
     sessions: Array.isArray(data.sessions) ? data.sessions : [],
     settings: data.settings ? normalizeSettings(data.settings) : undefined,
   };

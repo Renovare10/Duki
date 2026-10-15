@@ -1,11 +1,13 @@
 import { describe, expect, it } from "vitest";
 import {
+  adaptTarget,
   coveragePercents,
   fitLabel,
   isFullyKnown,
   matchesLevel,
   pickSuggestion,
   remainingUniques,
+  scoreCounts,
   scoreTokens,
   stillTeaches,
 } from "./score";
@@ -51,7 +53,7 @@ describe("scoreTokens", () => {
 });
 
 describe("pickSuggestion", () => {
-  it("prefers a text near 5–10% unknown", () => {
+  it("prefers a text near 8–14% unknown", () => {
     const scores = new Map([
       ["hard", score({ unknownLoad: 0.4, unique: 40, total: 80 })],
       ["right", score({ unknownLoad: 0.08, unique: 20, total: 50 })],
@@ -170,6 +172,22 @@ describe("coveragePercents", () => {
   });
 });
 
+describe("adaptTarget / scoreCounts", () => {
+  it("leaves the center alone until there are a few recent reads", () => {
+    expect(adaptTarget([0.2, 0.2])).toBeCloseTo(0.11);
+    expect(adaptTarget([0.2, 0.2, 0.2])).toBeGreaterThan(0.11);
+    expect(adaptTarget([0.2, 0.2, 0.2])).toBeLessThanOrEqual(0.14);
+  });
+
+  it("scores a word-count profile the same way as tokens", () => {
+    const statuses = new Map<string, WordStatus>([["我", "known"]]);
+    const score = scoreCounts(["我", "书"], [2, 1], statuses);
+    expect(score.total).toBe(3);
+    expect(score.known).toBe(2);
+    expect(score.unknownLoad).toBeCloseTo(1 / 3);
+  });
+});
+
 describe("fitLabel", () => {
   it("treats a fully unknown text as harder, not unread", () => {
     expect(
@@ -187,20 +205,21 @@ describe("fitLabel", () => {
     ).toBe("hard");
   });
 
-  it("labels a 7% unknown text as just right", () => {
-    expect(
-      fitLabel({
-        total: 100,
-        known: 93,
-        shaky: 2,
-        unknown: 5,
-        knownPct: 0.93,
-        unknownLoad: 0.07,
-        unique: 40,
-        uniqueUnknown: 6,
-        uniqueShaky: 2,
-      }),
-    ).toBe("just-right");
+  it("labels 7% as easy, 11% as just right, and 20% as hard", () => {
+    const row = (unknownLoad: number) => ({
+      total: 100,
+      known: Math.round((1 - unknownLoad) * 100),
+      shaky: 0,
+      unknown: Math.round(unknownLoad * 100),
+      knownPct: 1 - unknownLoad,
+      unknownLoad,
+      unique: 40,
+      uniqueUnknown: 6,
+      uniqueShaky: 0,
+    });
+    expect(fitLabel(row(0.07))).toBe("easy");
+    expect(fitLabel(row(0.11))).toBe("just-right");
+    expect(fitLabel(row(0.2))).toBe("hard");
   });
 
   it("does not treat a 43% unknown text as just right", () => {

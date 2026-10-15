@@ -87,6 +87,12 @@ export type LibraryText = {
   seriesTitle?: string;
   chapter?: number;
   preview?: boolean;
+  /**
+   * Last time this text was opened in the reader (ms). Added in library v2 for
+   * chapter-level "continue where you left off" in long works; optional, so
+   * rows written by older versions simply don't have it.
+   */
+  openedAt?: number;
 };
 
 export type Token = {

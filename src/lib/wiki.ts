@@ -72,6 +72,9 @@ export function wikiApiUrl(title: string, introOnly: boolean): string {
     inprop: "url",
     redirects: "1",
     titles: title,
+    // Simplified script. Without it zh.wikipedia returns each article in the
+    // script its editors used (often Traditional), which the glossary can't read.
+    variant: "zh-cn",
   });
   if (introOnly) params.set("exintro", "1");
   else params.set("exchars", "4500");

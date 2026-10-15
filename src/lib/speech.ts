@@ -29,7 +29,8 @@ function splitLong(body: string, start: number, end: number): SpeechChunk[] {
   if (spoken.length <= MAX_CHARS) return [{ text: spoken, start: from, end: to }];
 
   let breakAt = -1;
-  const limit = Math.min(MAX_CHARS, spoken.length - 1);
+  // Break at most MAX_CHARS in, so the first piece always fits and recursion ends.
+  const limit = Math.min(MAX_CHARS - 1, spoken.length - 1);
   for (let i = limit; i >= 12; i--) {
     if (PAUSE.test(spoken[i])) {
       breakAt = i + 1;

@@ -2,6 +2,8 @@ import fs from "node:fs";
 import path from "node:path";
 import zlib from "node:zlib";
 import { fileURLToPath } from "node:url";
+import OpenCC from "opencc-js";
+import { keepSenses } from "./gloss-senses.mjs";
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const outFile = path.join(root, "..", "public", "glossary.json");
@@ -112,11 +114,12 @@ for (let level = 1; level <= 6; level++) {
     const pinyin = String(item.pinyin || "")
       .trim()
       .replace(/\s+/g, " ");
-    const english = cleanGloss(item.translations || []);
+    const english = cleanGloss(keepSenses(hanzi, item.translations || []));
     upsert(hanzi, pinyin, english, level);
   }
 }
 
+const tradChars = new Set();
 const gz = fs.readFileSync(path.join(root, "cedict.txt.gz"));
 const cedict = zlib.gunzipSync(gz).toString("utf8");
 const lineRe = /^(\S+)\s+(\S+)\s+\[([^\]]+)\]\s+\/(.+)\/\s*$/;
@@ -126,8 +129,42 @@ for (const line of cedict.split(/\n/)) {
   if (!m) continue;
   const simplified = m[2];
   const pinyin = pinyinMarks(m[3].replace(/u:/g, "ü"));
-  const english = cleanGloss(m[4].split("/"));
+  const english = cleanGloss(keepSenses(simplified, m[4].split("/")));
   upsert(simplified, pinyin, english, null);
+  for (const ch of m[1]) tradChars.add(ch);
+}
+
+// Traditional → Simplified character map (OpenCC, single characters), used by
+// the app to match word records across scripts and to show classical texts in
+// Simplified. Stored as a string of pairs: "學学發发…".
+const toSimp = OpenCC.Converter({ from: "t", to: "cn" });
+let t2s = "";
+for (const ch of [...tradChars].sort()) {
+  if (!isHanWord(ch)) continue;
+  const simp = toSimp(ch);
+  if (simp !== ch && [...simp].length === 1 && isHanWord(simp)) t2s += ch + simp;
+}
+
+// Classical texts still meet words CEDICT only glosses as "surname" / "see …",
+// which the main pass drops, plus a few variant characters. Fill those gaps
+// from scripts/classical-glosses.json (CC BY-SA, same license as CC-CEDICT).
+const extraPath = path.join(root, "classical-glosses.json");
+if (fs.existsSync(extraPath)) {
+  const extra = JSON.parse(fs.readFileSync(extraPath, "utf8"));
+  for (const [hanzi, pair] of Object.entries(extra)) {
+    if (!isHanWord(hanzi) || !Array.isArray(pair)) continue;
+    const [py, en] = pair;
+    if (!en) continue;
+    const pinyin = /[1-5]/.test(String(py)) ? pinyinMarks(String(py)) : String(py || "");
+    const prev = entries.get(hanzi);
+    if (!prev) {
+      if (!pinyin) continue;
+      entries.set(hanzi, { pinyin, english: en, hsk: null });
+      maxLen = Math.max(maxLen, [...hanzi].length);
+    } else if (!prev.english) {
+      prev.english = en;
+    }
+  }
 }
 
 const packed = {};
@@ -135,8 +172,8 @@ for (const [hanzi, val] of entries) {
   packed[hanzi] = [val.pinyin, val.english];
 }
 
-const payload = { maxLen, count: entries.size, entries: packed };
+const payload = { maxLen, count: entries.size, t2s, entries: packed };
 fs.mkdirSync(path.dirname(outFile), { recursive: true });
 fs.writeFileSync(outFile, JSON.stringify(payload));
 const kb = Math.round(fs.statSync(outFile).size / 1024);
-console.log(`glossary: ${entries.size} words, maxLen=${maxLen}, ${kb} KB -> ${outFile}`);
+console.log(`glossary: ${entries.size} words, ${t2s.length / 2} trad→simp chars, maxLen=${maxLen}, ${kb} KB -> ${outFile}`);

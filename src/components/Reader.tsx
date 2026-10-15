@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import type {
   Bookmark,
   Gloss,
@@ -10,7 +10,8 @@ import type {
 } from "../types";
 import { FONT_LABELS, FONT_STACKS } from "../lib/fonts";
 import { ThemeToggle } from "./ThemeToggle";
-import { getGloss, hasWord, MAX_WORD_LEN } from "../lib/glossary";
+import { getGloss, hasWord, MAX_WORD_LEN, toSimplified } from "../lib/glossary";
+import { markKey, type ScriptChoice } from "../lib/script";
 import { shareClipboard, shareUrl } from "../lib/share";
 import { segment } from "../lib/segment";
 import { tokensInRange } from "../lib/speech";
@@ -28,6 +29,12 @@ type Props = {
   onBookmark: (bookmark: Bookmark) => void;
   onDone: (durationMs: number) => void;
   onSettings: (settings: ReaderSettings) => void;
+  /** Optional block after the text (chapter navigation in long works); gets the time spent reading. */
+  footer?: (elapsedMs: () => number) => ReactNode;
+  /** Char-aligned traditional original, when this is a converted classic. */
+  classic?: { original: string; simplified: string } | null;
+  script?: ScriptChoice;
+  onScript?: (script: ScriptChoice) => void;
 };
 
 type HoverState = {
@@ -52,6 +59,10 @@ export function Reader({
   onBookmark,
   onDone,
   onSettings,
+  footer,
+  classic = null,
+  script = "simplified",
+  onScript,
 }: Props) {
   const titleTokens = useMemo(
     () => segment(text.title, hasWord, MAX_WORD_LEN),
@@ -63,6 +74,26 @@ export function Reader({
   );
   const titleWords = useMemo(() => titleTokens.filter((t) => t.isWord), [titleTokens]);
   const bodyWords = useMemo(() => bodyTokens.filter((t) => t.isWord), [bodyTokens]);
+  const tradBody =
+    classic && classic.original.length === classic.simplified.length && text.body === classic.simplified
+      ? classic.original
+      : null;
+  const canToggle = Boolean(classic && classic.original && classic.simplified);
+  const bodyView = useMemo(() => {
+    let offset = 0;
+    return bodyTokens.map((token) => {
+      const glossKey = canToggle ? toSimplified(token.text) : token.text;
+      let surface = token.text;
+      if (canToggle && script === "traditional") {
+        surface = tradBody ? tradBody.slice(offset, offset + token.text.length) : token.text;
+      } else if (canToggle && script === "simplified" && !tradBody) {
+        surface = glossKey;
+      }
+      offset += token.text.length;
+      return { token, surface, glossKey };
+    });
+  }, [bodyTokens, canToggle, script, tradBody]);
+  const spoken = useMemo(() => (canToggle ? bodyView.map((v) => v.surface).join("") : text.body), [canToggle, bodyView, text.body]);
   const [selected, setSelected] = useState<Sel | null>(null);
   const [hover, setHover] = useState<HoverState | null>(null);
   const openedAt = useRef(Date.now());
@@ -75,11 +106,14 @@ export function Reader({
       : selected.zone === "title"
         ? titleTokens[selected.index]
         : bodyTokens[selected.index];
-  const selectedGloss = selectedToken?.isWord ? getGloss(selectedToken.text) : null;
-  const selectedWord = selectedToken?.isWord ? words.get(selectedToken.text) : undefined;
-  const selectedTint = selectedToken?.isWord
-    ? tintOf(words, selectedToken.text)
-    : null;
+  const selectedView = selected?.zone === "body" ? bodyView[selected.index] : null;
+  const selectedGlossKey = selectedView?.glossKey ?? (selectedToken?.isWord ? selectedToken.text : "");
+  const selectedSurface = selectedView?.surface ?? selectedToken?.text ?? "";
+  const selectedRecordKey =
+    selectedToken?.isWord ? markKey(selectedGlossKey, selectedSurface, (key) => words.has(key)) : "";
+  const selectedGloss = selectedToken?.isWord ? getGloss(selectedGlossKey || selectedToken.text) : null;
+  const selectedWord = selectedRecordKey ? words.get(selectedRecordKey) : undefined;
+  const selectedTint = selectedToken?.isWord ? tintOf(words, selectedRecordKey) : null;
 
   const [resumeIndex, setResumeIndex] = useState<number | null>(null);
   const [toast, setToast] = useState<string | null>(null);
@@ -217,14 +251,14 @@ export function Reader({
         return;
       }
 
-      if (!selectedToken?.isWord) return;
-      if (event.key === "1") onSetStatus(selectedToken.text, "unknown");
-      if (event.key === "2") onSetStatus(selectedToken.text, "shaky");
-      if (event.key === "3") onSetStatus(selectedToken.text, "known");
+      if (!selectedToken?.isWord || !selectedRecordKey) return;
+      if (event.key === "1") onSetStatus(selectedRecordKey, "unknown");
+      if (event.key === "2") onSetStatus(selectedRecordKey, "shaky");
+      if (event.key === "3") onSetStatus(selectedRecordKey, "known");
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [onSetStatus, selected, selectedToken, titleWords, bodyWords]);
+  }, [onSetStatus, selected, selectedToken, selectedRecordKey, titleWords, bodyWords]);
 
   return (
     <div className="reader-page">
@@ -291,6 +325,16 @@ export function Reader({
                 </option>
               ))}
             </select>
+            {canToggle && onScript ? (
+              <button
+                type="button"
+                className="ghost"
+                aria-pressed={script === "traditional"}
+                onClick={() => onScript(script === "traditional" ? "simplified" : "traditional")}
+              >
+                {script === "traditional" ? "Simplified" : "Traditional"}
+              </button>
+            ) : null}
             <ThemeToggle
               className="theme-btn"
               theme={settings.theme}
@@ -323,11 +367,11 @@ export function Reader({
           </span>
           <span>Okay is plain text</span>
         </div>
-        <VoicePlayer body={text.body} onSpeaking={setSpeaking} />
+        <VoicePlayer body={spoken} onSpeaking={setSpeaking} />
       </div>
 
       <article
-        className="article"
+        className={`article${footer ? " has-footer" : ""}`}
         lang="zh-CN"
         onMouseLeave={() => setHover(null)}
         style={{
@@ -335,17 +379,20 @@ export function Reader({
           fontSize: `${settings.fontSize}px`,
         }}
       >
-        {bodyTokens.map((token) =>
-          renderToken(token, "body", {
+        {bodyView.map((view) =>
+          renderToken(view.token, "body", {
             words,
             selected,
             resumeIndex,
             setSelected: selectWord,
             setHover,
             speaking: speakingTokens,
+            surface: view.surface,
+            glossKey: view.glossKey,
           }),
         )}
       </article>
+      {footer ? <div className="reader-footer">{footer(() => Date.now() - openedAt.current)}</div> : null}
 
       <div
         ref={sheetRef}
@@ -357,28 +404,28 @@ export function Reader({
       >
         {selectedToken?.isWord && selectedGloss && selectedTint ? (
           <>
-            <div className="dock-word">{selectedToken.text}</div>
+            <div className="dock-word">{selectedSurface}</div>
             <div className="status-btns">
               <StatusButton
                 label="Don’t know"
                 shortcut="1"
                 status="unknown"
                 active={selectedTint === "unknown"}
-                onClick={() => onSetStatus(selectedToken.text, "unknown")}
+                onClick={() => onSetStatus(selectedRecordKey, "unknown")}
               />
               <StatusButton
                 label="Barely"
                 shortcut="2"
                 status="shaky"
                 active={selectedTint === "shaky"}
-                onClick={() => onSetStatus(selectedToken.text, "shaky")}
+                onClick={() => onSetStatus(selectedRecordKey, "shaky")}
               />
               <StatusButton
                 label="Okay"
                 shortcut="3"
                 status="known"
                 active={selectedTint === "known"}
-                onClick={() => onSetStatus(selectedToken.text, "known")}
+                onClick={() => onSetStatus(selectedRecordKey, "known")}
               />
             </div>
             <div className="dock-pinyin">{selectedGloss.pinyin}</div>
@@ -425,6 +472,8 @@ type RenderOpts = {
   setSelected: (sel: Sel) => void;
   setHover: (hover: HoverState | null) => void;
   speaking: { from: number; to: number } | null;
+  surface?: string;
+  glossKey?: string;
 };
 
 function renderToken(token: Token, zone: "title" | "body", opts: RenderOpts) {
@@ -436,11 +485,14 @@ function renderToken(token: Token, zone: "title" | "body", opts: RenderOpts) {
   if (!token.isWord) {
     return (
       <span key={`${zone}-${token.index}`} className={marked ? "speaking" : undefined}>
-        {token.text}
+        {VERSE_NUM.test(token.text) ? withVerseNumbers(token.text) : token.text}
       </span>
     );
   }
-  const status = tintOf(opts.words, token.text);
+  const surface = opts.surface ?? token.text;
+  const glossKey = opts.glossKey ?? token.text;
+  const record = markKey(glossKey, surface, (key) => opts.words.has(key));
+  const status = tintOf(opts.words, record);
   const isSelected =
     opts.selected?.zone === zone && opts.selected.index === token.index;
   const isResume = zone === "body" && opts.resumeIndex === token.index;
@@ -454,7 +506,7 @@ function renderToken(token: Token, zone: "title" | "body", opts: RenderOpts) {
         opts.setHover(null);
       }}
       onMouseEnter={(event) => {
-        if (tintOf(opts.words, token.text) === "known") {
+        if (tintOf(opts.words, record) === "known") {
           opts.setHover(null);
           return;
         }
@@ -462,7 +514,7 @@ function renderToken(token: Token, zone: "title" | "body", opts: RenderOpts) {
         opts.setHover({
           token,
           zone,
-          gloss: getGloss(token.text),
+          gloss: getGloss(glossKey),
           x: rect.left + rect.width / 2,
           y: rect.top,
         });
@@ -470,8 +522,23 @@ function renderToken(token: Token, zone: "title" | "body", opts: RenderOpts) {
       onMouseLeave={() => opts.setHover(null)}
     >
       {isResume ? <span className="resume-flag">resume here</span> : null}
-      {token.text}
+      {surface}
     </span>
+  );
+}
+
+/** Bible chapters carry verse numbers as superscript digits (¹²³); show them quietly. */
+const VERSE_NUM = /[⁰¹²³⁴⁵⁶⁷⁸⁹]/;
+
+function withVerseNumbers(text: string): ReactNode[] {
+  return text.split(/([⁰¹²³⁴⁵⁶⁷⁸⁹]+)/).map((part, i) =>
+    i % 2 === 1 ? (
+      <span key={i} className="verse-num" aria-hidden="true">
+        {part}
+      </span>
+    ) : (
+      part
+    ),
   );
 }
 

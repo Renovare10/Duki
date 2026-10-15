@@ -69,3 +69,20 @@ describe("tokensInRange", () => {
     expect(tokensInRange(tokens, 0, 5)).toEqual({ from: 0, to: 3 });
   });
 });
+
+describe("speechChunks on long sentences", () => {
+  it("terminates when a comma sits exactly at the length limit", () => {
+    const body = "我".repeat(80) + "，" + "你".repeat(60) + "。";
+    const chunks = speechChunks(body);
+    // Used to recurse forever (a 81-char piece re-split at the same comma).
+    expect(chunks.map((c) => c.text).join("")).toBe(body);
+  });
+
+  it("splits a long comma-chained sentence into short pieces", () => {
+    const body = Array.from({ length: 40 }, () => "他走到门口看了看天").join("，") + "。";
+    const chunks = speechChunks(body);
+    expect(chunks.length).toBeGreaterThan(4);
+    expect(chunks.every((c) => c.text.length <= 80)).toBe(true);
+    expect(chunks.map((c) => body.slice(c.start, c.end)).join("")).toBe(body);
+  });
+});

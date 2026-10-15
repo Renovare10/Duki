@@ -132,7 +132,14 @@ function mergeText(a: LibraryText | undefined, b: LibraryText): LibraryText {
     wsTitle: na.wsTitle || nb.wsTitle,
     gutenbergId: na.gutenbergId ?? nb.gutenbergId,
     sourceUrl: na.sourceUrl || nb.sourceUrl,
+    ...pickOpenedAt(na.openedAt, nb.openedAt),
   };
+}
+
+/** Most recent open wins; absent on both sides (older clients) stays absent. */
+function pickOpenedAt(a: number | undefined, b: number | undefined): { openedAt?: number } {
+  const at = Math.max(a ?? 0, b ?? 0);
+  return at > 0 ? { openedAt: at } : {};
 }
 
 function pickReadAt(a: number | null, b: number | null): number | null {

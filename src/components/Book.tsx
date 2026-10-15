@@ -6,6 +6,7 @@ import { TitleCard } from "./Home";
 type Props = {
   book: Book;
   scores: Map<string, TextScore>;
+  personal?: boolean;
   wikiErrors?: Record<string, string>;
   wikiLoading?: string | null;
   onBack: () => void;
@@ -17,6 +18,7 @@ type Props = {
 export function BookScreen({
   book,
   scores,
+  personal = false,
   wikiErrors,
   wikiLoading,
   onBack,
@@ -57,6 +59,7 @@ export function BookScreen({
             key={chapter.id}
             text={chapter}
             score={scores.get(chapter.id)}
+            personal={personal}
             error={wikiErrors?.[chapter.id]}
             loading={wikiLoading === chapter.id}
             onOpen={onOpenChapter}
@@ -72,6 +75,7 @@ export function BookScreen({
 function ChapterRow({
   text,
   score,
+  personal,
   error,
   loading,
   onOpen,
@@ -80,6 +84,7 @@ function ChapterRow({
 }: {
   text: LibraryText;
   score: TextScore | undefined;
+  personal: boolean;
   error?: string;
   loading?: boolean;
   onOpen: (id: string) => void;
@@ -90,6 +95,7 @@ function ChapterRow({
     <TitleCard
       text={text}
       score={score}
+      personal={personal}
       error={error}
       loading={loading}
       onOpen={onOpen}
