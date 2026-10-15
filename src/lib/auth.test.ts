@@ -16,6 +16,8 @@ import {
   AUTH_TOKENS_KEY,
   migrateAuthStorage,
   SCHEMA_KEY,
+  authTimeFromIdToken,
+  sessionStart,
 } from "./auth";
 
 function jwtWithExp(expSeconds: number): string {
@@ -131,6 +133,21 @@ describe("ensureFreshAuth", () => {
   });
 });
 
+describe("session start", () => {
+  it("prefers the local sign-in time, else the token's auth_time, and survives a refresh", async () => {
+    const t = Math.floor(Date.now() / 1000);
+    const id = (o: object) => `h.${Buffer.from(JSON.stringify({ exp: t + 3600, ...o })).toString("base64url")}.s`;
+    expect(authTimeFromIdToken(id({ auth_time: 123 }))).toBe(123);
+    expect(sessionStart({ accessToken: "a", idToken: id({ auth_time: 123 }), email: null })).toBe(123000);
+    expect(sessionStart({ accessToken: "a", idToken: id({ auth_time: 123 }), email: null, signedInAt: 5 })).toBe(5);
+    const old = { accessToken: "a", idToken: id({ exp: t - 30 }), refreshToken: "r", email: null, signedInAt: 77 };
+    const next = await ensureFreshAuth(old, async () =>
+      new Response(JSON.stringify({ access_token: "b", id_token: id({}) }), { status: 200 }),
+    );
+    expect(next.signedInAt).toBe(77);
+  });
+});
+
 describe("migrateAuthStorage", () => {
   function fakeWindow(entries: Record<string, string>) {
     const mk = (init: Record<string, string>) => {
@@ -201,11 +218,13 @@ describe("shared sign-in hint", () => {
   });
 
   it("tries a silent sign-in only when signed out, hinted, online and not recently tried", () => {
-    const base = { signedIn: false, callbackInUrl: false, hint: true, online: true, lastTriedAt: null, now: 1e9 };
+    const base = { signedIn: false, callbackInUrl: false, hint: true, online: true, lastTriedAt: null, ssoAlive: true, now: 1e9 };
     expect(shouldTrySilentSignIn(base)).toBe(true);
     expect(shouldTrySilentSignIn({ ...base, signedIn: true })).toBe(false);
     expect(shouldTrySilentSignIn({ ...base, hint: false })).toBe(false);
     expect(shouldTrySilentSignIn({ ...base, online: false })).toBe(false);
+    // past Cognito's 1-hour session a redirect would only show a password page: offer one tap instead
+    expect(shouldTrySilentSignIn({ ...base, ssoAlive: false })).toBe(false);
     expect(shouldTrySilentSignIn({ ...base, callbackInUrl: true })).toBe(false);
     expect(shouldTrySilentSignIn({ ...base, lastTriedAt: 1e9 - 60_000 })).toBe(false);
     expect(shouldTrySilentSignIn({ ...base, lastTriedAt: 1e9 - 10 * 60_000 })).toBe(true);

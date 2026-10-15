@@ -37,15 +37,16 @@ import {
   subjectFromIdToken,
   type AuthTokens,
   authorizeUrl,
-  hasSignedInHint,
-  setSignedInHint,
   shouldTrySilentSignIn,
+  authTimeFromIdToken,
+  sessionStart,
   SILENT_SIGNIN_KEY,
   signupUrl,
   AuthExpiredError,
   hasStoredAuthKey,
 } from "./lib/auth";
 import { AppBar } from "./components/AppBar";
+import { markSignedIn, markSignedOut, sharedSession, signedOutSince, ssoAlive } from "./vendor/chadm-session.js";
 import {
   applySyncState,
   deleteText,
@@ -333,9 +334,10 @@ export default function App() {
       return;
     }
     void exchangeAuthCode(parsed.code, verifier, window.location.origin)
-      .then((tokens) => {
+      .then((signedIn) => {
+        const tokens = { ...signedIn, signedInAt: Date.now() };
         storeAuth(tokens);
-        setSignedInHint(true);
+        markShared(tokens);
         setAccountSettled(false);
         setAuth(tokens);
         window.sessionStorage.removeItem(PKCE_VERIFIER_KEY);
@@ -346,16 +348,43 @@ export default function App() {
       .finally(() => setAuthPending(false));
   }, []);
 
-  // Shared sign-in: signed in on another chadmurchison.com app (hint cookie) but not here yet.
+  // Shared chadmurchison.com session (docs/SSO.md): refresh the cookies while signed in here, and
+  // end this session if someone signed out in another app since it started.
+  function markShared(tokens: AuthTokens) {
+    markSignedIn({ email: tokens.email, authTime: authTimeFromIdToken(tokens.idToken) });
+  }
+  const [shared, setShared] = useState(() => sharedSession());
+  useEffect(() => {
+    function sync() {
+      const stored = loadStoredAuth();
+      if (stored && signedOutSince(sessionStart(stored))) signOutLocal(false);
+      else if (stored) markShared(stored);
+      setShared(sharedSession());
+    }
+    sync();
+    function onVisible() {
+      if (!document.hidden) sync();
+    }
+    document.addEventListener("visibilitychange", onVisible);
+    return () => document.removeEventListener("visibilitychange", onVisible);
+  }, []);
+  const [continueDismissed, setContinueDismissed] = useState(
+    () => window.sessionStorage.getItem("duki.sso.dismissed") === "1",
+  );
+
+  // Signed in on another chadmurchison.com app but not here yet: while Cognito's session is alive,
+  // one silent redirect signs in with no password; otherwise the "Continue as" prompt offers one tap.
   useEffect(() => {
     let lastTriedAt: number | null = Number(window.sessionStorage.getItem(SILENT_SIGNIN_KEY)) || null;
+    const s = sharedSession();
     if (
       !shouldTrySilentSignIn({
         signedIn: Boolean(loadStoredAuth()),
         callbackInUrl: parseAuthCallback(window.location.search, window.location.hash) !== null,
-        hint: hasSignedInHint(document.cookie),
+        hint: s.signedIn,
         online: navigator.onLine,
         lastTriedAt,
+        ssoAlive: ssoAlive(s),
       })
     )
       return;
@@ -368,20 +397,20 @@ export default function App() {
     const pkce = await createPkce();
     window.sessionStorage.setItem(PKCE_VERIFIER_KEY, pkce.verifier);
     const url = signup ? signupUrl : authorizeUrl;
-    window.location.assign(url(window.location.origin, pkce.challenge));
+    window.location.assign(url(window.location.origin, pkce.challenge, sharedSession().email));
   }
 
   /** Sign out. Always works: local state is cleared first, then the hosted UI session ends. */
   function onSignOut() {
-    signOutLocal();
+    signOutLocal(true);
     window.sessionStorage.setItem(SILENT_SIGNIN_KEY, String(Date.now()));
     window.location.assign(logoutUrl(window.location.origin));
   }
 
-  /** This device only: forget the tokens and the shared hint (refused or broken sign-in). */
-  function signOutLocal() {
+  /** Forget the tokens here and the shared hint. everywhere: a real Sign out (the other apps follow). */
+  function signOutLocal(everywhere: boolean) {
     try {
-      setSignedInHint(false);
+      markSignedOut({ everywhere });
       clearAuth();
     } catch {
       /* storage blocked */
@@ -407,6 +436,7 @@ export default function App() {
       const tokens = await ensureFreshAuth(stored);
       if (tokens !== stored) {
         storeAuth(tokens);
+        markShared(tokens);
         authRef.current = tokens;
         setAuth(tokens);
       }
@@ -435,7 +465,7 @@ export default function App() {
       await pushSnapshot(tokens.idToken, next);
     } catch (err) {
       // Refused refresh: cleanly signed out (no half signed-in state). Offline: stay as is.
-      if (err instanceof AuthExpiredError) signOutLocal();
+      if (err instanceof AuthExpiredError) signOutLocal(false);
       setAccountSettled(true);
     } finally {
       syncingRef.current = false;
@@ -1058,7 +1088,8 @@ export default function App() {
         <AppBar
           email={auth?.email ?? null}
           signedIn={Boolean(auth)}
-          canSignOut={Boolean(auth) || hasStoredAuthKey() || hasSignedInHint(document.cookie)}
+          canSignOut={Boolean(auth) || hasStoredAuthKey() || shared.signedIn}
+          signInLabel={!auth && shared.signedIn && shared.email ? `Continue as ${shared.email}` : "Log in"}
           items={[
             { label: MENU_ACTION_LABELS.review, onSelect: () => navigate({ name: "review" }) },
             { label: MENU_ACTION_LABELS.stats, onSelect: () => navigate({ name: "stats" }) },
@@ -1088,6 +1119,27 @@ export default function App() {
           }}
         />
       </header>
+
+      {!auth && !authPending && shared.signedIn && !continueDismissed ? (
+        <div className="sso-continue" role="region" aria-label="Signed in on chadmurchison.com">
+          <p>
+            You're signed in on chadmurchison.com{shared.email ? ` as ${shared.email}` : ""}.
+          </p>
+          <button type="button" className="primary" onClick={() => void onSignIn()}>
+            {shared.email ? `Continue as ${shared.email}` : "Continue"}
+          </button>
+          <button
+            type="button"
+            className="text-btn"
+            onClick={() => {
+              window.sessionStorage.setItem("duki.sso.dismissed", "1");
+              setContinueDismissed(true);
+            }}
+          >
+            Not now
+          </button>
+        </div>
+      ) : null}
 
       {importError ? (
         <p className="paste-error" style={{ textAlign: "center", margin: "0.6rem 0 0" }}>

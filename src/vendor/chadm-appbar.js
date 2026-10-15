@@ -27,7 +27,7 @@ const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled])';
 let uid = 0;
 
 class ChadmAppBar extends HTMLElement {
-  #o = { apps: APPS, user: null, canSignOut: false, plan: null, items: [], onSignIn: null, onSignUp: null, onSignOut: null };
+  #o = { apps: APPS, user: null, canSignOut: false, signInLabel: 'Log in', plan: null, items: [], onSignIn: null, onSignUp: null, onSignOut: null };
   #open = null;     // { btn, pop }
 
   connectedCallback() {
@@ -40,7 +40,7 @@ class ChadmAppBar extends HTMLElement {
     addEventListener('hashchange', () => this.close(false));
   }
   // Options (any subset): app, apps, user {email, name?} | null, canSignOut (show Sign out while signed
-  // out, e.g. stale sign-in state), plan async () => {text, fraction?, badge?, action?},
+  // out, e.g. stale sign-in state), signInLabel (e.g. "Continue as a@b.c"), plan async () => {text, fraction?, badge?, action?},
   // items [{label, onSelect | href | (type:'checkbox', checked, onChange)}] or () => items, onSignIn, onSignUp, onSignOut.
   configure(opts) { Object.assign(this.#o, opts); if (this.id_) this.#safeRender(); }
   #safeRender() {
@@ -94,7 +94,7 @@ class ChadmAppBar extends HTMLElement {
          ${o.plan ? '<div class="cab-plan" aria-live="polite"><span class="cab-note">Loading storage…</span></div>' : ''}`
       : `<div class="cab-head"><span class="cab-avatar big out" aria-hidden="true">${PERSON}</span>
           <div class="cab-who">You're not signed in</div></div>
-         <div class="cab-row"><button type="button" class="cab-b cab-in">Log in</button>
+         <div class="cab-row"><button type="button" class="cab-b cab-in">${esc(o.signInLabel || 'Log in')}</button>
            <button type="button" class="cab-b primary cab-up">Sign up</button></div>`;
     const list = document.createElement('div');
     list.className = 'cab-items';

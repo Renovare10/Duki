@@ -9,6 +9,8 @@ export type AuthTokens = {
   idToken: string;
   refreshToken?: string;
   email: string | null;
+  /** When this sign-in happened here (ms); kept through refreshes. Older stored tokens lack it. */
+  signedInAt?: number;
 };
 
 export function authRedirectUri(origin: string): string {
@@ -29,8 +31,9 @@ export async function createPkce(): Promise<{ verifier: string; challenge: strin
   return { verifier, challenge };
 }
 
-export function authorizeUrl(origin: string, challenge: string): string {
+export function authorizeUrl(origin: string, challenge: string, loginHint?: string | null): string {
   const params = new URLSearchParams({
+    ...(loginHint ? { login_hint: loginHint } : {}),
     client_id: AUTH_CLIENT_ID,
     response_type: "code",
     scope: AUTH_SCOPES,
@@ -42,7 +45,8 @@ export function authorizeUrl(origin: string, challenge: string): string {
 }
 
 /** Hosted UI sign-up page (self sign-up is enabled on the shared pool). Same PKCE flow as sign-in. */
-export function signupUrl(origin: string, challenge: string): string {
+export function signupUrl(origin: string, challenge: string, _loginHint?: string | null): string {
+  void _loginHint;
   return authorizeUrl(origin, challenge).replace("/oauth2/authorize?", "/signup?");
 }
 
@@ -78,10 +82,12 @@ export function shouldTrySilentSignIn(opts: {
   hint: boolean;
   online: boolean;
   lastTriedAt: number | null;
+  /** Cognito's session can still sign in without a password (chadm_sso_until, see docs/SSO.md). */
+  ssoAlive: boolean;
   now?: number;
 }): boolean {
   const now = opts.now ?? Date.now();
-  if (opts.signedIn || opts.callbackInUrl || !opts.hint || !opts.online) return false;
+  if (opts.signedIn || opts.callbackInUrl || !opts.hint || !opts.online || !opts.ssoAlive) return false;
   return opts.lastTriedAt == null || now - opts.lastTriedAt > SILENT_SIGNIN_COOLDOWN_MS;
 }
 
@@ -118,6 +124,23 @@ export function emailFromIdToken(idToken: string): string | null {
   }
 }
 
+/** The ID token's auth_time (s): when the user last typed their password. 0 if missing. */
+export function authTimeFromIdToken(idToken: string): number {
+  const parts = idToken.split(".");
+  if (parts.length < 2) return 0;
+  try {
+    const json = JSON.parse(base64UrlToJson(parts[1])) as { auth_time?: number };
+    return typeof json.auth_time === "number" ? json.auth_time : 0;
+  } catch {
+    return 0;
+  }
+}
+
+/** When this device's session began (ms): sign-in time, else auth_time. */
+export function sessionStart(tokens: AuthTokens): number {
+  return tokens.signedInAt ?? authTimeFromIdToken(tokens.idToken) * 1000;
+}
+
 /** Cognito `sub` (stable per account). Used only as a local cache key, never trusted. */
 export function subjectFromIdToken(idToken: string): string | null {
   const parts = idToken.split(".");
@@ -146,6 +169,7 @@ export function loadStoredAuth(): AuthTokens | null {
       idToken: parsed.idToken,
       refreshToken: typeof parsed.refreshToken === "string" ? parsed.refreshToken : undefined,
       email: typeof parsed.email === "string" ? parsed.email : emailFromIdToken(parsed.idToken),
+      ...(typeof parsed.signedInAt === "number" ? { signedInAt: parsed.signedInAt } : {}),
     };
   } catch {
     return null;
@@ -292,5 +316,6 @@ export async function ensureFreshAuth(
 ): Promise<AuthTokens> {
   if (idTokenIsFresh(tokens.idToken, now)) return tokens;
   if (!tokens.refreshToken) throw new AuthExpiredError();
-  return refreshSession(tokens.refreshToken, fetchImpl);
+  const next = await refreshSession(tokens.refreshToken, fetchImpl);
+  return tokens.signedInAt ? { ...next, signedInAt: tokens.signedInAt } : next;
 }

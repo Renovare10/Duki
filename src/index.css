@@ -183,6 +183,35 @@ button {
   display: none;
 }
 
+/* "Continue as <email>": signed in on another chadmurchison.com app, one tap to sign in here. */
+.sso-continue {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem 0.75rem;
+  margin: 0.75rem auto 0;
+  padding: 0.7rem 1rem;
+  max-width: 40rem;
+  width: calc(100% - 2rem);
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  background: var(--paper-raised);
+  color: var(--ink);
+  font-size: 0.9rem;
+}
+.sso-continue p {
+  margin: 0;
+  flex: 1 1 14rem;
+  overflow-wrap: anywhere;
+}
+.sso-continue .primary {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* Shared chadmurchison.com app tray + profile corner (src/vendor/chadm-appbar.*), Duki colours. */
 .topbar .brand {
   margin-right: auto;

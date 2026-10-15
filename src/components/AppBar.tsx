@@ -16,6 +16,8 @@ type Props = {
   signedIn: boolean;
   /** Anything sign-in related is stored here (tokens or the shared hint): offer Sign out. */
   canSignOut: boolean;
+  /** "Log in", or "Continue as <email>" when signed in on another chadmurchison.com app. */
+  signInLabel: string;
   items: ChadmAppBarItem[];
   onSignIn: () => void;
   onSignUp: () => void;
@@ -23,13 +25,14 @@ type Props = {
 };
 
 /** The shared chadmurchison.com app tray + profile corner (same element as the library's). */
-export function AppBar({ email, signedIn, canSignOut, items, onSignIn, onSignUp, onSignOut }: Props) {
+export function AppBar({ email, signedIn, canSignOut, signInLabel, items, onSignIn, onSignUp, onSignOut }: Props) {
   const ref = useRef<ChadmAppBarElement>(null);
   useEffect(() => {
     try {
       ref.current?.configure({
         user: signedIn ? { email: email ?? "Signed in" } : null,
         canSignOut,
+        signInLabel,
         items,
         onSignIn,
         onSignUp,

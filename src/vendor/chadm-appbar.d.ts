@@ -9,6 +9,7 @@ export type ChadmAppBarOptions = {
   apps?: ChadmApp[];
   user?: { email: string; name?: string } | null;
   canSignOut?: boolean;
+  signInLabel?: string;
   plan?: null | (() => Promise<{ text: string; fraction?: number; badge?: string } | null>);
   items?: ChadmAppBarItem[] | (() => ChadmAppBarItem[]);
   onSignIn?: (() => void) | null;
