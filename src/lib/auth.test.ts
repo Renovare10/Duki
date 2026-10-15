@@ -8,6 +8,10 @@ import {
   parseAuthCallback,
   stripAuthQuery,
   subjectFromIdToken,
+  hasSignedInHint,
+  shouldTrySilentSignIn,
+  signedInHintCookie,
+  signupUrl,
 } from "./auth";
 
 function jwtWithExp(expSeconds: number): string {
@@ -106,5 +110,41 @@ describe("subjectFromIdToken", () => {
   it("returns null for malformed tokens", () => {
     expect(subjectFromIdToken("nope")).toBeNull();
     expect(subjectFromIdToken("a.%%%.c")).toBeNull();
+  });
+});
+
+describe("shared sign-in hint", () => {
+  it("builds the shared-domain cookie only on chadmurchison.com hosts, with no token", () => {
+    const on = signedInHintCookie("duki.chadmurchison.com", true);
+    expect(on).toBe(
+      "chadm_signed_in=1; Domain=.chadmurchison.com; Path=/; Secure; SameSite=Lax; Max-Age=2592000",
+    );
+    expect(signedInHintCookie("duki.chadmurchison.com", false)).toContain("Max-Age=0");
+    expect(signedInHintCookie("localhost", true)).toBeNull();
+    expect(signedInHintCookie("evilchadmurchison.com", true)).toBeNull();
+  });
+
+  it("reads the hint from document.cookie", () => {
+    expect(hasSignedInHint("a=b; chadm_signed_in=1")).toBe(true);
+    expect(hasSignedInHint("chadm_signed_in=")).toBe(false);
+    expect(hasSignedInHint("")).toBe(false);
+  });
+
+  it("tries a silent sign-in only when signed out, hinted, online and not recently tried", () => {
+    const base = { signedIn: false, callbackInUrl: false, hint: true, online: true, lastTriedAt: null, now: 1e9 };
+    expect(shouldTrySilentSignIn(base)).toBe(true);
+    expect(shouldTrySilentSignIn({ ...base, signedIn: true })).toBe(false);
+    expect(shouldTrySilentSignIn({ ...base, hint: false })).toBe(false);
+    expect(shouldTrySilentSignIn({ ...base, online: false })).toBe(false);
+    expect(shouldTrySilentSignIn({ ...base, callbackInUrl: true })).toBe(false);
+    expect(shouldTrySilentSignIn({ ...base, lastTriedAt: 1e9 - 60_000 })).toBe(false);
+    expect(shouldTrySilentSignIn({ ...base, lastTriedAt: 1e9 - 10 * 60_000 })).toBe(true);
+  });
+
+  it("points sign-up at the hosted UI /signup with the same PKCE params", () => {
+    const url = new URL(signupUrl("https://duki.chadmurchison.com", "abc"));
+    expect(url.origin + url.pathname).toBe(`${AUTH_DOMAIN}/signup`);
+    expect(url.searchParams.get("client_id")).toBe(AUTH_CLIENT_ID);
+    expect(url.searchParams.get("code_challenge")).toBe("abc");
   });
 });

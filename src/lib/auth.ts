@@ -41,6 +41,50 @@ export function authorizeUrl(origin: string, challenge: string): string {
   return `${AUTH_DOMAIN}/oauth2/authorize?${params.toString()}`;
 }
 
+/** Hosted UI sign-up page (self sign-up is enabled on the shared pool). Same PKCE flow as sign-in. */
+export function signupUrl(origin: string, challenge: string): string {
+  return authorizeUrl(origin, challenge).replace("/oauth2/authorize?", "/signup?");
+}
+
+// ---------------------------------------------------------------- shared sign-in hint
+// A non-secret cookie shared by the chadmurchison.com apps: "someone signed in on this browser".
+// It carries no token. When it is present and this app is signed out, we do one top-level redirect
+// to /oauth2/authorize; Cognito's own session cookie then returns a code without a password.
+export const SIGNED_IN_HINT_COOKIE = "chadm_signed_in";
+export const SILENT_SIGNIN_KEY = "duki.sso.tried";
+export const SILENT_SIGNIN_COOLDOWN_MS = 5 * 60_000;
+const HINT_DOMAIN = "chadmurchison.com";
+const HINT_MAX_AGE_S = 30 * 24 * 3600;
+
+/** Cookie string to set (`on`) or clear the hint; null when not on a chadmurchison.com host. */
+export function signedInHintCookie(hostname: string, on: boolean): string | null {
+  if (hostname !== HINT_DOMAIN && !hostname.endsWith("." + HINT_DOMAIN)) return null;
+  return `${SIGNED_IN_HINT_COOKIE}=${on ? "1" : ""}; Domain=.${HINT_DOMAIN}; Path=/; Secure; SameSite=Lax; Max-Age=${on ? HINT_MAX_AGE_S : 0}`;
+}
+
+export function hasSignedInHint(cookie: string): boolean {
+  return cookie.split(/;\s*/).some((c) => c === `${SIGNED_IN_HINT_COOKIE}=1`);
+}
+
+export function setSignedInHint(on: boolean): void {
+  const c = signedInHintCookie(window.location.hostname, on);
+  if (c) document.cookie = c;
+}
+
+/** Try a silent sign-in? Only when signed out here, the hint exists, online, and not tried recently. */
+export function shouldTrySilentSignIn(opts: {
+  signedIn: boolean;
+  callbackInUrl: boolean;
+  hint: boolean;
+  online: boolean;
+  lastTriedAt: number | null;
+  now?: number;
+}): boolean {
+  const now = opts.now ?? Date.now();
+  if (opts.signedIn || opts.callbackInUrl || !opts.hint || !opts.online) return false;
+  return opts.lastTriedAt == null || now - opts.lastTriedAt > SILENT_SIGNIN_COOLDOWN_MS;
+}
+
 export function logoutUrl(origin: string): string {
   const params = new URLSearchParams({
     client_id: AUTH_CLIENT_ID,

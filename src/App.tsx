@@ -37,6 +37,11 @@ import {
   subjectFromIdToken,
   type AuthTokens,
   authorizeUrl,
+  hasSignedInHint,
+  setSignedInHint,
+  shouldTrySilentSignIn,
+  SILENT_SIGNIN_KEY,
+  signupUrl,
 } from "./lib/auth";
 import {
   applySyncState,
@@ -354,6 +359,7 @@ export default function App() {
     void exchangeAuthCode(parsed.code, verifier, window.location.origin)
       .then((tokens) => {
         storeAuth(tokens);
+        setSignedInHint(true);
         setAccountSettled(false);
         setAuth(tokens);
         window.sessionStorage.removeItem(PKCE_VERIFIER_KEY);
@@ -364,13 +370,33 @@ export default function App() {
       .finally(() => setAuthPending(false));
   }, []);
 
-  async function onSignIn() {
+  // Shared sign-in: signed in on another chadmurchison.com app (hint cookie) but not here yet.
+  useEffect(() => {
+    let lastTriedAt: number | null = Number(window.sessionStorage.getItem(SILENT_SIGNIN_KEY)) || null;
+    if (
+      !shouldTrySilentSignIn({
+        signedIn: Boolean(loadStoredAuth()),
+        callbackInUrl: parseAuthCallback(window.location.search, window.location.hash) !== null,
+        hint: hasSignedInHint(document.cookie),
+        online: navigator.onLine,
+        lastTriedAt,
+      })
+    )
+      return;
+    lastTriedAt = Date.now();
+    window.sessionStorage.setItem(SILENT_SIGNIN_KEY, String(lastTriedAt));
+    void onSignIn();
+  }, []);
+
+  async function onSignIn(signup = false) {
     const pkce = await createPkce();
     window.sessionStorage.setItem(PKCE_VERIFIER_KEY, pkce.verifier);
-    window.location.assign(authorizeUrl(window.location.origin, pkce.challenge));
+    const url = signup ? signupUrl : authorizeUrl;
+    window.location.assign(url(window.location.origin, pkce.challenge));
   }
 
   function onSignOut() {
+    setSignedInHint(false);
     clearAuth();
     setAuth(null);
     window.location.assign(logoutUrl(window.location.origin));
@@ -958,17 +984,28 @@ export default function App() {
             </button>
           </span>
         ) : (
-          <button
-            key={id}
-            type="button"
-            className="text-btn menu-action-auth"
-            onClick={() => {
-              closeMenu();
-              void onSignIn();
-            }}
-          >
-            Sign in
-          </button>
+          <span key={id} className="auth-chip menu-action-auth">
+            <button
+              type="button"
+              className="text-btn"
+              onClick={() => {
+                closeMenu();
+                void onSignIn();
+              }}
+            >
+              Sign in
+            </button>
+            <button
+              type="button"
+              className="text-btn"
+              onClick={() => {
+                closeMenu();
+                void onSignIn(true);
+              }}
+            >
+              Sign up
+            </button>
+          </span>
         );
       case "import":
         return (
