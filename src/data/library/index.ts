@@ -19,7 +19,15 @@ import p13 from "./p13";
 import p14 from "./p14";
 import p15 from "./p15";
 
-export const PACKS: LibraryPack[] = [p01, p02, p03, p04, p05, p06, p07, p08, p09, p10, p11, p12, p13, p14, p15];
+/** Every pack file, including drafts still waiting for a hand rewrite. Checked by scripts/validate-library.mjs. */
+export const ALL_PACKS: LibraryPack[] = [p01, p02, p03, p04, p05, p06, p07, p08, p09, p10, p11, p12, p13, p14, p15];
+
+/**
+ * Packs shown in the app. Only packs that have been rewritten by hand go here
+ * (append in order; never remove a pack once shipped, since progress is keyed by id).
+ * p02–p15 are still template drafts and stay hidden until rewritten.
+ */
+export const PACKS: LibraryPack[] = [p01];
 
 /** Topic tags for pack texts, keyed by text id. First topic is the main one. */
 export const LIBRARY_TOPICS: Record<string, string[]> = Object.fromEntries(

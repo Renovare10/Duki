@@ -17,7 +17,7 @@ export * as difficulty from ${JSON.stringify(path.join(root, "src/lib/difficulty
 `);
 
 const lib = await importTs(`
-export { PACKS } from ${JSON.stringify(path.join(root, "src/data/library/index.ts"))};
+export { ALL_PACKS as PACKS } from ${JSON.stringify(path.join(root, "src/data/library/index.ts"))};
 export { TOPICS } from ${JSON.stringify(path.join(root, "src/data/topics.ts"))};
 export { validateEntries } from ${JSON.stringify(path.join(root, "src/lib/library-entry.ts"))};
 `);
