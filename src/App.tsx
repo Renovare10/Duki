@@ -42,7 +42,10 @@ import {
   shouldTrySilentSignIn,
   SILENT_SIGNIN_KEY,
   signupUrl,
+  AuthExpiredError,
+  hasStoredAuthKey,
 } from "./lib/auth";
+import { AppBar } from "./components/AppBar";
 import {
   applySyncState,
   deleteText,
@@ -180,20 +183,16 @@ export default function App() {
   const syncingRef = useRef(false);
   const syncTimerRef = useRef<number | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [accountOpen, setAccountOpen] = useState(false);
-  const accountSlotRef = useRef<HTMLDivElement>(null);
-  const accountFaceRef = useRef<HTMLButtonElement>(null);
+  const importInputRef = useRef<HTMLInputElement>(null);
   const menuToggleRef = useRef<HTMLButtonElement>(null);
   const topbarRef = useRef<HTMLElement>(null);
 
   function closeMenu() {
     setMenuOpen(false);
-    setAccountOpen(false);
   }
 
   function navigate(next: View) {
     setMenuOpen(false);
-    setAccountOpen(false);
     const hash = viewToHash(next);
     if (window.location.hash !== hash) window.location.hash = hash;
     else setView(next);
@@ -210,10 +209,7 @@ export default function App() {
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 720px)");
     function onViewport() {
-      if (!mq.matches) {
-        setMenuOpen(false);
-        setAccountOpen(false);
-      }
+      if (!mq.matches) setMenuOpen(false);
     }
     mq.addEventListener("change", onViewport);
     return () => mq.removeEventListener("change", onViewport);
@@ -240,26 +236,6 @@ export default function App() {
     };
   }, [menuOpen]);
 
-  useEffect(() => {
-    if (!accountOpen) return;
-    function onPointerDown(event: PointerEvent) {
-      const node = event.target;
-      if (!(node instanceof Node)) return;
-      if (accountSlotRef.current?.contains(node)) return;
-      setAccountOpen(false);
-    }
-    function onKey(event: KeyboardEvent) {
-      if (event.key !== "Escape") return;
-      setAccountOpen(false);
-      accountFaceRef.current?.focus();
-    }
-    document.addEventListener("pointerdown", onPointerDown);
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.removeEventListener("pointerdown", onPointerDown);
-      document.removeEventListener("keydown", onKey);
-    };
-  }, [accountOpen]);
 
   const accountKey = auth
     ? accountThemeKey(subjectFromIdToken(auth.idToken), auth.email ?? null)
@@ -395,11 +371,23 @@ export default function App() {
     window.location.assign(url(window.location.origin, pkce.challenge));
   }
 
+  /** Sign out. Always works: local state is cleared first, then the hosted UI session ends. */
   function onSignOut() {
-    setSignedInHint(false);
-    clearAuth();
-    setAuth(null);
+    signOutLocal();
+    window.sessionStorage.setItem(SILENT_SIGNIN_KEY, String(Date.now()));
     window.location.assign(logoutUrl(window.location.origin));
+  }
+
+  /** This device only: forget the tokens and the shared hint (refused or broken sign-in). */
+  function signOutLocal() {
+    try {
+      setSignedInHint(false);
+      clearAuth();
+    } catch {
+      /* storage blocked */
+    }
+    authRef.current = null;
+    setAuth(null);
   }
 
   function localSnapshot() {
@@ -445,8 +433,9 @@ export default function App() {
       }
       setAccountSettled(true);
       await pushSnapshot(tokens.idToken, next);
-    } catch {
-      /* stay on this browser */
+    } catch (err) {
+      // Refused refresh: cleanly signed out (no half signed-in state). Offline: stay as is.
+      if (err instanceof AuthExpiredError) signOutLocal();
       setAccountSettled(true);
     } finally {
       syncingRef.current = false;
@@ -1031,7 +1020,7 @@ export default function App() {
 
   return (
     <div className="app">
-      <header className={`topbar${menuOpen ? " menu-open" : ""}${accountOpen ? " account-open" : ""}`} ref={topbarRef}>
+      <header className={`topbar${menuOpen ? " menu-open" : ""}`} ref={topbarRef}>
         <button
           type="button"
           className="brand"
@@ -1065,44 +1054,39 @@ export default function App() {
               {group.actions.map((actionId) => renderMenuAction(actionId))}
             </div>
           ))}
-          <div className="account-slot" ref={accountSlotRef}>
-            <button
-              type="button"
-              className="account-face"
-              aria-expanded={accountOpen}
-              aria-controls="account-panel"
-              aria-label={auth?.email ? `Account, ${auth.email}` : "Account"}
-              ref={accountFaceRef}
-              onClick={() => setAccountOpen((open) => !open)}
-            >
-              <svg className="account-icon" viewBox="0 0 24 24" aria-hidden="true">
-                <circle cx="12" cy="8" r="3.1" fill="none" stroke="currentColor" strokeWidth="1.7" />
-                <path
-                  d="M5.6 19.2c1.15-3.05 3.35-4.5 6.4-4.5s5.25 1.45 6.4 4.5"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.7"
-                  strokeLinecap="round"
-                />
-              </svg>
-              <span className="account-face-word">Account</span>
-            </button>
-            <div className="account-panel" id="account-panel">
-              {MENU_GROUPS.filter((group) => group.id === "account" || group.id === "backup").map(
-                (group) => (
-                  <div
-                    key={group.id}
-                    className={`menu-group menu-group-${group.id}`}
-                    data-group={group.id}
-                  >
-                    <p className="menu-group-label">{group.label}</p>
-                    {group.actions.map((actionId) => renderMenuAction(actionId))}
-                  </div>
-                ),
-              )}
-            </div>
-          </div>
         </nav>
+        <AppBar
+          email={auth?.email ?? null}
+          signedIn={Boolean(auth)}
+          canSignOut={Boolean(auth) || hasStoredAuthKey() || hasSignedInHint(document.cookie)}
+          items={[
+            { label: MENU_ACTION_LABELS.review, onSelect: () => navigate({ name: "review" }) },
+            { label: MENU_ACTION_LABELS.stats, onSelect: () => navigate({ name: "stats" }) },
+            { label: MENU_ACTION_LABELS.add, onSelect: () => navigate({ name: "add" }) },
+            {
+              type: "checkbox",
+              label: "Night theme",
+              checked: displayTheme === "night",
+              onChange: (on) => onThemeChange(on ? "night" : "paper"),
+            },
+            { label: MENU_ACTION_LABELS.export, onSelect: () => onExport() },
+            { label: MENU_ACTION_LABELS.import, onSelect: () => importInputRef.current?.click() },
+          ]}
+          onSignIn={() => void onSignIn()}
+          onSignUp={() => void onSignIn(true)}
+          onSignOut={onSignOut}
+        />
+        <input
+          ref={importInputRef}
+          type="file"
+          accept="application/json,.json"
+          hidden
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            e.target.value = "";
+            void onImport(file);
+          }}
+        />
       </header>
 
       {importError ? (

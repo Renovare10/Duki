@@ -183,6 +183,24 @@ button {
   display: none;
 }
 
+/* Shared chadmurchison.com app tray + profile corner (src/vendor/chadm-appbar.*), Duki colours. */
+.topbar .brand {
+  margin-right: auto;
+}
+.topbar > chadm-appbar {
+  flex-shrink: 0;
+}
+chadm-appbar {
+  --cab-bg: var(--paper-raised);
+  --cab-bg2: var(--paper-2);
+  --cab-line: var(--rule);
+  --cab-fg: var(--ink);
+  --cab-fg2: var(--ink-soft);
+  --cab-accent: var(--seal);
+  --cab-accent2: var(--seal-deep);
+  --cab-shadow: var(--shadow);
+}
+
 .menu-group {
   display: flex;
   align-items: center;
@@ -199,86 +217,13 @@ button {
   display: none;
 }
 
-.account-slot {
-  position: relative;
-  margin-left: 0.45rem;
-}
 
-.account-face {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  border: 1px solid var(--rule);
-  background: var(--paper-raised);
-  color: var(--ink);
-  border-radius: 999px;
-  padding: 0.18rem 0.7rem 0.18rem 0.18rem;
-  font: inherit;
-  font-size: 0.85rem;
-}
 
-.account-icon {
-  width: 1.75rem;
-  height: 1.75rem;
-  padding: 0.28rem;
-  border-radius: 999px;
-  background: var(--hover-wash);
-}
 
-.account-panel {
-  display: none;
-}
 
-.topbar.account-open .account-panel {
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  right: 0;
-  top: calc(100% + 0.45rem);
-  z-index: 9;
-  min-width: 13.5rem;
-  padding: 0.35rem 0 0.45rem;
-  background: var(--paper-raised);
-  color: var(--ink);
-  border: 1px solid var(--rule);
-  border-radius: 14px;
-  box-shadow: var(--shadow);
-}
 
-.topbar.account-open .account-panel .menu-group {
-  flex-direction: column;
-  align-items: stretch;
-  gap: 0;
-  margin: 0;
-  padding: 0;
-  border: 0;
-}
 
-.topbar.account-open .account-panel .menu-group-label {
-  display: block;
-  margin: 0;
-  padding: 0.4rem 0.9rem 0.1rem;
-  font-size: 0.72rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-}
 
-.topbar.account-open .account-panel .auth-chip {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  width: 100%;
-}
-.topbar.account-open .account-panel .text-btn,
-.topbar.account-open .account-panel .file-btn,
-.topbar.account-open .account-panel .auth-email {
-  width: 100%;
-  justify-content: flex-start;
-  text-align: left;
-  border-radius: 0;
-  max-width: none;
-}
 
 .menu-action-theme {
   order: 1;
@@ -2134,25 +2079,8 @@ button.badge {
     grid-template-columns: 1fr;
   }
 
-  .account-slot,
-  .account-panel {
-    display: contents;
-  }
 
-  .account-face {
-    display: none;
-  }
 
-  .topbar.account-open .account-panel {
-    display: contents;
-    position: static;
-    min-width: 0;
-    padding: 0;
-    background: none;
-    border: 0;
-    border-radius: 0;
-    box-shadow: none;
-  }
 
   .menu-toggle {
     display: inline-flex;

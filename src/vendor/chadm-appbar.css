@@ -1,0 +1,58 @@
+/* <chadm-appbar> — shared app tray + profile corner. Theme it with the --cab-* variables;
+   the defaults follow Alexandrea's Library variables and fall back to a dark palette. */
+chadm-appbar {
+  --cab-bg: var(--bg2, #1b1e23); --cab-bg2: var(--bg3, #252a31); --cab-line: var(--line, #343a43);
+  --cab-fg: var(--fg, #e3e6ea); --cab-fg2: var(--fg2, #9aa3ad); --cab-accent: var(--accent, #3daee9);
+  --cab-accent2: var(--accent2, #1d6fa5); --cab-shadow: 0 10px 34px #000a;
+  position: relative; display: flex; align-items: center; gap: 4px; flex: none;
+  font: inherit; color: var(--cab-fg);
+}
+chadm-appbar svg { width: 20px; height: 20px; }
+.cab-btn, .cab-avatar { display: inline-grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; padding: 0;
+  cursor: pointer; font: inherit; }
+.cab-btn { border: 1px solid transparent; background: none; color: var(--cab-fg); }
+.cab-btn svg { fill: currentColor; stroke: none; }
+.cab-btn:hover, .cab-btn[aria-expanded="true"] { background: var(--cab-bg2); }
+.cab-avatar { border: 2px solid var(--cab-accent); background: var(--cab-accent2); color: #fff; font-weight: 700; font-size: 1rem; }
+.cab-avatar.out { background: var(--cab-bg2); color: var(--cab-fg2); border-color: var(--cab-line); }
+.cab-avatar svg { fill: none; stroke: currentColor; stroke-width: 1.8; }
+.cab-avatar[aria-expanded="true"] { box-shadow: 0 0 0 3px color-mix(in srgb, var(--cab-accent) 40%, transparent); }
+chadm-appbar :focus-visible { outline: 2px solid var(--cab-accent); outline-offset: 2px; }
+
+.cab-pop { position: absolute; top: calc(100% + 8px); right: 0; z-index: 50; width: min(320px, calc(100vw - 16px));
+  max-height: calc(100vh - 80px); overflow: auto; box-sizing: border-box; padding: 12px;
+  background: var(--cab-bg); border: 1px solid var(--cab-line); border-radius: 16px; box-shadow: var(--cab-shadow);
+  animation: cab-in .14s ease-out; }
+@keyframes cab-in { from { opacity: 0; transform: translateY(-6px); } }
+@media (prefers-reduced-motion: reduce) { .cab-pop { animation: none; } }
+
+.cab-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+.cab-app { display: grid; justify-items: center; gap: 6px; padding: 12px 4px 10px; border-radius: 12px; text-decoration: none;
+  color: var(--cab-fg); text-align: center; font-size: .8rem; line-height: 1.2; }
+.cab-app:hover { background: var(--cab-bg2); }
+.cab-app[aria-current="page"] { background: color-mix(in srgb, var(--cab-accent) 18%, transparent); outline: 1px solid var(--cab-accent); }
+.cab-ic { width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center; box-shadow: 0 2px 6px #0005; }
+.cab-ic svg { width: 34px; height: 34px; stroke: none; }
+
+.cab-head { display: flex; align-items: center; gap: 12px; padding: 4px 4px 12px; border-bottom: 1px solid var(--cab-line); }
+.cab-avatar.big { width: 48px; height: 48px; font-size: 1.3rem; cursor: default; flex: none; }
+.cab-who { color: var(--cab-fg2); font-size: .8rem; }
+.cab-email { font-weight: 600; overflow-wrap: anywhere; }
+.cab-plan { display: grid; gap: 6px; padding: 12px 4px; border-bottom: 1px solid var(--cab-line); font-size: .85rem; }
+.cab-meter { height: 8px; border-radius: 4px; background: var(--cab-bg2); overflow: hidden; }
+.cab-meter > i { display: block; height: 100%; background: var(--cab-accent); }
+.cab-badge { padding: 1px 8px; border-radius: 10px; font-size: .75rem; font-weight: 700; background: linear-gradient(90deg, #d4a017, #f1c40f); color: #222; }
+.cab-note { color: var(--cab-fg2); }
+.cab-items { display: grid; padding-top: 6px; }
+.cab-item { display: flex; align-items: center; gap: 10px; width: 100%; box-sizing: border-box; padding: 10px 8px; border: 0; border-radius: 8px;
+  background: none; color: var(--cab-fg); font: inherit; font-size: .92rem; text-align: left; text-decoration: none; cursor: pointer; }
+.cab-item:hover { background: var(--cab-bg2); }
+.cab-check { align-items: flex-start; font-size: .85rem; }
+.cab-check input { margin-top: 2px; accent-color: var(--cab-accent); }
+.cab-plan-act { color: var(--cab-accent); padding-left: 0; }
+.cab-out { border-top: 1px solid var(--cab-line); border-radius: 0 0 8px 8px; margin-top: 6px; padding-top: 12px; }
+.cab-row { display: flex; gap: 8px; padding: 12px 0 6px; }
+.cab-b { flex: 1; padding: 9px 12px; border-radius: 8px; border: 1px solid var(--cab-line); background: var(--cab-bg2); color: var(--cab-fg);
+  font: inherit; font-weight: 600; cursor: pointer; }
+.cab-b.primary { background: var(--cab-accent2); border-color: var(--cab-accent2); color: #fff; }
+@media (max-width: 480px) { .cab-pop { position: fixed; top: calc(56px + env(safe-area-inset-top)); right: 8px; left: 8px; width: auto; } }

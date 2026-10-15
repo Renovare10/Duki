@@ -12,6 +12,10 @@ import {
   shouldTrySilentSignIn,
   signedInHintCookie,
   signupUrl,
+  AuthExpiredError,
+  AUTH_TOKENS_KEY,
+  migrateAuthStorage,
+  SCHEMA_KEY,
 } from "./auth";
 
 function jwtWithExp(expSeconds: number): string {
@@ -96,6 +100,72 @@ describe("ensureFreshAuth", () => {
     expect(next.accessToken).toBe("new-a");
     expect(next.idToken).toBe(fresh);
     expect(next.refreshToken).toBe("r1");
+  });
+
+  const expired = () => ({
+    accessToken: "old",
+    idToken: jwtWithExp(Math.floor(Date.now() / 1000) - 30),
+    refreshToken: "r1",
+    email: "a@b.c",
+  });
+
+  it("reports a refused refresh (4xx) as signed out", async () => {
+    await expect(
+      ensureFreshAuth(expired(), async () => new Response('{"error":"invalid_grant"}', { status: 400 })),
+    ).rejects.toBeInstanceOf(AuthExpiredError);
+  });
+
+  it("treats an expired token with nothing to refresh with as signed out", async () => {
+    await expect(ensureFreshAuth({ ...expired(), refreshToken: undefined })).rejects.toBeInstanceOf(
+      AuthExpiredError,
+    );
+  });
+
+  it("keeps the sign-in on server trouble (5xx) or no network", async () => {
+    const e5 = await ensureFreshAuth(expired(), async () => new Response("", { status: 503 })).catch((e) => e);
+    expect(e5).not.toBeInstanceOf(AuthExpiredError);
+    const net = await ensureFreshAuth(expired(), async () => {
+      throw new TypeError("Failed to fetch");
+    }).catch((e) => e);
+    expect(net).not.toBeInstanceOf(AuthExpiredError);
+  });
+});
+
+describe("migrateAuthStorage", () => {
+  function fakeWindow(entries: Record<string, string>) {
+    const mk = (init: Record<string, string>) => {
+      const m = new Map(Object.entries(init));
+      return {
+        getItem: (k: string) => m.get(k) ?? null,
+        setItem: (k: string, v: string) => void m.set(k, v),
+        removeItem: (k: string) => void m.delete(k),
+        map: m,
+      };
+    };
+    const local = mk(entries);
+    const session = mk({ "duki.sso.tried": "1" });
+    (globalThis as unknown as { window: unknown }).window = {
+      localStorage: local,
+      sessionStorage: session,
+      location: { hostname: "localhost" },
+    };
+    return { local, session };
+  }
+
+  it("keeps readable tokens exactly as they are", () => {
+    const tokens = JSON.stringify({ accessToken: "a", idToken: "b", refreshToken: "r", email: "x@y.z" });
+    const { local } = fakeWindow({ [AUTH_TOKENS_KEY]: tokens });
+    migrateAuthStorage();
+    expect(local.map.get(AUTH_TOKENS_KEY)).toBe(tokens);
+    expect(local.map.get(SCHEMA_KEY)).toBe("1");
+  });
+
+  it("drops only an unreadable sign-in", () => {
+    const { local, session } = fakeWindow({ [AUTH_TOKENS_KEY]: "{broken", "duki.other": "keep" });
+    migrateAuthStorage();
+    expect(local.map.has(AUTH_TOKENS_KEY)).toBe(false);
+    expect(local.map.get("duki.other")).toBe("keep");
+    expect(session.map.has("duki.sso.tried")).toBe(false);
   });
 });
 

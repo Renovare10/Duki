@@ -200,6 +200,44 @@ export async function exchangeAuthCode(
 
 const REFRESH_SKEW_MS = 60_000;
 
+/** The account server said no (refresh token expired/revoked): this device is signed out. */
+export class AuthExpiredError extends Error {
+  constructor() {
+    super("Sign in expired.");
+    this.name = "AuthExpiredError";
+  }
+}
+
+/** Anything stored under the token key (even unreadable): Sign out must stay reachable. */
+export function hasStoredAuthKey(): boolean {
+  try {
+    return window.localStorage.getItem(AUTH_TOKENS_KEY) != null;
+  } catch {
+    return false;
+  }
+}
+
+// ---------------------------------------------------------------- storage schema
+// Bump when the stored shape changes. Upgrading only drops a sign-in it can't read (and its
+// hint cookie); texts, words, sessions and settings in IndexedDB are never touched. Readable
+// tokens stay exactly where they are.
+export const STORAGE_SCHEMA = 1;
+export const SCHEMA_KEY = "duki.schema";
+export function migrateAuthStorage(): void {
+  try {
+    const from = Number(window.localStorage.getItem(SCHEMA_KEY)) || 0;
+    if (from >= STORAGE_SCHEMA) return;
+    if (hasStoredAuthKey() && !loadStoredAuth()) {
+      window.localStorage.removeItem(AUTH_TOKENS_KEY);
+      setSignedInHint(false);
+    }
+    window.sessionStorage.removeItem(SILENT_SIGNIN_KEY);
+    window.localStorage.setItem(SCHEMA_KEY, String(STORAGE_SCHEMA));
+  } catch {
+    /* storage blocked: nothing to migrate */
+  }
+}
+
 export function idTokenExpiresAt(idToken: string): number | null {
   const parts = idToken.split(".");
   if (parts.length < 2) return null;
@@ -230,13 +268,15 @@ export async function refreshSession(
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body,
   });
-  if (!res.ok) throw new Error("Sign in expired.");
+  // 4xx = refused (expired / revoked): signed out. 5xx = server trouble: try again later.
+  if (res.status >= 400 && res.status < 500) throw new AuthExpiredError();
+  if (!res.ok) throw new Error(`Token refresh failed (${res.status}).`);
   const json = (await res.json()) as {
     access_token?: string;
     id_token?: string;
     refresh_token?: string;
   };
-  if (!json.access_token || !json.id_token) throw new Error("Sign in expired.");
+  if (!json.access_token || !json.id_token) throw new AuthExpiredError();
   return {
     accessToken: json.access_token,
     idToken: json.id_token,
@@ -251,6 +291,6 @@ export async function ensureFreshAuth(
   now = Date.now(),
 ): Promise<AuthTokens> {
   if (idTokenIsFresh(tokens.idToken, now)) return tokens;
-  if (!tokens.refreshToken) throw new Error("Sign in expired.");
+  if (!tokens.refreshToken) throw new AuthExpiredError();
   return refreshSession(tokens.refreshToken, fetchImpl);
 }
