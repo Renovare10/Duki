@@ -25,9 +25,9 @@ export const ALL_PACKS: LibraryPack[] = [p01, p02, p03, p04, p05, p06, p07, p08,
 /**
  * Packs shown in the app. Only packs that have been rewritten by hand go here
  * (append in order; never remove a pack once shipped, since progress is keyed by id).
- * p02–p15 are still template drafts and stay hidden until rewritten.
+ * All packs p01–p15 are rewritten and published.
  */
-export const PACKS: LibraryPack[] = [p01, p02, p03, p04, p05, p06, p07, p08, p09, p10, p11, p12, p13, p14];
+export const PACKS: LibraryPack[] = [p01, p02, p03, p04, p05, p06, p07, p08, p09, p10, p11, p12, p13, p14, p15];
 
 /** Topic tags for pack texts, keyed by text id. First topic is the main one. */
 export const LIBRARY_TOPICS: Record<string, string[]> = Object.fromEntries(
