@@ -13,14 +13,20 @@ export function jsonBytes(value: unknown): number {
 }
 
 export function storageLabel(bytes: number, cap: number): string {
-  return `${(bytes / 1_000_000).toFixed(1)} MB of ${cap / 1_000_000} MB`;
+  let used = (bytes / 1_000_000).toFixed(1);
+  // Never round a non-empty library to "0.0" or an under-cap one up to the cap.
+  if (bytes > 0 && used === "0.0") used = "<0.1";
+  else if (bytes < cap && Number(used) * 1_000_000 >= cap) used = (Math.floor(bytes / 10_000) / 100).toFixed(2);
+  return `${used} MB of ${cap / 1_000_000} MB`;
 }
 
 /** Conservative text-only boundary; a file extension alone is never trusted. */
 export function assertPlainText(value: string): void {
-  const compact = value.replace(/\s/g, "");
+  // Undo only line wrapping (base64 is wrapped at 64/76 columns); spaces still separate
+  // ordinary English words, so prose is not mistaken for an encoded blob.
+  const compact = value.replace(/[\r\n]+[ \t]*/g, "");
   if (/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f\ufffd]/u.test(value) ||
-      /(?:data\s*:|blob\s*:|base64\s*[:,;]|<\s*\/?\s*(?:html|img|svg|script|iframe|object|embed|audio|video)\b)/iu.test(value) ||
+      /(?:\bdata\s*:\s*[\w.+-]+\/[\w.+-]+\s*[;,]|\bblob\s*:\s*(?:https?|null)|base64\s*[:,;]|<\s*\/?\s*(?:html|img|svg|script|iframe|object|embed|audio|video)\b)/iu.test(value) ||
       /^(?:%PDF-|PK\u0003\u0004|GIF8[79]a|RIFF|\u0089PNG)/u.test(value) ||
       /(?:JVBERi0|iVBORw0KGgo|R0lGOD[lh]|UEsDB|0M8R4KGxGuE|UklGR|SUQz)/u.test(compact) ||
       /[A-Za-z0-9+/_-]{256,}={0,2}/u.test(compact)) {
@@ -75,22 +81,48 @@ export function assertTextOnlyPayload(raw: unknown, snapshot = false): void {
   }
 }
 
+function sameStory(a: LibraryText | undefined, b: LibraryText): boolean {
+  return Boolean(a && a.body === b.body && a.title === b.title && a.blurb === b.blurb);
+}
+
+/** User-pasted stories that are new or whose text changed versus `existing`. */
+export function changedStories(texts: LibraryText[], existing: LibraryText[] = []): LibraryText[] {
+  const old = new Map(existing.map((text) => [text.id, text]));
+  return texts.filter((text) => text.kind === "paste" && !sameStory(old.get(text.id), text));
+}
+
+/** Rows whose text is unchanged from data the user already had are grandfathered. */
+export function withoutUnchangedStories<T extends { texts: LibraryText[] }>(payload: T, existing: LibraryText[]): T {
+  const old = new Map(existing.map((text) => [text.id, text]));
+  return { ...payload, texts: payload.texts.filter((text) => !sameStory(old.get(text.id), text)) };
+}
+
 /** Only new/changed uploads are subject to the per-story limit. Never alter old rows. */
 export function assertNewStories(texts: LibraryText[], existing: LibraryText[] = []): void {
   const old = new Map(existing.map((text) => [text.id, text]));
   for (const text of texts) {
     const previous = old.get(text.id);
-    if (previous && previous.body === text.body && previous.title === text.title && previous.blurb === text.blurb) continue;
+    if (sameStory(previous, text)) continue;
     if (text.kind !== "paste") continue;
     for (const field of [text.title, text.body, text.blurb]) assertPlainText(field);
     if (jsonBytes(text) > STORY_STORAGE_BYTES) throw new Error("Each new story must be at most 0.512 MB of plain text, including its metadata. Split this story into smaller parts.");
   }
 }
 
-export function assertStorageLimit(payload: unknown, cap: number): void {
-  if (jsonBytes(payload) > cap) {
-    throw new Error(`Storage limit reached (${storageLabel(jsonBytes(payload), cap)}). Existing stories are safe. New uploads are paused until storage is under the limit. Export a backup to keep a copy.`);
-  }
+/**
+ * Over the cap, only NEW uploads are blocked. Data the user already has keeps working:
+ * with `addsStories: false` (no new/changed pasted story; progress, words and settings
+ * only) an over-cap legacy library still saves, restores and syncs.
+ */
+export function assertStorageLimit(
+  payload: unknown,
+  cap: number,
+  opts: { addsStories?: boolean } = {},
+): void {
+  const bytes = jsonBytes(payload);
+  if (bytes <= cap) return;
+  if (opts.addsStories === false) return;
+  throw new Error(`Storage limit reached (${storageLabel(bytes, cap)}). Existing stories are safe. New uploads are paused until storage is under the limit. Export a backup to keep a copy.`);
 }
 
 export function importFileKind(file: Pick<File, "name" | "type" | "size">): "txt" | "json" {

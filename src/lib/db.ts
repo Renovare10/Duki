@@ -11,7 +11,7 @@ import { normalizeText } from "./text";
 import { isWorkRowId } from "./works";
 import { normalizeWord } from "./word";
 import { packSnapshot } from "./sync";
-import { assertNewStories, assertStorageLimit, assertTextOnlyPayload, LOCAL_STORAGE_BYTES } from "./storage-policy";
+import { assertNewStories, assertStorageLimit, assertTextOnlyPayload, changedStories, LOCAL_STORAGE_BYTES } from "./storage-policy";
 
 const DB_NAME = "duki";
 export const DB_VERSION = 6;
@@ -294,7 +294,10 @@ export async function importBackup(
   assertStorageLimit(packSnapshot({
     words: [...plannedWords.values()], texts: [...plannedTexts.values()],
     sessions: [...plannedSessions.values()], settings: backup.settings ?? current.settings,
-  }), storageCap);
+  }), storageCap, {
+    // Restoring words/progress or stories already on this device is never blocked.
+    addsStories: changedStories(backup.texts, current.texts).length > 0,
+  });
 
   const db = await openDb();
   const tx = db.transaction([...STORES], "readwrite");

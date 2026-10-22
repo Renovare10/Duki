@@ -6,7 +6,7 @@ import { packSnapshot, pushSnapshot } from "./sync";
 import {
   ACCOUNT_STORAGE_BYTES, LOCAL_STORAGE_BYTES, STORY_STORAGE_BYTES,
   assertNewStories, assertPlainText, assertStorageLimit, assertTextOnlyPayload,
-  importFileKind, jsonBytes, readTextImport, storageLabel,
+  changedStories, importFileKind, jsonBytes, readTextImport, storageLabel,
 } from "./storage-policy";
 
 const story = (body = "你好，世界。", id = "mine"): LibraryText => ({
@@ -27,6 +27,21 @@ describe("storage policy", () => {
     expect(STORY_STORAGE_BYTES).toBeLessThan(ACCOUNT_STORAGE_BYTES);
     expect(storageLabel(700_000, ACCOUNT_STORAGE_BYTES)).toBe("0.7 MB of 1 MB");
     expect(jsonBytes("中文")).toBe(8);
+    expect(storageLabel(300_000, ACCOUNT_STORAGE_BYTES)).toBe("0.3 MB of 1 MB");
+    expect(storageLabel(0, ACCOUNT_STORAGE_BYTES)).toBe("0.0 MB of 1 MB");
+    expect(storageLabel(20_000, ACCOUNT_STORAGE_BYTES)).toBe("<0.1 MB of 1 MB");
+    expect(storageLabel(990_000, ACCOUNT_STORAGE_BYTES)).toBe("0.99 MB of 1 MB");
+    expect(storageLabel(1_000_000, ACCOUNT_STORAGE_BYTES)).toBe("1.0 MB of 1 MB");
+  });
+  it("never blocks existing over-cap data, only new uploads", () => {
+    const texts = Array.from({ length: 3 }, (_, i) => story("中".repeat(160_000), String(i)));
+    const data = snapshot(texts);
+    expect(() => assertStorageLimit(data, ACCOUNT_STORAGE_BYTES)).toThrow(/Storage limit/);
+    expect(() => assertStorageLimit(data, ACCOUNT_STORAGE_BYTES, { addsStories: false })).not.toThrow();
+    expect(() => assertStorageLimit(data, ACCOUNT_STORAGE_BYTES, { addsStories: true })).toThrow(/Storage limit/);
+    expect(changedStories(texts, texts)).toEqual([]);
+    expect(changedStories([...texts, story("新", "x")], texts).map((t) => t.id)).toEqual(["x"]);
+    expect(changedStories([{ ...texts[0], bookmark: { tokenIndex: 1, scrollY: 1 } }], texts)).toEqual([]);
   });
   it("accepts the exact boundary and rejects even one byte over", () => {
     const data = { body: "中".repeat(100) };
@@ -59,6 +74,13 @@ describe("storage policy", () => {
 });
 
 describe("text-only import", () => {
+  it("does not mistake ordinary prose for binary", () => {
+    for (const ok of [
+      "这篇文章讲 metadata: 什么是元数据。", "Database: 数据库", "我在 blob: 上看到的",
+      "长句子 " + "the quick brown fox jumps over the lazy dog ".repeat(20),
+      "一行一行\n" + "abcdefghij klmnopqrst\n".repeat(40),
+    ]) expect(() => assertPlainText(ok)).not.toThrow();
+  });
   it("accepts plain text and both old Duki backup versions", async () => {
     expect(() => assertPlainText("中文\n第二段\twith English and numbers 123.")).not.toThrow();
     for (const version of [1, 2]) expect(parseBackup({ ...backup([story()]), version }).texts[0].body).toBe("你好，世界。");
@@ -90,12 +112,26 @@ describe("cloud preflight (not server enforcement)", () => {
   it("requires a strict verified-email claim", async () => {
     vi.stubEnv("VITE_DUKI_API", "https://test.invalid");
     const fetcher = vi.fn();
-    for (const claim of [false, undefined, "true", 1]) {
+    for (const claim of [false, undefined, "false", "yes", 1]) {
       const idToken = claim === undefined ? "legacy.token" : token(claim);
       expect(emailVerifiedFromIdToken(idToken)).toBe(false);
       await expect(pushSnapshot(idToken, snapshot(), fetcher)).rejects.toThrow(/Verify your email/);
     }
     expect(fetcher).not.toHaveBeenCalled();
+  });
+  it("accepts Cognito's string \"true\" claim for federated users", () => {
+    expect(emailVerifiedFromIdToken(token("true"))).toBe(true);
+    expect(emailVerifiedFromIdToken(token(true))).toBe(true);
+  });
+  it("keeps syncing a legacy over-cap account but refuses new stories", async () => {
+    vi.stubEnv("VITE_DUKI_API", "https://test.invalid");
+    const fetcher = vi.fn().mockResolvedValue(new Response(null, { status: 204 }));
+    const legacy = [story("中".repeat(180_000), "big"), ...Array.from({ length: 2 }, (_, i) => story("中".repeat(160_000), String(i)))];
+    const progress = legacy.map((t) => ({ ...t, bookmark: { tokenIndex: 5, scrollY: 50 } }));
+    await pushSnapshot(token(), snapshot(progress), fetcher, legacy);
+    expect(fetcher).toHaveBeenCalledTimes(1);
+    await expect(pushSnapshot(token(), snapshot([...progress, story("新故事", "new")]), fetcher, legacy)).rejects.toThrow(/Storage limit/);
+    expect(fetcher).toHaveBeenCalledTimes(1);
   });
   it("blocks total/per-story overflow and binary before any network write", async () => {
     vi.stubEnv("VITE_DUKI_API", "https://test.invalid");

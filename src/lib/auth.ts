@@ -116,7 +116,10 @@ export function parseAuthCallback(search: string, hash = ""): { code: string } |
 /** UI hint only. The API must verify the signed token and this claim itself. */
 export function emailVerifiedFromIdToken(idToken: string): boolean {
   try {
-    return JSON.parse(base64UrlToJson(idToken.split(".")[1] ?? "")).email_verified === true;
+    // Cognito emits a boolean for native users but the string "true" for some federated
+    // (e.g. Google) users. Both mean verified; anything else is unverified.
+    const claim = JSON.parse(base64UrlToJson(idToken.split(".")[1] ?? "")).email_verified;
+    return claim === true || claim === "true";
   } catch {
     return false;
   }

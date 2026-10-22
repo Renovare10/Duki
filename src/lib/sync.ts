@@ -4,7 +4,7 @@ import { normalizeText } from "./text";
 import { themeChoiceRank } from "./theme";
 import { normalizeWord } from "./word";
 import { emailVerifiedFromIdToken } from "./auth";
-import { ACCOUNT_STORAGE_BYTES, assertNewStories, assertStorageLimit, assertTextOnlyPayload } from "./storage-policy";
+import { ACCOUNT_STORAGE_BYTES, assertNewStories, assertStorageLimit, assertTextOnlyPayload, changedStories, withoutUnchangedStories } from "./storage-policy";
 
 export const SYNC_MAX_BYTES = ACCOUNT_STORAGE_BYTES;
 
@@ -212,9 +212,14 @@ export async function pushSnapshot(
   const base = dukiApiBase();
   if (!base) return;
   if (!emailVerifiedFromIdToken(idToken)) throw new Error("Verify your email to sync. Your stories remain on this device.");
-  assertTextOnlyPayload(snapshot, true);
+  // Rows already in the account (`existingTexts` = the pulled remote) are grandfathered:
+  // a legacy story never blocks syncing progress, and over-cap accounts keep syncing
+  // words/settings; only new or changed pasted stories are refused.
+  assertTextOnlyPayload(withoutUnchangedStories(snapshot, existingTexts), true);
   assertNewStories(snapshot.texts, existingTexts);
-  assertStorageLimit(snapshot, SYNC_MAX_BYTES);
+  assertStorageLimit(snapshot, SYNC_MAX_BYTES, {
+    addsStories: changedStories(snapshot.texts, existingTexts).length > 0,
+  });
   const body = JSON.stringify(snapshot);
   const res = await fetchImpl(`${base}/me`, {
     method: "PUT",

@@ -22,3 +22,5 @@ Start a new branch `reader-settings` from origin/main (40e091a, the live site). 
 - Screenshots in docs/shots/reader-settings-*.png (toggle both modes, large characters + width on desktop, mobile word bar).
 - docs/IMPORT-EXPORT.md explains the flow and the cap.
 - Commit on branch reader-settings (no push). Comment a short summary on the card with how to preview locally (dev server command + URL).
+
+> Update (Oct 21, 9:20 PM): Chad set the cap to **1 MB (1,000,000 bytes) total per verified user** and **512,000 bytes per story**; this supersedes the ~50 MB example above. See docs/IMPORT-EXPORT.md.

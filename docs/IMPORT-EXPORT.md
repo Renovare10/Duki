@@ -18,9 +18,11 @@ Chad's latest decision (Oct 21, 9:20 PM) is **1 MB total per verified user**. MB
 
 - New/changed pasted stories: **512,000 bytes (0.512 MB)** per serialized story record, including title and metadata. That allows roughly 170,000 common Chinese characters before metadata. Small stories can be numerous; there is no story-count limit. A single large story cannot consume the entire account allowance.
 - Anonymous/unverified: **local-only**, with a **1,000,000-byte (1 MB)** budget for the prospective account-style payload when accepting new stories/imports. This is not a claim to cap all browser disk usage: cached public text bodies, older local sessions and local Stats events are outside this budget. Existing local data is never purged.
-- Email verification is read from the ID token for UI/preflight only. Missing claims are unverified. The client does not cryptographically verify this claim; the server must do so. Unverified sessions do not invoke account sync, but can still read locally and export.
+- Email verification is read from the ID token for UI/preflight only (`true` or the string `"true"`). Missing claims are unverified. The client does not cryptographically verify this claim; the server must do so. Unverified sessions do not invoke account sync, but can still read locally and export.
 - Usage shows e.g. **0.7 MB of 1 MB**, labelled as an account or local budget. Unverified users have no cloud allowance; their 1 MB local-only import budget is not server storage. Usage estimates the next sync payload, not a server-confirmed storage reading. An 80% warning advises backup; at/above the limit new additions are paused. The final merged snapshot is checked again before PUT. A concurrent/new remote update can therefore make an initially accepted local import fail to sync; the local copy stays available and an error is shown.
 - A story/quota rejection does not truncate content, evict another story or silently upload a subset. An import is preflighted before any writes, so rejected content does not partially overwrite words, stories or settings. Existing oversized story bodies can still be loaded/exported; unchanged legacy oversized stories are grandfathered for the per-story check. A whole snapshot above 1 MB is not sent. No schema-version bump, data clearing or automatic migration is introduced.
+- **Legacy over-cap data keeps working.** An import or sync that adds no new or changed pasted story (only words, progress, settings, or stories the device/account already has) is allowed even above 1 MB; only writes that add/grow a pasted story are refused. Text-only checks on sync skip story rows unchanged from the pulled account copy, so one odd legacy row can never block syncing progress.
+- **Accounting caveat for Chad:** the 1 MB counts the whole snapshot, including vocabulary. One word record is ~240 bytes, the catalog metadata every user carries is ~0.12 MB, and 200 sessions are ~0.03 MB. So a reader with ~3,500 word records is at 1 MB with no uploads at all and cannot add a story. If the cap is meant for uploaded text only, count `kind: paste` story records (and keep a separate generous ceiling for the whole snapshot).
 - Ordinary progress/settings writes remain available locally even over budget. Reducing cloud usage is subject to the deletion/merge caveat below; do not promise that a local removal reclaims cloud storage yet.
 
 ## Text-only boundary
@@ -39,7 +41,7 @@ The frontend deployment workflow configures `VITE_DUKI_API` as:
 
 `https://j251m3eof8.execute-api.us-east-2.amazonaws.com`
 
-Cloud reads/writes use GET/PUT `/me` with an ID-token bearer header. This repository has no `/me` handler, backend package, database schema, infrastructure definition, or documented backend source checkout. The workflow's `chadm-duki` S3 bucket is the static frontend bucket; it does **not** establish where account snapshots are stored. The account DB/object-store type and existing server-side limits cannot be verified from this repo. No live account/API inspection was performed.
+Cloud reads/writes use GET/PUT `/me` with an ID-token bearer header. The backend is **not** in this repo. It lives in `Renovare10/portfolio-infra` (`duki.tf` + `duki-sync-lambda/index.mjs`; GitHub main 97f98cd is identical to the box checkout): API Gateway HTTP API `duki-http` with a Cognito JWT authorizer on `GET /me` and `PUT /me` → Lambda `duki-sync` (nodejs20.x) → one object per user at `s3://chadm-duki-user/<sub>/state.json` (bucket versioned, no lifecycle rule). Today the Lambda only checks the raw body is ≤ 8 MiB and `v === 1`, then overwrites the object; no email-verified check, no schema/text-only check, no per-story limit, no concurrency control. See [SERVER-STORAGE-PLAN.md](SERVER-STORAGE-PLAN.md) for the enforcement plan. No live account/API inspection was performed and the deployed Lambda version was not checked (no AWS credentials on the box).
 
 The owner of that API must:
 
@@ -70,7 +72,7 @@ There is **no server-side enforcement delivered or verified in this branch**. Pu
 Run locally (no backend configured by default):
 
 ```
-npm run dev -- --host 127.0.0.1 --port 5175 --strictPort
+nohup npx vite --host 127.0.0.1 --port 5175 --strictPort > dev.log 2>&1 &
 ```
 
 Preview: `http://127.0.0.1:5175/`. Open any story to use the controls. For a story URL, `http://127.0.0.1:5175/#/read/sample-home` works without importing data. Do not add production API settings to a test run.
@@ -83,8 +85,8 @@ npm run build
 node scripts/e2e/reader-settings.mjs
 ```
 
-The dedicated e2e uses an isolated headless Edge profile and blocks external requests. It seeds only test-browser IndexedDB, not user data. It covers both modes, reload persistence, desktop/mobile widths at 96 px, text-only rejection, `.txt` save, quota atomicity, JSON round trip, and real touch dismissal/reveal at **390×844 with 4x CPU throttling**. It records 88 frame samples and asserts p95 below 50 ms with zero article DOM mutations. The latest run recorded median 16.7 ms, p95 16.8 ms and maximum 33.4 ms. These are desktop-emulation measurements, not a claim about every physical phone.
+The dedicated e2e uses an isolated headless system-Chrome profile (`/usr/bin/google-chrome --headless=new`; `DUKI_CHROME`/`DUKI_BROWSER` override) and blocks external requests. It seeds only test-browser IndexedDB, not user data. It covers both modes, reload persistence, desktop (1280 px) narrow/wide and all widths at 96 px, legacy over-cap restore, text-only rejection, `.txt` save, quota atomicity, JSON round trip, and real touch dismissal/reveal at **390×844 with 4x CPU throttling**. It records 88 frame samples and asserts p95 below 50 ms with zero article DOM mutations. The latest run recorded median 16.7 ms, p95 16.8 ms and maximum 33.4 ms. These are desktop-emulation measurements, not a claim about every physical phone.
 
-`npm test`: 37 files / 343 tests pass (including library validation). Build passes with the existing large-bundle warning. No Wikipedia/library/classic content was edited.
+`npm test`: 37 files / 347 tests pass (including library validation). Build passes with the existing large-bundle warning. No Wikipedia/library/classic content was edited.
 
-Eight screenshots and machine-readable results are in `docs/shots/reader-settings-*`: Color-coded, Normal, large/wide desktop, large mobile, mobile word bar, dismissed and revealed states, storage usage, plus `reader-settings-verification.json`.
+Nine screenshots and machine-readable results are in `docs/shots/reader-settings-*`: Color-coded, Normal, large/wide and large/narrow desktop, large mobile, mobile word bar, dismissed and revealed states, storage usage, plus `reader-settings-verification.json`.

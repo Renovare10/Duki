@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { existsSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { chromium } from "playwright";
 
@@ -6,8 +7,12 @@ import { chromium } from "playwright";
 const base = process.env.DUKI_URL || "http://127.0.0.1:5175";
 const shots = "docs/shots";
 await mkdir(shots, { recursive: true });
-const browser = await chromium.launch({ channel: process.env.DUKI_BROWSER || "msedge", headless: true });
-const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, hasTouch: true, isMobile: true, acceptDownloads: true });
+// System Chrome by default (DUKI_CHROME=path); DUKI_BROWSER=msedge etc. selects a Playwright channel instead.
+const chromePath = process.env.DUKI_CHROME || (existsSync("/usr/bin/google-chrome") ? "/usr/bin/google-chrome" : "");
+const browser = await chromium.launch(process.env.DUKI_BROWSER || !chromePath
+  ? { channel: process.env.DUKI_BROWSER || "msedge", headless: true }
+  : { executablePath: chromePath, headless: true, args: ["--headless=new"] });
+const context = await browser.newContext({ viewport: { width: 1280, height: 900 }, hasTouch: true, acceptDownloads: true });
 await context.route("**/*", (route) => {
   const url = route.request().url();
   return url.startsWith(base) || url.startsWith("data:") || url.startsWith("blob:") ? route.continue() : route.abort();
@@ -59,6 +64,9 @@ try {
   assert.equal(await page.locator(".article").evaluate((el) => getComputedStyle(el).fontSize), "96px");
   await noOverflow();
   await page.screenshot({ path: `${shots}/reader-settings-desktop-large-wide.png` });
+  await page.getByLabel("Text width", { exact: true }).selectOption("narrow");
+  await noOverflow();
+  await page.screenshot({ path: `${shots}/reader-settings-desktop-large-narrow.png` });
   const widths = {};
   for (const width of ["narrow", "medium", "wide", "full"]) {
     await page.getByLabel("Text width", { exact: true }).selectOption(width);
@@ -112,6 +120,29 @@ try {
   assert.match(atomic.message, /Storage limit/);
   assert.equal(atomic.unchanged, true);
   check("over-cap import atomically preserves existing stories, words and settings");
+
+  // Legacy over-cap libraries: restoring what is already on the device still works.
+  const legacy = await page.evaluate(async () => {
+    const db = await import("/src/lib/db.ts");
+    const catalog = (await import("/src/data/catalog.ts")).CATALOG;
+    const texts = Array.from({ length: 3 }, (_, n) => ({ id: `legacy-${n}`, title: "旧故事", blurb: "", body: "旧".repeat(160_000), kind: "paste", category: "paste", createdAt: n + 1, readAt: null, bookmark: null }));
+    for (const text of texts) await db.putText(text);
+    const restore = { app: "duki", version: 2, words: [], texts: texts.map((t) => ({ ...t, readAt: 5 })) };
+    let restoreError = null, addError = null;
+    try { await db.importBackup(db.parseBackup(restore), catalog); } catch (error) { restoreError = error.message; }
+    const extra = { ...restore, texts: [...restore.texts, { ...texts[0], id: "legacy-new", body: "新" }] };
+    try { await db.importBackup(db.parseBackup(extra), catalog); } catch (error) { addError = error.message; }
+    const after = await db.loadAll();
+    const kept = texts.every((t) => after.texts.some((r) => r.id === t.id && r.body === t.body && r.readAt === 5));
+    const added = after.texts.some((t) => t.id === "legacy-new");
+    for (const text of texts) await db.deleteText(text.id);
+    return { restoreError, addError, kept, added };
+  });
+  assert.equal(legacy.restoreError, null);
+  assert.match(legacy.addError ?? "", /Storage limit/);
+  assert.equal(legacy.kept, true);
+  assert.equal(legacy.added, false);
+  check("over-cap legacy library: restore/progress import allowed, new story refused, nothing deleted");
 
   // Exercise the actual Export download, then import that exact text-only file.
   await page.getByRole("button", { name: "Account (not signed in)", exact: true }).click();
