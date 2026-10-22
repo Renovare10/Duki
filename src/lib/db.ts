@@ -10,6 +10,8 @@ import { normalizeEvent } from "./history";
 import { normalizeText } from "./text";
 import { isWorkRowId } from "./works";
 import { normalizeWord } from "./word";
+import { packSnapshot } from "./sync";
+import { assertNewStories, assertStorageLimit, assertTextOnlyPayload, LOCAL_STORAGE_BYTES } from "./storage-policy";
 
 const DB_NAME = "duki";
 export const DB_VERSION = 6;
@@ -22,6 +24,8 @@ export const DEFAULT_SETTINGS: ReaderSettings = {
   fontFamily: "serif",
   fontSize: 28,
   theme: "paper",
+  highlightStyle: "color-coded",
+  textWidth: "medium",
 };
 
 function openDb(): Promise<IDBDatabase> {
@@ -151,11 +155,17 @@ export function normalizeSettings(raw: Partial<ReaderSettings> | undefined): Rea
       ? raw.fontFamily
       : DEFAULT_SETTINGS.fontFamily;
   const fontSize =
-    typeof raw?.fontSize === "number"
-      ? Math.min(42, Math.max(18, Math.round(raw.fontSize)))
+    typeof raw?.fontSize === "number" && Number.isFinite(raw.fontSize)
+      ? Math.min(96, Math.max(18, Math.round(raw.fontSize)))
       : DEFAULT_SETTINGS.fontSize;
   const theme = raw?.theme === "night" || raw?.theme === "paper" ? raw.theme : DEFAULT_SETTINGS.theme;
   const out: ReaderSettings = { fontFamily, fontSize, theme };
+  out.highlightStyle = raw?.highlightStyle === "normal" ? "normal" : "color-coded";
+  out.textWidth = raw?.textWidth === "narrow" || raw?.textWidth === "wide" || raw?.textWidth === "full"
+    ? raw.textWidth : "medium";
+  if (typeof raw?.readerSetAt === "number" && Number.isFinite(raw.readerSetAt) && raw.readerSetAt > 0) {
+    out.readerSetAt = raw.readerSetAt;
+  }
   if (typeof raw?.themeSetAt === "number" && Number.isFinite(raw.themeSetAt) && raw.themeSetAt > 0) {
     out.themeSetAt = raw.themeSetAt;
   }
@@ -256,6 +266,7 @@ export async function applySyncState(input: {
 export async function importBackup(
   backup: BackupFile,
   catalog: LibraryText[],
+  storageCap = LOCAL_STORAGE_BYTES,
 ): Promise<{
   words: WordRecord[];
   texts: LibraryText[];
@@ -263,6 +274,28 @@ export async function importBackup(
   settings: ReaderSettings;
   events: WordEvent[];
 }> {
+  // Validate and measure the complete upsert before opening a write transaction.
+  // A rejected import cannot partially replace words, stories or settings.
+  assertTextOnlyPayload(backup);
+  const current = await loadAll();
+  assertNewStories(backup.texts, current.texts);
+  const plannedTexts = new Map(current.texts.map((text) => [text.id, text]));
+  for (const text of backup.texts) plannedTexts.set(text.id, text);
+  for (const sample of catalog) {
+    const imported = backup.texts.find((text) => text.id === sample.id);
+    plannedTexts.set(sample.id, imported
+      ? { ...sample, readAt: imported.readAt, bookmark: imported.bookmark }
+      : sample);
+  }
+  const plannedWords = new Map(current.words.map((word) => [word.hanzi, word]));
+  for (const word of backup.words) plannedWords.set(word.hanzi, word);
+  const plannedSessions = new Map(current.sessions.map((session) => [session.id, session]));
+  for (const session of backup.sessions ?? []) plannedSessions.set(session.id, session);
+  assertStorageLimit(packSnapshot({
+    words: [...plannedWords.values()], texts: [...plannedTexts.values()],
+    sessions: [...plannedSessions.values()], settings: backup.settings ?? current.settings,
+  }), storageCap);
+
   const db = await openDb();
   const tx = db.transaction([...STORES], "readwrite");
   const wordStore = tx.objectStore("words");
@@ -320,6 +353,7 @@ export function parseBackup(raw: unknown): BackupFile {
   if (!Array.isArray(data.words) || !Array.isArray(data.texts)) {
     throw new Error("Backup is missing words or texts.");
   }
+  assertTextOnlyPayload(raw);
   return {
     app: "duki",
     version: data.version,

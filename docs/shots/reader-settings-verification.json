@@ -1,0 +1,30 @@
+{
+  "viewport": "390x844",
+  "cpuThrottle": 4,
+  "checks": [
+    "both highlight modes preserve word status and use the expected colors",
+    "96 px and four widths fit desktop; settings persist after reload",
+    "image, renamed PDF and JSON base64 imports rejected without writes",
+    "UTF-8 .txt import previews and saves as a story",
+    "over-cap import atomically preserves existing stories, words and settings",
+    "own text-only JSON round trip preserves words, uploaded stories and settings",
+    "390x844 mobile fits 96 px at every width and shows word actions",
+    "4x CPU touch fling latches hidden; word tap reveals the sheet",
+    "4x CPU scroll-follow frame budget and no article DOM churn"
+  ],
+  "animation": {
+    "frames": 88,
+    "medianMs": 16.69999999999891,
+    "p95Ms": 16.799999999999272,
+    "maxMs": 33.399999999999636,
+    "articleDomMutations": 0,
+    "transform": "matrix(1, 0, 0, 1, -185.398, 205)",
+    "willChange": "transform"
+  },
+  "desktopWidths": {
+    "narrow": 620,
+    "medium": 860,
+    "wide": 1200,
+    "full": 1408
+  }
+}

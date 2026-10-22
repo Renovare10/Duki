@@ -128,6 +128,10 @@ export type ReaderSettings = {
   fontFamily: "serif" | "sans" | "system";
   fontSize: number;
   theme: ReaderTheme;
+  /** Optional for backups and clients written before reader-settings. */
+  highlightStyle?: "normal" | "color-coded";
+  textWidth?: "narrow" | "medium" | "wide" | "full";
+  readerSetAt?: number;
   /**
    * When the reader last picked `theme` with the toggle (ms). Absent on
    * settings written before this field existed; older clients drop it, which

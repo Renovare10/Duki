@@ -38,12 +38,12 @@ function prefersReducedMotion(): boolean {
 
 /** The sheet is centred with translateX(-50%); add the scroll-driven drop. */
 function writeOffset(el: HTMLElement, offset: number) {
-  el.style.transform = offset > 0 ? `translate(-50%, ${offset}px)` : "";
+  el.style.transform = `translate3d(-50%, ${offset}px, 0)`;
 }
 
 /**
- * Scroll-linked sheet: writes the sheet's transform straight from the window
- * scroll handler (no React render per scroll event, no CSS transition while
+ * Scroll-linked sheet: coalesces scroll events into one transform write per
+ * animation frame (no React render per scroll event, no CSS transition while
  * tracking). React only hears about it when the sheet latches fully hidden.
  * `resetKey` re-anchors and shows it again (e.g. a new text whose bookmark
  * restore just scrolled the page).
@@ -61,6 +61,7 @@ export function useScrollHide({
   const [latched, setLatched] = useState(false);
   const stateRef = useRef<SheetScrollState>(initialSheetScroll(0));
   const revealTimer = useRef(0);
+  const frameRef = useRef(0);
 
   useEffect(() => {
     const el = sheetRef.current;
@@ -72,7 +73,8 @@ export function useScrollHide({
     if (!enabled || !el) return;
 
     let distance = sheetHideDistance(el.offsetHeight);
-    stateRef.current = initialSheetScroll(window.scrollY, maxScrollY());
+    let maxY = maxScrollY();
+    stateRef.current = initialSheetScroll(window.scrollY, maxY);
 
     const apply = (next: SheetScrollState) => {
       const prev = stateRef.current;
@@ -88,21 +90,28 @@ export function useScrollHide({
     // dispatched, so it isn't read as the reader scrolling.
     let settle = window.requestAnimationFrame(() => {
       settle = 0;
-      stateRef.current = rebaseSheetScroll(stateRef.current, window.scrollY, maxScrollY());
+      stateRef.current = rebaseSheetScroll(stateRef.current, window.scrollY, maxY);
     });
 
     const onScroll = () => {
-      if (settle) return;
-      apply(stepSheetScroll(stateRef.current, window.scrollY, maxScrollY(), distance));
+      if (settle || frameRef.current) return;
+      frameRef.current = window.requestAnimationFrame(() => {
+        frameRef.current = 0;
+        apply(stepSheetScroll(stateRef.current, window.scrollY, maxY, distance));
+      });
     };
     // iOS address bar show/hide resizes the viewport; never treat that as scrolling.
     const onResize = () => {
-      stateRef.current = rebaseSheetScroll(stateRef.current, window.scrollY, maxScrollY());
+      maxY = maxScrollY();
+      stateRef.current = rebaseSheetScroll(stateRef.current, window.scrollY, maxY);
     };
     // Sheet height changes (hint vs. word, font, rotation) change the hide distance.
     const ro =
       typeof ResizeObserver === "function"
-        ? new ResizeObserver(() => {
+        ? new ResizeObserver((entries) => {
+            // Geometry is read on size changes, never in the scroll hot path.
+            maxY = maxScrollY();
+            if (!entries.some((entry) => entry.target === el)) return;
             distance = sheetHideDistance(el.offsetHeight);
             const s = stateRef.current;
             if (s.latched) apply({ ...s, offset: distance });
@@ -110,6 +119,7 @@ export function useScrollHide({
           })
         : null;
     ro?.observe(el);
+    ro?.observe(document.body);
 
     const vv = window.visualViewport;
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -121,6 +131,8 @@ export function useScrollHide({
       vv?.removeEventListener("resize", onResize);
       ro?.disconnect();
       if (settle) window.cancelAnimationFrame(settle);
+      window.cancelAnimationFrame(frameRef.current);
+      frameRef.current = 0;
       window.clearTimeout(revealTimer.current);
       el.style.transition = "";
       writeOffset(el, 0);
@@ -128,6 +140,8 @@ export function useScrollHide({
   }, [enabled, resetKey, sheetRef]);
 
   const reveal = useCallback(() => {
+    window.cancelAnimationFrame(frameRef.current);
+    frameRef.current = 0;
     const el = sheetRef.current;
     const wasDown = stateRef.current.offset > 0;
     stateRef.current = revealSheetScroll(window.scrollY, maxScrollY());

@@ -260,8 +260,16 @@ export function Reader({
     return () => window.removeEventListener("keydown", onKey);
   }, [onSetStatus, selected, selectedToken, selectedRecordKey, titleWords, bodyWords]);
 
+  // Bookmark updates and the sheet's latch must not rebuild a long article.
+  const bodyContent = useMemo(() => bodyView.map((view) =>
+    renderToken(view.token, "body", {
+      words, selected, resumeIndex, setSelected: selectWord, setHover,
+      speaking: speakingTokens, surface: view.surface, glossKey: view.glossKey,
+    }),
+  ), [bodyView, words, selected, resumeIndex, selectWord, speakingTokens]);
+
   return (
-    <div className="reader-page">
+    <div className={`reader-page highlights-${settings.highlightStyle ?? "color-coded"} width-${settings.textWidth ?? "medium"}`}>
       <div className="reader-chrome">
         <header className="reader-head">
           <div>
@@ -301,13 +309,31 @@ export function Reader({
               <input
                 type="range"
                 min={18}
-                max={42}
+                max={96}
                 value={settings.fontSize}
                 onChange={(e) =>
                   onSettings({ ...settings, fontSize: Number(e.target.value) })
                 }
                 aria-label="Reader font size"
               />
+            </label>
+            <label className="reader-option">
+              <span>Highlights</span>
+              <select aria-label="Highlight style" value={settings.highlightStyle ?? "color-coded"}
+                onChange={(e) => onSettings({ ...settings, highlightStyle: e.target.value as ReaderSettings["highlightStyle"] })}>
+                <option value="normal">Normal</option>
+                <option value="color-coded">Color-coded</option>
+              </select>
+            </label>
+            <label className="reader-option">
+              <span>Text width</span>
+              <select aria-label="Text width" value={settings.textWidth ?? "medium"}
+                onChange={(e) => onSettings({ ...settings, textWidth: e.target.value as ReaderSettings["textWidth"] })}>
+                <option value="narrow">Narrow</option>
+                <option value="medium">Medium</option>
+                <option value="wide">Wide</option>
+                <option value="full">Full</option>
+              </select>
             </label>
             <select
               aria-label="Reader font"
@@ -353,7 +379,7 @@ export function Reader({
           </div>
         </header>
         <div className="legend" aria-hidden="true">
-          <span>
+          {settings.highlightStyle === "normal" ? <span>Highlighted: not yet known · Okay is plain text</span> : <><span>
             <i className="swatch new" />
             First time
           </span>
@@ -365,7 +391,7 @@ export function Reader({
             <i className="swatch shaky" />
             Barely
           </span>
-          <span>Okay is plain text</span>
+          <span>Okay is plain text</span></>}
         </div>
         <VoicePlayer body={spoken} onSpeaking={setSpeaking} />
       </div>
@@ -379,18 +405,7 @@ export function Reader({
           fontSize: `${settings.fontSize}px`,
         }}
       >
-        {bodyView.map((view) =>
-          renderToken(view.token, "body", {
-            words,
-            selected,
-            resumeIndex,
-            setSelected: selectWord,
-            setHover,
-            speaking: speakingTokens,
-            surface: view.surface,
-            glossKey: view.glossKey,
-          }),
-        )}
+        {bodyContent}
       </article>
       {footer ? <div className="reader-footer">{footer(() => Date.now() - openedAt.current)}</div> : null}
 

@@ -26,7 +26,7 @@ Spaced repetition (SM-2 as Anki runs it). Words you mark Don’t know or Barely 
 
 ## Storage
 
-IndexedDB on this device. Export JSON v2 (imports v1). No accounts.
+IndexedDB on this device; verified accounts can also sync text and progress. Text-only `.txt`/Duki JSON import and JSON v2 export (v1 imports still supported). New uploads are checked against a 1 MB account-payload budget; existing data is retained. The external API still needs authoritative server enforcement before publication. See [Import, export and storage](docs/IMPORT-EXPORT.md) for the exact flow, limits and backend requirements.
 
 ## Run
 

@@ -3,8 +3,10 @@ import { dukiApiBase } from "./gutenberg";
 import { normalizeText } from "./text";
 import { themeChoiceRank } from "./theme";
 import { normalizeWord } from "./word";
+import { emailVerifiedFromIdToken } from "./auth";
+import { ACCOUNT_STORAGE_BYTES, assertNewStories, assertStorageLimit, assertTextOnlyPayload } from "./storage-policy";
 
-export const SYNC_MAX_BYTES = 8 * 1024 * 1024;
+export const SYNC_MAX_BYTES = ACCOUNT_STORAGE_BYTES;
 
 export type SyncSnapshot = {
   v: 1;
@@ -107,10 +109,19 @@ export function mergeSettings(
 ): ReaderSettings | null {
   const base = preferred || other;
   if (!base || !preferred || !other) return base;
-  if (themeChoiceRank(other) <= themeChoiceRank(preferred)) return base;
-  const merged: ReaderSettings = { ...base, theme: other.theme };
-  if (other.themeSetAt) merged.themeSetAt = other.themeSetAt;
-  else delete merged.themeSetAt;
+  const merged: ReaderSettings = { ...base };
+  if ((other.readerSetAt ?? 0) > (preferred.readerSetAt ?? 0)) {
+    merged.fontFamily = other.fontFamily;
+    merged.fontSize = other.fontSize;
+    merged.highlightStyle = other.highlightStyle ?? "color-coded";
+    merged.textWidth = other.textWidth ?? "medium";
+    merged.readerSetAt = other.readerSetAt;
+  }
+  if (themeChoiceRank(other) > themeChoiceRank(preferred)) {
+    merged.theme = other.theme;
+    if (other.themeSetAt) merged.themeSetAt = other.themeSetAt;
+    else delete merged.themeSetAt;
+  }
   return merged;
 }
 
@@ -196,11 +207,15 @@ export async function pushSnapshot(
   idToken: string,
   snapshot: SyncSnapshot,
   fetchImpl: typeof fetch = fetch,
+  existingTexts: LibraryText[] = [],
 ): Promise<void> {
   const base = dukiApiBase();
   if (!base) return;
+  if (!emailVerifiedFromIdToken(idToken)) throw new Error("Verify your email to sync. Your stories remain on this device.");
+  assertTextOnlyPayload(snapshot, true);
+  assertNewStories(snapshot.texts, existingTexts);
+  assertStorageLimit(snapshot, SYNC_MAX_BYTES);
   const body = JSON.stringify(snapshot);
-  if (body.length > SYNC_MAX_BYTES) throw new Error("Library is over the 8 MB account limit.");
   const res = await fetchImpl(`${base}/me`, {
     method: "PUT",
     headers: {
@@ -209,7 +224,8 @@ export async function pushSnapshot(
     },
     body,
   });
-  if (res.status === 413) throw new Error("Library is over the 8 MB account limit.");
+  if (res.status === 413) throw new Error("Account storage limit reached (1 MB total; 0.512 MB per new story). Existing stories are safe. Export a backup; new uploads are paused.");
+  if (res.status === 415) throw new Error("The account accepts plain text only; remove embedded binary/base64 from new uploads.");
   if (res.status === 401 || res.status === 403) throw new Error("Sign in expired.");
   if (!res.ok && res.status !== 204) throw new Error("Could not save account library.");
 }

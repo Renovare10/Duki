@@ -41,6 +41,7 @@ import {
   clearAuth,
   createPkce,
   ensureFreshAuth,
+  emailVerifiedFromIdToken,
   exchangeAuthCode,
   loadStoredAuth,
   logoutUrl,
@@ -76,7 +77,8 @@ import {
   putWord,
 } from "./lib/db";
 import { makeWordEvent } from "./lib/history";
-import { mergeSnapshots, packSnapshot, pullSnapshot, pushSnapshot } from "./lib/sync";
+import { mergeSnapshots, packSnapshot, pullSnapshot, pushSnapshot, snapshotBytes } from "./lib/sync";
+import { ACCOUNT_STORAGE_BYTES, LOCAL_STORAGE_BYTES, assertNewStories, assertPlainText, assertStorageLimit, readTextImport, storageLabel } from "./lib/storage-policy";
 import { dukiApiBase } from "./lib/gutenberg";
 import { hasWord, loadGlossary, MAX_WORD_LEN } from "./lib/glossary";
 import { loadClassic, type ClassicBody } from "./lib/classics";
@@ -85,6 +87,7 @@ import { profilesFrom, type WordSetFile } from "./lib/word-sets";
 import { MENU_ACTION_LABELS, MENU_GROUPS, type MenuActionId } from "./lib/menu";
 import { remainingUniques, scoreCounts, scoreTokens } from "./lib/score";
 import { segment } from "./lib/segment";
+import { createScoreCache } from "./lib/score-cache";
 import { applyReadingTap, applyReviewGrade } from "./lib/word";
 import type {
   BackupFile,
@@ -176,6 +179,7 @@ export default function App() {
   const [title, setTitle] = useState("");
   const [pasteError, setPasteError] = useState<string | null>(null);
   const [importError, setImportError] = useState<string | null>(null);
+  const [syncError, setSyncError] = useState<string | null>(null);
   const [wikiErrors, setWikiErrors] = useState<Record<string, string>>({});
   const [wikiLoading, setWikiLoading] = useState<string | null>(null);
   const [classicPair, setClassicPair] = useState<ClassicBody | null>(null);
@@ -450,6 +454,7 @@ export default function App() {
     }
     authRef.current = null;
     setAuth(null);
+    setSyncError(null);
   }
 
   function localSnapshot() {
@@ -473,6 +478,11 @@ export default function App() {
         authRef.current = tokens;
         setAuth(tokens);
       }
+      if (!emailVerifiedFromIdToken(tokens.idToken)) {
+        setSyncError("Verify your email to sync. Your stories stay on this device (1 MB limit for new imports).");
+        setAccountSettled(true);
+        return;
+      }
       let next = localSnapshot();
       const remote = await pullSnapshot(tokens.idToken);
       if (remote) {
@@ -495,10 +505,12 @@ export default function App() {
         });
       }
       setAccountSettled(true);
-      await pushSnapshot(tokens.idToken, next);
+      await pushSnapshot(tokens.idToken, next, fetch, remote?.texts ?? []);
+      setSyncError(null);
     } catch (err) {
       // Refused refresh: cleanly signed out (no half signed-in state). Offline: stay as is.
       if (err instanceof AuthExpiredError) signOutLocal(false);
+      setSyncError(err instanceof Error ? `${err.message} Changes are still on this device.` : "Could not sync. Changes are still on this device.");
       setAccountSettled(true);
     } finally {
       syncingRef.current = false;
@@ -587,20 +599,20 @@ export default function App() {
     return map;
   }, [words]);
 
+  const scoreCache = useRef<ReturnType<typeof createScoreCache> | null>(null);
+  if (!scoreCache.current) scoreCache.current = createScoreCache();
   const scores = useMemo(() => {
     const map = new Map<string, TextScore>();
     const profiles = profilesRef.current;
     for (const text of texts) {
-      if (text.body.trim()) {
-        map.set(text.id, scoreTokens(segment(text.body, hasWord, MAX_WORD_LEN), statuses));
-      } else {
-        const profile = profiles?.get(text.id);
-        map.set(
-          text.id,
-          profile ? scoreCounts(profile.words, profile.counts, statuses) : scoreTokens([], statuses),
-        );
-      }
+      const profile = profiles?.get(text.id);
+      map.set(text.id, scoreCache.current!.get(text, statuses, profile, () =>
+        text.body.trim()
+          ? scoreTokens(segment(text.body, hasWord, MAX_WORD_LEN), statuses)
+          : profile ? scoreCounts(profile.words, profile.counts, statuses) : scoreTokens([], statuses),
+      ));
     }
+    scoreCache.current!.retain(new Set(texts.map((text) => text.id)));
     return map;
   }, [texts, statuses, profileTick]);
 
@@ -990,12 +1002,19 @@ export default function App() {
       return;
     }
     const stored = settingsRef.current;
-    void onSettings({ ...next, theme: stored.theme, themeSetAt: stored.themeSetAt });
+    void onSettings({ ...next, theme: stored.theme, themeSetAt: stored.themeSetAt, readerSetAt: Date.now() });
   }
 
   async function onAdd(event: FormEvent) {
     event.preventDefault();
     const body = paste.trim();
+    try {
+      assertPlainText(body);
+      assertPlainText(title);
+    } catch (err) {
+      setPasteError((err as Error).message);
+      return;
+    }
     if (!hasHan(body)) {
       setPasteError("Paste some Chinese first.");
       return;
@@ -1011,7 +1030,16 @@ export default function App() {
       readAt: null,
       bookmark: null,
     };
-    await putText(item);
+    try {
+      assertNewStories([item]);
+      assertStorageLimit(packSnapshot({
+        ...localSnapshot(), texts: [...textsRef.current, item], settings: settingsRef.current,
+      }), storageCap);
+      await putText(item);
+    } catch (err) {
+      setPasteError(err instanceof Error ? err.message : "Could not save this text. Your library has not changed.");
+      return;
+    }
     textsRef.current = [...textsRef.current, item];
     setTexts(textsRef.current);
     setPaste("");
@@ -1088,9 +1116,17 @@ export default function App() {
     if (!file) return;
     setImportError(null);
     try {
-      const raw = JSON.parse(await file.text()) as unknown;
+      const imported = await readTextImport(file);
+      if (imported.kind === "txt") {
+        setPaste(imported.content);
+        setTitle(file.name.replace(/\.txt$/i, ""));
+        setPasteError(null);
+        navigate({ name: "add" });
+        return;
+      }
+      const raw = JSON.parse(imported.content) as unknown;
       const backup = parseBackup(raw);
-      const next = await importBackup(backup, CATALOG);
+      const next = await importBackup(backup, CATALOG, storageCap);
       setTexts(next.texts.sort((a, b) => a.createdAt - b.createdAt || a.title.localeCompare(b.title)));
       setWords(new Map(next.words.map((w) => [w.hanzi, w])));
       setSessions(next.sessions);
@@ -1221,7 +1257,7 @@ export default function App() {
             {MENU_ACTION_LABELS.import}
             <input
               type="file"
-              accept="application/json,.json"
+              accept="text/plain,.txt,application/json,.json"
               onChange={(e) => {
                 const file = e.target.files?.[0];
                 e.target.value = "";
@@ -1232,6 +1268,12 @@ export default function App() {
         );
     }
   }
+
+  const verifiedAccount = Boolean(auth && emailVerifiedFromIdToken(auth.idToken));
+  const storageCap = verifiedAccount ? ACCOUNT_STORAGE_BYTES : LOCAL_STORAGE_BYTES;
+  const usedBytes = useMemo(() => snapshotBytes(packSnapshot({
+    words: [...words.values()], texts, sessions, settings,
+  })), [words, texts, sessions, settings]);
 
   return (
     <div className="app">
@@ -1295,7 +1337,7 @@ export default function App() {
         <input
           ref={importInputRef}
           type="file"
-          accept="application/json,.json"
+          accept="text/plain,.txt,application/json,.json"
           hidden
           onChange={(e) => {
             const file = e.target.files?.[0];
@@ -1326,6 +1368,15 @@ export default function App() {
         </div>
       ) : null}
 
+      {ready && view.name !== "reader" ? (
+        <aside className="storage-usage" aria-label="Library storage">
+          <p>{verifiedAccount ? "Account payload" : "Local library"}: {storageLabel(usedBytes, storageCap)}.
+            {verifiedAccount ? " Text only · 0.512 MB per new story." : " Local-only until email is verified · 0.512 MB per new story."}</p>
+          {usedBytes >= storageCap * 0.8 ? <p role="status">{usedBytes >= storageCap ? "Storage limit reached. Existing stories are safe; new uploads are paused." : "You’re nearing the storage limit. Export a backup before adding more stories."}</p> : null}
+          {verifiedAccount ? <p>Usage estimates the next sync payload. Server enforcement still requires the backend update.</p> : null}
+        </aside>
+      ) : null}
+      {syncError ? <p className="storage-usage" role="status">{syncError}</p> : null}
       {importError ? (
         <p className="paste-error" style={{ textAlign: "center", margin: "0.6rem 0 0" }}>
           {importError}

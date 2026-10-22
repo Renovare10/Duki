@@ -24,8 +24,9 @@ export function AddText({
       <section className="hero">
         <h1>Add your own</h1>
         <p>
-          Paste Chinese you have the right to read. It lives on this device, on
-          the Your uploads shelf.
+          Paste Chinese you have the right to read, or use Import for a UTF-8 .txt file.
+          Text only; no images, PDFs, documents, audio or embedded binary/base64.
+          Stories live on this device on Your uploads; verified accounts also sync pasted text.
         </p>
       </section>
       <form className="paste-card" onSubmit={onAdd}>

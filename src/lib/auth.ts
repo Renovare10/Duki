@@ -113,6 +113,15 @@ export function parseAuthCallback(search: string, hash = ""): { code: string } |
   return { code };
 }
 
+/** UI hint only. The API must verify the signed token and this claim itself. */
+export function emailVerifiedFromIdToken(idToken: string): boolean {
+  try {
+    return JSON.parse(base64UrlToJson(idToken.split(".")[1] ?? "")).email_verified === true;
+  } catch {
+    return false;
+  }
+}
+
 export function emailFromIdToken(idToken: string): string | null {
   const parts = idToken.split(".");
   if (parts.length < 2) return null;
