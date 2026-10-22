@@ -1,15 +1,30 @@
 import type { LibraryText } from "../types";
 
 // Decimal MB, matching the user-facing label. No limit on story count.
+// The 1 MB allowance counts ONLY uploaded/pasted story records (`kind: "paste"`), not
+// saved words, progress, library listings, sessions or settings.
 export const ACCOUNT_STORAGE_BYTES = 1_000_000;
 export const LOCAL_STORAGE_BYTES = 1_000_000;
 export const STORY_STORAGE_BYTES = 512_000;
+// Whole-sync safety net (compact UTF-8 JSON of the full snapshot). Only saves that add or
+// change an uploaded story are refused above it; ordinary users never get close
+// (~0.12 MB listings + ~0.03 MB sessions + ~240 B per word + ≤1 MB uploads).
+export const SYNC_SAFETY_BYTES = 6_000_000;
+// The server's existing raw-body ceiling (8 MiB). Nothing larger can be saved at all.
+export const SYNC_HARD_MAX_BYTES = 8 * 1024 * 1024;
 // Backups include cached public-domain/catalog bodies and pretty-printing.
 export const IMPORT_FILE_BYTES = 25_000_000;
 export const TEXT_ONLY_MESSAGE = "Text only: use a UTF-8 .txt story, pasted text, or a Duki text-only .json backup. Images, PDFs, documents, audio and embedded binary/base64 are not accepted.";
 
 export function jsonBytes(value: unknown): number {
   return new TextEncoder().encode(JSON.stringify(value)).byteLength;
+}
+
+/** Bytes of uploaded stories: each pasted story's compact UTF-8 JSON record, summed. */
+export function uploadedStoryBytes(texts: readonly LibraryText[]): number {
+  let total = 0;
+  for (const text of texts) if (text.kind === "paste") total += jsonBytes(text);
+  return total;
 }
 
 export function storageLabel(bytes: number, cap: number): string {
@@ -110,19 +125,26 @@ export function assertNewStories(texts: LibraryText[], existing: LibraryText[] =
 }
 
 /**
- * Over the cap, only NEW uploads are blocked. Data the user already has keeps working:
+ * Over a limit, only NEW uploads are blocked. Data the user already has keeps working:
  * with `addsStories: false` (no new/changed pasted story; progress, words and settings
  * only) an over-cap legacy library still saves, restores and syncs.
+ * - `cap`: uploaded-story allowance (1 MB), counted over pasted story records only;
+ * - SYNC_SAFETY_BYTES: whole-snapshot safety net for saves that add/change a story.
  */
 export function assertStorageLimit(
-  payload: unknown,
+  payload: { texts: readonly LibraryText[] },
   cap: number,
   opts: { addsStories?: boolean } = {},
 ): void {
-  const bytes = jsonBytes(payload);
-  if (bytes <= cap) return;
   if (opts.addsStories === false) return;
-  throw new Error(`Storage limit reached (${storageLabel(bytes, cap)}). Existing stories are safe. New uploads are paused until storage is under the limit. Export a backup to keep a copy.`);
+  const used = uploadedStoryBytes(payload.texts);
+  if (used > cap) {
+    throw new Error(`Storage limit reached (uploaded stories: ${storageLabel(used, cap)}). Existing stories are safe. New uploads are paused until storage is under the limit. Export a backup to keep a copy.`);
+  }
+  const total = jsonBytes(payload);
+  if (total > SYNC_SAFETY_BYTES) {
+    throw new Error(`Your synced library is over the ${SYNC_SAFETY_BYTES / 1_000_000} MB safety limit, so new uploads are paused. Existing stories, words and progress are safe and still sync. Export a backup to keep a copy.`);
+  }
 }
 
 export function importFileKind(file: Pick<File, "name" | "type" | "size">): "txt" | "json" {

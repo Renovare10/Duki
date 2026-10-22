@@ -16,8 +16,8 @@
   "animation": {
     "frames": 88,
     "medianMs": 16.69999999999891,
-    "p95Ms": 16.800000000000182,
-    "maxMs": 33.30000000000109,
+    "p95Ms": 16.700000000000728,
+    "maxMs": 16.800000000000182,
     "articleDomMutations": 0,
     "transform": "matrix(1, 0, 0, 1, -185.398, 200)",
     "willChange": "transform"

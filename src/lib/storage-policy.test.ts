@@ -2,11 +2,12 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import type { LibraryText } from "../types";
 import { emailVerifiedFromIdToken } from "./auth";
 import { parseBackup } from "./db";
-import { packSnapshot, pushSnapshot } from "./sync";
+import { packSnapshot, pullSnapshotWithTag, pushSnapshot, retryOnConflict, SyncConflictError } from "./sync";
 import {
   ACCOUNT_STORAGE_BYTES, LOCAL_STORAGE_BYTES, STORY_STORAGE_BYTES,
   assertNewStories, assertPlainText, assertStorageLimit, assertTextOnlyPayload,
-  changedStories, importFileKind, jsonBytes, readTextImport, storageLabel,
+  SYNC_HARD_MAX_BYTES, SYNC_SAFETY_BYTES, changedStories, importFileKind, jsonBytes, readTextImport,
+  storageLabel, uploadedStoryBytes,
 } from "./storage-policy";
 
 const story = (body = "你好，世界。", id = "mine"): LibraryText => ({
@@ -43,13 +44,14 @@ describe("storage policy", () => {
     expect(changedStories([...texts, story("新", "x")], texts).map((t) => t.id)).toEqual(["x"]);
     expect(changedStories([{ ...texts[0], bookmark: { tokenIndex: 1, scrollY: 1 } }], texts)).toEqual([]);
   });
-  it("accepts the exact boundary and rejects even one byte over", () => {
-    const data = { body: "中".repeat(100) };
-    const bytes = jsonBytes(data);
-    expect(() => assertStorageLimit(data, bytes)).not.toThrow();
-    expect(() => assertStorageLimit(data, bytes - 1)).toThrow(/Existing stories are safe/);
+  it("accepts the exact uploaded-story boundary and rejects even one byte over", () => {
+    const one = story("中".repeat(100));
+    const bytes = jsonBytes(one);
+    expect(uploadedStoryBytes([one])).toBe(bytes);
+    expect(() => assertStorageLimit({ texts: [one] }, bytes)).not.toThrow();
+    expect(() => assertStorageLimit({ texts: [one] }, bytes - 1)).toThrow(/Existing stories are safe/);
   });
-  it("counts all stories together, including multibyte Chinese and metadata", () => {
+  it("counts all uploaded stories together, including multibyte Chinese and metadata", () => {
     const texts = Array.from({ length: 3 }, (_, i) => story("中".repeat(160_000), String(i)));
     expect(() => assertNewStories(texts)).not.toThrow();
     const data = snapshot(texts);
@@ -57,6 +59,24 @@ describe("storage policy", () => {
     expect(() => assertStorageLimit(data, ACCOUNT_STORAGE_BYTES)).toThrow(/Storage limit/);
     expect(() => assertStorageLimit(snapshot(texts.slice(0, 2)), LOCAL_STORAGE_BYTES)).not.toThrow();
     expect(() => assertStorageLimit(snapshot(texts.slice(0, 3)), LOCAL_STORAGE_BYTES)).toThrow();
+  });
+  it("does not count words, progress, sessions or library listings toward 1 MB", () => {
+    const word = { hanzi: "图书馆", status: "known" as const, updatedAt: 1792632772322, dontKnowCount: 0, barelyCount: 0, okayCount: 0, ease: 2.5, intervalDays: 12.5, repetitions: 4, dueAt: 1792632772322, phase: "review" as const, step: 0, lapses: 0, introducedAt: 1792632772322 };
+    const words = Array.from({ length: 8_000 }, (_, i) => ({ ...word, hanzi: `词${i}` }));
+    const sessions = Array.from({ length: 200 }, (_, i) => ({ id: `s${i}`, textId: "x", finishedAt: i, uniqueUnknown: 1, uniqueShaky: 1, durationMs: 1 }));
+    const listing = Array.from({ length: 900 }, (_, i) => ({ ...story("", `cat-${i}`), kind: "sample" as const, category: "graded" as const, blurb: "A catalog listing ".repeat(5) }));
+    const big = packSnapshot({ words, sessions, texts: [...listing, story("中".repeat(1000), "mine")], settings: { fontFamily: "serif", fontSize: 28, theme: "paper" } });
+    expect(jsonBytes(big)).toBeGreaterThan(ACCOUNT_STORAGE_BYTES);
+    expect(uploadedStoryBytes(big.texts)).toBeLessThan(5_000);
+    expect(() => assertStorageLimit(big, ACCOUNT_STORAGE_BYTES)).not.toThrow();
+  });
+  it("applies the 6 MB whole-sync safety limit only to saves that add a story", () => {
+    expect(SYNC_SAFETY_BYTES).toBe(6_000_000);
+    expect(SYNC_SAFETY_BYTES).toBeLessThan(SYNC_HARD_MAX_BYTES);
+    expect(SYNC_HARD_MAX_BYTES).toBe(8 * 1024 * 1024);
+    const huge = { ...snapshot([story("新")]), words: [{ hanzi: "x".repeat(SYNC_SAFETY_BYTES) }] } as unknown as ReturnType<typeof snapshot>;
+    expect(() => assertStorageLimit(huge, ACCOUNT_STORAGE_BYTES)).toThrow(/6 MB safety limit/);
+    expect(() => assertStorageLimit(huge, ACCOUNT_STORAGE_BYTES, { addsStories: false })).not.toThrow();
   });
   it("limits each new story but preserves legacy oversized rows and progress", () => {
     const old = story("中".repeat(180_000));
@@ -132,6 +152,36 @@ describe("cloud preflight (not server enforcement)", () => {
     expect(fetcher).toHaveBeenCalledTimes(1);
     await expect(pushSnapshot(token(), snapshot([...progress, story("新故事", "new")]), fetcher, legacy)).rejects.toThrow(/Storage limit/);
     expect(fetcher).toHaveBeenCalledTimes(1);
+  });
+  it("sends If-Match from the GET ETag and maps 409 to a retryable conflict", async () => {
+    vi.stubEnv("VITE_DUKI_API", "https://test.invalid");
+    const fetcher = vi.fn().mockResolvedValueOnce(new Response(JSON.stringify(snapshot()), { status: 200, headers: { etag: '"abc"' } }));
+    const pulled = await pullSnapshotWithTag(token(), fetcher);
+    expect(pulled.etag).toBe('"abc"');
+    fetcher.mockResolvedValueOnce(new Response(JSON.stringify({ error: "conflict" }), { status: 409 }));
+    await expect(pushSnapshot(token(), snapshot(), fetcher, [], { ifMatch: pulled.etag })).rejects.toBeInstanceOf(SyncConflictError);
+    expect(fetcher.mock.calls[1][1].headers["If-Match"]).toBe('"abc"');
+    fetcher.mockResolvedValueOnce(new Response(null, { status: 204 }));
+    await pushSnapshot(token(), snapshot(), fetcher);
+    expect(fetcher.mock.calls[2][1].headers).not.toHaveProperty("If-Match");
+  });
+  it("re-runs pull/merge/push after a conflict, at most three times", async () => {
+    const ok = vi.fn().mockRejectedValueOnce(new SyncConflictError()).mockResolvedValueOnce(undefined);
+    await retryOnConflict(ok);
+    expect(ok).toHaveBeenCalledTimes(2);
+    const always = vi.fn().mockRejectedValue(new SyncConflictError());
+    await expect(retryOnConflict(always)).rejects.toBeInstanceOf(SyncConflictError);
+    expect(always).toHaveBeenCalledTimes(3);
+    const other = vi.fn().mockRejectedValue(new Error("offline"));
+    await expect(retryOnConflict(other)).rejects.toThrow("offline");
+    expect(other).toHaveBeenCalledTimes(1);
+  });
+  it("shows the server's 413/403 explanations", async () => {
+    vi.stubEnv("VITE_DUKI_API", "https://test.invalid");
+    const fetcher = vi.fn().mockResolvedValueOnce(new Response(JSON.stringify({ error: "quota", message: "Uploaded stories are over 1 MB." }), { status: 413 }));
+    await expect(pushSnapshot(token(), snapshot(), fetcher)).rejects.toThrow("Uploaded stories are over 1 MB.");
+    fetcher.mockResolvedValueOnce(new Response(JSON.stringify({ error: "verify_email" }), { status: 403 }));
+    await expect(pushSnapshot(token(), snapshot(), fetcher)).rejects.toThrow(/Verify your email/);
   });
   it("blocks total/per-story overflow and binary before any network write", async () => {
     vi.stubEnv("VITE_DUKI_API", "https://test.invalid");

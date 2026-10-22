@@ -77,8 +77,8 @@ import {
   putWord,
 } from "./lib/db";
 import { makeWordEvent } from "./lib/history";
-import { mergeSnapshots, packSnapshot, pullSnapshot, pushSnapshot, snapshotBytes } from "./lib/sync";
-import { ACCOUNT_STORAGE_BYTES, LOCAL_STORAGE_BYTES, assertNewStories, assertPlainText, assertStorageLimit, readTextImport, storageLabel } from "./lib/storage-policy";
+import { mergeSnapshots, packSnapshot, pullSnapshotWithTag, pushSnapshot, retryOnConflict } from "./lib/sync";
+import { ACCOUNT_STORAGE_BYTES, LOCAL_STORAGE_BYTES, assertNewStories, assertPlainText, assertStorageLimit, readTextImport, storageLabel, uploadedStoryBytes } from "./lib/storage-policy";
 import { dukiApiBase } from "./lib/gutenberg";
 import { hasWord, loadGlossary, MAX_WORD_LEN } from "./lib/glossary";
 import { loadClassic, type ClassicBody } from "./lib/classics";
@@ -483,29 +483,34 @@ export default function App() {
         setAccountSettled(true);
         return;
       }
-      let next = localSnapshot();
-      const remote = await pullSnapshot(tokens.idToken);
-      if (remote) {
-        next = mergeSnapshots(next, remote);
-        await applySyncState(next);
-        const loaded = await loadAll();
-        const sorted = loaded.texts.sort(
-          (a, b) => a.createdAt - b.createdAt || a.title.localeCompare(b.title),
-        );
-        textsRef.current = sorted;
-        setTexts(sorted);
-        setWords(new Map(loaded.words.map((w) => [w.hanzi, w])));
-        setSessions(loaded.sessions);
-        setSettings(loaded.settings);
-        next = packSnapshot({
-          words: loaded.words,
-          texts: sorted,
-          sessions: loaded.sessions,
-          settings: loaded.settings,
-        });
-      }
-      setAccountSettled(true);
-      await pushSnapshot(tokens.idToken, next, fetch, remote?.texts ?? []);
+      // The server refuses a save if the account changed since our GET (409). Then
+      // re-fetch, merge exactly as before, and retry; a few attempts are plenty.
+      await retryOnConflict(async () => {
+        let next = localSnapshot();
+        const pulled = await pullSnapshotWithTag(tokens.idToken);
+        const remote = pulled.snapshot;
+        if (remote) {
+          next = mergeSnapshots(next, remote);
+          await applySyncState(next);
+          const loaded = await loadAll();
+          const sorted = loaded.texts.sort(
+            (a, b) => a.createdAt - b.createdAt || a.title.localeCompare(b.title),
+          );
+          textsRef.current = sorted;
+          setTexts(sorted);
+          setWords(new Map(loaded.words.map((w) => [w.hanzi, w])));
+          setSessions(loaded.sessions);
+          setSettings(loaded.settings);
+          next = packSnapshot({
+            words: loaded.words,
+            texts: sorted,
+            sessions: loaded.sessions,
+            settings: loaded.settings,
+          });
+        }
+        setAccountSettled(true);
+        await pushSnapshot(tokens.idToken, next, fetch, remote?.texts ?? [], { ifMatch: pulled.etag });
+      });
       setSyncError(null);
     } catch (err) {
       // Refused refresh: cleanly signed out (no half signed-in state). Offline: stay as is.
@@ -1271,9 +1276,8 @@ export default function App() {
 
   const verifiedAccount = Boolean(auth && emailVerifiedFromIdToken(auth.idToken));
   const storageCap = verifiedAccount ? ACCOUNT_STORAGE_BYTES : LOCAL_STORAGE_BYTES;
-  const usedBytes = useMemo(() => snapshotBytes(packSnapshot({
-    words: [...words.values()], texts, sessions, settings,
-  })), [words, texts, sessions, settings]);
+  // The 1 MB allowance counts uploaded/pasted stories only (not words, progress or listings).
+  const usedBytes = useMemo(() => uploadedStoryBytes(texts), [texts]);
 
   return (
     <div className="app">
@@ -1370,10 +1374,10 @@ export default function App() {
 
       {ready && view.name !== "reader" ? (
         <aside className="storage-usage" aria-label="Library storage">
-          <p>{verifiedAccount ? "Account payload" : "Local library"}: {storageLabel(usedBytes, storageCap)}.
+          <p>{verifiedAccount ? "Uploaded stories" : "Uploaded stories (this device)"}: {storageLabel(usedBytes, storageCap)}.
             {verifiedAccount ? " Text only · 0.512 MB per new story." : " Local-only until email is verified · 0.512 MB per new story."}</p>
           {usedBytes >= storageCap * 0.8 ? <p role="status">{usedBytes >= storageCap ? "Storage limit reached. Existing stories are safe; new uploads are paused." : "You’re nearing the storage limit. Export a backup before adding more stories."}</p> : null}
-          {verifiedAccount ? <p>Usage estimates the next sync payload. Server enforcement still requires the backend update.</p> : null}
+          <p>Words, progress and the built-in library don’t count toward this.</p>
         </aside>
       ) : null}
       {syncError ? <p className="storage-usage" role="status">{syncError}</p> : null}

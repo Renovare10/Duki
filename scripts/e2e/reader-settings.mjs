@@ -36,8 +36,19 @@ async function openReader() {
 try {
   await page.goto(base);
   await page.locator(".title-card").first().waitFor();
-  assert.match(await page.getByLabel("Library storage").innerText(), /MB of 1 MB/);
+  assert.match(await page.getByLabel("Library storage").innerText(), /Uploaded stories.*: 0\.0 MB of 1 MB/);
+  // ~0.3 MB uploaded story: usage counts uploaded stories only, not listings/words.
+  await page.evaluate(async () => {
+    const db = await import("/src/lib/db.ts");
+    await db.putText({ id: "usage-fixture", title: "三十万字节", blurb: "", body: "中".repeat(99_900), kind: "paste", category: "paste", createdAt: 2, readAt: null, bookmark: null });
+  });
+  await page.reload();
+  await page.locator(".title-card").first().waitFor();
+  assert.match(await page.getByLabel("Library storage").innerText(), /Uploaded stories.*: 0\.3 MB of 1 MB/);
   await page.screenshot({ path: `${shots}/reader-settings-storage.png` });
+  await page.evaluate(async () => (await import("/src/lib/db.ts")).deleteText("usage-fixture"));
+  await page.reload();
+  await page.locator(".title-card").first().waitFor();
   await page.evaluate(async () => {
     const db = await import("/src/lib/db.ts");
     await db.putText({ id: "reader-settings-fixture", title: "书店的一天", blurb: "Local test fixture",

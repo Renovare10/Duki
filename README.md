@@ -26,7 +26,7 @@ Spaced repetition (SM-2 as Anki runs it). Words you mark Don’t know or Barely 
 
 ## Storage
 
-IndexedDB on this device; verified accounts can also sync text and progress. Text-only `.txt`/Duki JSON import and JSON v2 export (v1 imports still supported). New uploads are checked against a 1 MB account-payload budget; existing data is retained. The external API still needs authoritative server enforcement before publication. See [Import, export and storage](docs/IMPORT-EXPORT.md) for the exact flow, limits and backend requirements.
+IndexedDB on this device; verified accounts can also sync text and progress. Text-only `.txt`/Duki JSON import and JSON v2 export (v1 imports still supported). Uploaded stories are capped at 1 MB per user (0.512 MB per story; words and progress don't count) and existing data is retained. Server enforcement lives in portfolio-infra branch `duki-storage-cap` (not yet applied). See [Import, export and storage](docs/IMPORT-EXPORT.md) for the exact flow, limits and backend requirements.
 
 ## Run
 
