@@ -36,7 +36,7 @@ async function openReader() {
 try {
   await page.goto(base);
   await page.locator(".title-card").first().waitFor();
-  assert.match(await page.getByLabel("Library storage").innerText(), /Uploaded stories.*: 0\.0 MB of 1 MB/);
+  assert.equal(await page.getByLabel("Library storage").count(), 0);
   // ~0.3 MB uploaded story: usage counts uploaded stories only, not listings/words.
   await page.evaluate(async () => {
     const db = await import("/src/lib/db.ts");
@@ -44,7 +44,7 @@ try {
   });
   await page.reload();
   await page.locator(".title-card").first().waitFor();
-  assert.match(await page.getByLabel("Library storage").innerText(), /Uploaded stories.*: 0\.3 MB of 1 MB/);
+  assert.equal(await page.getByLabel("Library storage").count(), 0); // hidden below 80% of cap
   await page.screenshot({ path: `${shots}/reader-settings-storage.png` });
   await page.evaluate(async () => (await import("/src/lib/db.ts")).deleteText("usage-fixture"));
   await page.reload();

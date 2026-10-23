@@ -78,7 +78,7 @@ import {
 } from "./lib/db";
 import { makeWordEvent } from "./lib/history";
 import { mergeSnapshots, packSnapshot, pullSnapshotWithTag, pushSnapshot, retryOnConflict } from "./lib/sync";
-import { ACCOUNT_STORAGE_BYTES, LOCAL_STORAGE_BYTES, assertNewStories, assertPlainText, assertStorageLimit, readTextImport, storageLabel, uploadedStoryBytes } from "./lib/storage-policy";
+import { ACCOUNT_STORAGE_BYTES, LOCAL_STORAGE_BYTES, assertNewStories, assertPlainText, assertStorageLimit, readTextImport, uploadedStoryBytes } from "./lib/storage-policy";
 import { dukiApiBase } from "./lib/gutenberg";
 import { hasWord, loadGlossary, MAX_WORD_LEN } from "./lib/glossary";
 import { loadClassic, type ClassicBody } from "./lib/classics";
@@ -1372,12 +1372,9 @@ export default function App() {
         </div>
       ) : null}
 
-      {ready && view.name !== "reader" ? (
+      {ready && view.name !== "reader" && usedBytes >= storageCap * 0.8 ? (
         <aside className="storage-usage" aria-label="Library storage">
-          <p>{verifiedAccount ? "Uploaded stories" : "Uploaded stories (this device)"}: {storageLabel(usedBytes, storageCap)}.
-            {verifiedAccount ? " Text only · 0.512 MB per new story." : " Local-only until email is verified · 0.512 MB per new story."}</p>
-          {usedBytes >= storageCap * 0.8 ? <p role="status">{usedBytes >= storageCap ? "Storage limit reached. Existing stories are safe; new uploads are paused." : "You’re nearing the storage limit. Export a backup before adding more stories."}</p> : null}
-          <p>Words, progress and the built-in library don’t count toward this.</p>
+          <p role="status">{usedBytes >= storageCap ? "Storage limit reached. Existing stories are safe; new uploads are paused." : "You’re nearing the storage limit. Export a backup before adding more stories."}</p>
         </aside>
       ) : null}
       {syncError ? <p className="storage-usage" role="status">{syncError}</p> : null}
