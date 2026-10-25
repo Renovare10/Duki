@@ -1,0 +1,5 @@
+# Cloudflare Pages rules for duki.chadmurchison.com.
+# SPA fallback: there is no 404.html, so unknown paths get index.html with 200 (CloudFront: 403/404 -> /index.html, 200).
+# Serve /index.html in place instead of Pages' 308 to / (it is a registered Cognito callback URL).
+# Never redirect to another host: guest data lives in IndexedDB on https://duki.chadmurchison.com.
+/index.html  /  200

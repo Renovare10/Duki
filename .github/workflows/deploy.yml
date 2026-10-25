@@ -1,4 +1,4 @@
-name: Deploy Duki
+name: Deploy Duki (Cloudflare Pages + S3 rollback copy)
 
 on:
   push:
@@ -16,6 +16,7 @@ jobs:
       cancel-in-progress: true
 
     env:
+      PAGES_PROJECT: chadmurchison-duki
       S3_BUCKET: chadm-duki
       CF_DISTRIBUTION_ID: E2C30FHOL2BUQ5
       VITE_DUKI_API: https://j251m3eof8.execute-api.us-east-2.amazonaws.com
@@ -36,6 +37,22 @@ jobs:
           npm ci
           npm test
           npm run build
+
+      # Live site: Cloudflare Pages (same hostname, so guest IndexedDB data and sign-in are unchanged).
+      # dist-pages/ = dist/ + deploy/pages/_headers (CSP + security headers + cache rules), _redirects,
+      # and assets/404.html. The S3 copy below still uses plain dist/.
+      - name: Assemble Pages output
+        run: ./scripts/build-pages.sh dist-pages
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist-pages --project-name=${{ env.PAGES_PROJECT }} --branch=main --commit-dirty=true
+
+      # TODO(after Nov 8 2026): remove the AWS steps below (S3 sync + CloudFront invalidation) once the
+      # 2-week Cloudflare rollback window is over; they only keep the CloudFront copy current for rollback.
 
       - name: Configure AWS Credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
@@ -62,4 +79,4 @@ jobs:
             --paths "/*"
 
       - name: Deployed
-        run: echo "Deployed https://duki.chadmurchison.com/"
+        run: echo "Deployed https://duki.chadmurchison.com/ (Cloudflare Pages) + S3/CloudFront rollback copy"

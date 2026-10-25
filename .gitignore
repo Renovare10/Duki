@@ -9,3 +9,4 @@ test-results/
 .env.*
 *.tsbuildinfo
 scripts/cache/
+dist-pages

@@ -1,0 +1,39 @@
+# Cloudflare Pages headers for duki.chadmurchison.com: the same as CloudFront response-headers
+# policy "duki-security-headers" + the Cache-Control set by the S3 deploy.
+# CSP copied from the live CloudFront response on Oct 25 2026; keep in sync with portfolio-infra duki.tf.
+
+/*
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self' https://accounts.chadmurchison.com; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://www.gutenberg.org https://gutenberg.org; connect-src 'self' https://accounts.chadmurchison.com https://cognito-idp.us-east-2.amazonaws.com https://j251m3eof8.execute-api.us-east-2.amazonaws.com https://gutendex.com https://zh.wikipedia.org https://zh.wikisource.org; upgrade-insecure-requests
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-XSS-Protection: 1; mode=block
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+# Entry point: short. Unknown paths (SPA fallback to index.html) get the Pages default
+# (max-age=0, must-revalidate), so a deep link never holds an old index.html.
+/
+  Cache-Control: public, max-age=60, must-revalidate
+/index.html
+  Cache-Control: public, max-age=60, must-revalidate
+
+# Hashed build output
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Library data and other public/ files (S3 used max-age=3600 for everything outside assets/)
+/works/*
+  Cache-Control: public, max-age=3600
+/classics/*
+  Cache-Control: public, max-age=3600
+/meta/*
+  Cache-Control: public, max-age=3600
+/glossary.json
+  Cache-Control: public, max-age=3600
+/favicon.svg
+  Cache-Control: public, max-age=3600
+
+# Keep pages.dev / preview URLs out of search results (the custom domain is unaffected).
+https://:project.pages.dev/*
+  X-Robots-Tag: noindex
