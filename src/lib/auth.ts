@@ -11,6 +11,11 @@ export type AuthTokens = {
   email: string | null;
   /** When this sign-in happened here (ms); kept through refreshes. Older stored tokens lack it. */
   signedInAt?: number;
+  /**
+   * "sso": signed in with a one-time handoff code (Cognito custom auth through the API, docs/SSO.md),
+   * so there is no hosted UI session behind it. Kept through refreshes.
+   */
+  via?: "sso";
 };
 
 export function authRedirectUri(origin: string): string {
@@ -182,6 +187,7 @@ export function loadStoredAuth(): AuthTokens | null {
       refreshToken: typeof parsed.refreshToken === "string" ? parsed.refreshToken : undefined,
       email: typeof parsed.email === "string" ? parsed.email : emailFromIdToken(parsed.idToken),
       ...(typeof parsed.signedInAt === "number" ? { signedInAt: parsed.signedInAt } : {}),
+      ...(parsed.via === "sso" ? { via: "sso" as const } : {}),
     };
   } catch {
     return null;
@@ -329,5 +335,32 @@ export async function ensureFreshAuth(
   if (idTokenIsFresh(tokens.idToken, now)) return tokens;
   if (!tokens.refreshToken) throw new AuthExpiredError();
   const next = await refreshSession(tokens.refreshToken, fetchImpl);
-  return tokens.signedInAt ? { ...next, signedInAt: tokens.signedInAt } : next;
+  return {
+    ...next,
+    ...(tokens.signedInAt ? { signedInAt: tokens.signedInAt } : {}),
+    ...(tokens.via ? { via: tokens.via } : {}),
+  };
+}
+
+/**
+ * When the accounts (hosted UI) session behind these tokens began (s), for chadm_sso_until.
+ * 0 after a handoff sign-in: it has no hosted UI session, so it must not promise a silent sign-in.
+ */
+export function hostedAuthTime(tokens: AuthTokens): number {
+  return tokens.via === "sso" ? 0 : authTimeFromIdToken(tokens.idToken);
+}
+
+/** Tokens from a handoff sign-in (chadm-handoff.js signInWithCode), ready for storeAuth. */
+export function tokensFromHandoff(
+  result: { idToken: string; accessToken: string; refreshToken?: string },
+  now = Date.now(),
+): AuthTokens {
+  return {
+    accessToken: result.accessToken,
+    idToken: result.idToken,
+    ...(result.refreshToken ? { refreshToken: result.refreshToken } : {}),
+    email: emailFromIdToken(result.idToken),
+    signedInAt: now,
+    via: "sso",
+  };
 }

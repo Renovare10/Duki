@@ -56,3 +56,5 @@ chadm-appbar :focus-visible { outline: 2px solid var(--cab-accent); outline-offs
   font: inherit; font-weight: 600; cursor: pointer; }
 .cab-b.primary { background: var(--cab-accent2); border-color: var(--cab-accent2); color: #fff; }
 @media (max-width: 480px) { .cab-pop { position: fixed; top: calc(56px + env(safe-area-inset-top)); right: 8px; left: 8px; width: auto; } }
+/* Tray app opening with a one-time sign-in handoff (chadm-appbar.js #openApp) */
+.cab-app[aria-busy="true"] { opacity: .6; cursor: progress; }

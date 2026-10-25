@@ -53,7 +53,7 @@ import {
   type AuthTokens,
   authorizeUrl,
   shouldTrySilentSignIn,
-  authTimeFromIdToken,
+  hostedAuthTime,
   sessionStart,
   SILENT_SIGNIN_KEY,
   signupUrl,
@@ -62,6 +62,8 @@ import {
 } from "./lib/auth";
 import { AppBar } from "./components/AppBar";
 import { markSignedIn, markSignedOut, sharedSession, signedOutSince, ssoAlive } from "./vendor/chadm-session.js";
+import { lastPullAt, markPulled, pullUrl, shouldPull } from "./vendor/chadm-handoff.js";
+import { hadStartupHandoff, libraryHandoffUrl, peekHandoff, signInWithHandoff, takeHandoff } from "./lib/handoff";
 import {
   applySyncState,
   deleteText,
@@ -198,8 +200,10 @@ export default function App() {
   /** A `?code=` sign-in exchange is in flight, so we don't know who this is yet. */
   const [authPending, setAuthPending] = useState(
     () =>
-      parseAuthCallback(window.location.search, window.location.hash) !== null &&
-      Boolean(window.sessionStorage.getItem(PKCE_VERIFIER_KEY)),
+      (parseAuthCallback(window.location.search, window.location.hash) !== null &&
+        Boolean(window.sessionStorage.getItem(PKCE_VERIFIER_KEY))) ||
+      // A #sso= handoff from the library is signing in (docs/SSO.md).
+      Boolean(peekHandoff() && "code" in peekHandoff()! && !loadStoredAuth() && navigator.onLine),
   );
   /** IndexedDB settings have been read (fast path, ahead of the glossary). */
   const [settingsLoaded, setSettingsLoaded] = useState(false);
@@ -385,10 +389,38 @@ export default function App() {
       .finally(() => setAuthPending(false));
   }, []);
 
+  // #sso=<code>&u=<username> from the library's app tray (or answering our pull): sign in with
+  // Cognito custom auth. Already signed in here: the unused code just expires (60 s).
+  useEffect(() => {
+    const h = takeHandoff();
+    if (!h) return;
+    if (!("code" in h)) {
+      markPulled(); // the library had no session to hand over: don't ask again soon
+      return;
+    }
+    if (loadStoredAuth() || !navigator.onLine) {
+      setAuthPending(false);
+      return;
+    }
+    void signInWithHandoff(h)
+      .then((tokens) => {
+        markShared(tokens);
+        setShared(sharedSession());
+        setAccountSettled(false);
+        authRef.current = tokens;
+        setAuth(tokens);
+      })
+      .catch((err) => {
+        console.warn("sign-in handoff", err); // stay signed out; "Continue as" is offered
+      })
+      .finally(() => setAuthPending(false));
+  }, []);
+
   // Shared chadmurchison.com session (docs/SSO.md): refresh the cookies while signed in here, and
   // end this session if someone signed out in another app since it started.
   function markShared(tokens: AuthTokens) {
-    markSignedIn({ email: tokens.email, authTime: authTimeFromIdToken(tokens.idToken) });
+    // hostedAuthTime is 0 for a handoff sign-in: no hosted UI session, so no silent sign-in promise.
+    markSignedIn({ email: tokens.email, authTime: hostedAuthTime(tokens) });
   }
   const [shared, setShared] = useState(() => sharedSession());
   useEffect(() => {
@@ -412,6 +444,7 @@ export default function App() {
   // Signed in on another chadmurchison.com app but not here yet: while Cognito's session is alive,
   // one silent redirect signs in with no password; otherwise the "Continue as" prompt offers one tap.
   useEffect(() => {
+    if (hadStartupHandoff()) return; // a handoff is signing in (or the library just said it can't)
     let lastTriedAt: number | null = Number(window.sessionStorage.getItem(SILENT_SIGNIN_KEY)) || null;
     const s = sharedSession();
     if (
@@ -423,12 +456,45 @@ export default function App() {
         lastTriedAt,
         ssoAlive: ssoAlive(s),
       })
-    )
+    ) {
+      // Too long since the password sign-in for a silent redirect: ask the library (signed in
+      // there?) for a one-time code instead, once per tab per 5 min (docs/SSO.md, "Pull").
+      if (
+        shouldPull({
+          signedIn: Boolean(loadStoredAuth()),
+          hint: s.signedIn,
+          online: navigator.onLine,
+          inProgress: parseAuthCallback(window.location.search, window.location.hash) !== null,
+          lastTriedAt: lastPullAt(),
+        })
+      ) {
+        markPulled();
+        window.location.assign(pullUrl("duki", window.location.hash));
+      }
       return;
+    }
     lastTriedAt = Date.now();
     window.sessionStorage.setItem(SILENT_SIGNIN_KEY, String(lastTriedAt));
     void onSignIn();
   }, []);
+
+  /** App tray: the library opens signed in with a one-time code from Duki's API (docs/SSO.md). */
+  async function openApp(app: { id: string }): Promise<string | null> {
+    if (app.id !== "library" || !authRef.current) return null;
+    try {
+      return await libraryHandoffUrl(authRef.current, "", {
+        onRefreshed: (tokens) => {
+          markShared(tokens);
+          authRef.current = tokens;
+          setAuth(tokens);
+        },
+      });
+    } catch (err) {
+      if (err instanceof AuthExpiredError) signOutLocal(false);
+      console.warn("sign-in handoff", err);
+      return null;
+    }
+  }
 
   async function onSignIn(signup = false) {
     const pkce = await createPkce();
@@ -1337,6 +1403,7 @@ export default function App() {
           onSignIn={() => void onSignIn()}
           onSignUp={() => void onSignIn(true)}
           onSignOut={onSignOut}
+          openApp={openApp}
         />
         <input
           ref={importInputRef}

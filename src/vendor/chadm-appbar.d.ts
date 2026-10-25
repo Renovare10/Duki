@@ -15,6 +15,8 @@ export type ChadmAppBarOptions = {
   onSignIn?: (() => void) | null;
   onSignUp?: (() => void) | null;
   onSignOut?: (() => void) | null;
+  /** URL to open for a tray app (e.g. with a one-time sign-in handoff); null/failure = the plain link. */
+  openApp?: ((app: ChadmApp) => Promise<string | null> | string | null) | null;
 };
 export interface ChadmAppBarElement extends HTMLElement {
   configure(opts: ChadmAppBarOptions): void;

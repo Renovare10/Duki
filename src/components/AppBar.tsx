@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import "../vendor/chadm-appbar.js";
-import type { ChadmAppBarElement, ChadmAppBarItem } from "../vendor/chadm-appbar.js";
+import type { ChadmApp, ChadmAppBarElement, ChadmAppBarItem } from "../vendor/chadm-appbar.js";
 
 declare module "react" {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -22,10 +22,12 @@ type Props = {
   onSignIn: () => void;
   onSignUp: () => void;
   onSignOut: () => void;
+  /** URL to open for a tray app (one-time sign-in handoff); null = the plain link. */
+  openApp?: (app: ChadmApp) => Promise<string | null>;
 };
 
 /** The shared chadmurchison.com app tray + profile corner (same element as the library's). */
-export function AppBar({ email, signedIn, canSignOut, signInLabel, items, onSignIn, onSignUp, onSignOut }: Props) {
+export function AppBar({ email, signedIn, canSignOut, signInLabel, items, onSignIn, onSignUp, onSignOut, openApp }: Props) {
   const ref = useRef<ChadmAppBarElement>(null);
   useEffect(() => {
     try {
@@ -37,6 +39,7 @@ export function AppBar({ email, signedIn, canSignOut, signInLabel, items, onSign
         onSignIn,
         onSignUp,
         onSignOut,
+        openApp: openApp ?? null,
       });
     } catch (err) {
       console.error("app bar", err);

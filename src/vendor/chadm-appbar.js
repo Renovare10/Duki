@@ -3,7 +3,7 @@
 // chadm-appbar.css through --cab-* variables). Usage: see docs/APPBAR.md.
 //
 //   const bar = document.querySelector('chadm-appbar');   // <chadm-appbar app="library">
-//   bar.configure({ user: { email }, canSignOut, plan, items, onSignIn, onSignUp, onSignOut });
+//   bar.configure({ user: { email }, canSignOut, plan, items, onSignIn, onSignUp, onSignOut, openApp });
 //
 // Robust by design: before configure() (or if the page's own code failed), Log in / Sign up /
 // Sign out still work: they fire bubbling "chadm-signin" / "chadm-signup" / "chadm-signout" events
@@ -27,7 +27,7 @@ const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled])';
 let uid = 0;
 
 class ChadmAppBar extends HTMLElement {
-  #o = { apps: APPS, user: null, canSignOut: false, signInLabel: 'Log in', plan: null, items: [], onSignIn: null, onSignUp: null, onSignOut: null };
+  #o = { apps: APPS, user: null, canSignOut: false, signInLabel: 'Log in', plan: null, items: [], onSignIn: null, onSignUp: null, onSignOut: null, openApp: null };
   #open = null;     // { btn, pop }
 
   connectedCallback() {
@@ -41,7 +41,9 @@ class ChadmAppBar extends HTMLElement {
   }
   // Options (any subset): app, apps, user {email, name?} | null, canSignOut (show Sign out while signed
   // out, e.g. stale sign-in state), signInLabel (e.g. "Continue as a@b.c"), plan async () => {text, fraction?, badge?, action?},
-  // items [{label, onSelect | href | (type:'checkbox', checked, onChange)}] or () => items, onSignIn, onSignUp, onSignOut.
+  // items [{label, onSelect | href | (type:'checkbox', checked, onChange)}] or () => items, onSignIn, onSignUp, onSignOut,
+  // openApp async (app) => url | null: the URL to open for a tray app (e.g. with a one-time sign-in
+  // handoff, chadm-handoff.js); null/failure/slow (> 5 s) falls back to the plain link.
   configure(opts) { Object.assign(this.#o, opts); if (this.id_) this.#safeRender(); }
   #safeRender() {
     try { this.#render(); } catch (e) {
@@ -82,7 +84,22 @@ class ChadmAppBar extends HTMLElement {
     pop.innerHTML = `<ul class="cab-grid">${this.#o.apps.map(a => `<li><a class="cab-app" href="${esc(a.url)}"
       ${a.id === app ? 'aria-current="page"' : ''}><span class="cab-ic" style="background:${esc(a.color)}" aria-hidden="true">
       <svg viewBox="0 0 24 24">${a.icon}</svg></span><span class="cab-name">${esc(a.name)}</span></a></li>`).join('')}</ul>`;
+    pop.querySelectorAll('.cab-app').forEach((el, i) => el.addEventListener('click', e => this.#openApp(e, this.#o.apps[i], el)));
     return pop;
+  }
+  // Plain clicks only (new-tab/modified clicks keep the normal link). Never strands the user:
+  // any error, a null URL or no answer within 5 s opens the plain link.
+  #openApp(e, a, el) {
+    const hook = this.#o.openApp, app = this.getAttribute('app') || this.#o.app;
+    if (!hook || !a || a.id === app || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    e.preventDefault();
+    if (el.getAttribute('aria-busy') === 'true') return;
+    el.setAttribute('aria-busy', 'true');
+    let done = false;
+    const go = url => { if (done) return; done = true; el.removeAttribute('aria-busy'); location.assign(url || a.url); };
+    setTimeout(() => go(null), 5000);
+    try { Promise.resolve(hook(a)).then(go, err => { console.warn('chadm-appbar openApp', err); go(null); }); }
+    catch (err) { console.warn('chadm-appbar openApp', err); go(null); }
   }
   #menu() {
     const o = this.#o, pop = this.querySelector('.cab-menu');
