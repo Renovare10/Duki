@@ -228,6 +228,14 @@ async function serverMessage(res: Response): Promise<{ code?: string; message?: 
   }
 }
 
+/** The API refused the ID token (401/403 other than verify_email). Message kept for the UI. */
+export class SignInExpiredError extends Error {
+  constructor() {
+    super("Sign in expired.");
+    this.name = "SignInExpiredError";
+  }
+}
+
 /** GET /me plus the ETag (only readable once the API exposes it via CORS; otherwise null). */
 export async function pullSnapshotWithTag(
   idToken: string,
@@ -238,7 +246,7 @@ export async function pullSnapshotWithTag(
   const res = await fetchImpl(`${base}/me`, {
     headers: { Authorization: `Bearer ${idToken}` },
   });
-  if (res.status === 401 || res.status === 403) throw new Error("Sign in expired.");
+  if (res.status === 401 || res.status === 403) throw new SignInExpiredError();
   if (!res.ok) throw new Error("Could not load account library.");
   const etag = res.headers?.get?.("etag") ?? null;
   return { snapshot: parseSnapshot(await res.json()), etag };
@@ -289,8 +297,8 @@ export async function pushSnapshot(
   if (res.status === 403) {
     const { code } = await serverMessage(res);
     if (code === "verify_email") throw new Error("Verify your email to sync. Your stories remain on this device.");
-    throw new Error("Sign in expired.");
+    throw new SignInExpiredError();
   }
-  if (res.status === 401) throw new Error("Sign in expired.");
+  if (res.status === 401) throw new SignInExpiredError();
   if (!res.ok && res.status !== 204) throw new Error("Could not save account library.");
 }

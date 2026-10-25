@@ -41,6 +41,8 @@ import {
   clearAuth,
   createPkce,
   ensureFreshAuth,
+  forceRefresh,
+  idTokenIsFresh,
   emailVerifiedFromIdToken,
   exchangeAuthCode,
   loadStoredAuth,
@@ -79,7 +81,7 @@ import {
   putWord,
 } from "./lib/db";
 import { makeWordEvent } from "./lib/history";
-import { mergeSnapshots, packSnapshot, pullSnapshotWithTag, pushSnapshot, retryOnConflict } from "./lib/sync";
+import { mergeSnapshots, packSnapshot, pullSnapshotWithTag, pushSnapshot, retryOnConflict, SignInExpiredError } from "./lib/sync";
 import { ACCOUNT_STORAGE_BYTES, LOCAL_STORAGE_BYTES, assertNewStories, assertPlainText, assertStorageLimit, readTextImport, uploadedStoryBytes } from "./lib/storage-policy";
 import { dukiApiBase } from "./lib/gutenberg";
 import { hasWord, loadGlossary, MAX_WORD_LEN } from "./lib/glossary";
@@ -396,6 +398,12 @@ export default function App() {
     if (!h) return;
     if (!("code" in h)) {
       markPulled(); // the library had no session to hand over: don't ask again soon
+      // …and nobody is signed in on either app, so the shared hint is stale: clear it (not
+      // "everywhere": nobody signed out).
+      if (!loadStoredAuth()) {
+        markSignedOut();
+        setShared(sharedSession());
+      }
       return;
     }
     if (loadStoredAuth() || !navigator.onLine) {
@@ -445,6 +453,39 @@ export default function App() {
   // one silent redirect signs in with no password; otherwise the "Continue as" prompt offers one tap.
   useEffect(() => {
     if (hadStartupHandoff()) return; // a handoff is signing in (or the library just said it can't)
+    let cancelled = false;
+    void (async () => {
+      await checkStoredSession();
+      if (!cancelled) silentOrPull();
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  /**
+   * At startup: refresh a stale stored sign-in now (max 5 s), so one that ran out (refresh refused)
+   * is noticed before the silent sign-in / pull decision rather than on the first sync.
+   */
+  async function checkStoredSession() {
+    const stored = loadStoredAuth();
+    if (!stored || !navigator.onLine || idTokenIsFresh(stored.idToken)) return;
+    try {
+      const tokens = await Promise.race([
+        ensureFreshAuth(stored),
+        new Promise<null>((resolve) => window.setTimeout(() => resolve(null), 5000)),
+      ]);
+      if (!tokens || tokens === stored) return;
+      storeAuth(tokens);
+      markShared(tokens);
+      authRef.current = tokens;
+      setAuth(tokens);
+    } catch (err) {
+      if (err instanceof AuthExpiredError) signOutLocal(false, { keepHint: true });
+    }
+  }
+
+  function silentOrPull() {
     let lastTriedAt: number | null = Number(window.sessionStorage.getItem(SILENT_SIGNIN_KEY)) || null;
     const s = sharedSession();
     if (
@@ -476,7 +517,7 @@ export default function App() {
     lastTriedAt = Date.now();
     window.sessionStorage.setItem(SILENT_SIGNIN_KEY, String(lastTriedAt));
     void onSignIn();
-  }, []);
+  }
 
   /** App tray: the library opens signed in with a one-time code from Duki's API (docs/SSO.md). */
   async function openApp(app: { id: string }): Promise<string | null> {
@@ -490,7 +531,7 @@ export default function App() {
         },
       });
     } catch (err) {
-      if (err instanceof AuthExpiredError) signOutLocal(false);
+      if (err instanceof AuthExpiredError) signOutLocal(false, { keepHint: true });
       console.warn("sign-in handoff", err);
       return null;
     }
@@ -510,10 +551,15 @@ export default function App() {
     window.location.assign(logoutUrl(window.location.origin));
   }
 
-  /** Forget the tokens here and the shared hint. everywhere: a real Sign out (the other apps follow). */
-  function signOutLocal(everywhere: boolean) {
+  /**
+   * Forget the tokens here and the shared hint. everywhere: a real Sign out (the other apps follow).
+   * keepHint: this app's sign-in ran out (refresh refused) but nobody signed out, so keep the shared
+   * hint: the next load pulls a handoff from the library, whose sign-in may be newer. If the library
+   * has none either, its #sso=none answer clears the hint.
+   */
+  function signOutLocal(everywhere: boolean, { keepHint = false }: { keepHint?: boolean } = {}) {
     try {
-      markSignedOut({ everywhere });
+      if (!keepHint) markSignedOut({ everywhere });
       clearAuth();
     } catch {
       /* storage blocked */
@@ -532,10 +578,11 @@ export default function App() {
     });
   }
 
-  async function runCloudSync() {
+  async function runCloudSync(retried = false) {
     const stored = authRef.current;
     if (!stored?.idToken || syncingRef.current) return;
     syncingRef.current = true;
+    let retry = false;
     try {
       const tokens = await ensureFreshAuth(stored);
       if (tokens !== stored) {
@@ -579,12 +626,27 @@ export default function App() {
       });
       setSyncError(null);
     } catch (err) {
-      // Refused refresh: cleanly signed out (no half signed-in state). Offline: stay as is.
-      if (err instanceof AuthExpiredError) signOutLocal(false);
+      // The API refused a token we thought was valid (revoked, clock skew): refresh once and retry.
+      if (err instanceof SignInExpiredError && !retried && authRef.current?.refreshToken) {
+        try {
+          const next = await forceRefresh(authRef.current);
+          storeAuth(next);
+          markShared(next);
+          authRef.current = next;
+          setAuth(next);
+          retry = true;
+          return;
+        } catch (refreshErr) {
+          err = refreshErr;
+        }
+      }
+      // Refused refresh: cleanly signed out here (no half signed-in state). Offline: stay as is.
+      if (err instanceof AuthExpiredError) signOutLocal(false, { keepHint: true });
       setSyncError(err instanceof Error ? `${err.message} Changes are still on this device.` : "Could not sync. Changes are still on this device.");
       setAccountSettled(true);
     } finally {
       syncingRef.current = false;
+      if (retry) void runCloudSync(true);
     }
   }
 

@@ -9,7 +9,10 @@
 //   chadm_signout_at=<ms>    last "Sign out" anywhere: older sessions in the other apps end too
 export const DOMAIN = 'chadmurchison.com';
 const NAMES = { hint: 'chadm_signed_in', user: 'chadm_user', ssoUntil: 'chadm_sso_until', signoutAt: 'chadm_signout_at' };
-const MAX_AGE = 30 * 86400;                 // = the refresh token lifetime
+const MAX_AGE = 30 * 86400;                 // = the refresh token lifetime; renewed on every signed-in load
+// A "Sign out" must outlive every session it ends, also if the refresh token lifetime is raised
+// later (Cognito allows up to 10 years). 400 days is the longest a browser keeps a cookie.
+const SIGNOUT_MAX_AGE = 400 * 86400;
 const COGNITO_SESSION_MS = 3600e3;
 const MARGIN_MS = 2 * 60e3;
 
@@ -54,5 +57,5 @@ export function markSignedOut({ everywhere = false } = {}) {
   write(NAMES.hint, '', 0);
   write(NAMES.user, '', 0);
   write(NAMES.ssoUntil, '', 0);
-  if (everywhere) write(NAMES.signoutAt, String(Date.now()), MAX_AGE);
+  if (everywhere) write(NAMES.signoutAt, String(Date.now()), SIGNOUT_MAX_AGE);
 }

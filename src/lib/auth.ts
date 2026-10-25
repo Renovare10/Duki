@@ -333,6 +333,11 @@ export async function ensureFreshAuth(
   now = Date.now(),
 ): Promise<AuthTokens> {
   if (idTokenIsFresh(tokens.idToken, now)) return tokens;
+  return forceRefresh(tokens, fetchImpl);
+}
+
+/** Refresh now even if the ID token looks fresh (the API refused it). Keeps signedInAt and via. */
+export async function forceRefresh(tokens: AuthTokens, fetchImpl: typeof fetch = fetch): Promise<AuthTokens> {
   if (!tokens.refreshToken) throw new AuthExpiredError();
   const next = await refreshSession(tokens.refreshToken, fetchImpl);
   return {
