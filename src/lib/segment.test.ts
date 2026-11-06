@@ -14,6 +14,20 @@ const words = new Set([
 ]);
 const has = (w: string) => words.has(w);
 
+describe("English segmentation", () => {
+  it("makes English words tappable while preserving case, punctuation and spacing", () => {
+    const text = "A cat, a CAT!\nDon't run—wait.";
+    const tokens = segment(text, has, 8, "en");
+    expect(tokens.map((t) => t.text).join("")).toBe(text);
+    expect(tokens.filter((t) => t.isWord).map((t) => [t.text, t.key])).toEqual([
+      ["A", "a"], ["cat", "cat"], ["a", "a"], ["CAT", "cat"],
+      ["Don't", "don't"], ["run", "run"], ["wait", "wait"],
+    ]);
+    expect(tokens.map((t) => t.index)).toEqual(tokens.map((_, i) => i));
+    expect(segment(" , 42!\n", has, 8, "en").every((t) => !t.isWord)).toBe(true);
+  });
+});
+
 describe("segment", () => {
   it("matches longest dictionary words, not characters", () => {
     const tokens = segment("你好中国", has, 8).filter((t) => t.isWord);

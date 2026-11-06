@@ -1,22 +1,25 @@
 import { useEffect, useRef, useState } from "react";
-import { mandarinVoice, speakSupport, speechChunks, type SpeakSupport } from "../lib/speech";
+import { speechVoice, speakSupport, speechChunks, type SpeakSupport } from "../lib/speech";
+import type { Language } from "../types";
 
 type Range = { start: number; end: number };
 
 type Props = {
   body: string;
+  lang?: Language;
   onSpeaking: (range: Range | null) => void;
 };
 
 const RATE = 0.85;
 
-export function VoicePlayer({ body, onSpeaking }: Props) {
-  const chunks = speechChunks(body);
+export function VoicePlayer({ body, lang = "zh", onSpeaking }: Props) {
+  const chunks = speechChunks(body, lang);
   const [support, setSupport] = useState<SpeakSupport>(() =>
     speakSupport(
       typeof window !== "undefined" && Boolean(window.speechSynthesis),
       window.speechSynthesis?.getVoices() ?? [],
       false,
+      lang,
     ),
   );
   const [playing, setPlaying] = useState(false);
@@ -30,11 +33,11 @@ export function VoicePlayer({ body, onSpeaking }: Props) {
   useEffect(() => {
     const synth = window.speechSynthesis;
     if (!synth) return;
-    const check = () => setSupport(speakSupport(true, synth.getVoices(), true));
+    const check = () => setSupport(speakSupport(true, synth.getVoices(), true, lang));
     if (synth.getVoices().length) check();
     synth.addEventListener("voiceschanged", check);
     return () => synth.removeEventListener("voiceschanged", check);
-  }, []);
+  }, [lang]);
 
   useEffect(() => {
     indexRef.current = 0;
@@ -42,7 +45,7 @@ export function VoicePlayer({ body, onSpeaking }: Props) {
     return () => stop(true);
     // Fresh story, fresh place.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [body]);
+  }, [body, lang]);
 
   function stop(reset: boolean) {
     runRef.current += 1;
@@ -57,19 +60,19 @@ export function VoicePlayer({ body, onSpeaking }: Props) {
   }
 
   function show(at: number) {
-    const chunk = speechChunks(body)[at];
+    const chunk = speechChunks(body, lang)[at];
     onSpeakingRef.current(chunk ? { start: chunk.start, end: chunk.end } : null);
   }
 
   function play() {
     const synth = window.speechSynthesis;
     if (!synth) return;
-    const voice = mandarinVoice(synth.getVoices());
+    const voice = speechVoice(synth.getVoices(), lang);
     if (!voice) {
       setSupport("none");
       return;
     }
-    const pieces = speechChunks(body);
+    const pieces = speechChunks(body, lang);
     if (!pieces.length) return;
     if (indexRef.current >= pieces.length) {
       indexRef.current = 0;
@@ -96,7 +99,7 @@ export function VoicePlayer({ body, onSpeaking }: Props) {
       onSpeakingRef.current({ start: chunk.start, end: chunk.end });
       const utter = new SpeechSynthesisUtterance(chunk.text);
       utter.voice = voice;
-      utter.lang = "zh-CN";
+      utter.lang = lang === "en" ? "en-US" : "zh-CN";
       utter.rate = RATE;
       utter.onend = () => {
         if (runRef.current !== run) return;
@@ -116,7 +119,7 @@ export function VoicePlayer({ body, onSpeaking }: Props) {
   }
 
   function skip(delta: number) {
-    const pieces = speechChunks(body);
+    const pieces = speechChunks(body, lang);
     if (!pieces.length) return;
     const next = Math.min(pieces.length - 1, Math.max(0, indexRef.current + delta));
     const wasPlaying = playingRef.current;
@@ -132,7 +135,7 @@ export function VoicePlayer({ body, onSpeaking }: Props) {
   if (support === "none") {
     return (
       <p className="voice-note" role="status">
-        No Mandarin voice on this device.
+        No {lang === "en" ? "English" : "Mandarin"} voice on this device.
       </p>
     );
   }

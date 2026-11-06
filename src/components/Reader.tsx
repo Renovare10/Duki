@@ -3,6 +3,7 @@ import type {
   Bookmark,
   Gloss,
   LibraryText,
+  Language,
   ReaderSettings,
   Token,
   WordRecord,
@@ -64,13 +65,15 @@ export function Reader({
   script = "simplified",
   onScript,
 }: Props) {
+  const lang = text.lang ?? "zh";
+  const fontFamily = lang === "en" && settings.fontFamily === "serif" ? "var(--serif-en)" : FONT_STACKS[settings.fontFamily];
   const titleTokens = useMemo(
-    () => segment(text.title, hasWord, MAX_WORD_LEN),
-    [text.title],
+    () => segment(text.title, hasWord, MAX_WORD_LEN, lang),
+    [text.title, lang],
   );
   const bodyTokens = useMemo(
-    () => segment(text.body, hasWord, MAX_WORD_LEN),
-    [text.body],
+    () => segment(text.body, hasWord, MAX_WORD_LEN, lang),
+    [text.body, lang],
   );
   const titleWords = useMemo(() => titleTokens.filter((t) => t.isWord), [titleTokens]);
   const bodyWords = useMemo(() => bodyTokens.filter((t) => t.isWord), [bodyTokens]);
@@ -78,11 +81,11 @@ export function Reader({
     classic && classic.original.length === classic.simplified.length && text.body === classic.simplified
       ? classic.original
       : null;
-  const canToggle = Boolean(classic && classic.original && classic.simplified);
+  const canToggle = lang === "zh" && Boolean(classic && classic.original && classic.simplified);
   const bodyView = useMemo(() => {
     let offset = 0;
     return bodyTokens.map((token) => {
-      const glossKey = canToggle ? toSimplified(token.text) : token.text;
+      const glossKey = token.key ?? (canToggle ? toSimplified(token.text) : token.text);
       let surface = token.text;
       if (canToggle && script === "traditional") {
         surface = tradBody ? tradBody.slice(offset, offset + token.text.length) : token.text;
@@ -107,11 +110,11 @@ export function Reader({
         ? titleTokens[selected.index]
         : bodyTokens[selected.index];
   const selectedView = selected?.zone === "body" ? bodyView[selected.index] : null;
-  const selectedGlossKey = selectedView?.glossKey ?? (selectedToken?.isWord ? selectedToken.text : "");
+  const selectedGlossKey = selectedView?.glossKey ?? (selectedToken?.isWord ? selectedToken.key ?? selectedToken.text : "");
   const selectedSurface = selectedView?.surface ?? selectedToken?.text ?? "";
   const selectedRecordKey =
-    selectedToken?.isWord ? markKey(selectedGlossKey, selectedSurface, (key) => words.has(key)) : "";
-  const selectedGloss = selectedToken?.isWord ? getGloss(selectedGlossKey || selectedToken.text) : null;
+    selectedToken?.isWord ? lang === "en" ? selectedGlossKey : markKey(selectedGlossKey, selectedSurface, (key) => words.has(key)) : "";
+  const selectedGloss = selectedToken?.isWord ? getGloss(selectedGlossKey || selectedToken.text, lang) : null;
   const selectedWord = selectedRecordKey ? words.get(selectedRecordKey) : undefined;
   const selectedTint = selectedToken?.isWord ? tintOf(words, selectedRecordKey) : null;
 
@@ -162,7 +165,7 @@ export function Reader({
   }, [text.id]);
 
   useEffect(() => {
-    if (hover && tintOf(words, hover.token.text) === "known") {
+    if (hover && tintOf(words, hover.token.key ?? hover.token.text) === "known") {
       setHover(null);
     }
   }, [words, hover]);
@@ -263,10 +266,10 @@ export function Reader({
   // Bookmark updates and the sheet's latch must not rebuild a long article.
   const bodyContent = useMemo(() => bodyView.map((view) =>
     renderToken(view.token, "body", {
-      words, selected, resumeIndex, setSelected: selectWord, setHover,
+      lang, words, selected, resumeIndex, setSelected: selectWord, setHover,
       speaking: speakingTokens, surface: view.surface, glossKey: view.glossKey,
     }),
-  ), [bodyView, words, selected, resumeIndex, selectWord, speakingTokens]);
+  ), [bodyView, words, selected, resumeIndex, selectWord, speakingTokens, lang]);
 
   return (
     <div className={`reader-page highlights-${settings.highlightStyle ?? "color-coded"} width-${settings.textWidth ?? "medium"}`}>
@@ -275,12 +278,13 @@ export function Reader({
           <div>
             <h1
               className="reader-title"
-              lang="zh-CN"
+              lang={lang === "en" ? "en-US" : "zh-CN"}
               onMouseLeave={() => setHover(null)}
-              style={{ fontFamily: FONT_STACKS[settings.fontFamily] }}
+              style={{ fontFamily }}
             >
               {titleTokens.map((token) =>
                 renderToken(token, "title", {
+                  lang,
                   words,
                   selected,
                   resumeIndex: null,
@@ -393,15 +397,15 @@ export function Reader({
           </span>
           <span>Okay is plain text</span></>}
         </div>
-        <VoicePlayer body={spoken} onSpeaking={setSpeaking} />
+        <VoicePlayer body={spoken} lang={lang} onSpeaking={setSpeaking} />
       </div>
 
       <article
         className={`article${footer ? " has-footer" : ""}`}
-        lang="zh-CN"
+        lang={lang === "en" ? "en-US" : "zh-CN"}
         onMouseLeave={() => setHover(null)}
         style={{
-          fontFamily: FONT_STACKS[settings.fontFamily],
+          fontFamily,
           fontSize: `${settings.fontSize}px`,
         }}
       >
@@ -443,7 +447,7 @@ export function Reader({
                 onClick={() => onSetStatus(selectedRecordKey, "known")}
               />
             </div>
-            <div className="dock-pinyin">{selectedGloss.pinyin}</div>
+            {lang === "zh" ? <div className="dock-pinyin">{selectedGloss.pinyin}</div> : null}
             <div className="dock-en">{selectedGloss.english}</div>
             <div className="dock-counts">
               Don’t know {selectedWord?.dontKnowCount ?? 0}
@@ -455,8 +459,7 @@ export function Reader({
           </>
         ) : (
           <div className="dock-hint">
-            Tap a word. Hover for pinyin and English. Status never changes unless
-            you press a button.
+            {lang === "en" ? "Tap a word to mark it. Hover for a sample gloss." : "Tap a word. Hover for pinyin and English."} Status never changes unless you press a button.
           </div>
         )}
       </div>
@@ -471,7 +474,7 @@ export function Reader({
             transform: "translate(-50%, -100%)",
           }}
         >
-          <div className="py">{hover.gloss.pinyin}</div>
+          {lang === "zh" ? <div className="py">{hover.gloss.pinyin}</div> : null}
           <div className="en">{hover.gloss.english}</div>
         </div>
       ) : null}
@@ -481,6 +484,7 @@ export function Reader({
 }
 
 type RenderOpts = {
+  lang: Language;
   words: Map<string, WordRecord>;
   selected: Sel | null;
   resumeIndex: number | null;
@@ -505,8 +509,8 @@ function renderToken(token: Token, zone: "title" | "body", opts: RenderOpts) {
     );
   }
   const surface = opts.surface ?? token.text;
-  const glossKey = opts.glossKey ?? token.text;
-  const record = markKey(glossKey, surface, (key) => opts.words.has(key));
+  const glossKey = opts.glossKey ?? token.key ?? token.text;
+  const record = opts.lang === "en" ? glossKey : markKey(glossKey, surface, (key) => opts.words.has(key));
   const status = tintOf(opts.words, record);
   const isSelected =
     opts.selected?.zone === zone && opts.selected.index === token.index;
@@ -529,7 +533,7 @@ function renderToken(token: Token, zone: "title" | "body", opts: RenderOpts) {
         opts.setHover({
           token,
           zone,
-          gloss: getGloss(glossKey),
+          gloss: getGloss(glossKey, opts.lang),
           x: rect.left + rect.width / 2,
           y: rect.top,
         });

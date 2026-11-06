@@ -1,4 +1,4 @@
-import type { Token } from "../types";
+import type { Language, Token } from "../types";
 
 const HAN = /[\u3400-\u9fff\uf900-\ufaff]/;
 
@@ -10,7 +10,16 @@ export function segment(
   text: string,
   hasWord: (word: string) => boolean,
   maxLen: number,
+  lang: Language = "zh",
 ): Token[] {
+  if (lang === "en") {
+    const parts = text.match(/[A-Za-z]+(?:['’][A-Za-z]+)*|[^A-Za-z]+/g) ?? [];
+    return parts.map((part, index) => {
+      const isWord = /^[A-Za-z]/.test(part);
+      return { text: part, isWord, index,
+        ...(isWord ? { key: part.toLowerCase().replaceAll("’", "'") } : {}) };
+    });
+  }
   const tokens: Token[] = [];
   let i = 0;
   let index = 0;

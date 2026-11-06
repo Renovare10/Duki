@@ -42,6 +42,7 @@ export function normalizeText(
       : "graded";
   return {
     id: raw.id,
+    ...(raw.lang === "en" ? { lang: "en" as const } : {}),
     title: raw.title?.trim() || "Untitled",
     blurb: raw.blurb?.trim() || "",
     body: raw.body,

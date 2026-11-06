@@ -10,6 +10,7 @@ import { TEXT_TOPICS } from "../data/topics";
 import { REMOTE_META } from "../data/remote-meta.generated";
 import type { Book } from "./books";
 import { scoreSource } from "./books";
+import { segment } from "./segment";
 import {
   estimateKnown,
   hanCount,
@@ -50,6 +51,8 @@ export type EntryInfo = {
   /** Ordering key: easier first; unmeasured last. */
   sortScore: number;
   chars: number | null;
+  /** English draft lengths are word counts, not Han character counts. */
+  words?: number;
   minutes: number | null;
   topics: string[];
 };
@@ -86,6 +89,13 @@ export function describeText(
   remote: Record<string, readonly [number, number, number, number]> = REMOTE_META.meta,
 ): EntryInfo {
   const tags = topicTags(text, topics);
+  if (text.lang === "en") {
+    return {
+      level: null, levelMax: null, badge: "", badgeTitle: "English draft sample",
+      band: null, sortScore: UNMEASURED, chars: null, minutes: null, topics: tags,
+      words: segment(text.body, () => false, 8, "en").filter((t) => t.isWord).length,
+    };
+  }
   const m = meta[text.id];
   if (m) return measured(m[0], null, m[1] / 100, m[2], tags);
   const pre = remote[text.id];
@@ -402,6 +412,7 @@ export function topicCounts(entries: Entry[]): Map<string, number> {
 
 /** "96 字 · 1 min" / "922,250 字 · ~85 h". */
 export function lengthLabel(info: EntryInfo): string | null {
+  if (info.words !== undefined) return `${info.words.toLocaleString("en-US")} words`;
   if (info.chars === null) return null;
   const chars = info.chars >= 10000 ? `${Math.round(info.chars / 1000).toLocaleString("en-US")}k 字` : `${info.chars.toLocaleString("en-US")} 字`;
   if (info.minutes === null) return chars;

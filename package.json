@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "glossary": "node scripts/build-glossary.mjs",
     "test": "node scripts/validate-library.mjs && vitest run",
-    "e2e": "node scripts/e2e.mjs"
+    "e2e": "node scripts/e2e.mjs",
+    "e2e:en": "node scripts/e2e-en-toggle.mjs && node scripts/e2e-en-speech.mjs"
   },
   "dependencies": {
     "react": "^19.3.0",

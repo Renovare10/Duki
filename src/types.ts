@@ -1,3 +1,5 @@
+export type Language = "zh" | "en";
+
 export type WordStatus = "unknown" | "shaky" | "known";
 
 export type ReviewGrade = "again" | "hard" | "good" | "easy";
@@ -67,6 +69,8 @@ export type Bookmark = {
 
 export type LibraryText = {
   id: string;
+  /** Legacy catalog rows are Mandarin; no IndexedDB schema change. */
+  lang?: Language;
   title: string;
   blurb: string;
   body: string;
@@ -97,6 +101,8 @@ export type LibraryText = {
 
 export type Token = {
   text: string;
+  /** Normalized English lookup key; Mandarin continues to use text verbatim. */
+  key?: string;
   isWord: boolean;
   index: number;
 };

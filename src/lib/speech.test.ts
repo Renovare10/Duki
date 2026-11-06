@@ -1,6 +1,20 @@
 import { describe, expect, it } from "vitest";
 import { mandarinVoice, speakSupport, speechChunks, tokensInRange } from "./speech";
 
+describe("English speech", () => {
+  it("splits English at full stops and keeps offsets into the original text", () => {
+    const body = "A cat sleeps. The bag is warm.";
+    const chunks = speechChunks(body, "en");
+    expect(chunks.map((c) => c.text)).toEqual(["A cat sleeps.", "The bag is warm."]);
+    expect(chunks.every((c) => body.slice(c.start, c.end) === c.text)).toBe(true);
+  });
+
+  it("offers English speech without requiring a Mandarin voice", () => {
+    expect(speakSupport(true, [{ lang: "en-US" }], true, "en")).toBe("ready");
+    expect(speakSupport(true, [{ lang: "zh-CN" }], true, "en")).toBe("none");
+  });
+});
+
 describe("speechChunks", () => {
   it("keeps the stop with its sentence", () => {
     expect(speechChunks("我是学生。她是老师。")).toEqual([

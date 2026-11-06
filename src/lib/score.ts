@@ -13,15 +13,16 @@ export function scoreTokens(
   const uniqueShaky = new Set<string>();
 
   for (const token of words) {
-    unique.add(token.text);
-    const status = statuses.get(token.text);
+    const key = token.key ?? token.text;
+    unique.add(key);
+    const status = statuses.get(key);
     if (status === "known") known += 1;
     else if (status === "shaky") {
       shaky += 1;
-      uniqueShaky.add(token.text);
+      uniqueShaky.add(key);
     } else {
       unknown += 1;
-      uniqueUnknown.add(token.text);
+      uniqueUnknown.add(key);
     }
   }
 
@@ -117,10 +118,11 @@ export function remainingUniques(
   const uniqueShaky = new Set<string>();
   for (const token of tokens) {
     if (!token.isWord) continue;
-    const status = statuses.get(token.text);
+    const key = token.key ?? token.text;
+    const status = statuses.get(key);
     if (status === "known") continue;
-    if (status === "shaky") uniqueShaky.add(token.text);
-    else uniqueUnknown.add(token.text);
+    if (status === "shaky") uniqueShaky.add(key);
+    else uniqueUnknown.add(key);
   }
   return { uniqueUnknown: uniqueUnknown.size, uniqueShaky: uniqueShaky.size };
 }

@@ -1,4 +1,5 @@
-import type { Gloss } from "../types";
+import type { Gloss, Language } from "../types";
+import { EN_GLOSSES } from "../data/en-samples";
 
 type GlossaryFile = {
   maxLen: number;
@@ -41,7 +42,10 @@ export function hasWord(word: string): boolean {
   return dict.has(word);
 }
 
-export function getGloss(word: string): Gloss {
+export function getGloss(word: string, lang: Language = "zh"): Gloss {
+  if (lang === "en") {
+    return { pinyin: "", english: EN_GLOSSES[word.toLowerCase()] ?? "—" };
+  }
   const key = entries[word] ? word : toSimplified(word);
   const hit = entries[key];
   if (hit) {

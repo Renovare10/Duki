@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { AddText } from "./components/AddText";
 import { Home } from "./components/Home";
+import { EnglishHome } from "./components/EnglishHome";
+import { EN_SAMPLES } from "./data/en-samples";
 import { Reader } from "./components/Reader";
 import { Review } from "./components/Review";
 import { Stats } from "./components/Stats";
@@ -97,6 +99,7 @@ import type {
   BackupFile,
   Bookmark,
   LibraryText,
+  Language,
   ReaderSettings,
   ReaderTheme,
   ReadingSession,
@@ -106,6 +109,9 @@ import type {
   WordRecord,
   WordStatus,
 } from "./types";
+
+// This branch is a private, device-only prototype. Never sign in or sync its stub data.
+const LOCAL_DRAFT = true;
 
 type View =
   | { name: "home"; shelf?: string }
@@ -171,6 +177,10 @@ function hashToView(hash: string): View {
 }
 
 export default function App() {
+  const [lang, setLang] = useState<Language>(() => {
+    try { return window.localStorage.getItem("duki.language") === "en" ? "en" : "zh"; }
+    catch { return "zh"; }
+  });
   const [view, setView] = useState<View>(() => hashToView(window.location.hash));
   const [ready, setReady] = useState(false);
   const [bootError, setBootError] = useState<string | null>(null);
@@ -198,14 +208,14 @@ export default function App() {
   workBodiesRef.current = workBodies;
   const [workTocs, setWorkTocs] = useState<Map<string, WorkToc>>(new Map());
   const [workError, setWorkError] = useState<string | null>(null);
-  const [auth, setAuth] = useState<AuthTokens | null>(() => loadStoredAuth());
+  const [auth, setAuth] = useState<AuthTokens | null>(() => LOCAL_DRAFT ? null : loadStoredAuth());
   /** A `?code=` sign-in exchange is in flight, so we don't know who this is yet. */
   const [authPending, setAuthPending] = useState(
-    () =>
+    () => !LOCAL_DRAFT && (
       (parseAuthCallback(window.location.search, window.location.hash) !== null &&
         Boolean(window.sessionStorage.getItem(PKCE_VERIFIER_KEY))) ||
       // A #sso= handoff from the library is signing in (docs/SSO.md).
-      Boolean(peekHandoff() && "code" in peekHandoff()! && !loadStoredAuth() && navigator.onLine),
+      Boolean(peekHandoff() && "code" in peekHandoff()! && !loadStoredAuth() && navigator.onLine)),
   );
   /** IndexedDB settings have been read (fast path, ahead of the glossary). */
   const [settingsLoaded, setSettingsLoaded] = useState(false);
@@ -365,6 +375,7 @@ export default function App() {
 
   useEffect(() => {
     const parsed = parseAuthCallback(window.location.search, window.location.hash);
+    if (LOCAL_DRAFT) return;
     if (!parsed) return;
     window.history.replaceState(
       null,
@@ -394,6 +405,7 @@ export default function App() {
   // #sso=<code>&u=<username> from the library's app tray (or answering our pull): sign in with
   // Cognito custom auth. Already signed in here: the unused code just expires (60 s).
   useEffect(() => {
+    if (LOCAL_DRAFT) return;
     const h = takeHandoff();
     if (!h) return;
     if (!("code" in h)) {
@@ -432,6 +444,7 @@ export default function App() {
   }
   const [shared, setShared] = useState(() => sharedSession());
   useEffect(() => {
+    if (LOCAL_DRAFT) return;
     function sync() {
       const stored = loadStoredAuth();
       if (stored && signedOutSince(sessionStart(stored))) signOutLocal(false);
@@ -468,6 +481,7 @@ export default function App() {
    * is noticed before the silent sign-in / pull decision rather than on the first sync.
    */
   async function checkStoredSession() {
+    if (LOCAL_DRAFT) return;
     const stored = loadStoredAuth();
     if (!stored || !navigator.onLine || idTokenIsFresh(stored.idToken)) return;
     try {
@@ -486,6 +500,7 @@ export default function App() {
   }
 
   function silentOrPull() {
+    if (LOCAL_DRAFT) return;
     let lastTriedAt: number | null = Number(window.sessionStorage.getItem(SILENT_SIGNIN_KEY)) || null;
     const s = sharedSession();
     if (
@@ -521,6 +536,7 @@ export default function App() {
 
   /** App tray: the library opens signed in with a one-time code from Duki's API (docs/SSO.md). */
   async function openApp(app: { id: string }): Promise<string | null> {
+    if (LOCAL_DRAFT) return null;
     if (app.id !== "library" || !authRef.current) return null;
     try {
       return await libraryHandoffUrl(authRef.current, "", {
@@ -538,6 +554,7 @@ export default function App() {
   }
 
   async function onSignIn(signup = false) {
+    if (LOCAL_DRAFT) return;
     const pkce = await createPkce();
     window.sessionStorage.setItem(PKCE_VERIFIER_KEY, pkce.verifier);
     const url = signup ? signupUrl : authorizeUrl;
@@ -546,6 +563,7 @@ export default function App() {
 
   /** Sign out. Always works: local state is cleared first, then the hosted UI session ends. */
   function onSignOut() {
+    if (LOCAL_DRAFT) return;
     signOutLocal(true);
     window.sessionStorage.setItem(SILENT_SIGNIN_KEY, String(Date.now()));
     window.location.assign(logoutUrl(window.location.origin));
@@ -579,6 +597,7 @@ export default function App() {
   }
 
   async function runCloudSync(retried = false) {
+    if (LOCAL_DRAFT) return;
     const stored = authRef.current;
     if (!stored?.idToken || syncingRef.current) return;
     syncingRef.current = true;
@@ -651,6 +670,7 @@ export default function App() {
   }
 
   function scheduleCloudPush() {
+    if (LOCAL_DRAFT) return;
     if (!authRef.current?.idToken) return;
     if (syncTimerRef.current) window.clearTimeout(syncTimerRef.current);
     syncTimerRef.current = window.setTimeout(() => {
@@ -665,7 +685,7 @@ export default function App() {
         const [, loaded] = await Promise.all([loadGlossary(), loadAll()]);
         if (cancelled) return;
         const byId = new Map(loaded.texts.map((t) => [t.id, t]));
-        for (const item of CATALOG) {
+        for (const item of [...CATALOG, ...EN_SAMPLES]) {
           const existing = byId.get(item.id);
           if (!existing) {
             await putText(item);
@@ -684,9 +704,9 @@ export default function App() {
             byId.set(item.id, merged);
           }
         }
-        setTexts(
-          [...byId.values()].sort((a, b) => a.createdAt - b.createdAt || a.title.localeCompare(b.title)),
-        );
+        const seeded = [...byId.values()].sort((a, b) => a.createdAt - b.createdAt || a.title.localeCompare(b.title));
+        textsRef.current = seeded;
+        setTexts(seeded);
         setWords(new Map(loaded.words.map((w) => [w.hanzi, w])));
         setSessions(loaded.sessions);
         setWordEvents(loaded.events);
@@ -726,11 +746,15 @@ export default function App() {
     };
   }, []);
 
+  // English keys are the segmenter's lowercase Latin words; legacy Han keys stay untouched.
+  const languageWords = useMemo(() => new Map([...words].filter(([key]) =>
+    (lang === "en") === /^[a-z]+(?:'[a-z]+)*$/i.test(key),
+  )), [words, lang]);
   const statuses = useMemo(() => {
     const map = new Map<string, WordStatus>();
-    for (const [hanzi, rec] of words) map.set(hanzi, rec.status);
+    for (const [hanzi, rec] of languageWords) map.set(hanzi, rec.status);
     return map;
-  }, [words]);
+  }, [languageWords]);
 
   const scoreCache = useRef<ReturnType<typeof createScoreCache> | null>(null);
   if (!scoreCache.current) scoreCache.current = createScoreCache();
@@ -741,7 +765,7 @@ export default function App() {
       const profile = profiles?.get(text.id);
       map.set(text.id, scoreCache.current!.get(text, statuses, profile, () =>
         text.body.trim()
-          ? scoreTokens(segment(text.body, hasWord, MAX_WORD_LEN), statuses)
+          ? scoreTokens(segment(text.body, hasWord, MAX_WORD_LEN, text.lang), statuses)
           : profile ? scoreCounts(profile.words, profile.counts, statuses) : scoreTokens([], statuses),
       ));
     }
@@ -749,11 +773,16 @@ export default function App() {
     return map;
   }, [texts, statuses, profileTick]);
 
+  const languageTexts = useMemo(() => texts.filter((t) => (t.lang ?? "zh") === lang), [texts, lang]);
+  const languageTextIds = useMemo(() => new Set(languageTexts.map((t) => t.id)), [languageTexts]);
+  const languageScores = useMemo(() => new Map([...scores].filter(([id]) => languageTextIds.has(id))), [scores, languageTextIds]);
+  const languageSessions = useMemo(() => sessions.filter((s) => languageTextIds.has(s.textId)), [sessions, languageTextIds]);
+  const languageEvents = useMemo(() => wordEvents.filter((e) => languageWords.has(e.hanzi)), [wordEvents, languageWords]);
   const currentRow =
     view.name === "reader"
-      ? texts.find((t) => t.id === view.id)
+      ? languageTexts.find((t) => t.id === view.id)
       : view.name === "share" && shareTextId
-        ? texts.find((t) => t.id === shareTextId)
+        ? languageTexts.find((t) => t.id === shareTextId)
         : undefined;
   const readingWork = view.name === "reader" ? parseWorkRowId(view.id) : null;
   // Work chapters: the stored row has no body; attach the fetched one for reading.
@@ -783,6 +812,10 @@ export default function App() {
 
   async function hydrateRemote(seeded: Map<string, LibraryText>) {
     void seeded;
+    if (LOCAL_DRAFT) {
+      mergeIncoming(wikisourceStubs(800));
+      return;
+    }
     try {
       const extra = await randomWikipedia();
       mergeIncoming(extra);
@@ -1081,7 +1114,7 @@ export default function App() {
     const next = { ...text, readAt: text.readAt ?? Date.now() };
     await saveText(next);
     const body = isWorkRowId(id) ? workBodiesRef.current.get(id) ?? "" : text.body;
-    const tokens = segment(body, hasWord, MAX_WORD_LEN);
+    const tokens = segment(body, hasWord, MAX_WORD_LEN, text.lang);
     const remaining = remainingUniques(tokens, statusesFrom(wordsRef.current));
     const session: ReadingSession = {
       id: crypto.randomUUID(),
@@ -1426,7 +1459,7 @@ export default function App() {
             <span className="brand-sub">A library of stories</span>
           </span>
         </button>
-        <button
+        {lang === "zh" ? <button
           type="button"
           className="text-btn menu-toggle"
           aria-expanded={menuOpen}
@@ -1435,16 +1468,26 @@ export default function App() {
           onClick={() => setMenuOpen((open) => !open)}
         >
           {menuOpen ? "Close" : "Menu"}
-        </button>
+        </button> : null}
+        <div className="language-toggle" role="group" aria-label="Reading language">
+          {(["zh", "en"] as const).map((choice) => (
+            <button type="button" key={choice} className="chip" aria-pressed={lang === choice}
+              disabled={!ready} onClick={() => {
+                setLang(choice);
+                try { window.localStorage.setItem("duki.language", choice); } catch { /* session only */ }
+                navigate({ name: "home" });
+              }}>{choice === "zh" ? "Mandarin" : "English"}</button>
+          ))}
+        </div>
         <nav id="app-menu" className="top-actions" aria-label="Main">
-          {MENU_GROUPS.filter((group) => group.id === "read" || group.id === "look").map((group) => (
+          {MENU_GROUPS.filter((group) => lang === "zh" && (group.id === "read" || group.id === "look")).map((group) => (
             <div key={group.id} className={`menu-group menu-group-${group.id}`} data-group={group.id}>
               <p className="menu-group-label">{group.label}</p>
               {group.actions.map((actionId) => renderMenuAction(actionId))}
             </div>
           ))}
         </nav>
-        <AppBar
+        {!LOCAL_DRAFT && lang === "zh" ? <AppBar
           email={auth?.email ?? null}
           signedIn={Boolean(auth)}
           canSignOut={Boolean(auth) || hasStoredAuthKey() || shared.signedIn}
@@ -1466,7 +1509,7 @@ export default function App() {
           onSignUp={() => void onSignIn(true)}
           onSignOut={onSignOut}
           openApp={openApp}
-        />
+        /> : null}
         <input
           ref={importInputRef}
           type="file"
@@ -1479,8 +1522,9 @@ export default function App() {
           }}
         />
       </header>
+      {lang === "en" ? <p className="draft-chip" role="status">Draft · local only</p> : null}
 
-      {!auth && !authPending && shared.signedIn && !continueDismissed ? (
+      {!LOCAL_DRAFT && !auth && !authPending && shared.signedIn && !continueDismissed ? (
         <div className="sso-continue" role="region" aria-label="Signed in on chadmurchison.com">
           <p>
             You're signed in on chadmurchison.com{shared.email ? ` as ${shared.email}` : ""}.
@@ -1526,12 +1570,17 @@ export default function App() {
         </div>
       ) : null}
 
-      {ready && view.name === "home" ? (
+      {ready && lang === "en" && view.name !== "reader" && view.name !== "share" ? (
+        <EnglishHome texts={languageTexts} scores={languageScores} onOpen={(id) => void onOpen(id)}
+          onMarkRead={(id, read) => void onMarkRead(id, read)} />
+      ) : null}
+
+      {ready && lang === "zh" && view.name === "home" ? (
         <Home
-          texts={texts}
-          scores={scores}
+          texts={languageTexts}
+          scores={languageScores}
           statuses={statuses}
-          sessions={sessions}
+          sessions={languageSessions}
           openShelf={view.shelf ?? null}
           wikiErrors={wikiErrors}
           wikiLoading={wikiLoading}
@@ -1547,10 +1596,10 @@ export default function App() {
         />
       ) : null}
 
-      {ready && view.name === "book" ? (
-        findBook(texts, view.id) ? (
+      {ready && lang === "zh" && view.name === "book" ? (
+        findBook(languageTexts, view.id) ? (
           <BookScreen
-            book={findBook(texts, view.id)!}
+            book={findBook(languageTexts, view.id)!}
             scores={scores}
             personal={personal}
             wikiErrors={wikiErrors}
@@ -1570,7 +1619,7 @@ export default function App() {
         )
       ) : null}
 
-      {ready && view.name === "work" ? (
+      {ready && lang === "zh" && view.name === "work" ? (
         findWork(view.id) ? (
           <WorkScreen
             work={findWork(view.id)!}
@@ -1590,7 +1639,7 @@ export default function App() {
         )
       ) : null}
 
-      {ready && view.name === "add" ? (
+      {ready && lang === "zh" && view.name === "add" ? (
         <AddText
           paste={paste}
           title={title}
@@ -1607,8 +1656,9 @@ export default function App() {
 
       {ready && (view.name === "reader" || view.name === "share") && current?.body.trim() ? (
         <Reader
+          key={current.id}
           text={current}
-          words={words}
+          words={languageWords}
           settings={{ ...settings, theme: displayTheme }}
           onSetStatus={(hanzi, status) => void setStatus(hanzi, status)}
           onBookmark={(bookmark) => void onBookmark(current.id, bookmark)}
@@ -1661,22 +1711,22 @@ export default function App() {
         </div>
       ) : null}
 
-      {ready && view.name === "review" ? (
+      {ready && lang === "zh" && view.name === "review" ? (
         <Review
           key={view.focus ?? "all"}
-          words={words}
+          words={languageWords}
           focus={view.focus}
           onGrade={(hanzi, grade) => void onGrade(hanzi, grade)}
         />
       ) : null}
 
-      {ready && view.name === "stats" ? (
+      {ready && lang === "zh" && view.name === "stats" ? (
         <Stats
-          words={words}
-          texts={texts}
-          sessions={sessions}
-          events={wordEvents}
-          scores={scores}
+          words={languageWords}
+          texts={languageTexts}
+          sessions={languageSessions}
+          events={languageEvents}
+          scores={languageScores}
           onReviewWord={(hanzi) => navigate({ name: "review", focus: hanzi })}
           onOpen={(id) => void onOpen(id)}
           onScore={(id) => void onScoreCard(id)}

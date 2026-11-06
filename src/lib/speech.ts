@@ -1,3 +1,5 @@
+import type { Language } from "../types";
+
 /** Sentence ends a learner would want spoken as one breath. */
 const BREAK = /[。！？!?；;\n]/;
 const PAUSE = /[，、,]/;
@@ -7,11 +9,11 @@ const MAX_CHARS = 80;
 export type SpeechChunk = { text: string; start: number; end: number };
 
 /** Spoken pieces of a story. Punctuation stays with its sentence. */
-export function speechChunks(body: string): SpeechChunk[] {
+export function speechChunks(body: string, lang: Language = "zh"): SpeechChunk[] {
   const chunks: SpeechChunk[] = [];
   let start = 0;
   for (let i = 0; i < body.length; i++) {
-    if (!BREAK.test(body[i])) continue;
+    if (!BREAK.test(body[i]) && !(lang === "en" && body[i] === ".")) continue;
     chunks.push(...splitLong(body, start, i + 1));
     start = i + 1;
   }
@@ -60,6 +62,14 @@ export function mandarinVoice<T extends VoiceLike>(voices: T[]): T | null {
 
 export type SpeakSupport = "hidden" | "ready" | "none";
 
+/** Prefer US English, then another installed English voice. Never cross languages. */
+export function speechVoice<T extends VoiceLike>(voices: T[], lang: Language = "zh"): T | null {
+  if (lang === "zh") return mandarinVoice(voices);
+  const code = (v: T) => v.lang.toLowerCase().replaceAll("_", "-");
+  return voices.find((v) => code(v) === "en-us") ??
+    voices.find((v) => code(v) === "en" || code(v).startsWith("en-")) ?? null;
+}
+
 /**
  * No speech engine: hide the control.
  * Engine, but no Mandarin voice once the list is known: explain, do not offer Play.
@@ -69,10 +79,11 @@ export function speakSupport(
   hasSynth: boolean,
   voices: VoiceLike[],
   voicesKnown: boolean,
+  lang: Language = "zh",
 ): SpeakSupport {
   if (!hasSynth) return "hidden";
   if (voices.length === 0 && !voicesKnown) return "ready";
-  return mandarinVoice(voices) ? "ready" : "none";
+  return speechVoice(voices, lang) ? "ready" : "none";
 }
 
 export function tokensInRange(
