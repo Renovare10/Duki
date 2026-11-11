@@ -492,6 +492,66 @@ Ruth looked up. "She's had a long day too."
 
 Sara pulled up a chair. She could tell them about the station tomorrow. For now, she wanted to sit down and look at her niece.`,
   },
+  {
+    id: "en-book-borrowed-camera-1", lang: "en", level: 5,
+    seriesId: "en-book-borrowed-camera", seriesTitle: "The Borrowed Camera", chapter: 1,
+    title: "Chapter 1: A Very Expensive Dragon",
+    blurb: "Eli borrows a school camera to make an adventure film with a very small cast.",
+    kind: "sample", category: "novel", featured: false,
+    createdAt: 210_009, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+    body: `The camera came in a black case with spaces cut into the soft lining. Eli lifted it out as carefully as if he were picking up a sleeping animal.
+
+"There's one battery in the camera and a spare in the side pocket," said Mr Cole. "Use the memory card in the case. Bring everything back on Monday."
+
+Eli signed the borrowing form. He belonged to the school film club, but until now he had only helped with other people's films. This weekend he would make his own.
+
+The club's challenge was simple: tell a complete story in three minutes. Eli had written a story about a traveller who stole a dragon's egg and then had to return it. It included a mountain, a broken bridge, and a dragon rising out of smoke.
+
+Mr Cole read the page without smiling.
+
+"How are you making the dragon?"
+
+"I haven't decided yet."
+
+"Decide before you need it. And keep the camera dry."
+
+At home, Eli spread his drawings across the kitchen table. His eleven-year-old sister, Ruby, leaned over his shoulder.
+
+"Who's playing the traveller?"
+
+"Marcus. You're carrying things."
+
+"I've been promoted, then. Last time I wasn't allowed in the room."
+
+Marcus arrived on Saturday with a brown coat and a cardboard sword. He looked at the drawings and pointed to the mountain.
+
+"We don't have one of those."
+
+"The hill in the park. If we put the camera low, it'll look bigger."
+
+Ruby picked up the drawing of the dragon. "We don't have one of these either."
+
+Eli had a solution for that. He had made a green head from two boxes and an old sheet. His mother had refused to let him use smoke in the house, but outdoors he could film the head against the sky. He thought he might add the smoke later, somehow.
+
+They carried everything to the park. It took two trips from the bus stop. By the time they reached the hill, Marcus was sweating inside the coat, and Ruby had put the dragon's head on to free her hands.
+
+Eli set the camera on its stand. Through the screen, the little hill did look like a mountain. Then a man walking a tiny dog appeared behind Marcus. The dog stopped to examine the cardboard sword.
+
+They waited for him to pass. A group of runners followed. After that came a family with a red pushchair.
+
+"Can't the dragon eat them?" Ruby asked from inside the box.
+
+Eli asked her to be serious. He moved the camera, but now the road was visible. He moved it again, and the stand sank into the soft ground.
+
+At last, there was a clear moment. Marcus climbed towards the camera, carrying the egg, which was a football wrapped in gold paper.
+
+"Return what you have taken!" Ruby shouted in her deepest voice.
+
+A gust of wind lifted the sheet. The dragon's head twisted sideways, and Ruby disappeared inside it.
+
+Marcus began to laugh. Eli stopped recording. On the screen, his mountain looked exactly like a small wet hill.`,
+  },
 ];
 
 /** Topic ids are shared with the Mandarin library; every chapter has its own entry. */
