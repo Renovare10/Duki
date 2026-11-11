@@ -370,6 +370,33 @@ Good map reading therefore involves checking the legend, scale, date, and intend
 
 The demand that a map include everything would make it impossible to use. What we need is enough information about the selection to judge whether it suits our purpose. Before trusting a map, imagine a decision you will make with it and identify the details that decision requires. The railway diagram may get you across town perfectly. To discover whether the station is actually closer on foot, you may need to put it down and consult another map.`
   },
+  {
+    id: "en-l8-the-last-climb", level: 8,
+    title: "The Last Climb",
+    blurb: "A cyclist returns to her old club expecting to recognize her place in the team.",
+    topics: ["sports", "feelings", "literature"],
+    body: `The first person to drop behind on the hill was the man who had spent breakfast describing his training plan. Helen noticed this with an uncharitable satisfaction that lasted until the gradient increased and she had to concentrate on breathing. Ahead, the younger riders climbed without apparent effort, their bright jackets moving between the hedges. She remembered being one of the people who waited at the top.
+
+She had rejoined the cycling club after four years away. During that absence she had cared for her father, changed jobs, and acquired a bicycle that spent most of its life leaning against a bedroom wall. On the club's website, the Sunday route was described as a social ride. Helen had taken this to mean that her old fitness would be sufficient. Nobody had promised that it would remain hers indefinitely.
+
+At the top, everyone was waiting. A young woman named Tess offered her a piece of flapjack without saying anything encouraging. Helen appreciated the silence. Breathless reassurance would have made the situation unbearable. She drank, looked across the valley, and asked how many climbs remained. Tess held up two fingers, then hesitated and added a third. The website, it seemed, had simplified the geography.
+
+Their leader, Rob, asked whether the pace was comfortable. Helen said yes before she had considered the question. He had led the club when she first joined, and she disliked the idea of becoming someone he needed to manage. As they set off, she moved closer to the front, where she could prove that the opening climb had been an exception rather than a warning.
+
+For twenty minutes she managed it. Then the road turned into the wind. Helen took a turn at the front for too long, determined not to appear protected by the others. By the time she moved aside, her legs felt heavy and oddly distant. The rider behind asked if she was all right. She nodded, saving the breath a spoken answer would cost.
+
+The second climb separated her from the group almost immediately. She could still see their jackets when the man from breakfast drew level. His name was Martin. He said he had misunderstood "social" too. They rode together for a while, exchanging occasional complaints in the gaps between breaths. When he suggested telling Rob they needed a slower pace, she said she preferred not to hold everyone up.
+
+"They're already waiting," Martin said. "They just don't know for how long."
+
+At the junction, Helen finally admitted she was struggling. Rob looked more relieved than concerned. He had been trying to decide whether she wanted space or assistance. There was a shorter road to the cafe, he explained, without the final climb. Two other riders chose it immediately. One had an afternoon shift; the other had been hoping someone would suggest it since breakfast.
+
+Tess joined them. Helen assumed she was being kind until the younger woman said she disliked the descent on the longer route. She was a strong climber but still nervous on steep downhill roads. Helen had been admiring a complete athlete who did not exist. In return, Tess had mistaken Helen's silence for the concentration of someone comfortably managing her effort.
+
+They reached the cafe before the faster group. Martin ordered two cakes and said that next week he intended to train specifically for sitting down. Helen laughed so hard she spilled coffee into the saucer. When Rob arrived, she asked whether the club still ran the shorter Saturday rides. He said they had never stopped, although the website made them surprisingly difficult to find.
+
+At home she entered the ride in her old training notebook. The distance looked disappointingly small beside entries from four years earlier. She considered adding an explanation, as if the notebook might accuse her of laziness. Instead, she wrote the names of the people she had ridden with and the time of next Saturday's meeting. Her legs were already stiffening. She moved the bicycle away from the bedroom wall and left it near the front door.`
+  },
   // NEXT_READING
 ];
 
