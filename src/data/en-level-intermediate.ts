@@ -403,6 +403,33 @@ A month later, Frances returned with a small notebook and a very large envelope.
 
 Jo fetched two pencils. They still had several hundred photographs to look through, and the handwriting on the envelopes was difficult.`,
   },
+  {
+    ...DEFAULTS,
+    id: "en-l6-after-my-last-night-shift", level: 6, createdAt: 260_015,
+    title: "After My Last Night Shift",
+    blurb: "A bakery worker writes to the colleague who will miss her least convenient habits.",
+    topics: ["letters", "work", "food"],
+    body: `Dear Sal,
+
+I woke at two this morning and reached for my work trousers before remembering that I don't need them anymore. After twelve years of night shifts, my body hasn't read the retirement card. The trousers are still on the chair, and I suspect they'll stay there for a while.
+
+Thank you for the party. I know you were responsible for the cake because nobody else would put "Enjoy your lie-ins" across something shaped like an alarm clock. I took the clock face home. My grandson ate the number seven and then asked why a bakery worker needed a cake from another bakery. I told him I deserved a night off.
+
+What I remember most about our shifts is the hour before the delivery drivers arrive. Outside, the streets are quiet, but inside we're trying to finish everything at once. You always say you like that hour. I used to think you were pretending. Then I noticed you humming whenever the first trays went out, and realised you probably meant it.
+
+I'll miss the journeys home more than the journeys in. At six, the city seems to belong to people who are about to do something. Shop shutters go up, buses fill, and the newspaper seller has an opinion about the weather before anyone asks. I'd be passing through all of it with a whole working day already behind me.
+
+I won't miss explaining that an afternoon phone call can wake someone who has worked all night. My sister never quite accepted this. She used to say, "But it's three o'clock!" as if I had forgotten to look outside. Now I'll have to find another reason for not answering her calls immediately.
+
+There are a few things I meant to tell you before leaving. The notebook of customer requests is in the office drawer, not the cupboard where we used to keep it. I moved it last week and forgot to update the note. Also, the radio behind the flour shelf is mine. You can keep it if you want it. It only receives one station clearly, which has saved us years of arguments.
+
+Please don't agree to cover every extra shift just because I'm gone. The manager needs a proper replacement, and you need the days off you've already booked. I enjoyed working with you, but I don't want my retirement to mean you never get to see your garden.
+
+Come for lunch next month when your rota allows it. Bring no bread. I intend to buy some from a shop, complain about the price, and eat it without checking the shape of every loaf.
+
+Love,
+Jean`,
+  },
 ];
 
 export const EN_INTERMEDIATE_TEXTS: LibraryText[] = INTERMEDIATE_DRAFTS.map(({ topics: _topics, ...text }) => text);
