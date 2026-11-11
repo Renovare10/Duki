@@ -242,6 +242,36 @@ There is pleasure in looking beyond the suggested line. On that first city visit
 
 I still keep that map folded in an old travel notebook. It was excellent for finding trains. The street map I bought later was excellent for getting lost slowly on purpose. I needed both, but I needed to understand what each one could tell me before asking it where to go.`,
   },
+  {
+    ...DEFAULTS,
+    id: "en-l5-the-wrong-dragon", level: 5, createdAt: 260_009,
+    title: "The Wrong Dragon",
+    blurb: "A theatre assistant collects a costume without asking one useful question.",
+    topics: ["humor", "arts", "work"],
+    body: `The costume shop had three green dragons ready for collection. Oliver didn't know that. His director had sent him a message saying, "Collect the dragon before four," and he had arrived at the shop at three fifty with a small car and very little patience.
+
+"The green dragon?" the assistant asked.
+
+"That's right," Oliver said. He was already looking at the traffic on his phone. The assistant brought out a large bag, checked the theatre company's name, and gave him a receipt. There were two orders under that name, but Oliver pointed at the first one before she finished explaining.
+
+At the theatre, the actor playing the dragon was waiting on stage. Oliver opened the bag and pulled out a bright green head with friendly eyes. Next came a round body, short wings, and enormous soft feet. The actor stared at them.
+
+"Am I supposed to frighten the village," he asked, "or invite it to my birthday party?"
+
+Their play needed a terrible dragon that lived in a mountain cave. This dragon had a yellow bow tie. When Oliver pressed one of its paws by accident, it made a cheerful squeaking sound.
+
+The director closed her eyes. Oliver checked his receipt. The costume belonged to the same company's children's show, which was opening the following week. He had collected the right animal for the wrong production.
+
+By then, the shop was closed. Their final rehearsal was due to start in ten minutes. The director said they would have to rehearse in the friendly costume and exchange it the next morning. She told Oliver to stop apologising and help with the feet.
+
+The first scene went badly. The dragon could not enter the narrow cave door without turning sideways. Its soft tail knocked over a wooden tree. When the hero raised his sword, the dragon tried to step back and squeaked. Nobody on stage could speak for nearly a minute.
+
+Then the actor changed his voice. Instead of roaring, he asked the hero politely to stop waving the sword near his nose. The hero replied that he had spent three days climbing the mountain and expected at least a small fight. The director started writing in her notebook.
+
+They still exchanged the costume. Their new dragon had long teeth and proper wings, and it fitted through the door. However, the actor kept the polite voice for one short scene. The unexpected request made the hero seem less certain of himself, which the director liked.
+
+On opening night, Oliver stood backstage holding the spare sword. Before every scene, he checked exactly who needed it. His colleagues found this very funny. Oliver let them laugh. Asking twice took less time than driving back to a costume shop.`,
+  },
 ];
 
 export const EN_INTERMEDIATE_TEXTS: LibraryText[] = INTERMEDIATE_DRAFTS.map(({ topics: _topics, ...text }) => text);
