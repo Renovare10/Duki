@@ -220,6 +220,28 @@ On the way home, they passed a poster for another race in six weeks. Mark waited
 
 That evening, Nina sent her parents a photograph from the cafe. In the message, she wrote her time and said she was disappointed. Her mother replied that she wanted to hear about it on Sunday. Nina was glad she hadn't written that everything was wonderful.`,
   },
+  {
+    ...DEFAULTS,
+    id: "en-l5-the-city-under-the-map", level: 5, createdAt: 260_008,
+    title: "The City Under the Map",
+    blurb: "A visitor discovers why two useful maps can describe the same city differently.",
+    topics: ["travel", "daily-life"],
+    body: `On my first visit to a large city, I used the underground railway map to decide where to walk. Two stations looked far apart, so I bought a ticket and changed trains twice. When I came out, I could see the street where I had started. The journey had taken twenty minutes. The walk would have taken five.
+
+Nothing was wrong with the railway map. It showed which stations were connected and where I could change lines. That was the information a passenger needed. To make those connections easy to read, the designer had changed distances and straightened routes. I had asked the map a question it wasn't designed to answer.
+
+Every map leaves things out. A map that included every bench, doorstep, and tree would be difficult to carry and almost impossible to read at a useful size. The choices depend on the purpose. A walking map may show paths that a road map ignores. A map of bus services may make an important hospital clear while leaving nearby streets unnamed.
+
+Colour and symbols also guide our attention. A wide coloured line may look like the most important road, but importance can mean different things. For a driver, it might mean a fast route across town. For someone walking with a child, a smaller road with good crossings may be a much better choice.
+
+Digital maps can make these decisions feel automatic. We enter a destination and receive a route, sometimes with a very exact arrival time. Yet the route still depends on choices. Is it for walking or driving? Does it avoid stairs? Does it assume a speed that feels comfortable to us? A confident instruction can still be unsuitable.
+
+I now compare the route with a wider view before leaving. I check the travel mode and look for rivers, railway lines, and other barriers. If accessibility matters, I seek specific information rather than trusting a general route. I also check current notices, because a bridge or station entrance can close after a map was made.
+
+There is pleasure in looking beyond the suggested line. On that first city visit, I eventually walked between the two stations. I found a public garden, a quiet square, and a bakery with a queue outside. None of them had been visible on the railway map.
+
+I still keep that map folded in an old travel notebook. It was excellent for finding trains. The street map I bought later was excellent for getting lost slowly on purpose. I needed both, but I needed to understand what each one could tell me before asking it where to go.`,
+  },
 ];
 
 export const EN_INTERMEDIATE_TEXTS: LibraryText[] = INTERMEDIATE_DRAFTS.map(({ topics: _topics, ...text }) => text);
