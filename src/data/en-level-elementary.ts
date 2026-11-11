@@ -271,9 +271,9 @@ At the next corner, there was no bakery. A bike shop stood in its place. We look
 
 Farther along, we found the green building. It was a little shop with a flat roof. A man was painting its door white.
 
-"Was this always a shop?" Jack asked him.
+"What did this shop sell before?" Jack asked him.
 
-"No," the man said. "My mother sold ice cream here in summer. She painted the whole place green. Even the door."
+"Ice cream," the man said. "My mother sold it here in summer. She painted the whole place green. Even the door."
 
 Jack looked at me. "Now I remember! That's the ice cream shop."
 
@@ -412,7 +412,7 @@ Later, she played the recording again. Between the cooking instructions, her fat
   {
     id: "en-l4-someone-at-the-door", lang: "en", level: 4,
     title: "Someone at the Door",
-    blurb: "A school play nearly stops when the person making the door sound goes missing.",
+    blurb: "During a school play, Rosa must find another way to make a knocking sound.",
     body: `For the school play, Rosa wanted to be the detective. Instead, she got a job behind the stage. She had to make the sound of someone knocking on a door.
 
 "Only three knocks," the teacher said. "Wait until the detective puts down her cup."
