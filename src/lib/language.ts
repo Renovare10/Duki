@@ -77,13 +77,13 @@ export function mandarinOnly<T extends { words: WordRecord[]; texts: LibraryText
 }
 
 /**
- * Preview / no-sync mode. ON unless the build explicitly sets VITE_DUKI_CLOUD_SYNC=on, so a local
- * preview of this branch can never write to a real account (production only understands v1).
+ * Local-only build switch. Production syncs exactly as before (Mandarin only, v1). A build made
+ * with VITE_DUKI_CLOUD_SYNC=off (e.g. a throwaway preview) turns off sign-in, pulls and PUTs.
  */
 export function cloudSyncEnabled(env: Record<string, unknown> | undefined): boolean {
-  return env?.VITE_DUKI_CLOUD_SYNC === "on";
+  return env?.VITE_DUKI_CLOUD_SYNC !== "off";
 }
 
-export function previewNoSync(): boolean {
+export function localOnlyBuild(): boolean {
   return !cloudSyncEnabled(import.meta.env as Record<string, unknown> | undefined);
 }

@@ -25,7 +25,5 @@ export default defineConfig({
   test: {
     environment: "node",
     include: ["src/**/*.test.ts"],
-    // Existing sync tests exercise the real cloud path; language.test.ts covers the preview default (off).
-    setupFiles: ["src/test-setup.ts"],
   },
 });

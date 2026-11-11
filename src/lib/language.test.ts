@@ -3,20 +3,13 @@ import type { LibraryText, WordRecord } from "../types";
 import {
   cloudSyncEnabled,
   languageWordsView,
+  localOnlyBuild,
   mandarinOnly,
-  previewNoSync,
   readLanguage,
   wordStorageKey,
   writeLanguage,
 } from "./language";
-import {
-  assertSyncV2Body,
-  CloudWritesDisabledError,
-  packSnapshot,
-  pullSnapshotWithTag,
-  pushSnapshot,
-  SyncVersionError,
-} from "./sync";
+import { packSnapshot, pullSnapshotWithTag, pushSnapshot } from "./sync";
 
 const token = `test.${btoa(JSON.stringify({ email_verified: true }))}.test`;
 const settings = { fontFamily: "serif", fontSize: 28, theme: "paper" } as const;
@@ -71,48 +64,49 @@ describe("language-separated words", () => {
   });
 });
 
-describe("preview / no-sync mode", () => {
-  it("is on unless the build explicitly enables cloud sync", () => {
-    expect(cloudSyncEnabled(undefined)).toBe(false);
-    expect(cloudSyncEnabled({})).toBe(false);
-    expect(cloudSyncEnabled({ VITE_DUKI_CLOUD_SYNC: "true" })).toBe(false);
+describe("production cloud sync (Mandarin, v1, unchanged)", () => {
+  it("is on unless a build explicitly sets VITE_DUKI_CLOUD_SYNC=off", () => {
+    expect(cloudSyncEnabled(undefined)).toBe(true);
+    expect(cloudSyncEnabled({})).toBe(true);
     expect(cloudSyncEnabled({ VITE_DUKI_CLOUD_SYNC: "on" })).toBe(true);
+    expect(cloudSyncEnabled({ VITE_DUKI_CLOUD_SYNC: "off" })).toBe(false);
     vi.stubEnv("VITE_DUKI_CLOUD_SYNC", "");
-    expect(previewNoSync()).toBe(true);
+    expect(localOnlyBuild()).toBe(false);
   });
 
-  it("blocks every cloud PUT before any request is made", async () => {
-    vi.stubEnv("VITE_DUKI_API", "https://test.invalid");
-    vi.stubEnv("VITE_DUKI_CLOUD_SYNC", "");
-    const fetcher = vi.fn().mockResolvedValue(new Response(null, { status: 204 }));
-    await expect(pushSnapshot(token, snap(), fetcher)).rejects.toBeInstanceOf(CloudWritesDisabledError);
-    await expect(pushSnapshot(token, snap(), fetcher, [], { noSync: true })).rejects.toBeInstanceOf(CloudWritesDisabledError);
-    expect(fetcher).not.toHaveBeenCalled();
-  });
-});
-
-describe("sync body version", () => {
-  it("rejects bodies whose v is not 2", () => {
-    for (const body of [{ v: 1 }, { v: "2" }, { v: 3 }, {}, null, "x"]) {
-      expect(() => assertSyncV2Body(body)).toThrow(SyncVersionError);
-    }
-    expect(assertSyncV2Body({ v: 2 }).v).toBe(2);
-  });
-
-  it("refuses a GET that advertises v2 but carries a v1 body, before any merge or PUT", async () => {
+  it("reads the live duki-sync GET (x-duki-sync-version: 2 header on every response, v1 legacy body)", async () => {
     vi.stubEnv("VITE_DUKI_API", "https://test.invalid");
     const body = packSnapshot({ words: [word("中")], texts: [], sessions: [], settings, now: 1 });
     const fetcher = vi.fn().mockResolvedValue(
-      new Response(JSON.stringify(body), { status: 200, headers: { "x-duki-sync-version": "2" } }),
+      new Response(JSON.stringify(body), { status: 200, headers: { "x-duki-sync-version": "2", etag: '"e1"' } }),
     );
-    await expect(pullSnapshotWithTag(token, fetcher)).rejects.toBeInstanceOf(SyncVersionError);
-    expect(fetcher).toHaveBeenCalledTimes(1);
-    expect(fetcher.mock.calls[0][1]?.method ?? "GET").toBe("GET");
+    const pulled = await pullSnapshotWithTag(token, fetcher);
+    expect(pulled.snapshot?.words.map((w) => w.hanzi)).toEqual(["中"]);
+    // No version header is sent, so the server keeps answering with the legacy (Mandarin-only) projection.
+    const init = fetcher.mock.calls[0][1] as RequestInit | undefined;
+    expect(JSON.stringify(init?.headers ?? {})).not.toMatch(/x-duki-sync-version/i);
   });
 
-  it("refuses an unknown body version instead of treating it as an empty account", async () => {
+  it("PUTs a byte-identical v1 Mandarin body whether or not English rows exist on the device", async () => {
     vi.stubEnv("VITE_DUKI_API", "https://test.invalid");
-    const fetcher = vi.fn().mockResolvedValue(new Response(JSON.stringify({ v: 2, words: [] }), { status: 200 }));
-    await expect(pullSnapshotWithTag(token, fetcher)).rejects.toBeInstanceOf(SyncVersionError);
+    const zh = { words: [word("中")], texts: [text("zh-1")], sessions: [{ id: "s1", textId: "zh-1", finishedAt: 1, uniqueUnknown: 0, uniqueShaky: 0 }] as never, settings };
+    const withEn = {
+      words: [...zh.words, word("en:cat")],
+      texts: [...zh.texts, text("en-1", "en")],
+      sessions: [...zh.sessions, { id: "s2", textId: "en-1", finishedAt: 1, uniqueUnknown: 0, uniqueShaky: 0 }] as never,
+      settings,
+    };
+    const bodies: string[] = [];
+    const fetcher = vi.fn(async (_url: string, init?: RequestInit) => {
+      bodies.push(String(init?.body));
+      return new Response(null, { status: 204 });
+    });
+    await pushSnapshot(token, packSnapshot({ ...mandarinOnly(zh), now: 1 }), fetcher as never);
+    await pushSnapshot(token, packSnapshot({ ...mandarinOnly(withEn), now: 1 }), fetcher as never);
+    expect(bodies).toHaveLength(2);
+    expect(bodies[1]).toBe(bodies[0]);
+    const sent = JSON.parse(bodies[1]);
+    expect(sent.v).toBe(1);
+    expect(bodies[1]).not.toMatch(/en:|"lang"/);
   });
 });

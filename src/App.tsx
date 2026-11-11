@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { AddText } from "./components/AddText";
 import { Home } from "./components/Home";
 import { EN_SAMPLES } from "./data/en-samples";
-import { displayWordKey, isEnglishWordKey, languageWordsView, mandarinOnly, previewNoSync, readLanguage, wordStorageKey, writeLanguage } from "./lib/language";
+import { displayWordKey, isEnglishWordKey, languageWordsView, mandarinOnly, localOnlyBuild, readLanguage, wordStorageKey, writeLanguage } from "./lib/language";
 import { Reader } from "./components/Reader";
 import { Review } from "./components/Review";
 import { Stats } from "./components/Stats";
@@ -110,9 +110,9 @@ import type {
   WordStatus,
 } from "./types";
 
-// Preview / no-sync mode (default for this branch): no sign-in, no cloud pulls or PUTs.
-// Opt out only with VITE_DUKI_CLOUD_SYNC=on, after the v2 client + backend ship together.
-const LOCAL_DRAFT = previewNoSync();
+// Production: false, so sign-in and Mandarin cloud sync behave exactly as before. Only a build
+// made with VITE_DUKI_CLOUD_SYNC=off is local-only. English rows never sync either way.
+const LOCAL_DRAFT = localOnlyBuild();
 
 type View =
   | { name: "home"; shelf?: string }
@@ -1531,7 +1531,6 @@ export default function App() {
           }}
         />
       </header>
-      {lang === "en" || LOCAL_DRAFT ? <p className="draft-chip" role="status">{lang === "en" ? "English · preview" : "Preview"} · local only, cloud sync off</p> : null}
 
       {!LOCAL_DRAFT && !auth && !authPending && shared.signedIn && !continueDismissed ? (
         <div className="sso-continue" role="region" aria-label="Signed in on chadmurchison.com">

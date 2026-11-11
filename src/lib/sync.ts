@@ -4,7 +4,6 @@ import { normalizeText } from "./text";
 import { themeChoiceRank } from "./theme";
 import { normalizeWord } from "./word";
 import { emailVerifiedFromIdToken } from "./auth";
-import { previewNoSync } from "./language";
 import { ACCOUNT_STORAGE_BYTES, SYNC_HARD_MAX_BYTES, assertNewStories, assertStorageLimit, assertTextOnlyPayload, changedStories, withoutUnchangedStories } from "./storage-policy";
 
 /** Hard ceiling for any account write (the server rejects larger bodies). */
@@ -237,33 +236,6 @@ export class SignInExpiredError extends Error {
   }
 }
 
-/** A sync body this client must not merge or answer with a PUT. */
-export class SyncVersionError extends Error {
-  constructor(message = "The account returned a sync version this app can't read. Nothing was changed; your progress is still on this device.") {
-    super(message);
-    this.name = "SyncVersionError";
-  }
-}
-
-/**
- * A response that advertises the language-aware protocol (v2) must carry a v2 body. A body
- * claiming anything else (e.g. header v2 + body v1) is rejected before any merge or PUT, so it
- * can never overwrite cloud English data or history.
- */
-export function assertSyncV2Body(raw: unknown): { v: 2 } & Record<string, unknown> {
-  const v = raw && typeof raw === "object" ? (raw as { v?: unknown }).v : undefined;
-  if (v !== 2) throw new SyncVersionError();
-  return raw as { v: 2 } & Record<string, unknown>;
-}
-
-/** Cloud writes are refused in the local preview / no-sync mode. */
-export class CloudWritesDisabledError extends Error {
-  constructor() {
-    super("Cloud sync is off in this local preview. Your progress stays on this device.");
-    this.name = "CloudWritesDisabledError";
-  }
-}
-
 /** GET /me plus the ETag (only readable once the API exposes it via CORS; otherwise null). */
 export async function pullSnapshotWithTag(
   idToken: string,
@@ -277,15 +249,7 @@ export async function pullSnapshotWithTag(
   if (res.status === 401 || res.status === 403) throw new SignInExpiredError();
   if (!res.ok) throw new Error("Could not load account library.");
   const etag = res.headers?.get?.("etag") ?? null;
-  const raw: unknown = await res.json();
-  if (res.headers?.get?.("x-duki-sync-version") === "2") {
-    // Validate first (rejects header-v2/body-v1), then refuse: this client only merges v1.
-    assertSyncV2Body(raw);
-    throw new SyncVersionError("The account uses a newer sync version than this app. Nothing was changed.");
-  }
-  const v = raw && typeof raw === "object" ? (raw as { v?: unknown }).v : undefined;
-  if (v !== undefined && v !== 1) throw new SyncVersionError();
-  return { snapshot: parseSnapshot(raw), etag };
+  return { snapshot: parseSnapshot(await res.json()), etag };
 }
 
 export async function pullSnapshot(idToken: string, fetchImpl: typeof fetch = fetch): Promise<SyncSnapshot | null> {
@@ -297,10 +261,8 @@ export async function pushSnapshot(
   snapshot: SyncSnapshot,
   fetchImpl: typeof fetch = fetch,
   existingTexts: LibraryText[] = [],
-  opts: { ifMatch?: string | null; noSync?: boolean } = {},
+  opts: { ifMatch?: string | null } = {},
 ): Promise<void> {
-  // Preview / no-sync mode blocks every cloud PUT before anything else runs.
-  if (opts.noSync ?? previewNoSync()) throw new CloudWritesDisabledError();
   const base = dukiApiBase();
   if (!base) return;
   if (!emailVerifiedFromIdToken(idToken)) throw new Error("Verify your email to sync. Your stories remain on this device.");

@@ -32,3 +32,13 @@ npm run e2e:en     # needs the dev server; DUKI_URL / DUKI_CHROME / DUKI_SHOTS o
 ## Deferred
 
 More stories, Review/Stats/Add text/import for English, v2 sync, accounts.
+
+## Production (Nov 11 2026)
+
+- Production builds sync exactly as before: Mandarin only, v1 body, no `x-duki-sync-version` request header,
+  so the live duki-sync Lambda keeps answering with its legacy (Mandarin-only) projection.
+- English is local-only on this device: `mandarinOnly()` strips `en:` words, `lang: "en"` texts and their
+  sessions before every merge and PUT. IndexedDB stays at v6 (no schema change).
+- `src/lib/sync.ts` is byte-identical to main (cb02207). The preview's v2-header guard was removed because the
+  live Lambda sends `x-duki-sync-version: 2` on every response, which would have stopped Mandarin pulls.
+- A throwaway preview can still be built local-only with `VITE_DUKI_CLOUD_SYNC=off`.
