@@ -106,6 +106,66 @@ They put the table together in Mei's room. It stands by the window. Mei sits dow
 
 Mei looks at the table. Then she looks at the chair. She has a little more work to do.`,
   },
+  {
+    id: "en-book-blue-table-3", lang: "en", level: 2,
+    seriesId: "en-book-blue-table", seriesTitle: "Room for a Table", chapter: 3,
+    title: "Chapter 3: A Place for Everyone",
+    blurb: "Mei invites her helpers to dinner in a room with only one chair.",
+    kind: "sample", category: "novel", featured: false,
+    createdAt: 210_002, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+    body: `On Sunday, Mei calls Tom.
+
+"Can you and Ava come for dinner?" she asks. "You helped me. I want to cook for you."
+
+"We'd like that," he says. "What can we bring?"
+
+Mei looks at her room. "Two chairs."
+
+Tom laughs. "We can bring those."
+
+Mei goes to buy food. She gets eggs, rice, and some green vegetables. Back at home, she washes the vegetables. She puts a pot of rice on her little cooker.
+
+Then she opens her bag of plates. There are two plates inside. Two plates for three people. She looks in the bag again. It still has two plates.
+
+She calls Tom.
+
+"Could you bring a plate too?"
+
+"Just one?" he asks.
+
+"Yes. I have two."
+
+"I'll write a list," he says.
+
+At six, someone knocks. Tom is outside with two chairs. Ava stands behind him. She has a plate and a small yellow bag.
+
+They put the chairs by the table. Mei brings the food. Ava looks at her father's plate.
+
+"You have more egg than me."
+
+Tom gives her a piece of his egg. "Better?"
+
+Ava looks again. "Yes."
+
+They eat and talk. Mei tells them about her old home. Tom tells her where to buy good bread. Ava tells her about a dog on their street. The dog is called Mouse.
+
+After dinner, Ava opens the yellow bag. Inside is a little green plant.
+
+"For your table," she says.
+
+Mei puts it over the white mark. It looks nice there. But now Ava cannot put her plate down.
+
+Mei moves the plant to the window. They eat oranges. Juice runs down Tom's hand. He asks for a cloth.
+
+"My new table!" says Mei.
+
+Tom looks worried. Then he sees her face. She is laughing.
+
+When they go, Tom takes the chairs. Mei washes three plates. She dries Ava's plate and leaves it by the door.
+
+She can take it back tomorrow. Now she knows someone on her street.`,
+  },
 ];
 
 /** Topic ids are shared with the Mandarin library; every chapter has its own entry. */
