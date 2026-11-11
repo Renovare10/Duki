@@ -343,6 +343,41 @@ We spent the next few minutes making animals on the wall. My dinner got cold.`,
     createdAt: 250_009, readAt: null, bookmark: null,
     source: "Original (Duki) · AI-drafted",
   },
+  {
+    id: "en-l4-the-broken-zip", lang: "en", level: 4,
+    title: "The Broken Zip",
+    blurb: "At a repair event, Amir learns why his mother has kept an old travel bag.",
+    body: `Amir carried his mother's travel bag into the community hall. One handle was faded, and the zip would not close. He had offered to buy her a new bag, but she wanted this one repaired.
+
+At a table near the window, a woman called Jo was helping people mend clothes. She turned the bag over and examined the broken zip.
+
+"I can't fix this today," she said. "It needs a new zip, and I don't have one this long."
+
+Amir had expected a quick repair. He checked the time. His mother was waiting outside, and he had promised to take her shopping afterward.
+
+Jo noticed a faded label inside the bag. It had an address written by hand.
+
+"Your old home?" she asked.
+
+"My grandparents' place. My mother used this bag when she moved here."
+
+He had heard that story often, usually while trying to do something else. Now he looked at the label properly. His grandfather's writing was smaller than he remembered.
+
+Amir brought his mother inside. Jo showed her where the cloth had worn thin beside the zip. A new one would need a strong strip of cloth underneath it.
+
+"It will show," Jo warned.
+
+"That's fine," his mother said. "It doesn't have to look new."
+
+They chose dark blue cloth from a box of spare pieces. Jo wrote down the size of the zip they needed and gave them the address of a shop.
+
+There was no time for their other shopping. Instead, they went to buy the zip.
+
+On the bus, his mother held the bag on her knees. Amir asked her what she had packed for that first journey. This time, he put his phone away before she answered.`,
+    kind: "sample", category: "graded", featured: false,
+    createdAt: 250_010, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+  },
 ];
 
 export const EN_ELEMENTARY_TOPICS: Record<string, string[]> = {
@@ -356,4 +391,5 @@ export const EN_ELEMENTARY_TOPICS: Record<string, string[]> = {
   "en-l3-the-picture-map": ["adventure", "family", "arts"],
   "en-l3-the-dog-behind-the-door": ["letters", "nature", "humor"],
   "en-l3-the-afternoon-shadow": ["science", "school", "family"],
+  "en-l4-the-broken-zip": ["family", "daily-life", "shopping"],
 };
