@@ -758,6 +758,78 @@ That was true. It was also not an answer to the question on the desk.
 
 Nina wrote a price beside each completed job, then drew a line through the ones Hugo had waived. Seeing the figures crossed out made her feel disloyal. Leaving them invisible seemed worse. She left the page where he would have to move it before he could eat his sandwich.`,
   },
+  {
+    id: "en-book-repair-list-2", lang: "en", level: 7,
+    seriesId: "en-book-repair-list", seriesTitle: "The Repair List", chapter: 2,
+    title: "Chapter 2: What the Work Costs",
+    blurb: "Nina's tidy solution meets customers, a deadline, and the limits of unpaid help.",
+    kind: "sample", category: "novel", featured: false,
+    createdAt: 210_013, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+    body: `On Monday, Nina put a notice beside the door: Please ask for an estimate before leaving furniture. It looked reasonable, almost dull. Her father studied it as though she had announced that customers must bring their own chairs to sit on.
+
+"We've always given estimates," he said.
+
+"We've given some estimates."
+
+"People will think we're changing."
+
+"We are. A little."
+
+The first customer wanted six dining chairs repaired before a family party. Hugo began saying he would fit them in. Nina asked Sal how long the work would take.
+
+Sal examined each chair, made notes, and named a price. The customer's expression hardened.
+
+"I could buy new ones for that."
+
+"You could," Sal said. "These are well made, but repairing all six properly will take time."
+
+He took the chairs away. After his van had gone, Hugo pulled the notice from its tape and laid it face down on the desk.
+
+"That was a whole set of chairs."
+
+"And a whole set of hours," Nina said.
+
+The workshop seemed very quiet after that. She had wanted the figures to settle the disagreement. Instead, they had made a customer leave, and she could not prove he had been the wrong kind of customer to keep.
+
+At lunchtime, Mrs Shaw returned with a small table. One of its drawers stuck. Nina felt an immediate, unreasonable irritation, then disliked herself for it.
+
+"Could you have a look?" Mrs Shaw asked Hugo. "And this time you must let me pay. I brought cash on Friday and went home feeling ridiculous."
+
+Hugo rubbed the back of his neck.
+
+They agreed on a price for examining the drawer, with a call before any additional work. Mrs Shaw asked for it to be written down, then put the paper carefully in her handbag. She looked more comfortable leaving than she had arriving.
+
+Later, Sal took Nina to the back room. A large cabinet stood under a dust sheet. Its owner had paid a deposit and been promised delivery that Friday. Sal had been trying to complete it between smaller jobs.
+
+"I don't mind helping people," she said. "But I spend the week catching up. Your dad says the little repairs only take a minute. They take my minute while he's talking to the next person."
+
+Nina looked at the cabinet's unfinished doors. "Why didn't you say?"
+
+"I did. I'm saying it again."
+
+There was no anger in her voice, which made Nina's embarrassment sharper. She had arrived with coloured folders and assumed that the problem had been waiting for her to discover it.
+
+That evening, Hugo asked whether she could stay another month. The accounts were easier to understand now. Customers liked having someone at the desk. He said it would be good for her to keep busy while she looked for proper work.
+
+Nina put down her pen.
+
+"This is proper work."
+
+"I didn't mean it like that."
+
+"Would you ask someone else to do it for nothing?"
+
+He began to answer, stopped, and looked towards the back room. Sal had gone home at five. Nina had been there since eight and had not yet opened the job application she meant to finish.
+
+"I can't afford another full wage," he said at last.
+
+It was the first useful thing either of them had said for several minutes. Nina pulled a clean sheet from the printer.
+
+"Then let's work out what you can afford. And which jobs we can actually finish."
+
+This time, her father sat beside her rather than standing behind the chair. They left the shop phone ringing when it sounded after closing time. Whoever it was could leave a message.`,
+  },
 ];
 
 /** Topic ids are shared with the Mandarin library; every chapter has its own entry. */
