@@ -84,6 +84,21 @@ Later bicycles had pedals on a large front wheel. Some had a very big front whee
 
 By the late nineteenth century, the safety bicycle had become a better choice. Its wheels were closer in size, and a chain drove the back wheel. Modern bicycles still often have this shape. People use them to get to work, carry shopping, exercise, and race.`,
   },
+  {
+    id: "en-wiki-octopus", level: 5, title: "Octopus",
+    blurb: "Eight arms, three hearts, and several ways to escape.",
+    wikiTitle: "Octopus", sourceUrl: "https://en.wikipedia.org/wiki/Octopus",
+    createdAt: 220_005, topics: ["encyclopedia", "nature", "science"],
+    body: `An octopus has eight arms and a soft body. It belongs to the same animal group as squid and cuttlefish. It has no hard outer shell, so it can squeeze through surprisingly small openings. Its hard beak, at the center of its arms, limits how narrow an opening it can pass through.
+
+The arms have suckers that help the animal hold objects and move across the sea floor. An octopus can also move by forcing water out through a tube in its body. This pushes it in the opposite direction and helps it escape quickly.
+
+Many octopuses can change their skin color to match their surroundings. Some can change its texture too. A hungry animal may swim past without noticing them. If hiding fails, an octopus may release a cloud of ink and swim away.
+
+Inside its body are three hearts. Two move blood through the gills, where it takes in oxygen. The third sends blood around the rest of the body.
+
+Octopuses can learn and solve problems. Their arms contain many nerve cells, so the control of movement is spread through the body rather than handled entirely by the brain.`,
+  },
 ];
 
 export const EN_WIKI_TOPICS: Record<string, string[]> = Object.fromEntries(
