@@ -190,6 +190,36 @@ Agree that the speaker can skip a question or stop. If a subject becomes uncomfo
 
 Afterwards, save a clearly named copy and keep another copy somewhere safe. Write down the date, the speakers' names, and any limits on sharing. Let the person listen or read what you plan to use. Correct mistakes, respect anything they ask you to remove, and thank them for their time. You may finish with fewer stories than you expected, but the ones you keep will have been shared willingly.`,
   },
+  {
+    ...DEFAULTS,
+    id: "en-l5-the-last-runner", level: 5, createdAt: 260_007,
+    title: "The Last Runner",
+    blurb: "Nina finishes her first race and has to explain why she is disappointed.",
+    topics: ["sports", "feelings"],
+    body: `By the final turn, Nina could no longer see another runner. The road behind her was open, and the road ahead ended at a banner that two volunteers were beginning to untie. She lifted one hand. A volunteer saw her and quickly tied his end back to the fence.
+
+Nina crossed the line to a loud cheer from her brother, Mark. He took a photograph, handed her a bottle of water, and said she had done brilliantly. She bent forward with her hands on her knees. It was her first five-kilometre race, and she had come last.
+
+"You finished," Mark said. "That's all that matters."
+
+Nina knew he was trying to help. She also knew she had wanted to finish in under forty minutes. Her watch showed forty-four. She had trained for two months and told nearly everyone in her office about the race. Finishing was not all that had mattered to her that morning.
+
+At a nearby cafe, Mark ordered two breakfasts and started choosing photographs to send to their parents. "Don't send that one," Nina said. In the picture, the banner was hanging loose at one end. She didn't want to explain it every time someone looked at her phone.
+
+Mark put his own phone away. "Do you want to talk about it?"
+
+She told him about the number on her watch. She had started too fast because she was afraid of falling behind. After the first hill, she had needed to walk. Seeing everyone pass her had made her panic, and she had run too fast again.
+
+"That sounds awful," Mark said.
+
+It was the first thing he had said that made her laugh. They ate for a while without discussing the race. Then Nina asked whether he still had the video from her first practice run. He found it. In that video, she was walking after less than a minute and arguing that his chosen route was too steep.
+
+She watched it twice. She had improved. She had also run a poor race. Both things could be true, although she preferred one of them.
+
+On the way home, they passed a poster for another race in six weeks. Mark waited while she read it. He didn't suggest entering, which made it easier for her to think about. She took a picture of the date and asked him to help her practise a slower start.
+
+That evening, Nina sent her parents a photograph from the cafe. In the message, she wrote her time and said she was disappointed. Her mother replied that she wanted to hear about it on Sunday. Nina was glad she hadn't written that everything was wonderful.`,
+  },
 ];
 
 export const EN_INTERMEDIATE_TEXTS: LibraryText[] = INTERMEDIATE_DRAFTS.map(({ topics: _topics, ...text }) => text);
