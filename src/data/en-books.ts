@@ -688,6 +688,76 @@ Afterwards, Ruby asked whether they could use the camera again.
 
 He looked at her. She managed to keep a serious face until they reached the stairs.`,
   },
+  {
+    id: "en-book-repair-list-1", lang: "en", level: 7,
+    seriesId: "en-book-repair-list", seriesTitle: "The Repair List", chapter: 1,
+    title: "Chapter 1: Jobs with No Price",
+    blurb: "Nina returns to her father's furniture workshop and finds kindness in the accounts.",
+    kind: "sample", category: "novel", featured: false,
+    createdAt: 210_012, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+    body: `The repair list was written on the back of a calendar from a year nobody could agree on. Nina's father had crossed out the dates but kept the photograph of a yellow boat. Below it, in three different pens, were the names of customers who wanted chairs made steady, drawers persuaded to open, and tables restored to something like their remembered condition.
+
+Nina recognised most of the names. She had grown up above the workshop, doing homework to the sound of her father sanding wood downstairs. Now she was thirty-two, recently unemployed, and sitting at his desk while he looked for a receipt in a tin that had once held biscuits.
+
+"You don't have to organise everything," Hugo said.
+
+"I'm looking for the electricity bill."
+
+"It's paid."
+
+"I know. I need to put it in the accounts."
+
+Her father regarded the accounts as a form of weather. They happened at the end of each month, usually brought bad news, and were best discussed after they had passed.
+
+Nina had offered to help for a fortnight. Her old company had closed its regional office, and the sudden absence of meetings had left long, uncomfortable spaces in her days. Two weeks in the workshop would be useful to him and, she hoped, to her.
+
+Sal, the other furniture repairer, came through from the back carrying a chair upside down. She had worked for Hugo for seven years and could spot a loose joint by the way a chair sounded when she set it down.
+
+"Mrs Shaw's ready," she said. "What are we charging?"
+
+Hugo took the chair, pressed its seat, and nodded. "Leave that with me."
+
+Sal did not let go immediately. "I need a number for the job sheet."
+
+"She's been coming here since before Nina was born."
+
+"That isn't a number."
+
+He smiled in the way he did when he wanted an argument to turn into a joke. Sal put the chair down and returned to the workbench.
+
+Mrs Shaw collected it after lunch. Her husband had died the previous winter. Hugo asked about her garden, carried the chair to her car, and refused the money she held out to him. She left with her hands pressed together in thanks.
+
+Nina watched from the desk. It was the sort of thing she had always loved about her father. At her old office, even a fifteen-minute call needed a reference code. Here, someone could simply need something.
+
+Then Sal brought her the weekly time sheets.
+
+Mrs Shaw's chair had taken two hours. There were three other jobs marked Ask Hugo. One required materials that had already been bought. Sal's wages were due on Friday, the rent on Monday. The workshop had enough money for both, but little would remain afterwards.
+
+"Does he do this often?" Nina asked.
+
+Sal looked at the calendar on the wall. "That depends what you mean by often."
+
+Nina added up the hours. Her father came back smelling of rain and asked whether she wanted a sandwich. She turned the sheet towards him.
+
+"How much work on this list are we giving away?"
+
+He did not look at the total. "We aren't giving away the expensive things."
+
+"Time is the expensive thing."
+
+"You'll find people don't always have money when they need a repair."
+
+Nina disliked the implication that this was something she had failed to learn. She had spent the morning considering which of her own bills she could postpone.
+
+"Sal still needs to be paid for those hours," she said.
+
+"Of course she does. I've never missed a payday."
+
+That was true. It was also not an answer to the question on the desk.
+
+Nina wrote a price beside each completed job, then drew a line through the ones Hugo had waived. Seeing the figures crossed out made her feel disloyal. Leaving them invisible seemed worse. She left the page where he would have to move it before he could eat his sandwich.`,
+  },
 ];
 
 /** Topic ids are shared with the Mandarin library; every chapter has its own entry. */
