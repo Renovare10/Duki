@@ -218,6 +218,60 @@ Lin thought about the two balls he had missed. Then he thought about the one in 
 
 "What time?" he asked.`,
   },
+  {
+    id: "en-book-saturday-team-2", lang: "en", level: 3,
+    seriesId: "en-book-saturday-team", seriesTitle: "The Saturday Team", chapter: 2,
+    title: "Chapter 2: The Quiet Goalkeeper",
+    blurb: "Lin can stop the ball, but he must learn to speak to the players in front of him.",
+    kind: "sample", category: "novel", featured: false,
+    createdAt: 210_004, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+    body: `On Wednesday evening, Lin arrived early. Jo gave him a pair of gloves from the team's bag. They were a little large, but his fingers felt safer inside them.
+
+Ben came too. His work at the bakery finished at four on Wednesdays.
+
+"Jo asked me to help," he said. "Show me what you can do."
+
+Ben sent balls along the ground. Lin stopped most of them. Then Ben kicked some higher balls. Lin missed more of those.
+
+"Watch the ball," said Ben. "Don't watch my feet after I've kicked it."
+
+They worked until the others arrived. Soon Lin was hot, and the gloves were wet inside.
+
+During the practice game, Dan ran back towards him. A long ball came over Dan's head. Lin ran forward too. He could reach it before anyone else.
+
+But Dan did not know that. He tried to kick it away. Lin stopped suddenly, and the two boys almost fell over each other. The ball rolled into the goal.
+
+"You should have left it," Lin said quietly.
+
+"I didn't know you were coming!" Dan answered.
+
+Jo stopped the game. She asked Lin what he could see.
+
+"The ball. Dan. The other players."
+
+"Dan could only see the ball," she said. "You were behind him. Tell him when you're coming. Say 'Mine!' Say it early."
+
+Lin tried. His first shout was so quiet that Ben asked him to repeat it.
+
+On the walk home, Lin's older sister called. She asked how practice had gone.
+
+"I have to shout," he told her. "It feels strange."
+
+"You shout at me when I'm in the bathroom too long."
+
+"That's different."
+
+"You're telling me something I need to know," she said. "The others need to know where you are."
+
+At home, she stood at one end of the kitchen and threw him a soft ball. Each time, he had to call for it before he caught it.
+
+After ten throws, their father opened the door.
+
+"I know it's yours," he said. "The whole street knows it's yours. Can we have dinner now?"
+
+Lin put the ball down. He could hear his sister laughing as he went to wash his hands.`,
+  },
 ];
 
 /** Topic ids are shared with the Mandarin library; every chapter has its own entry. */
