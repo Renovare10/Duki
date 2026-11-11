@@ -397,6 +397,29 @@ They reached the cafe before the faster group. Martin ordered two cakes and said
 
 At home she entered the ride in her old training notebook. The distance looked disappointingly small beside entries from four years earlier. She considered adding an explanation, as if the notebook might accuse her of laziness. Instead, she wrote the names of the people she had ridden with and the time of next Saturday's meeting. Her legs were already stiffening. She moved the bicycle away from the bedroom wall and left it near the front door.`
   },
+  {
+    id: "en-l8-the-darkness-between-the-stars", level: 8,
+    title: "The Darkness Between the Stars",
+    blurb: "A dark night sky tells us something surprising about the history of the universe.",
+    topics: ["science", "nature"],
+    body: `On a clear night far from streetlights, the sky contains bright points separated by enormous patches of darkness. This seems so ordinary that it hardly demands an explanation. The sun has set, and the other stars are far away. Yet distance alone does not fully explain why the whole sky is not bright. Under certain assumptions about the universe, even very distant stars would collectively fill our view with light.
+
+Imagine a universe that has existed forever, is not expanding, and contains stars distributed roughly evenly throughout unlimited space. Now imagine dividing that space into shells centered on Earth. More distant shells contain more stars because their volumes are larger. Although each individual star looks dimmer with distance, the increasing number of stars compensates for that fading. Each shell of equal thickness would contribute roughly the same amount of light, until intervening stars blocked the ones behind them.
+
+Another way to picture the problem is to imagine standing in an enormous forest. Nearby trunks occupy only part of your view, but farther trunks fill many of the gaps. In a sufficiently extensive forest, almost every horizontal line of sight eventually meets a trunk. Similarly, in the imagined eternal universe, almost every direction should eventually lead to a stellar surface. The sky should resemble an overlapping wall of stars rather than bright pinpricks against blackness.
+
+This argument is commonly called Olbers' paradox, after the astronomer Heinrich Wilhelm Olbers, although earlier thinkers had discussed related questions. The paradox does not show that observations are wrong. It shows that the assumptions behind the imaginary universe cannot all describe the real one. A dark sky is evidence against a particular model, not a failure of the stars to behave as expected.
+
+Dust initially seems like an attractive solution. Perhaps clouds between the stars absorb enough light to leave the sky dark. But in a universe that had been shining forever, absorbing dust would heat up. It would then emit radiation of its own. Dust can change the wavelengths at which energy emerges, but it cannot serve indefinitely as a cold hiding place for an endless supply of stellar energy.
+
+The actual universe has a finite history. Light travels at a finite speed, so light from sufficiently distant regions has not had time to reach us. Looking outward also means looking backward: we see distant objects as they were when their light began its journey. We cannot simply keep adding shells filled with stars identical to nearby ones. Far enough back, we reach periods before ordinary stars existed.
+
+Cosmic expansion changes the picture as well. As the universe expands, the wavelengths of freely traveling light stretch. Radiation arriving from distant sources therefore has lower photon energies than when it was emitted, and its arrival pattern is altered too. The detailed calculation requires more than the shell argument, but the conclusion is clear: a static universe shining forever is a poor model of what we observe.
+
+Darkness to human eyes does not mean an absence of radiation. Space contains a faint background left from the early universe, now observed mainly at microwave wavelengths. Our eyes cannot detect it. Instruments can measure it across the sky, revealing information about conditions long before the formation of the stars we recognize. The apparently empty background is therefore not empty in every useful sense.
+
+There are also more immediate reasons why a particular sky looks dark or bright. Moonlight, clouds, atmospheric scattering, and artificial lighting affect what an observer sees from the ground. These local effects should not be confused with the larger cosmological question. Moving away from a city reveals more stars, but it does not turn the sky into a continuous shining surface. The darkness that remains is part of the evidence that the universe has changed over time.`
+  },
   // NEXT_READING
 ];
 
