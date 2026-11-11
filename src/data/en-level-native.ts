@@ -467,4 +467,37 @@ Mrs Dyer looked past Mara into the chamber, where an officer was folding away th
 
 Mara returned to her desk. In the new minutes she recorded the correction without describing the conversation at the door. Later she opened the next meeting's agenda and added the drainage assessment to her list of papers still outstanding.`,
   },
+  {
+    id: "en-l10-the-right-to-be-unremarkable", lang: "en", level: 10,
+    title: "The Right to Be Unremarkable",
+    blurb: "An opinion essay asking who benefits when ordinary activity must be recorded.",
+    kind: "sample", category: "graded", featured: false,
+    createdAt: 280_009, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+    body: `Imagine a café where every chair asks, before you sit down, what brought you in today. The question is friendly. The chair would like to understand your needs. You may skip the question, though the button allowing you to do so is a little smaller than the others. After your coffee, the table asks whether you would recommend the experience. On your way out, the door invites you to create a profile so that next time it can remember how you prefer to enter.
+
+This café does not exist, as far as I know. Its manners are familiar. Ordinary activities increasingly come with a request that we account for them: rate the transaction, explain the cancellation, identify the purpose of the visit. A single request is rarely oppressive. The cumulative effect is to make participation feel faintly contractual, as though buying a sandwich has appointed you an unpaid witness to the sandwich's performance.
+
+I want to defend a small freedom here: the freedom to do something ordinary without turning it into information about the kind of person I am. I may buy the sandwich because it is nearby. I may abandon a film because somebody knocks at the door. The abandoned film need not become evidence that I dislike its genre, its actors, or its running time. Much of life is circumstantial. Systems built to find patterns have a professional interest in forgetting this.
+
+There are useful reasons to collect feedback. A person cannot fix a broken service merely by hoping that silence means satisfaction. A hospital needs to know whether patients can understand its letters. A transit agency needs some account of where journeys begin and end. The choice is not between measurement and a charming world governed by intuition. Intuition can be a very comfortable arrangement for people whose mistakes are paid for by somebody else.
+
+The questions are what must be measured, who bears the work of measuring it, and what happens to the record afterwards. A count of passengers is not the same thing as a list of named passengers kept indefinitely. An anonymous complaint about a confusing letter is not the same thing as permission to combine medical correspondence with a shopping history. These distinctions are tedious to describe, which gives an advantage to anyone selling a single convenient button marked Agree.
+
+Convenience itself is real. I like a service that remembers my address. I do not want to type it on a small screen in the rain. When I accept that convenience, however, I should not have to pretend that remembering an address and constructing a permanent account of my behaviour are inseparable technical achievements. Sometimes the connection is a business decision. It should be defended as one, rather than disguised as the inevitable price of progress.
+
+The person who refuses may look awkward. Everybody else has downloaded the app; everybody else has accepted the terms. The queue is waiting. The assistant behind the counter did not design the process and cannot alter it. Insisting on a different route imposes an immediate, visible inconvenience, while the consequences of compliance remain distant and difficult to specify. This is a poor setting for meaningful negotiation. It converts a question about design into a disagreement between two tired people.
+
+We often discuss privacy as the concealment of embarrassing facts. This makes the unembarrassed person appear to have nothing at stake. Yet an ordinary record can acquire a different meaning when placed beside another record, or when interpreted by someone with a different purpose. A visit, a purchase, a pause in employment: each can be innocent and still be something we would rather explain in our own words, if explanation becomes necessary.
+
+There is also a loss that occurs before any sinister use of the information. People alter their behaviour when they expect an audience, even a hypothetical one. I do not mean that every recorded action becomes false. I mean that the possibility of interpretation joins the action itself. We begin anticipating the account we may have to give. Trying something clumsily, changing our minds, or spending an afternoon without a coherent purpose can start to feel like leaving untidy paperwork for our future selves.
+
+A defence of privacy that depends only on spectacular abuses misses this quieter cost. We need places where an unimportant action is allowed to remain unimportant. A person should be able to read an unfashionable book without endorsing it, attend a meeting without acquiring a permanent affiliation, or ask an elementary question without having it attached to a professional reputation. Some learning requires a period of looking less capable than we hope to become.
+
+This is not an argument that anonymity should excuse cruelty or prevent accountability. A system that protects a vulnerable speaker may also shelter someone harassing that speaker. Different settings require different safeguards. Invoking complexity, though, should begin a design discussion rather than end it. We can ask how long a record is needed, whether identification is necessary, and whether refusal actually remains possible. Those are practical questions, even when their answers are contested.
+
+My imaginary café need not throw away its booking system. It might simply allow a walk-in customer to sit down, pay, and leave. It might ask a question once rather than repeatedly until politeness becomes exhaustion. It might make the route without a profile as legible as the route with one. None of this guarantees virtue. It distributes a little less power to the party already holding the screen.
+
+I would probably still visit. I might even tell the owner that the coffee was good. What I want is for the compliment to remain something I chose to give, rather than the final task required to complete my breakfast.`,
+  },
 ];
