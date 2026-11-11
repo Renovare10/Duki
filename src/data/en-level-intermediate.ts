@@ -452,6 +452,28 @@ Before any vote, read the exact proposal aloud. Include conditions, costs, and r
 
 Finish by confirming who will do what and by when. Share a brief record afterwards and provide a way to correct factual errors. A clear result may still disappoint someone who preferred vegetables to benches. They should nevertheless be able to understand how the decision was reached, what was approved, and whether they volunteered to buy anything.`,
   },
+  {
+    ...DEFAULTS,
+    id: "en-l6-why-the-street-stays-warm", level: 6, createdAt: 260_017,
+    title: "Why the Street Stays Warm",
+    blurb: "What buildings, trees, and night-time temperatures reveal about urban heat.",
+    topics: ["science", "weather", "nature"],
+    body: `After a hot afternoon, a walk from a busy street into a shaded park can feel like a change in the weather. The sun is the same, and the places may be only a few minutes apart. Yet the materials under our feet, the shade above us, and the movement of air can make the experience very different.
+
+Sunlight warms surfaces. Dark road materials often absorb much of the sunlight reaching them, while a tree's shade reduces the sunlight falling directly on the ground below. Buildings and paved surfaces can also store heat during the day and release it later. This helps explain why a street may remain warm after the sun has gone down.
+
+Plants affect heat in another way. Water moves from soil through plants and eventually enters the air as water vapour. Evaporation uses energy and can cool the surrounding environment. The amount of cooling depends on conditions, including available water and the kind of vegetation. A dry patch of grass does not behave like a healthy, well-watered tree.
+
+Cities also produce heat through human activity. Vehicles, machinery, and cooling systems release heat. Air conditioning can make a room comfortable while sending heat outdoors. The effect on a particular street depends on the number and arrangement of buildings and machines, as well as the weather.
+
+The tendency for an urban area to be warmer than nearby less built-up surroundings is often called the urban heat island effect. It is not a promise that every part of every city is always hotter. Wind, cloud, local geography, and the time of day all matter. A shaded city garden and an exposed field can produce a different comparison from a dense shopping district and nearby woodland.
+
+Measuring the difference requires care. A thermometer left in direct sunlight may become warmer than the air you intended to measure. An instrument aimed at a road measures a surface temperature, which is not the same as air temperature. Comparisons are more useful when the instruments and methods are suitable and consistent.
+
+There are ways to reduce urban heat, but each needs planning. Trees can provide shade, yet they need space for roots and suitable care. Reflective roofs may absorb less solar energy, while poorly chosen bright surfaces can create uncomfortable glare. Opening a path for wind can help in some settings, but the arrangement of nearby buildings affects the result.
+
+These details matter because heat is experienced locally. A citywide forecast cannot describe every bus stop or upstairs bedroom. Knowing why one place stays warm helps planners ask better questions about shade, housing, and public space. It also explains why an evening weather report can sound comfortable while the pavement outside your front door is still giving back the afternoon's heat.`,
+  },
 ];
 
 export const EN_INTERMEDIATE_TEXTS: LibraryText[] = INTERMEDIATE_DRAFTS.map(({ topics: _topics, ...text }) => text);
