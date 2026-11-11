@@ -378,6 +378,62 @@ The woman was now surrounded by passengers. Sara did not want to join the crowd 
 
 "I'll look outside first."`,
   },
+  {
+    id: "en-book-alder-station-2", lang: "en", level: 4,
+    seriesId: "en-book-alder-station", seriesTitle: "A Night at Alder Station", chapter: 2,
+    title: "Chapter 2: A Different Kind of Waiting",
+    blurb: "Sara searches for a way out of Alder while Ruth makes herself useful inside.",
+    kind: "sample", category: "novel", featured: false,
+    createdAt: 210_007, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+    body: `The rain had collected in deep pools outside the station. Sara followed a sign to the bus stop, holding her folder over her head. Water ran down the back of her neck.
+
+There were two buses on the timetable. One went to the hospital. The other went to West Alder. Its last departure was printed beside the stop name: 17:10.
+
+Sara checked her phone. It was 17:26.
+
+For a few seconds, she stood staring at the timetable. She had been inside making calls when the bus left. If she had checked earlier, they might have caught it. That thought hurt more than the cold water in her shoes.
+
+When she returned to the hall, her mother was no longer on the bench.
+
+Sara found her by the closed cafe. Ruth was sitting at a table with an elderly man and a boy in a school uniform. Between them lay a large sheet of paper.
+
+"There you are," Ruth said. "We're playing a word game. Would you like to lose?"
+
+"What are you doing over here? I thought you'd gone somewhere."
+
+"I did go somewhere. About ten metres."
+
+Sara sat down. She told Ruth about the bus and the taxis. The boy, whose name was Owen, looked up from the game.
+
+"My dad's coming from West Alder," he said. "He says the main road's flooded. He's taking the long way round."
+
+Sara put her damp folder on the table. Even if they had caught the bus, it might not have reached the other station.
+
+The woman in the yellow coat passed them, carrying a box of water bottles. Her name badge said HELEN.
+
+Ruth raised her hand. "When you have a moment, could we ask you something?"
+
+Helen set the box down.
+
+"My daughter and I are going to Marsh Bay," Ruth said. "I can manage a few steps, but I can't climb high ones easily. What kind of bus is coming?"
+
+Sara had not thought of that. She had been so busy finding any bus that she had forgotten her mother's knee.
+
+"I'm still checking the vehicles," Helen answered. "I'll make a note. Please stay here where I can find you."
+
+After she left, Sara leaned back in her chair.
+
+"I said I'd arrange everything."
+
+"You arranged the journey," said Ruth. "You didn't arrange the tree."
+
+The elderly man pushed the paper towards Sara. He had written seven words beginning with B. Ruth had written nine.
+
+"Your mother says 'bus stop' counts as one," he said. "We need a judge."
+
+Sara took the pencil. Outside, the windows had grown dark. Inside, someone had opened a packet of biscuits. She ate one, then another, before she checked her phone again.`,
+  },
 ];
 
 /** Topic ids are shared with the Mandarin library; every chapter has its own entry. */
