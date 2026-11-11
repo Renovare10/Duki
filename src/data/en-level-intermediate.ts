@@ -272,6 +272,34 @@ They still exchanged the costume. Their new dragon had long teeth and proper win
 
 On opening night, Oliver stood backstage holding the spare sword. Before every scene, he checked exactly who needed it. His colleagues found this very funny. Oliver let them laugh. Asking twice took less time than driving back to a costume shop.`,
   },
+  {
+    ...DEFAULTS,
+    id: "en-l6-the-bridge-on-page-nine", level: 6, createdAt: 260_010,
+    title: "The Bridge on Page Nine",
+    blurb: "A walking guide goes to print just as its most useful route disappears.",
+    topics: ["work", "travel", "nature"],
+    body: `The first boxes of walking guides arrived on a Wednesday, six months after Ruth had started drawing the maps. She cut one open and turned straight to page nine. Her favourite route followed a stream through the woods, crossed a narrow footbridge, and returned through an orchard. In the photograph, the bridge looked new.
+
+On Thursday, a storm brought a tree down across it. By Friday morning, the park office had closed the crossing. Ruth read the notice on her phone while standing beside three hundred copies of a guide that now directed people towards a bridge they could not use.
+
+The publisher, Martin, suggested putting an update on their website. "We have a corrections page for exactly this kind of thing," he said. "The books aren't wrong about everything else."
+
+Ruth agreed about the other routes. She was less convinced that someone holding a printed guide in the woods would check a website first. The cover described all twelve walks as suitable for families. She asked Martin to delay sending the boxes to shops.
+
+He reminded her what storage cost and asked how long the bridge would be closed. She didn't know. The park office had no repair date, and inventing one would not improve the book. When she asked whether he would take his daughter on that route tomorrow, he said this was becoming personal.
+
+They ended the call without an agreement. Ruth sat at her desk, angry with Martin and increasingly annoyed with herself. She had argued about responsibility without offering a practical way to handle three hundred books.
+
+That afternoon, she spoke to the park officer. There was an alternative route along a public lane, but it was longer and had a steep section. It could not simply replace the family walk. Ruth asked permission to quote the closure notice and confirmed where readers could obtain current information.
+
+She drafted a short warning for page nine: the route was closed at the bridge, readers should not attempt the crossing, and reopening information was available from the park office. She also proposed a clearly visible notice inside the front cover. Martin could approve the wording, and she would help add the notices before any copies left the store room.
+
+This time, their conversation lasted fifteen minutes. Martin disliked the extra work, but agreed that the notices were better than hoping everyone visited the corrections page. They cancelled the route's place in an upcoming advertisement too.
+
+For two days, Ruth and a student assistant opened books and fixed notices into place. It was slow, dull work. In the final box, she found a copy with a small tear across page nine and put it aside for herself.
+
+The bridge reopened months later. Ruth updated the website, but left the warning in her own copy. Whenever someone praised the photograph, she opened the book far enough to show them the rest of the page.`,
+  },
 ];
 
 export const EN_INTERMEDIATE_TEXTS: LibraryText[] = INTERMEDIATE_DRAFTS.map(({ topics: _topics, ...text }) => text);
