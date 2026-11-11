@@ -268,6 +268,23 @@ Human arrivals have also changed the islands. Introduced animals, including goat
 
 Much of the archipelago is protected through a national park and marine reserve. Conservation work includes controlling introduced species and managing tourism. The islands' isolation helped shape their wildlife, but it cannot by itself protect that wildlife from changes brought by visitors, settlers, and ships.`,
   },
+  {
+    id: "en-wiki-fermentation", level: 7, title: "Fermentation",
+    blurb: "How cells obtain energy while changing the foods around them.",
+    wikiTitle: "Fermentation", sourceUrl: "https://en.wikipedia.org/wiki/Fermentation",
+    createdAt: 220_017, topics: ["encyclopedia", "science", "food"],
+    body: `Fermentation helps explain why bread dough rises and why yogurt tastes sour. In each case, living cells break down substances in their surroundings and release products that change the food. People used these processes long before they understood the microorganisms responsible.
+
+In biology, fermentation is a way for cells to obtain energy from organic compounds without relying on oxygen as the final receiver of electrons. This distinguishes it from the familiar form of cellular respiration that uses oxygen. The detailed chemistry varies between organisms, so fermentation does not always produce the same substances.
+
+Yeast can turn sugars into ethanol and carbon dioxide. In bread dough, the gas creates bubbles that help the dough expand. In beer and wine production, the alcohol is a desired product. Different conditions and ingredients lead to different results even when related organisms are involved.
+
+Bacteria used in yogurt production convert milk sugar into lactic acid. The increasing acidity helps change the milk's texture and gives yogurt its characteristic sourness. Other fermented foods depend on different combinations of microbes and raw materials.
+
+Fermentation is not restricted to food factories or kitchens. Microbes carry it out in natural environments, including animal digestive systems. Human muscle cells can also use a fermentation pathway when energy demand exceeds what oxygen-dependent processes can supply.
+
+Everyday use of the word is broader than its strict biochemical meaning. An industrial fermentation process may refer generally to growing microorganisms to manufacture a useful product, even when oxygen is supplied. Understanding the context matters: the name on a food process and the name of a cellular energy pathway do not always describe exactly the same thing.`,
+  },
 ];
 
 export const EN_WIKI_TOPICS: Record<string, string[]> = Object.fromEntries(
