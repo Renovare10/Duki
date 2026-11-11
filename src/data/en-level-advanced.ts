@@ -429,7 +429,7 @@ There are also more immediate reasons why a particular sky looks dark or bright.
 
 The auctioneer turned a page. We were holding up the viewing queue, so I moved aside and let a woman in a green coat inspect the legs. She crouched with an expertise I found threatening. Our table was being examined like a potential employee, and I wanted to tell her it had already worked hard enough.
 
-Our mother was moving to an apartment near the sea. She had chosen the apartment, arranged the sale, and refused our offers to store everything she could no longer use. "I am moving," she said, "not establishing a museum." The auction included furniture from several houses. She intended to spend the morning having lunch with a friend, leaving us strict instructions not to buy anything on her behalf.
+Our mother was moving to an apartment near the sea. She had chosen the apartment, arranged the sale, and refused our offers to store everything she could no longer use. "I am moving," she said, "not establishing a museum." The auction included furniture from several houses. She intended to skip the auction and have lunch with a friend, leaving us strict instructions not to buy anything on her behalf.
 
 I had no intention of obeying. My brother apparently felt the same, although we did not discover this until the bidding began. I raised my card at the opening price. Across the aisle, he raised his. We looked at each other with the furious surprise of people who have arrived independently at the same foolish plan.
 
