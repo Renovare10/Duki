@@ -87,6 +87,31 @@ At the door, the woman studied my map. "You draw like my grandson," she said. I 
 
 I watched until she reached the crossing, then started the engine. That afternoon I reported the outdated leaflet to my supervisor. I wanted the story to end with a corrected notice appearing the next morning, but it took two weeks. In the meantime, I learned to ask passengers for destinations when they seemed uncertain. I also learned where the connecting services stopped. These were not questions on the driving test, although I needed the answers almost every day.`
   },
+  {
+    id: "en-l7-a-loaf-full-of-holes", level: 7,
+    title: "A Loaf Full of Holes",
+    blurb: "The bubbles inside bread reveal the work of living organisms and heat.",
+    topics: ["food", "science"],
+    body: `A slice of bread is mostly a network of walls around empty spaces. Some holes are tiny and neat; others are large enough to let jam fall through. These spaces did not appear when someone cut the loaf. They began as bubbles in the dough, long before the bread went into the oven. To understand them, it helps to follow the life of an ordinary yeast loaf.
+
+The ingredients may look unpromising: flour, water, yeast, and salt. Wheat flour contains starch and proteins. When water is added and the dough is mixed, two groups of proteins help form gluten, a flexible network. A useful comparison is a stretchy bag, although the actual structure is much more complicated. It can hold gas while allowing the dough to expand.
+
+Yeast is a living organism, a kind of fungus. Baker's yeast uses sugars and can produce carbon dioxide and alcohol through fermentation. Enzymes in the flour help break some starch into smaller sugars that yeast can use. As carbon dioxide collects in bubbles within the dough, the dough rises. The yeast does not build the walls of those bubbles; the structure of the dough helps keep the gas from escaping immediately.
+
+Time and temperature affect this work. Dough usually rises faster in a moderately warm place than in a cool one. That does not mean the hottest possible place is best. Excessive heat can damage or kill yeast. A slow rise in the refrigerator can develop flavor while making the schedule more convenient for a baker. The exact result depends on the recipe, the temperature, and how long the dough is left.
+
+Salt does more than make bread taste pleasant. It also affects the dough's structure and the activity of yeast. Leaving it out can change both flavor and the way the dough behaves. Likewise, adding large amounts of sugar or fat creates a different environment from a basic flour-and-water dough. A method that works well for one loaf may need adjustments for another.
+
+Bakers often let dough rise, shape it, and then allow another rise before baking. Shaping redistributes gas and creates tension at the surface. It is not simply an attempt to squeeze out every bubble. Handle dough roughly at the wrong stage and a loaf may lose the open texture the baker wanted. Leave it rising too long and its structure may become unable to hold the gas effectively.
+
+Inside the oven, several changes happen close together. Gases expand as they warm, and some water becomes vapor. For a short time, yeast activity may increase before the rising temperature stops it. The dough grows quickly during this early stage, a change bakers call oven spring. Eventually the proteins and starch change in ways that set the loaf's structure, so it can no longer stretch as freely.
+
+The crust follows a different path from the moist interior. Its surface dries and becomes hot enough for browning reactions to create new colors and flavors. Inside, moisture keeps temperatures lower during ordinary baking. This is why a loaf can have a dark, crisp exterior around a pale, soft center. The whole loaf is in the same oven, but its parts are not experiencing identical conditions.
+
+Freshly baked bread is tempting to cut at once. Waiting allows the crumb, the soft inner part, to settle as heat and moisture move through it. Cutting too early can leave a gummy impression even when the outside looks finished. Cooling is therefore part of making bread, not merely the delay between baking and eating.
+
+The holes in a finished slice record many decisions. Flour choice, mixing, fermentation, shaping, and oven conditions all leave traces. A large hole is not automatically proof of a superior loaf; a tight, even crumb may be exactly right for a sandwich. Next time you spread something on bread, look at the surface first. Its ordinary pattern is the result of biology meeting a material that can stretch, hold, and finally become firm.`
+  },
   // NEXT_READING
 ];
 
