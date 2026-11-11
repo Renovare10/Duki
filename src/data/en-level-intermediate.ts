@@ -107,6 +107,38 @@ I still use numbers when I cook it at home. They help me begin, and they help me
 
 My mother has a copy of my longer recipe. She keeps it in a drawer and has never cooked from it. Once, I caught her showing it to a neighbour. "All this," she said, turning over the page, "for one pot of soup."`,
   },
+  {
+    ...DEFAULTS,
+    id: "en-l5-six-minutes-at-the-piano", level: 5, createdAt: 260_004,
+    title: "Six Minutes at the Piano",
+    blurb: "Waiting for a train, Daniel finds an audience he did not ask for.",
+    topics: ["arts", "travel", "feelings"],
+    body: `Daniel had forty minutes before his train. He bought a coffee, checked the departure board, and noticed a piano near the station cafe. A card above the keys said anyone could play. He had seen public pianos before, but there was usually somebody better sitting at them.
+
+That morning, the seat was empty. Daniel put his bag under it and opened the keyboard cover. He hadn't played regularly since leaving school. Still, he remembered one piece well enough to start without thinking. His left hand found the first few notes, and his right hand followed.
+
+Halfway through, he forgot what came next. He stopped, tried the last part again, and stopped a second time. Someone behind him said, "Take your time." That made him more nervous. He hadn't realised anyone was listening.
+
+He turned and saw a woman with a yellow suitcase. She was holding her phone towards him. "My sister plays," she said. "I thought she'd enjoy this."
+
+"Are you recording me?" Daniel asked.
+
+"Just a little bit."
+
+He took his hands off the keys. The woman lowered the phone, surprised. She explained that she only planned to send the video to her sister. Daniel understood that she meant to be friendly, but he didn't want a recording of his mistakes travelling to someone he had never met.
+
+"I'd rather you didn't," he said. His voice came out sharper than he intended.
+
+The woman looked embarrassed. She deleted the video while he watched, then walked towards the cafe. Daniel closed the keyboard cover. Now he felt embarrassed too. He had wanted ten quiet minutes with a piano, and somehow he had made a stranger feel bad.
+
+An announcement told passengers that his train was delayed. He still had time to sit somewhere else. Instead, he went to the cafe and found the woman waiting for tea. He thanked her for deleting the recording. "I wasn't angry with you," he added. "I just get nervous."
+
+She nodded. "I should have asked first. My sister always says that when I film her. Apparently I don't listen."
+
+When Daniel returned to the piano, he chose a shorter piece. The woman sat nearby with her tea, her phone inside her coat pocket. He made two mistakes but reached the end. This time he didn't turn around until the final note had faded.
+
+She clapped softly, then checked the board. They were taking the same train. On the platform, she asked how long he had studied music. He asked about her sister. There was no video to remember the morning by, but he could still hear the last few notes as the train pulled out.`,
+  },
 ];
 
 export const EN_INTERMEDIATE_TEXTS: LibraryText[] = INTERMEDIATE_DRAFTS.map(({ topics: _topics, ...text }) => text);
