@@ -85,6 +85,28 @@ Agree on costs before anyone orders a part. Also ask what happens if the repair 
 
 Before leaving, ask whether the item is ready to use and whether any work remains. Don't assume that being examined means it is safe. Take your belongings and any loose pieces with you. If the repair succeeds, you can thank the volunteer by explaining how you use the object. A mended backpack that goes to school every day has a more interesting future than one that stays in a cupboard.`,
   },
+  {
+    ...DEFAULTS,
+    id: "en-l5-the-recipe-with-no-numbers", level: 5, createdAt: 260_003,
+    title: "The Recipe with No Numbers",
+    blurb: "A family recipe becomes harder to write down than to cook.",
+    topics: ["food", "family", "culture"],
+    body: `My mother's recipe for tomato soup begins with "Take some tomatoes." It continues with "Add enough water" and ends with "Cook until it's ready." When I moved away, she wrote these instructions on a card. I thanked her, packed it carefully, and discovered a week later that I couldn't use it.
+
+I called to ask how many tomatoes I needed. "How many people are eating?" she asked. I said two. "Then enough for two people." We were both trying to be helpful, but we weren't having the same conversation. I wanted a number. She wanted me to picture a pot of soup.
+
+When I visited her next, I brought a notebook and a small kitchen scale. She thought this was very funny. While she cooked, I weighed the tomatoes and measured the water. I wrote down the size of the pot and the time she started. At last, I would have a recipe that meant something outside our kitchen.
+
+Then she tasted the soup and added more water. A few minutes later, she added another tomato. I crossed out my numbers. The first tomatoes had been sweeter than she expected, she explained, and there wasn't quite enough soup. She was following the food, while I was following the notebook.
+
+That afternoon, I understood why her card was so short. It wasn't a complete set of instructions. It was a reminder for somebody who already knew what the soup should look and taste like. The missing information was in her hands and her memory. I had eaten the soup for years without paying attention to either.
+
+We tried again the following day. This time, I cooked and she watched. She told me to notice how thick the soup was when I lifted the spoon. I wrote that down beside the amount of water. We also measured the extra water I added, so I could understand how much the soup had changed.
+
+I still use numbers when I cook it at home. They help me begin, and they help me explain the recipe to friends. However, my card now includes other details: the pot I use, the number of bowls it makes, and what to do if it looks too thick. There are food safety instructions in the kitchen books too; family memory isn't a substitute for those.
+
+My mother has a copy of my longer recipe. She keeps it in a drawer and has never cooked from it. Once, I caught her showing it to a neighbour. "All this," she said, turning over the page, "for one pot of soup."`,
+  },
 ];
 
 export const EN_INTERMEDIATE_TEXTS: LibraryText[] = INTERMEDIATE_DRAFTS.map(({ topics: _topics, ...text }) => text);
