@@ -504,6 +504,28 @@ In the second half, North Town scored twice. Harris made an obvious effort not t
 
 On Monday, Leah found the delivery problem: their company had entered the wrong order size. She called to explain the refund. Harris thanked her, then asked whether she thought the goalkeeper would recover his confidence. She said she hoped so, but declined to investigate that as well.`,
   },
+  {
+    ...DEFAULTS,
+    id: "en-l6-what-the-free-chair-cost", level: 6, createdAt: 260_019,
+    title: "What the Free Chair Cost",
+    blurb: "A free piece of furniture prompts an argument about money, time, and value.",
+    topics: ["shopping", "daily-life", "feelings"],
+    body: `The chair in my living room was free. I mention this whenever somebody admires it, although my brother says the claim needs a footnote. I borrowed his van to collect it, bought him lunch, and spent a Saturday cleaning it. According to him, a free chair that requires a van and a Saturday is simply a chair with a confusing price.
+
+He has a point. The number on a label tells us how much money changes hands for an object. It doesn't describe every cost involved in obtaining and using it. A cheap table may need expensive transport. A printer may be affordable until it needs more ink. A free cupboard can become a problem if there is nowhere to put it.
+
+Time matters too, although it is harder to compare with money. Collecting the chair meant giving up a walk I had planned with a friend. That doesn't mean I should multiply every hour by my working wage. I wasn't choosing between collecting furniture and earning extra pay. I was choosing between two ways of spending a day, and one of them involved carrying something heavy downstairs.
+
+My brother's calculation also leaves out what I enjoyed. I liked meeting the woman who gave away the chair. She was moving into a smaller flat and wanted it to be used. I enjoyed cleaning the wooden arms and finding that the marks came off more easily than expected. Those hours were work, but they weren't all a loss.
+
+The awkward part is separating pleasure from the desire to defend a decision. Once I had carried the chair home, I wanted it to have been a sensible choice. I became unusually interested in the price of similar chairs in shops. A high price made me feel clever, even though I had no intention of buying another one.
+
+There is a practical way to think about the next free offer before accepting it. I can ask where it will go, how it will get there, what condition it is in, and whether I would want it without the word free attached. These questions do not produce a perfect answer. They do make an overflowing hallway less likely.
+
+I still like the chair. It fits beside the window, and I sit there most evenings. My brother has stopped correcting me when I describe it as free, partly because I now tell the rest of the story without being asked.
+
+Last week, he sent me a photograph of a free dining table advertised nearby. I asked whether he wanted to borrow anything. "Just your opinion," he replied. We discussed the staircase before discussing the table.`,
+  },
 ];
 
 export const EN_INTERMEDIATE_TEXTS: LibraryText[] = INTERMEDIATE_DRAFTS.map(({ topics: _topics, ...text }) => text);
