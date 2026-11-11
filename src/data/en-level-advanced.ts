@@ -162,6 +162,33 @@ There are costs beyond the port fence. Ships burn fuel, trucks contribute to tra
 
 The container's strength is its ordinary appearance. Goods can travel far because people have agreed on the outside of the box, even when they know little about what is inside. Look at the different company names on containers passing a railway station. Their shared fittings record years of negotiation and investment. The box works because a large number of people, many of whom will never meet, have arranged to handle it in compatible ways.`
   },
+  {
+    id: "en-l7-the-midnight-gardener", level: 7,
+    title: "The Midnight Gardener",
+    blurb: "Missing water turns a peaceful vegetable garden into a small investigation.",
+    topics: ["nature", "humor", "adventure"],
+    body: `By the end of June, everyone in the community garden had accused someone else of stealing water. The rain barrel beside the shed was full on Monday evening and nearly empty by Tuesday morning. There had been no rain for a week. Under the new watering agreement, each plot could receive two cans a day. Someone, Priya announced, was taking considerably more.
+
+She called a meeting beside her beans. Twelve gardeners stood in the heat while she explained the evidence. Mr. Cole, whose tomatoes were unusually large, looked offended before anyone mentioned his name. Elena pointed out that she grew flowers, which several members seemed to consider less deserving of water than vegetables. Ben, who had joined in April, asked whether someone had checked the barrel for a leak.
+
+Priya said she had. Beneath the tap was a dry paving stone. The barrel stood upright on bricks, and no water was running down its sides. Besides, she had heard someone in the garden late the previous night. She lived in a flat overlooking the gate. There had been a scraping noise and then a bang. Nobody admitted to a midnight visit.
+
+Ben disliked suspicion more than he disliked losing sleep. He volunteered to watch the garden that evening. Priya offered to join him, partly because she owned a flask and partly because she did not entirely trust a new member with the investigation. They settled behind the shed at ten. By eleven, the tea was gone and Priya had explained every disagreement the garden had experienced in fifteen years.
+
+At half past eleven, a light appeared by the gate. Ben sat up so sharply that his folding chair collapsed. The light vanished. They heard hurried steps outside the fence, followed by a quiet voice asking whether someone needed help. It was Mr. Cole. He had come to put fleece over his young plants because the night was cooler than expected. He shone his torch on the broken chair and tried not to smile.
+
+They let him finish his work and leave. Priya whispered that visiting one's tomatoes in darkness was not proof of innocence. Ben suggested that nobody could remove a barrel of water in a pocket. They waited another hour. A fox passed along the far fence. Somewhere beyond the railway line, a machine hummed. Then came a hollow knock from the shed.
+
+The barrel was still beside it. Ben checked the level with his torch: lower than before. Priya examined the dry stone beneath the tap and folded her arms. He walked around the back instead. In the narrow space between barrel and wall, his shoe sank into wet soil. A thin stream was coming from a split near the bottom, almost hidden behind a supporting brick.
+
+He put his hand against the plastic. The crack widened slightly when he pressed. They had filled the barrel in the evening, and the weight of the water had pushed against the damaged section. From the front, neither the crack nor the damp ground was visible. Water had been soaking into the earth behind the shed, where nobody usually walked.
+
+At the next meeting, Priya brought a photograph of the split. She apologized without naming anyone, which Elena said was not quite sufficient. Eventually Priya apologized to Mr. Cole in particular. He accepted, then admitted that he had sometimes taken a third can before the restrictions began. This confession produced another argument, shorter but louder than the first.
+
+Replacing the barrel cost more than expected. Ben suggested moving it away from the wall so everyone could inspect it. The others agreed. They also put a measuring stick beside it and wrote down the level each evening. For several weeks the garden was almost painfully polite.
+
+Then somebody began leaving the shared tools in the wrong cupboard. Priya proposed a sign-out book. Ben said he would help paint labels but would not, under any circumstances, spend another night behind the shed. His repaired chair was now reserved for sitting beside his own small, slightly disappointing potatoes.`
+  },
   // NEXT_READING
 ];
 
