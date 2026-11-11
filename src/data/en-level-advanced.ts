@@ -241,6 +241,31 @@ Daniel's final message came just before the program finished. His mother had bee
 
 Mara forwarded the request with Daniel's permission. She was disappointed at first, though she could not have said exactly what result she had expected. On her way home, the city buses were starting their routes. She left her headphones in her bag and listened to the uneven noise of the waking street.`
   },
+  {
+    id: "en-l7-the-plant-by-the-window", level: 7,
+    title: "The Plant by the Window",
+    blurb: "Two pots of basil show why a fair experiment needs more than a plausible result.",
+    topics: ["science", "school", "nature"],
+    body: `Suppose you want to know whether a liquid plant food helps basil grow. You put one plant by the kitchen window and another on a shelf. You feed the first plant and give the second only water. Three weeks later, the plant by the window is taller. You have a result that agrees with your prediction. You do not yet have a good reason to credit the plant food.
+
+The plants received different amounts of light. They may also have started at different sizes, occupied different pots, or grown in different soil. Any of these differences could affect growth. The difficulty is not that your observation is false. One plant really is taller. The difficulty is deciding what caused the difference, which is a separate question from what you saw.
+
+A controlled experiment tries to make comparisons that answer a specific question. In this example, you would aim to keep light, soil, pot size, and watering similar while changing the use of plant food. The plants receiving no added food form a comparison group, often called a control group. This does not mean they receive no care. It means they do not receive the particular treatment being tested.
+
+Even then, using only one plant in each group is risky. Living things vary. One seedling might have damaged roots before the experiment starts. Another might grow quickly for reasons you do not notice. Several plants in each group give you a better picture of that variation. A larger sample does not fix every mistake, but it can reduce the influence of one unusual individual.
+
+Assigning plants to groups at random can help too. If you choose all the strongest-looking plants for the food treatment, you have given that group an advantage before feeding begins. A random assignment gives each eligible plant a chance of receiving either treatment. With a small number of plants, the groups can still differ by chance. Randomization improves the method; it does not promise perfectly matched groups.
+
+You also need to decide what "helps grow" means. A taller stem is easy to measure, but it is not the only useful outcome. You might care about leaf number, leaf mass, or the plant's survival. Choosing your main measure before seeing the results makes it harder to select whichever number makes the treatment look best. You can still examine other measures, provided you explain what you did.
+
+Measurements introduce their own problems. A ruler placed at a different angle can change the recorded height. Measuring one group in the morning and the other in the evening might introduce a regular difference unrelated to the treatment. Clear instructions, consistent timing, and written records help other people understand the procedure. They also protect you from relying on memory when an unexpected result appears.
+
+Imagine that the treated plants grow only slightly taller on average, while individual heights vary widely in both groups. It would be unwise to announce that the food definitely works. It would also be too strong to declare that it has no effect. The experiment may be unable to distinguish a small effect from ordinary variation. An honest conclusion describes both the observed difference and the limits of the evidence.
+
+Repeating an experiment can test whether a pattern is dependable. A result that appears under one set of conditions may disappear under another. Perhaps the original soil lacked a nutrient that the food supplied, while richer soil already contained enough. That would make the first result useful but limited. It would not justify a claim about every plant in every garden.
+
+These habits apply far beyond pots of basil. Whenever someone says a change caused an improvement, ask what comparison supports the claim. Notice what else changed, how the outcome was measured, and how much variation there was. You need not turn every household decision into a formal study. But you can learn to separate a promising observation from a conclusion it has not yet earned.`
+  },
   // NEXT_READING
 ];
 
