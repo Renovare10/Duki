@@ -181,4 +181,65 @@ For a while they watched the black window reflecting the carriage. Then he asked
 
 At their stop she took his bag before he could object. He let her. Outside, while they waited for the taxi, he folded the blue scarf and put it carefully in his pocket. She could smell hot bread from the station bakery.`,
   },
+  {
+    id: "en-l9-the-quiet-carriage", lang: "en", level: 9,
+    title: "The Quiet Carriage",
+    blurb: "A passenger appoints himself guardian of the train's silence.",
+    kind: "sample", category: "graded", featured: false,
+    createdAt: 280_003, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+    body: `I had chosen the quiet carriage because I needed to rehearse a difficult conversation in my head. My partner called this worrying. I called it preparation, although I concede that preparation usually ends when the event begins, whereas I have been known to revise an argument several years after losing it.
+
+The conversation concerned my retirement. My department wanted a date. I had offered a season, which my manager said was not sufficiently precise for payroll. Now I was on my way to see my daughter, who had opinions on the subject, and who would ask whether I had brought the papers she had emailed. I had brought them. They were underneath my newspaper, where I could avoid seeing them without technically having forgotten them.
+
+At the first stop, a young man sat across the aisle. He had a laptop, two phones, and the alarming confidence of someone who expects a table socket to work. Before we had left the platform he was on a call, explaining that he was literally on the train. This was undeniable, but I resented being made part of the evidence.
+
+I waited until he said, "Can you hear me?" for the third time. Then I pointed to the sign above the window.
+
+"Quiet carriage," I said.
+
+He glanced up, covered the phone, and apologised. Then he went into the vestibule. I felt a brief, clean satisfaction. A rule had been broken, a rule had been enforced, and nobody had needed a committee.
+
+A woman two rows ahead opened a packet of something crisp. Each item required an excavation of the wrapper. I looked towards her, but there were limits to my jurisdiction. Across from her, a child drew on a tablet whose pen made a tiny click against the screen. A pair of headphones leaked a rhythm like a distant machine developing a fault. Silence, once you begin defending it, turns out to have a great many enemies.
+
+The young man returned and worked without speaking. I attempted my retirement papers. They used the word flexibility several times, usually to describe an obligation on my part. After a paragraph about optional transitions, I found myself reading the same line for the fourth time. The train entered a tunnel. My own phone rang.
+
+It was my daughter. I silenced it at once, fumbling so badly that the device fell between my seat and the wall. The young man pretended not to notice. By the time I had retrieved it, she had called again. There was also a message: Please answer. Nothing awful. Need to change plans.
+
+I got up and went into the vestibule, carrying my phone in front of me like a permit. The automatic door refused to close until I moved my heel. Behind it, the carriage was bright and orderly. Out here there was a draught and a smell of warm metal.
+
+"The plumber's here," my daughter said. "He was meant to come yesterday. Can you stay on to the next station? I'll meet you there."
+
+I explained that I had a ticket to her station, not the next one. She said I could buy another. I explained that the train might not stop. She said she had checked. I heard, with some irritation, the tone I used myself when offering a solution to somebody determined to preserve a problem.
+
+"Dad, are you still there?"
+
+The signal broke. I moved towards the door and said, rather loudly, "Can you hear me?"
+
+Through the glass I saw the young man look up. His expression did not change, which was worse than a smile.
+
+When I returned, he pointed at the papers protruding from my newspaper. "Sorry, I think that's your name on the floor."
+
+A page had slipped under the table. He reached it before I could. It contained an estimate of my income after work, printed in large type at my daughter's insistence. I took it from him with the embarrassment of having had a private number spoken aloud, although he hadn't said a word.
+
+"Forms," he said sympathetically.
+
+"Retirement."
+
+"My mum's just done hers."
+
+We spoke quietly, leaning across the aisle. His mother had worked in a dental surgery for thirty-two years and had immediately taken another job, part-time, at a garden centre. She liked knowing where she had to be on Tuesdays. I said that I understood this. He said he was a sound engineer travelling to a job interview, which explained the two phones but made his original offence seem professionally inexcusable.
+
+The child ahead of us looked around. A finger went to her lips. We both stopped talking.
+
+At the next station I helped the young man free his bag from a strap caught under the seat. He wished me luck with the forms. I wished him luck with the interview. He left, and for the remainder of the journey his empty seat seemed to make more room than it occupied.
+
+My daughter was waiting on the platform beyond her usual stop, wearing slippers inside her boots. I showed her the additional ticket before she asked. Then, because I wanted to say it before we reached the car, I told her I was thinking of leaving work in April.
+
+"This April?"
+
+"Yes. A date in April. I'll work out which one."
+
+She took my bag, and we went to find somewhere to have lunch while the plumber finished. I left the papers folded in my coat.`,
+  },
 ];
