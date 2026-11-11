@@ -566,6 +566,37 @@ I took one, then asked a stranger to photograph us together. Dad put an arm arou
     createdAt: 250_016, readAt: null, bookmark: null,
     source: "Original (Duki) · AI-drafted",
   },
+  {
+    id: "en-l4-the-night-receptionist", lang: "en", level: 4,
+    title: "The Night Receptionist",
+    blurb: "On his first hotel night shift, Paul has to solve a problem he cannot see.",
+    body: `By two in the morning, Paul had completed everything on the hotel's night checklist. He had checked the doors, counted the spare keys, and prepared the breakfast room. His first night shift seemed surprisingly quiet.
+
+Then the phone rang. A guest in room twelve said there was a strange noise in the room above her.
+
+Paul checked the screen. Room twenty-two was empty. He went upstairs and listened outside its door, but heard nothing. With his master key, he opened it and looked inside. Everything was still.
+
+He returned to the desk. Five minutes later, the guest called again.
+
+"It's happening now," she said. "Like something rolling across the floor."
+
+Paul checked his instructions. They told him who to call for an emergency and how to record a complaint. Neither seemed quite right for an occasional rolling noise.
+
+He asked the guest if he could come to her room and listen. From beside her door, he finally heard it: a low rumble, followed by a click. It seemed to come from above the wardrobe.
+
+In the corridor outside was a cupboard holding a small fridge for guests' drinks. It stood against the wall beside her room. Paul listened there until the motor started again. One of the metal shelves inside was loose.
+
+He removed the empty shelf, and the rolling sound stopped. The fridge still made its ordinary low hum.
+
+The guest thanked him, then asked for an extra blanket. By the time he brought it, she was already half asleep.
+
+At seven, the day receptionist asked how his shift had gone.
+
+"Mostly quiet," Paul said. He handed over the night report, with a note about the fridge. Then he went home, where road workers were starting outside his bedroom window.`,
+    kind: "sample", category: "graded", featured: false,
+    createdAt: 250_017, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+  },
 ];
 
 export const EN_ELEMENTARY_TOPICS: Record<string, string[]> = {
@@ -586,4 +617,5 @@ export const EN_ELEMENTARY_TOPICS: Record<string, string[]> = {
   "en-l4-the-warmer-room": ["daily-life", "weather", "science"],
   "en-l4-below-the-clouds": ["adventure", "travel", "weather"],
   "en-l4-one-last-film": ["culture", "arts", "family"],
+  "en-l4-the-night-receptionist": ["work", "daily-life", "adventure"],
 };
