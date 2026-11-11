@@ -37,8 +37,44 @@ He asked for a second piece before he finished the first.`,
     createdAt: 250_000, readAt: null, bookmark: null,
     source: "Original (Duki) · AI-drafted",
   },
+  {
+    id: "en-l3-lunch-on-the-roof", lang: "en", level: 3,
+    title: "Lunch on the Roof",
+    blurb: "On his first day at work, Daniel cannot find a quiet place to eat.",
+    body: `Daniel started his new job on a Monday. By lunchtime, he knew where to find paper and how to use the coffee machine. He did not know anyone's name.
+
+The office kitchen was full. People stood around the table with their plates. Daniel held his lunch box and waited by the door.
+
+"You can come upstairs," a woman said. "There's a garden on the roof."
+
+Her name was Ruth. She took him up one floor and opened a heavy door. Outside, there were two benches and some large plants. Daniel could hear buses in the street below.
+
+He sat down and opened his lunch box. Inside were cold noodles and a fork. Ruth had bread and cheese.
+
+For a while, they ate without talking. Daniel was glad. He had answered so many questions that morning.
+
+Then a small brown bird landed near his shoe. It looked at his noodles.
+
+"Does it work here too?" Daniel asked.
+
+"It comes every day," Ruth said. "But it never answers the phone."
+
+Daniel laughed. They talked about the birds they saw near their homes. Ruth lived by a lake. Daniel lived above a busy shop.
+
+After lunch, Ruth put her empty box in her bag.
+
+"Same time tomorrow?" she asked.
+
+"Yes," Daniel said. "I'll bring a warmer coat."
+
+Back at his desk, he still had to check the paper to remember his new password. Ruth's name was easier to remember.`,
+    kind: "sample", category: "graded", featured: false,
+    createdAt: 250_001, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+  },
 ];
 
 export const EN_ELEMENTARY_TOPICS: Record<string, string[]> = {
   "en-l3-the-last-peaches": ["shopping", "food", "family"],
+  "en-l3-lunch-on-the-roof": ["work", "feelings", "daily-life"],
 };
