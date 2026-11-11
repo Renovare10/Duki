@@ -375,4 +375,43 @@ This year I planted radishes again, in a wider container. The packet was the sam
 
 The others went into the compost. There was no photograph, partly on principle and partly because I had dirt on my hands. Later I wrote down the date.`,
   },
+  {
+    id: "en-l9-the-understudy", lang: "en", level: 9,
+    title: "The Understudy",
+    blurb: "An actor gets her chance, but the performance refuses to become a triumph.",
+    kind: "sample", category: "graded", featured: false,
+    createdAt: 280_007, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+    body: `At six seventeen, Leila was promoted from person holding a sandwich to person holding up the production. The stage manager found her in the loading bay and said that Frances had lost her voice. Not a sore throat, not nerves, but an actual absence of sound. Leila put the sandwich back in its wrapper. She had imagined this announcement so often that its arrival seemed badly acted.
+
+She knew the role. She knew it standing at her kitchen sink and sitting on the last bus home. She had performed it to a washing machine that interrupted every second speech with a spin cycle. Yet as she followed the stage manager upstairs, she couldn't recall the first line. All she could remember was that Frances's shoes were half a size smaller than hers.
+
+The play concerned a family deciding what to do with a house. In the rehearsal room, people had called it a study of inheritance. Leila thought it was mostly about who got to finish a sentence. Her character, the eldest daughter, spoke for long stretches while other people handled glasses, opened drawers, and waited to contradict her. The pauses were difficult. Alone in her flat she could make them feel charged. Onstage she feared they would feel like forgetting.
+
+Frances sat in the dressing room with a scarf around her neck and a notebook on her lap. She wrote good luck, underlined it, and showed it to Leila. Her expression was generous and furious. Leila understood both feelings and wished she didn't. A dresser appeared with the costume. Nobody mentioned the shoes until Leila stood and winced.
+
+"Use your own," the dresser said. "They'll be looking at your face."
+
+Leila had spent years hoping this was true. It sounded suddenly like a threat.
+
+At seven twenty-five, the company gathered behind the curtain. The actor playing her brother squeezed her shoulder. "I'll keep an eye on you," he said, which was kind and also exactly what she didn't want. She wanted him to behave as though this happened every day. She wanted five contradictory forms of kindness, none of which she could explain before the lights went down.
+
+Her first entrance went well. The door opened cleanly, and the first line returned as soon as she saw the table. There were faces beyond the light, more distinct than she expected. Someone in the second row was taking off a coat with painful deliberation. She looked at the actor playing her mother and began the scene.
+
+For twelve minutes she was competent. She could feel this without enjoying it. She placed the glass in the right place, waited for the laugh, and resisted rushing the speech about the roof. Then her brother entered with a letter, and she took it with her right hand instead of her left. This blocked the gesture that should have followed. A small error, invisible to most of the audience, but she began watching herself correct it.
+
+The next cue went past. Her brother repeated the last few words of his line. She knew he was helping. She also heard him helping, and for a second the whole theatre seemed to hear it with her. The line came back. She said it too loudly. Somebody coughed. The scene continued without requiring her permission to survive.
+
+By the interval she wanted two things: to be told she was wonderful and to be left completely alone. The stage manager offered water and a note about the letter. Leila nodded. On her phone was a message from her sister: They've announced you're on! Should I come? Leila wrote No, then deleted it. She wrote Too late for tonight. Tomorrow if I'm still doing it.
+
+The second half was better in places and worse in others. She discovered that one joke needed less effort than she had been giving it. She also stepped on another actor's final line, and the look he gave her belonged to neither the play nor their friendship. Near the end, during the speech she had practised most, she heard somebody unwrapping a sweet. The ordinary rudeness steadied her. People could be bored while she did the most important thing of her year. She had to continue anyway.
+
+There was applause. It was neither thunderous nor reluctant. At the curtain call she bowed too early, rose, and bowed again with everyone else. Backstage, people said well done in voices softened by fatigue. Her brother said she had saved the evening. The actor whose line she'd interrupted said nothing until she apologised. Then he said, "Tomorrow, just listen for the end."
+
+Frances had gone home. On the dressing table she'd left a note about the costume's loose fastening, which could come undone if pulled too quickly. Leila had spent the evening assuming the problem was her own clumsiness. She folded the note and put it beside her phone.
+
+Outside, rain had gathered in the loading bay. Leila found her sandwich where she had left it and threw it away. She was hungry enough to resent the waste. The stage manager called after her that Frances would see a doctor in the morning, and they would let her know about tomorrow.
+
+On the bus, Leila opened the script. A man across the aisle asked if she'd been in something he might have seen. She said probably not. Then she marked the letter scene in pencil and tried to hear the other actor's line all the way to its end.`,
+  },
 ];
