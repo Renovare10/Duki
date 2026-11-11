@@ -219,6 +219,21 @@ Maathai's campaigning brought her into conflict with political leaders. She oppo
 
 In 2004, she became the first African woman to receive the Nobel Peace Prize. The award recognized connections between environmental protection, democracy, and peace. Maathai died in 2011, leaving a movement that had made local tree planting part of a much larger public effort.`,
   },
+  {
+    id: "en-wiki-refrigeration", level: 6, title: "Refrigeration",
+    blurb: "Keeping food cold means moving heat somewhere else.",
+    wikiTitle: "Refrigeration", sourceUrl: "https://en.wikipedia.org/wiki/Refrigeration",
+    createdAt: 220_014, topics: ["encyclopedia", "science", "food"],
+    body: `A refrigerator keeps its inside cooler than the surrounding room. It does this by moving heat from the inside to the outside. The machine needs energy because heat does not normally flow in that direction by itself.
+
+In a common refrigerator, a substance called a refrigerant travels around a closed system. In one part, it absorbs heat as it changes from liquid to gas. A compressor raises the pressure of the gas. Elsewhere, the refrigerant releases heat to the room and becomes liquid again. The cycle repeats, carrying more heat away from the food compartment.
+
+People kept food and drinks cool long before household refrigerators existed. They stored snow and ice in insulated places or used naturally cool spaces. During the nineteenth century, businesses transported natural ice over long distances. Mechanical cooling gradually reduced the need to collect fresh supplies of ice.
+
+Refrigeration changed more than kitchens. Cooled railway cars, ships, and trucks allowed food to travel farther. Shops could stock products that would otherwise spoil before reaching customers. Farms and fishing businesses gained access to more distant markets.
+
+Cold storage slows many of the processes that spoil food, but it does not make food last forever. Modern food distribution depends on maintaining suitable temperatures throughout transport and storage. A working refrigerator at the final destination cannot undo every problem that occurred earlier in the journey.`,
+  },
 ];
 
 export const EN_WIKI_TOPICS: Record<string, string[]> = Object.fromEntries(
