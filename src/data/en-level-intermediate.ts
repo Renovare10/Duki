@@ -300,6 +300,33 @@ For two days, Ruth and a student assistant opened books and fixed notices into p
 
 The bridge reopened months later. Ruth updated the website, but left the warning in her own copy. Whenever someone praised the photograph, she opened the book far enough to show them the rest of the page.`,
   },
+  {
+    ...DEFAULTS,
+    id: "en-l6-the-letters-in-the-biscuit-tin", level: 6, createdAt: 260_011,
+    title: "The Letters in the Biscuit Tin",
+    blurb: "Two sisters disagree about giving their grandmother's letters to an archive.",
+    topics: ["letters", "family", "history"],
+    body: `Dear Ellen,
+
+I've been thinking about our argument on Sunday. I should not have called you secretive. You have spent months sorting Grandma's papers while I've mostly sent messages asking how it was going. I understand why my sudden enthusiasm for donating the letters sounded like another job for you.
+
+I still think the local archive might be interested. Grandma's descriptions of her factory work include things I never heard her discuss: the changing shifts, the women who shared the bus, the jokes about the supervisor. Those details could matter to someone studying working life. A biscuit tin in my spare room is not an especially reliable plan for keeping them.
+
+However, you're right that the letters contain much more than factory memories. They name people whose families still live here. Some describe arguments, debts, and relationships that were never meant to become public. We cannot assume that because Grandma is gone, everyone mentioned in her letters has lost an interest in their privacy.
+
+I called the archive yesterday, but I did not offer the papers or send photographs. I only asked about their general process. The archivist said they would first need to assess the material and discuss any proposed conditions. They could not promise to accept it, or promise particular restrictions without reviewing what those restrictions would involve.
+
+That seems a more useful starting point than our argument about keeping everything private or publishing everything online. Those are not the only possible choices. We need to ask what the archive can actually do, and then decide whether that arrangement is one we can accept. We should also confirm who has authority to make the decision rather than assuming it belongs to whichever sister currently has the tin.
+
+Would you be willing to make a basic list with me next month? We could record dates and broad subjects without copying private passages into a shared document. If a letter raises a concern, we can note that concern separately. I will do the typing and bring lunch. You have done enough unpaid organising already.
+
+I would also like us to read a few letters without turning the afternoon into a project. I keep thinking about the one where Grandma complains that the seaside was full of sand. I'd forgotten how funny she could be when she wasn't trying to entertain children.
+
+Please don't feel you have to decide before I visit. If you would rather wait, say so. I wanted to explain what I learned and apologise for the way I spoke. We can disagree about the archive without making the letters into a new family quarrel.
+
+Love,
+Helen`,
+  },
 ];
 
 export const EN_INTERMEDIATE_TEXTS: LibraryText[] = INTERMEDIATE_DRAFTS.map(({ topics: _topics, ...text }) => text);
