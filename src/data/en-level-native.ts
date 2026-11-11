@@ -130,4 +130,55 @@ The table did not become a community hub. We did not start a supper club or disc
 
 The next morning the table was empty again. I caught myself considering a bowl, a plant, something to make it look finished. For now, I have left it alone.`,
   },
+  {
+    id: "en-l9-the-away-supporters", lang: "en", level: 9,
+    title: "The Away Supporters",
+    blurb: "A father and daughter travel to a match neither expects to enjoy.",
+    kind: "sample", category: "graded", featured: false,
+    createdAt: 280_002, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+    body: `Her father had bought the tickets before the operation. He told Nina this twice, as though the date of purchase established that he had not deliberately arranged a test of her loyalty. They were away to Westbridge, three hours by train, and the forecast was rain. Nina hadn't watched a match in seven years. She had been very happy with that arrangement.
+
+At the station he wore his old blue scarf over a coat she had never seen. The coat was too large. Either he had bought it in the wrong size or he had become smaller since the last time she had paid attention. When she offered to carry his bag, he said it contained nothing heavy, which was not quite the answer to her question.
+
+They found their seats opposite a boy eating crisps with the concentration of someone handling dangerous chemicals. Her father consulted the team sheet on his phone. He enlarged it, shrank it, enlarged it again.
+
+"They'll play Reeves on the left," he said.
+
+"Is that bad?"
+
+He looked at her with pleasure. Here was a question on which he could be fully authoritative. By the time they reached the first stop, she knew about Reeves's knee, his contract, and the inexplicable optimism of the manager. She had missed this, she realised, though she had not missed football. In recent months her father had spoken chiefly about medication, and she about whether he was taking it.
+
+When her parents separated, Nina had stopped going to matches. She was seventeen and suspected every invitation of concealing an appeal to take sides. Her father had wanted their Saturday routine to survive unchanged. Her mother had said it was entirely up to her, in a voice which made freedom sound like a trap. Nina chose a Saturday job at a bakery and acquired a defensible reason to disappoint everyone.
+
+Now she worked in an office where people said they had no bandwidth when they meant they were tired. She had taken Friday off and was carrying a folder of papers she intended to read on the journey back. Her father noticed the folder but said nothing. She noticed him noticing it.
+
+At Westbridge they walked with the visiting supporters towards the ground. The streets narrowed, and the crowd moved in uneven bursts. Her father stopped outside a hardware shop and pretended to inspect a display of padlocks. Nina stood beside him. A little farther on, a steward directed them to a quieter entrance, where nobody made a ceremony of the extra time he needed.
+
+Their seats were high enough to command an excellent view of the wind. Nina had forgotten the peculiar discomfort of watching winter sport: the cold feet, the hot face, the impossibility of choosing the right moment to remove a glove. Beside her, a woman in a knitted hat was arguing with a radio held to one ear. Everyone seemed to know something the manager did not.
+
+The home side scored after eleven minutes. Her father delivered a detailed account of the defensive error, then fell silent. Nina looked at him. He was leaning forward, elbows on his knees, watching with such attention that she couldn't tell whether he was miserable or perfectly content.
+
+At half-time she went for tea. When she returned, the woman with the radio had moved one seat closer and was showing him a photograph. Nina paused at the end of the row, balancing the cups.
+
+"Her granddaughter," he explained. "Goalkeeper."
+
+"Terrible position," the woman said proudly. "Everyone remembers your mistakes."
+
+They conceded again. The rain arrived sideways, reaching them despite the roof, and a man behind Nina began a lengthy comparison between the current squad and a collection of household appliances. She laughed. Her father turned, surprised, and then laughed too, an abrupt wheeze that frightened her until he waved away her concern.
+
+With fifteen minutes left, their striker missed an open goal. Nina stood involuntarily and made a noise she would later deny making. Her father put a hand on her sleeve to steady her as people rose around them. For the rest of the match she stayed forward in her seat. She could see the pass before it was made now; she remembered how to wait for a player to arrive in the space.
+
+They lost two-nil. On the way out, the woman with the radio said, "See you next time," with the calm certainty of someone who had survived worse Saturdays. Nina's father answered that she probably would. He didn't glance towards Nina to include her in the promise.
+
+Their train home was delayed. In the station café he admitted that the walk had been harder than he expected. She moved his tea within reach and asked whether he wanted her to find a taxi for the other end. He said yes. Neither of them apologised.
+
+"You can read your papers," he said, once they were on the train.
+
+"I know."
+
+For a while they watched the black window reflecting the carriage. Then he asked about her work, and she told him about a colleague who kept replying to messages meant for someone else. It was a long, inconsequential story. He asked enough questions to make it longer.
+
+At their stop she took his bag before he could object. He let her. Outside, while they waited for the taxi, he folded the blue scarf and put it carefully in his pocket. She could smell hot bread from the station bakery.`,
+  },
 ];
