@@ -630,6 +630,64 @@ Before bed, Eli called Marcus. He apologised without explaining how disappointed
 
 Eli sent the page. Then he plugged in the charger, checked both batteries, and took the broken dragon downstairs for repairs.`,
   },
+  {
+    id: "en-book-borrowed-camera-3", lang: "en", level: 5,
+    seriesId: "en-book-borrowed-camera", seriesTitle: "The Borrowed Camera", chapter: 3,
+    title: "Chapter 3: Three Minutes on Screen",
+    blurb: "Eli's film finally has a story, but finishing it means sharing control.",
+    kind: "sample", category: "novel", featured: false,
+    createdAt: 210_011, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+    body: `On Sunday morning, Eli's mother gave them the kitchen until noon. She moved her shopping bags out of the way but refused to clean the room for them.
+
+"A dragon can live with a few dishes," she said.
+
+"That's actually useful," Ruby replied.
+
+They had repaired the dragon with fresh tape. Eli took a picture of Ruby wearing the head, so they could keep the costume the same between shots. Marcus put on the coat. His sword had bent in the rain, but a small piece of wood inside the cardboard made it straight again.
+
+This time, Eli filmed a test before they started properly. They watched it together. Ruby's voice was still difficult to hear through the box.
+
+"I can say the lines afterwards," she suggested.
+
+They tried it. Eli recorded her voice separately in a quiet room, close to the camera's microphone. The dragon's mouth did not move anyway, so matching the sound would not be too difficult.
+
+Their new film began with the traveller waiting at the kitchen table, his sword beside a cup. The dragon came home carrying a bag of vegetables. She saw his muddy boots, looked at the floor, and pointed to the door.
+
+Marcus played the traveller as a man who was trying very hard to be brave and getting confused by ordinary questions. When the dragon asked whether he had eaten, he lifted his sword. She handed him a potato to peel.
+
+They had to film that moment four times. On the first attempt, Ruby laughed inside the dragon. On the second, Marcus forgot his line. The third was good, but Eli's mother called from the hall to ask where her keys were.
+
+Before the fourth attempt, Ruby went to the hall and explained that they needed two quiet minutes. She came back holding the keys. Everyone waited until the front door had closed.
+
+At noon, they had the pictures they needed. Eli and Marcus spent the afternoon choosing shots, while Ruby listened to the recorded lines and marked the clearest ones.
+
+The first version lasted four minutes and twelve seconds.
+
+"We have to lose something," Eli said.
+
+His favourite shot was a slow close-up of the sword. He had spent twenty minutes getting the light right. Ruby thought they should cut it.
+
+"He hasn't touched it for half the film," she said. "We know he's stopped wanting to fight."
+
+Eli watched the film without the shot. It moved better. He saved the cut version, then kept the sword shot in a separate folder. He was not ready to delete it.
+
+On Monday, he returned the equipment and gave Mr Cole the finished film. Its final scene showed the traveller drying a plate while the dragon put her feet up. Beside them, the golden egg began to shake. The traveller reached for the sword; the dragon handed him a small towel instead.
+
+At the club screening, people laughed at the muddy boots. They were quiet during the potato scene, which worried Eli, but afterwards one student said it was her favourite part.
+
+"Who's the dragon?" someone asked.
+
+Eli pointed to Ruby, who had been allowed to visit the club. On the last screen, both their names appeared under the words Written by. Marcus's name appeared beside Traveller.
+
+Afterwards, Ruby asked whether they could use the camera again.
+
+"Probably," Eli said. "What are you thinking?"
+
+"A film with a mountain."
+
+He looked at her. She managed to keep a serious face until they reached the stairs.`,
+  },
 ];
 
 /** Topic ids are shared with the Mandarin library; every chapter has its own entry. */
