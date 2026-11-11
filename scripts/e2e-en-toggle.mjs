@@ -34,19 +34,51 @@ try {
   assert.ok(zhCards > 0, "Mandarin shelves render");
   await page.screenshot({ path: `${shots}/mandarin.png` });
 
+  // Mandarin: one story still opens and reads (pinyin + gloss dock).
+  await page.locator(".title-hit").first().click();
+  await page.locator(".article .word").first().waitFor();
+  await page.locator(".article .word").first().click();
+  await page.locator(".dock-pinyin").waitFor();
+  await page.goto(base);
+  await page.getByRole("heading", { name: "Read real Chinese at your level." }).waitFor();
+
   await page.getByRole("button", { name: "English", exact: true }).click();
-  await page.getByRole("heading", { name: "English", exact: true }).waitFor();
-  await page.getByText("No English stories yet", { exact: true }).waitFor();
-  assert.equal(await page.locator(".title-card").count(), 0, "No English story content");
-  await page.screenshot({ path: `${shots}/english.png` });
+  await page.getByRole("heading", { name: "Read real English at your level." }).waitFor();
+  assert.equal(await page.locator(".title-card").count(), 20, "two stories per level");
+  await page.screenshot({ path: `${shots}/english-story-list.png` });
 
   await page.reload();
-  await page.getByText("No English stories yet", { exact: true }).waitFor();
+  await page.getByRole("heading", { name: "Read real English at your level." }).waitFor();
   assert.equal(await page.getByRole("button", { name: "English", exact: true }).getAttribute("aria-pressed"), "true");
 
-  await page.getByRole("button", { name: "Mandarin", exact: true }).click();
-  await page.getByRole("heading", { name: "Read real Chinese at your level." }).waitFor();
+  // Pick a level, open a story, tap a word, mark it.
+  await page.locator(".en-levels").getByRole("button", { name: "L3", exact: true }).click();
+  assert.equal(await page.locator(".title-card").count(), 2);
+  await page.locator(".title-card", { hasText: "The Wrong Train" }).locator(".title-hit").click();
+  await page.locator(".article[lang='en-US'] .word").first().waitFor();
+  assert.equal(await page.locator(".dock-pinyin, .tooltip .py").count(), 0, "no pinyin in English");
+  assert.equal(await page.locator(".voice-player, [aria-label*='Play' i]").count(), 0, "no audio in English");
+  const word = page.locator(".article .word", { hasText: /^station$/ }).first();
+  await word.click();
+  const gloss = await page.locator(".dock-en").innerText();
+  assert.ok(gloss && gloss !== "—", `gloss shown: ${gloss}`);
+  await page.getByRole("button", { name: /Barely/ }).click();
+  await page.waitForFunction(() => document.querySelector(".article .word.selected")?.classList.contains("shaky"));
+  await page.screenshot({ path: `${shots}/english-story-page.png` });
+  const keys = await page.evaluate(() => new Promise((resolve, reject) => {
+    const req = indexedDB.open("duki");
+    req.onerror = () => reject(req.error);
+    req.onsuccess = () => {
+      const all = req.result.transaction("words").objectStore("words").getAllKeys();
+      all.onsuccess = () => resolve(all.result);
+    };
+  }));
+  assert.ok(keys.includes("en:station"), "English word stored under en: prefix");
+  assert.ok(!keys.includes("station"), "no unprefixed English key");
   await page.reload();
+  await page.locator(".article .word.shaky", { hasText: /^station$/ }).first().waitFor();
+
+  await page.getByRole("button", { name: "Mandarin", exact: true }).click();
   await page.getByRole("heading", { name: "Read real Chinese at your level." }).waitFor();
   assert.equal(await page.locator(".title-card").count(), zhCards, "Mandarin shelves unchanged");
 

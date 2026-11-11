@@ -10,7 +10,8 @@ npm run dev        # http://localhost:5173/
 ```
 
 - Header **Mandarin / English** toggle; the choice is stored in `localStorage["duki.language"]` and survives reloads.
-- English shows an empty "No English stories yet" shelf. Add stories later as `LibraryText` rows with `lang: "en"` in `src/data/en-samples.ts` (`EN_SAMPLES`); they then use the shared cards and reader.
+- English has 20 original graded stories, two per level L1–L10 (`src/data/en-stories.ts`). Pick a level, open a story, tap a word for its Chinese gloss, and mark it Don't know / Barely / Okay. No audio or pinyin in English.
+- Glosses: `src/data/en-glosses.generated.ts`, built from ECDICT (MIT) by `ECDICT_CSV=… node scripts/build-en-glosses.mjs`; re-run it after editing stories (a test fails if any story word lacks a gloss).
 - Mandarin is unchanged (shelves, Review, Stats, Add text, Night, app tray), except that sign-in and cloud sync are off in the preview.
 
 ## Safety: preview / no-sync mode (default)
@@ -30,4 +31,4 @@ npm run e2e:en     # needs the dev server; DUKI_URL / DUKI_CHROME / DUKI_SHOTS o
 
 ## Deferred
 
-English stories, Review/Stats/Add text/import for English, v2 sync, accounts.
+More stories, Review/Stats/Add text/import for English, v2 sync, accounts.

@@ -397,7 +397,7 @@ export function Reader({
           </span>
           <span>Okay is plain text</span></>}
         </div>
-        <VoicePlayer body={spoken} lang={lang} onSpeaking={setSpeaking} />
+        {lang === "zh" ? <VoicePlayer body={spoken} lang={lang} onSpeaking={setSpeaking} /> : null}
       </div>
 
       <article
@@ -459,7 +459,7 @@ export function Reader({
           </>
         ) : (
           <div className="dock-hint">
-            {lang === "en" ? "Tap a word to mark it. Hover for a sample gloss." : "Tap a word. Hover for pinyin and English."} Status never changes unless you press a button.
+            {lang === "en" ? "Tap a word for its Chinese meaning, then mark how well you know it." : "Tap a word. Hover for pinyin and English."} Status never changes unless you press a button.
           </div>
         )}
       </div>

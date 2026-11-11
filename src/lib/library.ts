@@ -90,10 +90,14 @@ export function describeText(
 ): EntryInfo {
   const tags = topicTags(text, topics);
   if (text.lang === "en") {
+    const words = segment(text.body, () => false, 8, "en").filter((t) => t.isWord).length;
+    const level = text.level ?? null;
     return {
-      level: null, levelMax: null, badge: "", badgeTitle: "English draft sample",
-      band: null, sortScore: UNMEASURED, chars: null, minutes: null, topics: tags,
-      words: segment(text.body, () => false, 8, "en").filter((t) => t.isWord).length,
+      level, levelMax: null,
+      badge: level ? `L${level}` : "", badgeTitle: level ? LEVEL_NAMES[level] : "English text",
+      band: level ? levelBand(level) : null, sortScore: level ?? UNMEASURED, chars: null,
+      minutes: words ? Math.max(1, Math.round(words / (level && level <= 2 ? 80 : level && level <= 5 ? 120 : 160))) : null,
+      topics: tags, words,
     };
   }
   const m = meta[text.id];
@@ -412,7 +416,10 @@ export function topicCounts(entries: Entry[]): Map<string, number> {
 
 /** "96 字 · 1 min" / "922,250 字 · ~85 h". */
 export function lengthLabel(info: EntryInfo): string | null {
-  if (info.words !== undefined) return `${info.words.toLocaleString("en-US")} words`;
+  if (info.words !== undefined) {
+    const words = `${info.words.toLocaleString("en-US")} words`;
+    return info.minutes === null ? words : `${words} · ${info.minutes} min`;
+  }
   if (info.chars === null) return null;
   const chars = info.chars >= 10000 ? `${Math.round(info.chars / 1000).toLocaleString("en-US")}k 字` : `${info.chars.toLocaleString("en-US")} 字`;
   if (info.minutes === null) return chars;

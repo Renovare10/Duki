@@ -2845,3 +2845,15 @@ button.badge {
 .en-empty-copy {
   margin: 0;
 }
+
+.en-levels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0.25rem 0 0.75rem;
+}
+
+.en-levels [aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--paper);
+}

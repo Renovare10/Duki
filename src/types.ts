@@ -71,6 +71,8 @@ export type LibraryText = {
   id: string;
   /** Legacy catalog rows are Mandarin; no IndexedDB schema change. */
   lang?: Language;
+  /** Built-in English stories only: target level 1–10 (Mandarin levels are measured, not stored). */
+  level?: number;
   title: string;
   blurb: string;
   body: string;
