@@ -539,6 +539,33 @@ At home, she left the photograph on the wall. Beside it, she put their map. She 
     createdAt: 250_015, readAt: null, bookmark: null,
     source: "Original (Duki) · AI-drafted",
   },
+  {
+    id: "en-l4-one-last-film", lang: "en", level: 4,
+    title: "One Last Film",
+    blurb: "On a cinema's final evening, a daughter sees the building through her father's eyes.",
+    body: `The Palace cinema had a name that was much grander than the building. Rain came through the roof near the back row, and nobody used the left-hand ticket window anymore.
+
+When it announced its final show, my father bought two tickets. I had not been there since primary school. The new cinema by the station had better seats, and that was where my friends went.
+
+Dad arrived early. He wanted to show me the small stars painted on the ceiling. Some had faded so badly that I could only see them when he pointed.
+
+"Your grandfather painted those," he said. "He worked here before he opened his own shop."
+
+I knew Grandad had been a painter, but I had never thought about the places he painted. To me, his work meant old brushes in a box under the stairs.
+
+People kept stopping to talk to Dad. One woman remembered selling tickets here. Another man said he had once fallen asleep during a film and missed the last bus home.
+
+The manager gave a short speech before the lights went down. She thanked the staff and asked people to take their rubbish with them, just as she did every evening.
+
+During the film, I forgot about the roof and the uncomfortable seat. Dad laughed at a scene I did not find funny. Later, I laughed alone at something he missed.
+
+Before we went outside, I took a picture of the ceiling. People were standing in the street, looking at the bright sign. The building was going to become offices. Dad asked me to take a photo of him by the entrance.
+
+I took one, then asked a stranger to photograph us together. Dad put an arm around my shoulders while we waited for her to find the button.`,
+    kind: "sample", category: "graded", featured: false,
+    createdAt: 250_016, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+  },
 ];
 
 export const EN_ELEMENTARY_TOPICS: Record<string, string[]> = {
@@ -558,4 +585,5 @@ export const EN_ELEMENTARY_TOPICS: Record<string, string[]> = {
   "en-l4-the-bird-we-could-not-name": ["nature", "science", "feelings"],
   "en-l4-the-warmer-room": ["daily-life", "weather", "science"],
   "en-l4-below-the-clouds": ["adventure", "travel", "weather"],
+  "en-l4-one-last-film": ["culture", "arts", "family"],
 };
