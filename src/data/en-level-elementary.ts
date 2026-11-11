@@ -626,6 +626,45 @@ When the bus came, Mina's grandfather got up carefully and walked toward it. He 
     createdAt: 250_018, readAt: null, bookmark: null,
     source: "Original (Duki) · AI-drafted",
   },
+  {
+    id: "en-l4-captain-on-the-bench", lang: "en", level: 4,
+    title: "Captain on the Bench",
+    blurb: "A team captain must watch a close basketball game instead of playing in it.",
+    body: `Nora had been captain of the basketball team for two years. She liked calling the players together before a game and being the person they looked for when the score was close.
+
+Then she hurt her ankle. Her doctor told her not to play for several weeks, which meant missing the last game of the season.
+
+She went to practice anyway. From the bench, she shouted advice until the coach sat beside her.
+
+"They can't listen to five instructions at once," he said. "Let them finish the play."
+
+On Saturday, Nora wore her team shirt over ordinary clothes. The game was close from the start. Each time the other team scored, she wanted to get up and do something.
+
+At halftime, their youngest player, Sophie, sat alone. She had missed two easy shots. Nora was about to explain what she should have done when she noticed Sophie hiding her face in a towel.
+
+Nora sat down beside her.
+
+"Do you want to talk about the shots, or would you rather have some water?"
+
+"Water first," Sophie said.
+
+They sat quietly until the coach called everyone over. In the second half, Sophie asked for the ball again. Nora clapped, although the next shot missed too.
+
+With a minute left, Sophie scored. Their team still lost by three points.
+
+Afterward, Nora helped collect the water bottles while the players changed. She had not scored, and her team had not won. She disliked both facts.
+
+As Sophie left, she asked whether Nora would come to practice on Tuesday.
+
+"Even if you can't play yet?"
+
+Nora looked at her bandaged ankle. "I'll be there. But you're carrying the balls."
+
+Sophie picked up the bag before Nora could reach for it.`,
+    kind: "sample", category: "graded", featured: false,
+    createdAt: 250_019, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+  },
 ];
 
 export const EN_ELEMENTARY_TOPICS: Record<string, string[]> = {
@@ -648,4 +687,5 @@ export const EN_ELEMENTARY_TOPICS: Record<string, string[]> = {
   "en-l4-one-last-film": ["culture", "arts", "family"],
   "en-l4-the-night-receptionist": ["work", "daily-life", "adventure"],
   "en-l4-the-bench-at-stop-six": ["daily-life", "family", "travel"],
+  "en-l4-captain-on-the-bench": ["sports", "feelings", "health"],
 };
