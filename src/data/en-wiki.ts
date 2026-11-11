@@ -234,6 +234,23 @@ Refrigeration changed more than kitchens. Cooled railway cars, ships, and trucks
 
 Cold storage slows many of the processes that spoil food, but it does not make food last forever. Modern food distribution depends on maintaining suitable temperatures throughout transport and storage. A working refrigerator at the final destination cannot undo every problem that occurred earlier in the journey.`,
   },
+  {
+    id: "en-wiki-silk-road", level: 7, title: "The Silk Road",
+    blurb: "A network of exchanges, not a single road from China to Rome.",
+    wikiTitle: "Silk Road", sourceUrl: "https://en.wikipedia.org/wiki/Silk_Road",
+    createdAt: 220_015, topics: ["encyclopedia", "history", "travel"],
+    body: `The Silk Road was not one continuous highway with a clear beginning and end. The name describes a changing network of trade routes linking communities across Asia and connecting them with regions farther west. Historians sometimes prefer the plural term Silk Routes because it better reflects this arrangement.
+
+Chinese silk gave the network its modern name, but merchants carried many other goods. Horses, precious metals, and manufactured products moved through different sections. Traders commonly bought and sold goods along only part of a route. An object could therefore cross a continent through a series of exchanges without a single merchant accompanying it all the way.
+
+The Han dynasty's expansion and diplomatic missions into Central Asia helped develop long-distance connections. Later empires influenced the security of travel and the places where commerce flourished. Mountains and deserts made journeys difficult, while settlements with water and supplies offered essential stopping points.
+
+Trade also depended on people whose importance can disappear in a simple story about China and Rome. Central Asian merchants and local communities organized transport, linked markets, and helped travelers communicate. The network had many active centers rather than merely two ends.
+
+Ideas traveled with people. Buddhism spread through parts of Asia along these connections, and scientific knowledge circulated between societies. Disease could travel too; the movement of people and goods helped infections spread across long distances.
+
+The term Silk Road became popular long after the routes' ancient history. It is a useful label, but it can make a diverse and uneven system look more unified than it was. The actual exchanges changed as political power, commercial opportunities, and available routes changed.`,
+  },
 ];
 
 export const EN_WIKI_TOPICS: Record<string, string[]> = Object.fromEntries(
