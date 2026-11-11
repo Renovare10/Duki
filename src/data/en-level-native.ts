@@ -559,4 +559,37 @@ The amended catalogue entry read: Women outside the North Mill. Inscription on r
 
 Before saving, she put the cursor after uncertain. She wanted to add a sentence explaining that her mother had been accurate about many things, that she had kept every rent receipt, that she had never knowingly short-changed anyone. The box was intended for information about the photograph. Ellen saved the entry as it was and returned the picture to its sleeve.`,
   },
+  {
+    id: "en-l10-what-the-translation-leaves-open", lang: "en", level: 10,
+    title: "What the Translation Leaves Open",
+    blurb: "An essay about ambiguity, family language, and choices a translation cannot avoid.",
+    kind: "sample", category: "graded", featured: false,
+    createdAt: 280_011, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+    body: `In a letter I once tried to translate for a relative, a woman described a visit from an old friend. The original sentence did not require her to specify the friend's gender. English, as I first wrote it, did. I supplied a pronoun, read the sentence back, and realised that I had quietly invented a fact. Removing the pronoun produced an awkward repetition. Recasting the paragraph solved the immediate problem and created another: the friend's entrance now sounded deliberate and important, whereas in the original the person had almost drifted into the room.
+
+This was a family letter, not a diplomatic agreement. Nobody's legal position depended on my choice. Yet I remember it because the difficulty resisted my favourite account of translation, which was that a patient person could eventually find the right words. Here the obstacle was an invitation issued by the receiving language. It wanted me to decide something the writer had been allowed to leave undecided.
+
+It is tempting to describe such moments as failures. Something has been lost, and a translation is expected to return with all the luggage. But that metaphor assumes the original was a collection of detachable meanings, each of which could be packed separately and delivered intact. Often the meaning lies partly in what a sentence does not settle. Its openness may be habitual rather than artistic. The reader of the original may not notice it until another language demands a choice.
+
+English can leave other things vague. I can say that I visited my cousin without saying whether the cousin was older or younger than I am, or which side of the family connected us. Other languages may invite or require distinctions that English lets me postpone. There is no universal scale on which one language is precise and another beautifully mysterious. A language may require precision in one relationship and permit considerable vagueness in another.
+
+The translator's decisions also have social consequences. Suppose a character addresses an older neighbour using a respectful form that would be ordinary in the original setting. An English translation can reproduce the title, omit it, or compensate through the tone of the dialogue. Retaining it may make the relationship seem more formal than it feels to the characters. Omitting it may erase a difference that matters later. Adding courteous phrases may make the speaker sound evasive. Each solution changes the reader's expectations before the conversation has properly begun.
+
+Explanations can help, but they have a cost. A footnote is a courteous interruption. Several footnotes can make a kitchen conversation resemble evidence presented at a hearing. The reader is continually reminded of what must be learned before the characters can simply speak. Sometimes that reminder is welcome; sometimes it preserves information at the expense of pace, humour, or intimacy. Deciding which cost to accept is part of the work rather than an embarrassing departure from it.
+
+Readers who know both languages may disagree about the result for good reasons. One wants the translation to sound as natural as the original sounded to its first readers. Another wants to feel the pressure of a different way of arranging experience. Those aims overlap, but they do not coincide. A wholly familiar voice can conceal the fact that the characters inhabit a different social world. A persistently unfamiliar voice can make ordinary people seem as though they speak in ceremonial riddles.
+
+I am especially suspicious of praise for a translation's beauty when beauty means that every blunt sentence has become graceful. A rude character should sometimes be rude without eloquence. A joke can be feeble in the original. A letter written in haste may repeat a word because its writer was reaching for a train, not for a subtle effect. The translator who repairs all of this may produce better prose while giving us a less accurate acquaintance with the speaker.
+
+The opposite temptation is to preserve awkwardness as a badge of loyalty. This can be just as misleading. A phrase that is entirely routine in one language may sound strange when its parts are carried over separately. The reader then attributes significance to something that originally passed unnoticed. Literalness is a method with uses; it does not absolve the translator of responsibility for the impression the sentence creates.
+
+My family letter offered a smaller but more personal difficulty. The woman writing it was brisk. She gave news without explaining everybody's feelings, then asked whether a parcel had arrived. My relative, reading the English version, wanted to know if she sounded lonely. I had chosen a slightly melancholy phrase for the quiet house after the visit. The original allowed that reading, but did not insist on it. My translation had leaned on the scale.
+
+I revised the phrase and told my relative why. This did not restore some perfectly neutral version. The new sentence had a different rhythm; it sounded cooler. We compared them and talked about the writer, whom my relative knew better than I did. The conversation yielded more than a declaration that one version was correct. It also reminded me that familiarity with a person is not interchangeable with fluency in a language.
+
+A useful translation can acknowledge its decisions without presenting an inventory of every uncertainty. A brief note may be enough. In conversation, the translator can say that a phrase admits more than one reading. In a novel, the surrounding pages may preserve an ambiguity that a single sentence cannot. The choice depends on what the translation is for and what kind of attention its reader can reasonably give.
+
+I kept both versions of the letter. The one I sent was plain, with a short explanation of the phrase we had discussed. Months later, my relative asked about the parcel. Neither of us remembered what it had contained. We had spent an afternoon weighing the emotional temperature of the visit and forgotten the question the writer had actually wanted answered.`,
+  },
 ];
