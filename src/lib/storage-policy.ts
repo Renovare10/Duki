@@ -49,7 +49,7 @@ export function assertPlainText(value: string): void {
   }
 }
 
-const TEXT_KEYS = new Set("id title blurb body kind category featured createdAt readAt bookmark source sourceUrl wikiTitle wsTitle gutenbergId author coverUrl seriesId seriesTitle chapter preview openedAt".split(" "));
+const TEXT_KEYS = new Set("id lang level title blurb body kind category featured createdAt readAt bookmark source sourceUrl wikiTitle wsTitle gutenbergId author coverUrl seriesId seriesTitle chapter preview openedAt".split(" "));
 const WORD_KEYS = new Set("hanzi status updatedAt dontKnowCount barelyCount okayCount ease intervalDays repetitions dueAt phase step lapses introducedAt".split(" "));
 const SESSION_KEYS = new Set("id textId finishedAt uniqueUnknown uniqueShaky durationMs".split(" "));
 const SETTINGS_KEYS = new Set("fontFamily fontSize theme themeSetAt highlightStyle textWidth readerSetAt".split(" "));

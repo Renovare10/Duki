@@ -7,6 +7,7 @@ import type { LibraryText, TextScore } from "../types";
 import { TEXT_META } from "../data/text-meta";
 import { LIBRARY_TOPICS } from "../data/library/index";
 import { TEXT_TOPICS } from "../data/topics";
+import { EN_TOPICS } from "../data/en-stories";
 import { REMOTE_META } from "../data/remote-meta.generated";
 import type { Book } from "./books";
 import { scoreSource } from "./books";
@@ -75,7 +76,7 @@ function measured(level: number, levelMax: number | null, score: number, chars: 
 }
 
 function topicTags(text: LibraryText, topics: Record<string, string[]>): string[] {
-  const listed = topics[text.id] ?? LIBRARY_TOPICS[text.id] ?? [];
+  const listed = topics[text.id] ?? LIBRARY_TOPICS[text.id] ?? (text.lang === "en" ? EN_TOPICS[text.id] : undefined) ?? [];
   if (listed.length) return listed;
   if (text.kind === "wiki" || text.category === "wiki") return ["encyclopedia"];
   if (text.kind === "wikisource" || text.category === "wikisource") return ["classics"];
@@ -361,8 +362,9 @@ export function matchesFilters(entry: Entry, f: BrowseFilters): boolean {
     }
   }
   if (f.length !== "all") {
-    if (entry.info.chars === null) return f.length === "long" && entry.info.band === "native";
-    const bucket = entry.type === "work" ? "long" : lengthBucket(entry.info.chars);
+    const size = entry.info.chars ?? entry.info.words ?? null;
+    if (size === null) return f.length === "long" && entry.info.band === "native";
+    const bucket = entry.type === "work" ? "long" : lengthBucket(size);
     if (bucket !== f.length) return false;
   }
   if (!fitMatches(entry.fit, f.fit)) return false;
@@ -381,7 +383,7 @@ export function sortByLevel(entries: Entry[]): Entry[] {
   return [...entries].sort(
     (a, b) =>
       a.info.sortScore - b.info.sortScore ||
-      (a.info.chars ?? 1e9) - (b.info.chars ?? 1e9) ||
+      (a.info.chars ?? a.info.words ?? 1e9) - (b.info.chars ?? b.info.words ?? 1e9) ||
       a.id.localeCompare(b.id),
   );
 }

@@ -34,8 +34,11 @@ try {
   assert.ok(zhCards > 0, "Mandarin shelves render");
   await page.screenshot({ path: `${shots}/mandarin.png` });
 
-  // Mandarin: one story still opens and reads (pinyin + gloss dock).
-  await page.locator(".title-hit").first().click();
+  // Mandarin: one built-in story still opens and reads (pinyin + gloss dock).
+  // Avoid the first recommended card if it is a Wikipedia stub (e2e blocks remote fetches).
+  const zhStory = page.locator(".title-card", { hasText: "我的家" }).locator(".title-hit").first();
+  if (await zhStory.count()) await zhStory.click();
+  else await page.locator(".title-card", { hasText: "L1" }).locator(".title-hit").first().click();
   await page.locator(".article .word").first().waitFor();
   await page.locator(".article .word").first().click();
   await page.locator(".dock-pinyin").waitFor();
@@ -43,17 +46,28 @@ try {
   await page.getByRole("heading", { name: "Read real Chinese at your level." }).waitFor();
 
   await page.getByRole("button", { name: "English", exact: true }).click();
-  await page.getByRole("heading", { name: "Read real English at your level." }).waitFor();
-  assert.equal(await page.locator(".title-card").count(), 20, "two stories per level");
+  await page.getByRole("heading", { name: "Read English at your level." }).waitFor();
+  for (const name of ["Review", "Stats", "Add text"]) {
+    assert.ok(await page.getByRole("button", { name, exact: true }).count(), `English header has ${name}`);
+  }
+  assert.ok(await page.getByLabel("Search the library").count(), "English keeps the search box");
+  for (const label of ["Level", "Length", "For me", "Status", "Sort"]) {
+    assert.ok(await page.getByLabel(label, { exact: true }).count(), `English keeps the ${label} filter`);
+  }
+  const enTitles = await page.locator(".title-card-name").allTextContents();
+  assert.equal(new Set(enTitles.map((s) => s.trim()).filter(Boolean)).size, 20, "two stories per level (unique titles)");
   await page.screenshot({ path: `${shots}/english-story-list.png` });
 
   await page.reload();
-  await page.getByRole("heading", { name: "Read real English at your level." }).waitFor();
+  await page.getByRole("heading", { name: "Read English at your level." }).waitFor();
   assert.equal(await page.getByRole("button", { name: "English", exact: true }).getAttribute("aria-pressed"), "true");
 
-  // Pick a level, open a story, tap a word, mark it.
-  await page.locator(".en-levels").getByRole("button", { name: "L3", exact: true }).click();
-  assert.equal(await page.locator(".title-card").count(), 2);
+  // Shared search + Level filter, then open a story, tap a word, mark it.
+  await page.getByLabel("Level", { exact: true }).selectOption("elementary");
+  assert.equal(await page.locator(".title-card").count(), 4, "Elementary is L3–4 (four stories)");
+  await page.getByLabel("Search the library").fill("Wrong Train");
+  await page.locator(".title-card", { hasText: "The Wrong Train" }).waitFor();
+  assert.equal(await page.locator(".title-card").count(), 1);
   await page.locator(".title-card", { hasText: "The Wrong Train" }).locator(".title-hit").click();
   await page.locator(".article[lang='en-US'] .word").first().waitFor();
   assert.equal(await page.locator(".dock-pinyin, .tooltip .py").count(), 0, "no pinyin in English");

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import type { LibraryText, ReadingSession, TextScore, WordEvent, WordRecord } from "../types";
+import type { Language, LibraryText, ReadingSession, TextScore, WordEvent, WordRecord } from "../types";
 import { getGloss } from "../lib/glossary";
 import type { DemoData } from "../lib/demo";
 import { NEW_CARDS_PER_DAY } from "../lib/review";
@@ -116,6 +116,7 @@ function stripDemoParam() {
 }
 
 type Props = {
+  lang?: Language;
   words: Map<string, WordRecord>;
   texts: LibraryText[];
   sessions: ReadingSession[];
@@ -133,6 +134,7 @@ type Panel =
   | { kind: "texts"; progress: "finished" | "inProgress" | "untouched"; title: string };
 
 export function Stats({
+  lang = "zh",
   words: realWords,
   texts,
   sessions: realSessions,
@@ -212,7 +214,7 @@ export function Stats({
         ) : (
           <ul className="miss-list">
             {list.map((word) => {
-              const gloss = getGloss(word.hanzi);
+              const gloss = getGloss(word.hanzi, lang);
               return (
                 <li key={word.hanzi}>
                   <button
@@ -224,8 +226,9 @@ export function Stats({
                     <span>
                       <span className="miss-hanzi">{word.hanzi}</span>
                       <span className="miss-gloss">
-                        {gloss.pinyin}
-                        {gloss.english && gloss.english !== "—" ? ` · ${gloss.english}` : ""}
+                        {gloss.pinyin ? gloss.pinyin : ""}
+                        {gloss.pinyin && gloss.english && gloss.english !== "—" ? " · " : ""}
+                        {gloss.english && gloss.english !== "—" ? gloss.english : ""}
                       </span>
                     </span>
                     <span className="miss-n">{word.status}</span>
@@ -315,6 +318,7 @@ export function Stats({
       </div>
 
       <ProgressDashboard
+        lang={lang}
         words={words}
         events={events}
         sessions={sessions}
@@ -392,6 +396,7 @@ export function Stats({
 }
 
 function ProgressDashboard({
+  lang = "zh",
   words,
   events,
   sessions,
@@ -405,6 +410,7 @@ function ProgressDashboard({
   onLoadDemo,
   onReviewWord,
 }: {
+  lang?: Language;
   words: Map<string, WordRecord>;
   events: WordEvent[];
   sessions: ReadingSession[];
@@ -720,7 +726,7 @@ function ProgressDashboard({
           ) : (
             <ol className="hard-list">
               {hardest.map((h) => {
-                const gloss = getGloss(h.hanzi);
+                const gloss = getGloss(h.hanzi, lang);
                 return (
                   <li key={h.hanzi}>
                     <button
@@ -732,8 +738,9 @@ function ProgressDashboard({
                       <span className="hard-word">
                         <span className="miss-hanzi">{h.hanzi}</span>
                         <span className="miss-gloss">
-                          {gloss.pinyin}
-                          {gloss.english && gloss.english !== "—" ? ` · ${gloss.english}` : ""}
+                          {gloss.pinyin ? gloss.pinyin : ""}
+                          {gloss.pinyin && gloss.english && gloss.english !== "—" ? " · " : ""}
+                          {gloss.english && gloss.english !== "—" ? gloss.english : ""}
                         </span>
                       </span>
                       <span className="hard-meta">

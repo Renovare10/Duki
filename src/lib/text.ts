@@ -43,6 +43,7 @@ export function normalizeText(
   return {
     id: raw.id,
     ...(raw.lang === "en" ? { lang: "en" as const } : {}),
+    ...(typeof raw.level === "number" && Number.isInteger(raw.level) && raw.level >= 1 && raw.level <= 10 ? { level: raw.level } : {}),
     title: raw.title?.trim() || "Untitled",
     blurb: raw.blurb?.trim() || "",
     body: raw.body,

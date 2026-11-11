@@ -1,9 +1,8 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { AddText } from "./components/AddText";
 import { Home } from "./components/Home";
-import { EnglishHome } from "./components/EnglishHome";
 import { EN_SAMPLES } from "./data/en-samples";
-import { isEnglishWordKey, languageWordsView, mandarinOnly, previewNoSync, readLanguage, wordStorageKey, writeLanguage } from "./lib/language";
+import { displayWordKey, isEnglishWordKey, languageWordsView, mandarinOnly, previewNoSync, readLanguage, wordStorageKey, writeLanguage } from "./lib/language";
 import { Reader } from "./components/Reader";
 import { Review } from "./components/Review";
 import { Stats } from "./components/Stats";
@@ -129,9 +128,9 @@ function hasHan(text: string): boolean {
   return /[\u3400-\u9fff]/.test(text);
 }
 
-function firstLineTitle(body: string): string {
+function firstLineTitle(body: string, lang: Language = "zh"): string {
   const line = body.replace(/\s+/g, " ").trim();
-  return line.slice(0, 12) || "Untitled";
+  return line.slice(0, lang === "en" ? 48 : 12) || "Untitled";
 }
 
 function viewToHash(view: View): string {
@@ -778,7 +777,13 @@ export default function App() {
   const languageTextIds = useMemo(() => new Set(languageTexts.map((t) => t.id)), [languageTexts]);
   const languageScores = useMemo(() => new Map([...scores].filter(([id]) => languageTextIds.has(id))), [scores, languageTextIds]);
   const languageSessions = useMemo(() => sessions.filter((s) => languageTextIds.has(s.textId)), [sessions, languageTextIds]);
-  const languageEvents = useMemo(() => wordEvents.filter((e) => (lang === "en") === isEnglishWordKey(e.hanzi)), [wordEvents, languageWords]);
+  const languageEvents = useMemo(
+    () =>
+      wordEvents
+        .filter((e) => (lang === "en") === isEnglishWordKey(e.hanzi))
+        .map((e) => (lang === "en" ? { ...e, hanzi: displayWordKey(e.hanzi) } : e)),
+    [wordEvents, lang],
+  );
   const currentRow =
     view.name === "reader"
       ? languageTexts.find((t) => t.id === view.id)
@@ -1178,13 +1183,19 @@ export default function App() {
       setPasteError((err as Error).message);
       return;
     }
-    if (!hasHan(body)) {
+    if (lang === "en") {
+      if (!/[A-Za-z]{2,}/.test(body)) {
+        setPasteError("Paste some English first.");
+        return;
+      }
+    } else if (!hasHan(body)) {
       setPasteError("Paste some Chinese first.");
       return;
     }
     const item: LibraryText = {
       id: crypto.randomUUID(),
-      title: title.trim() || firstLineTitle(body),
+      ...(lang === "en" ? { lang: "en" as const } : {}),
+      title: title.trim() || firstLineTitle(body, lang),
       blurb: "Added by you.",
       body,
       kind: "paste",
@@ -1456,7 +1467,7 @@ export default function App() {
             <span className="brand-sub">A library of stories</span>
           </span>
         </button>
-        {lang === "zh" ? <button
+        <button
           type="button"
           className="text-btn menu-toggle"
           aria-expanded={menuOpen}
@@ -1465,7 +1476,7 @@ export default function App() {
           onClick={() => setMenuOpen((open) => !open)}
         >
           {menuOpen ? "Close" : "Menu"}
-        </button> : null}
+        </button>
         <div className="language-toggle" role="group" aria-label="Reading language">
           {(["zh", "en"] as const).map((choice) => (
             <button type="button" key={choice} className="chip" aria-pressed={lang === choice}
@@ -1473,18 +1484,19 @@ export default function App() {
                 setLang(choice);
                 writeLanguage(window.localStorage, choice);
                 navigate({ name: "home" });
+                window.scrollTo(0, 0);
               }}>{choice === "zh" ? "Mandarin" : "English"}</button>
           ))}
         </div>
         <nav id="app-menu" className="top-actions" aria-label="Main">
-          {MENU_GROUPS.filter((group) => lang === "zh" && (group.id === "read" || group.id === "look")).map((group) => (
+          {MENU_GROUPS.filter((group) => group.id === "read" || group.id === "look").map((group) => (
             <div key={group.id} className={`menu-group menu-group-${group.id}`} data-group={group.id}>
               <p className="menu-group-label">{group.label}</p>
               {group.actions.map((actionId) => renderMenuAction(actionId))}
             </div>
           ))}
         </nav>
-        {lang === "zh" ? <AppBar
+        <AppBar
           email={auth?.email ?? null}
           signedIn={Boolean(auth)}
           canSignOut={!LOCAL_DRAFT && (Boolean(auth) || hasStoredAuthKey() || shared.signedIn)}
@@ -1506,7 +1518,7 @@ export default function App() {
           onSignUp={() => void onSignIn(true)}
           onSignOut={onSignOut}
           openApp={openApp}
-        /> : null}
+        />
         <input
           ref={importInputRef}
           type="file"
@@ -1567,13 +1579,9 @@ export default function App() {
         </div>
       ) : null}
 
-      {ready && lang === "en" && view.name !== "reader" && view.name !== "share" ? (
-        <EnglishHome texts={languageTexts} scores={languageScores} onOpen={(id) => void onOpen(id)}
-          onMarkRead={(id, read) => void onMarkRead(id, read)} />
-      ) : null}
-
-      {ready && lang === "zh" && view.name === "home" ? (
+      {ready && view.name === "home" ? (
         <Home
+          lang={lang}
           texts={languageTexts}
           scores={languageScores}
           statuses={statuses}
@@ -1589,7 +1597,7 @@ export default function App() {
           onDelete={(id) => void onDelete(id)}
           onMarkRead={(id, readFlag) => void onMarkRead(id, readFlag)}
           onAddText={() => navigate({ name: "add" })}
-          onRemoteSearch={(q) => void onRemoteSearch(q)}
+          onRemoteSearch={lang === "zh" ? (q) => void onRemoteSearch(q) : undefined}
         />
       ) : null}
 
@@ -1636,8 +1644,9 @@ export default function App() {
         )
       ) : null}
 
-      {ready && lang === "zh" && view.name === "add" ? (
+      {ready && view.name === "add" ? (
         <AddText
+          lang={lang}
           paste={paste}
           title={title}
           error={pasteError}
@@ -1708,17 +1717,19 @@ export default function App() {
         </div>
       ) : null}
 
-      {ready && lang === "zh" && view.name === "review" ? (
+      {ready && view.name === "review" ? (
         <Review
-          key={view.focus ?? "all"}
+          key={`${lang}:${view.focus ?? "all"}`}
+          lang={lang}
           words={languageWords}
           focus={view.focus}
-          onGrade={(hanzi, grade) => void onGrade(hanzi, grade)}
+          onGrade={(hanzi, grade) => void onGrade(wordStorageKey(lang, hanzi), grade)}
         />
       ) : null}
 
-      {ready && lang === "zh" && view.name === "stats" ? (
+      {ready && view.name === "stats" ? (
         <Stats
+          lang={lang}
           words={languageWords}
           texts={languageTexts}
           sessions={languageSessions}

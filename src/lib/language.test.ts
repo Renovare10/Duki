@@ -52,6 +52,7 @@ describe("language-separated words", () => {
     expect(wordStorageKey("zh", "OK")).toBe("OK");
     expect([...languageWordsView(words, "zh").keys()]).toEqual(["中", "OK", "DNA"]);
     expect([...languageWordsView(words, "en").keys()]).toEqual(["ok"]);
+    expect(languageWordsView(words, "en").get("ok")?.hanzi).toBe("ok");
     expect(languageWordsView(words, "zh").get("OK")?.status).toBe("known");
   });
 

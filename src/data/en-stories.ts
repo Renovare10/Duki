@@ -296,6 +296,9 @@ They sold the house in the spring. The proceeds were divided equally, as instruc
   },
 ];
 
+/** Topics for the shared library filters (Home topic strip). */
+export const EN_TOPICS: Record<string, string[]> = Object.fromEntries(EN_STORIES.map((s) => [s.id, s.topics]));
+
 /** Rows for the app catalog. `level` drives the English level picker and card badge. */
 export const EN_STORY_TEXTS: LibraryText[] = EN_STORIES.map((s, i) => ({
   id: s.id,

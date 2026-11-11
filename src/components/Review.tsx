@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import type { ReviewGrade, WordRecord } from "../types";
+import type { Language, ReviewGrade, WordRecord } from "../types";
 import { getGloss } from "../lib/glossary";
 import {
   buildReviewQueue,
@@ -16,6 +16,7 @@ import { formatDelay } from "../lib/sm2";
 import { applyReviewGrade } from "../lib/word";
 
 type Props = {
+  lang?: Language;
   words: Map<string, WordRecord>;
   focus?: string;
   onGrade: (hanzi: string, grade: ReviewGrade) => void;
@@ -42,7 +43,7 @@ function whenLabel(dueAt: number, now: number): string {
   return due.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" });
 }
 
-export function Review({ words, focus, onGrade }: Props) {
+export function Review({ lang = "zh", words, focus, onGrade }: Props) {
   const [order, setOrder] = useState<string[]>([]);
   const [forced, setForced] = useState<string | null>(focus ?? null);
   const [flipped, setFlipped] = useState(false);
@@ -58,7 +59,7 @@ export function Review({ words, focus, onGrade }: Props) {
 
   const currentId = pickNext(order, words, now, forced);
   const current = currentId ? words.get(currentId) : undefined;
-  const gloss = current ? getGloss(current.hanzi) : null;
+  const gloss = current ? getGloss(current.hanzi, lang) : null;
   const counts = sessionCounts(order, words, now);
 
   // Learning steps are minutes long: re-check while a step is pending.
@@ -164,11 +165,11 @@ export function Review({ words, focus, onGrade }: Props) {
             <div className="review-hanzi">{current.hanzi}</div>
             {flipped && gloss ? (
               <div className="review-back">
-                <div className="review-pinyin">{gloss.pinyin}</div>
+                {lang === "zh" && gloss.pinyin ? <div className="review-pinyin">{gloss.pinyin}</div> : null}
                 <div className="review-en">{gloss.english}</div>
               </div>
             ) : (
-              <div className="review-prompt">Show pinyin and English</div>
+              <div className="review-prompt">{lang === "en" ? "Show Chinese meaning" : "Show pinyin and English"}</div>
             )}
           </button>
           {flipped ? (

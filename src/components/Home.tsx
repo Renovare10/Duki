@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import type { LibraryText, ReadingSession, TextCategory, TextScore, WordStatus } from "../types";
+import type { Language, LibraryText, ReadingSession, TextCategory, TextScore, WordStatus } from "../types";
 import { WORKS, workStats } from "../data/works";
 import { TOPICS, topicLabel } from "../data/topics";
 import { LEVEL_BANDS, type LevelBand } from "../lib/difficulty";
@@ -39,6 +39,7 @@ import { countNoun, coverTitle, isWorkRowId, workProgress, workRowId, workRows, 
 import { useWorkProfiles, useWorkTocs } from "./useWorks";
 
 type Props = {
+  lang?: Language;
   texts: LibraryText[];
   scores: Map<string, TextScore>;
   statuses: Map<string, WordStatus>;
@@ -106,6 +107,7 @@ type Row = { id: string; title: string; hint?: string; entries: Entry[]; tags?: 
 type ContinueTarget = { title: string; open: () => void; progress?: string };
 
 export function Home({
+  lang = "zh",
   texts,
   scores,
   statuses,
@@ -133,7 +135,7 @@ export function Home({
   }, [filters.query]);
 
   const personal = useMemo(() => personalReady(statuses), [statuses]);
-  const workIds = useMemo(() => WORKS.map((w) => w.id), []);
+  const workIds = useMemo(() => (lang === "zh" ? WORKS.map((w) => w.id) : []), [lang]);
   const profiles = useWorkProfiles(workIds, personal);
   const startedWorks = useMemo(
     () => WORKS.filter((w) => workRowSummary(texts, w.id).last).map((w) => w.id),
@@ -145,7 +147,8 @@ export function Home({
 
   const workInfo = useMemo(() => {
     const out = new Map<string, { entry: Entry; cont: ContinueTarget | null; lastTouched: number }>();
-    for (const work of WORKS) {
+    const works = lang === "zh" ? WORKS : [];
+    for (const work of works) {
       const stats = workStats(work.id);
       const toc = tocs.get(work.id);
       const rows = workRows(texts, work.id);
@@ -172,7 +175,7 @@ export function Home({
       out.set(work.id, { entry: workEntry(work, stats, known, progress), cont, lastTouched });
     }
     return out;
-  }, [texts, tocs, profiles, statuses, personal]);
+  }, [lang, texts, tocs, profiles, statuses, personal]);
 
   const entries = useMemo(() => {
     const list: Entry[] = collapsed.map((item) =>
@@ -282,9 +285,9 @@ export function Home({
   );
 
   return (
-    <div className="home">
+    <div className="home" lang={lang === "en" ? "en" : undefined}>
       <div className="home-hero-copy">
-        <h1>Read real Chinese at your level.</h1>
+        <h1>{lang === "en" ? "Read English at your level." : "Read real Chinese at your level."}</h1>
         <p>Every card shows its level, length, and how much of it you already know.</p>
       </div>
 
@@ -306,7 +309,7 @@ export function Home({
           >
             All topics
           </button>
-          {TOPICS.filter((t) => counts.get(t.id)).map((t) => (
+          {TOPICS.filter((t) => lang === "en" || counts.get(t.id)).map((t) => (
             <button
               key={t.id}
               type="button"
@@ -329,7 +332,12 @@ export function Home({
             label="Length"
             value={filters.length}
             onChange={(v) => set({ length: v as LengthBucket | "all" })}
-            options={[{ id: "all", label: "Any length" }, ...LENGTHS.map((l) => ({ id: l.id, label: `${l.label} · ${l.hint}` }))]}
+            options={[{ id: "all", label: "Any length" }, ...LENGTHS.map((l) => ({
+              id: l.id,
+              label: lang === "en"
+                ? `${l.label} · ${l.id === "short" ? "under 300 words" : l.id === "medium" ? "300–1,500 words" : "books and long reads"}`
+                : `${l.label} · ${l.hint}`,
+            }))]}
           />
           <Pick
             label="For me"

@@ -35,11 +35,19 @@ export function wordStorageKey(lang: Language, key: string): string {
 }
 
 /** Reader-facing view of the lexicon: Mandarin keys verbatim, English keys without the prefix. */
+/** Strip the `en:` prefix for display and for the language-scoped word view. */
+export function displayWordKey(key: string): string {
+  return isEnglishWordKey(key) ? key.slice(EN_WORD_PREFIX.length) : key;
+}
+
 export function languageWordsView(words: Map<string, WordRecord>, lang: Language): Map<string, WordRecord> {
   const out = new Map<string, WordRecord>();
   for (const [key, rec] of words) {
     if (lang === "en") {
-      if (isEnglishWordKey(key)) out.set(key.slice(EN_WORD_PREFIX.length), rec);
+      if (isEnglishWordKey(key)) {
+        const bare = displayWordKey(key);
+        out.set(bare, rec.hanzi === bare ? rec : { ...rec, hanzi: bare });
+      }
     } else if (!isEnglishWordKey(key)) {
       out.set(key, rec);
     }
