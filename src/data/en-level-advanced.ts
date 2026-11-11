@@ -214,6 +214,33 @@ Pictures can help, provided they show the food customers will receive. A photogr
 
 The best test of a translated menu is an ordinary order. Give it to someone unfamiliar with the dishes, ask what they expect, and listen for surprises. If their imagined meal is very different from the one the kitchen serves, the wording needs work. A menu has succeeded when the customer can choose with reasonable confidence and still discover something new on the plate. Perfect word matching is less important than a lunch that makes sense when it arrives.`
   },
+  {
+    id: "en-l7-the-silent-request", level: 7,
+    title: "The Silent Request",
+    blurb: "A late-night radio host receives a request for something she cannot play.",
+    topics: ["arts", "work", "feelings"],
+    body: `Mara's radio program began at midnight, when the advertising office was dark and the building's automatic lights kept switching off around her. She played music for taxi drivers, people finishing late shifts, and anyone who could not sleep. Between songs she read messages. Most requested familiar recordings. Some described a rainy motorway or a kitchen table covered in unpaid bills. She read those more slowly.
+
+The unusual message arrived on a Thursday. A listener named Daniel asked her to play a recording of the sea. He did not mean a song about it. He wanted the sound of waves on a beach, preferably without music, birds, or someone explaining how peaceful it was. Mara checked the station's sound library. There was a storm, a ship's horn, and a short splash labeled "water, general."
+
+She apologized on air and played the next scheduled track. Ten minutes later Daniel wrote again. His mother had moved into a care home inland. She had lived by the coast for most of her life and missed the sea at night. He had tried recordings on his phone, but she disliked the little speaker. The radio beside her bed sounded familiar. She trusted it in a way she did not trust his phone.
+
+Mara knew she should continue with the program. The producer had already complained that she read too many long messages. Still, she asked whether anyone listening had a clear recording of waves. She said they needed permission to broadcast it, not a clip taken from a film or another person's channel. Then she waited, feeling slightly foolish.
+
+The first offering included a dog barking directly into a microphone. The second had a family arguing about sandwiches. A fisherman sent a recording made from his boat, but its engine covered almost everything else. Mara listened through headphones while a song played. She could see why Daniel had been so specific. The sea apparently came with many unwanted companions.
+
+Near one o'clock, a message arrived from Ruth, a night receptionist at a small coastal hotel. She had recorded waves earlier that week using a portable recorder. She used the recording when editing her own holiday videos. The beach had been empty, and the hotel had no music playing outside. She attached the file and confirmed that she had made it herself and was happy for the station to use it.
+
+Mara downloaded it, checked the sound, and called the duty editor. Broadcasting several minutes without speech or music was not part of the schedule. The editor listened, asked about permission, and approved a short section. He warned her that listeners might think the station had broken. She promised to explain before it began.
+
+At one fifteen, Mara announced the recording. She resisted the urge to describe an imaginary moonlit beach. Ruth's waves were enough. A low rush approached, broke softly, and withdrew over stones. Mara watched the seconds pass on the screen. For once she had nothing to prepare, nothing to say, and no reason to fill the room with her voice.
+
+Messages appeared almost immediately. One driver said he had checked his radio twice. A nurse on her break asked where the beach was. Someone complained that the sound made an unpleasant night feel longer. Mara read none of these aloud. When the recording ended, she identified Ruth, thanked her, and returned to the music.
+
+Daniel's final message came just before the program finished. His mother had been asleep when the waves played. He had listened alone in the chair beside her bed. He thanked Mara anyway and asked whether Ruth might allow them a copy for another evening.
+
+Mara forwarded the request with Daniel's permission. She was disappointed at first, though she could not have said exactly what result she had expected. On her way home, the city buses were starting their routes. She left her headphones in her bag and listened to the uneven noise of the waking street.`
+  },
   // NEXT_READING
 ];
 
