@@ -420,6 +420,31 @@ Darkness to human eyes does not mean an absence of radiation. Space contains a f
 
 There are also more immediate reasons why a particular sky looks dark or bright. Moonlight, clouds, atmospheric scattering, and artificial lighting affect what an observer sees from the ground. These local effects should not be confused with the larger cosmological question. Moving away from a city reveals more stars, but it does not turn the sky into a continuous shining surface. The darkness that remains is part of the evidence that the universe has changed over time.`
   },
+  {
+    id: "en-l8-the-auction-lot", level: 8,
+    title: "The Auction Lot",
+    blurb: "Two siblings bid for their mother's dining table, but neither has measured a doorway.",
+    topics: ["family", "humor", "daily-life"],
+    body: `Lot forty-two was described as an oak dining table with minor surface damage. My brother objected to the description. The damage, he said, consisted of a burn from my chemistry set and a long scratch made when he attempted to sharpen an ice skate. Neither defect was minor in our mother's opinion. She had mentioned both regularly for thirty years.
+
+The auctioneer turned a page. We were holding up the viewing queue, so I moved aside and let a woman in a green coat inspect the legs. She crouched with an expertise I found threatening. Our table was being examined like a potential employee, and I wanted to tell her it had already worked hard enough.
+
+Our mother was moving to an apartment near the sea. She had chosen the apartment, arranged the sale, and refused our offers to store everything she could no longer use. "I am moving," she said, "not establishing a museum." The auction included furniture from several houses. She intended to spend the morning having lunch with a friend, leaving us strict instructions not to buy anything on her behalf.
+
+I had no intention of obeying. My brother apparently felt the same, although we did not discover this until the bidding began. I raised my card at the opening price. Across the aisle, he raised his. We looked at each other with the furious surprise of people who have arrived independently at the same foolish plan.
+
+The woman in green joined in. My brother bid again. I put my card on my lap and tried to calculate how much the table would cost after the additional charges. The auctioneer's voice made calculation difficult. Every pause sounded like an accusation of insufficient affection. When the woman shook her head, my brother secured the table for a sum that would have bought him a perfectly adequate new one.
+
+Outside, he looked pleased until I asked how he intended to transport it. He had a small car. I had arrived by train. The auction house could arrange delivery, but the first available day was Thursday, when he would be attending a conference in another city. He asked whether the table could come to my flat temporarily. I reminded him that he had outbid me for it.
+
+We ate sandwiches in his car and called our mother. She listened, asked the price, and laughed for longer than either of us considered necessary. Then she asked whether we had measured my stairs. I knew the stairs were wide enough because I had carried a mattress up them. My brother pointed out that mattresses bend. The table, he added unnecessarily, was oak.
+
+The next hour involved tape measures, photographs, and increasingly technical descriptions of a turn on my second-floor landing. The auction house confirmed that the legs could be removed. This solved the stairs but not the problem that neither of us had room for a large dining table. My brother's kitchen already contained one. Mine contained the washing machine where a dining table might otherwise have gone.
+
+It was my brother who called the woman in green. She had left her number with the auctioneer in case the successful bidder withdrew. She ran a small evening cooking class and wanted a table where students could eat together. We offered it at her final bid, accepting the difference as the price of our morning's entertainment. She arranged collection without asking either of us to attend.
+
+Our mother visited the class a month later, at the woman's invitation. Afterwards she sent us a photograph of six people eating noodles around the familiar scratches. My brother complained that strangers were getting more use from the table than we ever had. Mother replied that this had been her intention in selling it. Then she asked whether we wanted the ice skates. She had discovered them in a cupboard, and neither blade had ever been sharpened properly.`
+  },
   // NEXT_READING
 ];
 
