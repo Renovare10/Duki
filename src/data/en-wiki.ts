@@ -319,6 +319,23 @@ As presses spread, books became more widely available, and religious and scienti
 
 Later presses used iron construction, steam power, and rotating cylinders to increase output further.`,
   },
+  {
+    id: "en-wiki-plate-tectonics", level: 8, title: "Plate Tectonics",
+    blurb: "A moving outer shell explains patterns in mountains and earthquakes.",
+    wikiTitle: "Plate tectonics", sourceUrl: "https://en.wikipedia.org/wiki/Plate_tectonics",
+    createdAt: 220_020, topics: ["encyclopedia", "science", "nature"],
+    body: `Earth's surface appears stable on the scale of an ordinary walk, yet its rigid outer shell is divided into moving plates. These plates include the crust and the uppermost mantle, a combination called the lithosphere. A plate may carry ocean floor, continental land, or both; its boundaries do not simply follow the edges of continents.
+
+Plate motion is generally measured in centimeters per year. Over millions of years, such small annual movements can open oceans or bring continents together. The behavior of neighboring plates also explains why earthquakes and volcanoes are concentrated in particular belts rather than scattered evenly across the globe.
+
+At a divergent boundary, plates separate. Beneath an ocean, material rising between them can form new crust along a spreading ridge. At a convergent boundary, plates approach one another. Dense oceanic lithosphere may bend downward into the mantle in a process called subduction. Continental collisions can instead thicken and deform the crust, producing mountain ranges. Where plates slide past each other, the boundary is called transform.
+
+These movements do not require plates to float on a worldwide ocean of liquid rock. Much of the mantle is solid, but under high temperatures and pressure it can deform and flow over geological time. Forces associated with sinking slabs and differences in density contribute to plate motion. Their relative importance varies with the setting.
+
+The modern theory developed from earlier ideas about continental drift. Matching fossils and geological formations on separated continents suggested that those continents had once been joined. Evidence from the ocean floor, including patterns associated with spreading, helped establish plate tectonics during the twentieth century.
+
+The theory links observations that previously seemed separate: the creation of oceanic crust, the destruction of old lithosphere, and the changing arrangement of continents. It also explains why a quiet-looking landscape can have a history of major movement.`,
+  },
 ];
 
 export const EN_WIKI_TOPICS: Record<string, string[]> = Object.fromEntries(
