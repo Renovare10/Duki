@@ -112,6 +112,31 @@ Freshly baked bread is tempting to cut at once. Waiting allows the crumb, the so
 
 The holes in a finished slice record many decisions. Flour choice, mixing, fermentation, shaping, and oven conditions all leave traces. A large hole is not automatically proof of a superior loaf; a tight, even crumb may be exactly right for a sandwich. Next time you spread something on bread, look at the surface first. Its ordinary pattern is the result of biology meeting a material that can stretch, hold, and finally become firm.`
   },
+  {
+    id: "en-l7-the-name-below-the-photograph", level: 7,
+    title: "The Name Below the Photograph",
+    blurb: "A museum volunteer notices that a familiar face has the wrong name.",
+    topics: ["history", "family", "arts"],
+    body: `My grandmother found the mistake before she had taken off her coat. We were visiting the town museum, where I had spent six Saturdays helping prepare an exhibition about local factories. Beside a photograph of women assembling radios, a label identified the woman nearest the camera as a supervisor named Margaret Bell. My grandmother leaned forward and said, "That's your Aunt June. Margaret was much taller."
+
+I looked at the photograph. The woman had dark eyebrows and a serious mouth, but so did half the women in our old family albums. I asked how she could be certain. Grandmother pointed to the woman's left hand. There was a pale mark beside her thumb. June had burned herself on a stove as a child. I could see something in the photograph, although it might have been a scratch on the print.
+
+The exhibition opened in four days. We had printed labels, painted walls, and persuaded a retired engineer to lend us a heavy radio from his sitting room. I wanted my work to be finished. When I told the curator what Grandmother had said, I hoped he would smile and explain why the museum was right. Instead, he asked whether she could come back with any photographs of June.
+
+At home we emptied two boxes onto the dining table. Most pictures had nothing written on the back. Relatives stood beside cars no one could identify, or smiled in gardens that had since become shops. Grandmother named people confidently until she came to a wedding group. Then she called the groom by two different names and became cross when I asked which was correct.
+
+I began to feel uncomfortable about the museum photograph. Remembering one detail clearly did not make every memory reliable. When I said this, Grandmother pushed back her chair. She had worked with June. She had watched her leave for the factory each morning. Why, she asked, was a label written last week more trustworthy than a person who had actually been there?
+
+I had no good answer. I did have a photograph from June's retirement party. On the back, in June's own handwriting, was a date and a list of names. Near the center stood the same narrow-faced woman as in the museum picture. Beside her was someone taller, identified as Margaret Bell. Grandmother tapped the table once, satisfied, and went to put the kettle on.
+
+The curator welcomed the evidence but did not immediately order a new label. He showed us the file for the exhibition photograph. Its identification had come from a newspaper cutting, written decades after the picture was taken. It might be wrong. He wanted to compare staff records and contact the family that had donated the print before deciding how to describe it.
+
+Grandmother thought this was unnecessary. I was beginning to enjoy it. We were looking at the same photograph but asking different questions: who was there, who had named them, and when the naming had happened. A clear picture could still carry uncertain information. I had spent weeks straightening labels without thinking much about the words on them.
+
+By opening day, the museum had located a staff newsletter containing another copy of the photograph. It named June in the front row. The replacement label included the corrected identification and the newsletter's date. The curator also placed a small notice near the exit inviting visitors to share information about other photographs. He warned me that not every suggested correction would be right.
+
+Grandmother came wearing the same coat. She read the new label in silence, then walked through the rest of the exhibition. At the radio display she stopped and described a test the factory workers used to check each finished set. None of us had known about it. This time I fetched a notebook. Before writing down her account, I asked if I could record her name and the years she had worked there. She gave me the dates slowly and made me read them back.`
+  },
   // NEXT_READING
 ];
 
