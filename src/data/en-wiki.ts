@@ -353,6 +353,23 @@ Mangrove soils can also store substantial amounts of carbon. Damage to these for
 
 Restoration requires more than placing seedlings wherever a coastline is bare. Tidal flow, elevation, sediment, and the choice of species influence whether trees survive. Working with local communities also matters because fishing, land use, and conservation take place in the same inhabited landscape.`,
   },
+  {
+    id: "en-wiki-rosetta-stone", level: 8, title: "The Rosetta Stone",
+    blurb: "Three scripts on one decree helped scholars read ancient Egyptian.",
+    wikiTitle: "Rosetta Stone", sourceUrl: "https://en.wikipedia.org/wiki/Rosetta_Stone",
+    createdAt: 220_022, topics: ["encyclopedia", "history", "culture"],
+    body: `The Rosetta Stone records a decree issued in Egypt in 196 BC on behalf of King Ptolemy V. Its historical value comes partly from repetition: substantially the same message appears in three scripts. Two versions use the Egyptian language, written in hieroglyphic and Demotic scripts; the third is in Ancient Greek.
+
+Calling these three different languages is therefore misleading. A script is a system for representing language in writing. The stone gave scholars several written forms to compare, including Greek, which they could already read. This supplied clues to Egyptian writing whose meaning had been lost.
+
+The object is a broken slab of granodiorite, originally part of a larger monument. It was eventually reused as building material near the town of Rashid, known in European languages as Rosetta. A French officer found it in 1799 during France's invasion of Egypt. After the British defeated the French, it passed into British possession under the terms of the military surrender and was taken to London. It has been displayed at the British Museum since 1802.
+
+Decipherment required more than matching a few pictures to Greek words. Scholars had to determine how Egyptian signs represented language. Thomas Young made important advances, and Jean-François Champollion announced a major breakthrough in 1822. Recognizing that signs could represent sounds, including in native Egyptian words, helped move interpretation beyond the assumption that hieroglyphs were purely symbolic pictures.
+
+The work continued after that announcement. Reading inscriptions confidently required further comparison and study, not simply one successful translation. Other copies of related decrees later provided additional evidence.
+
+The stone's surviving text concerns royal authority and the relationship between the ruler and priests. Its fame now rests less on that decree's particular instructions than on the evidence its parallel versions supplied for understanding a much larger body of writing.`,
+  },
 ];
 
 export const EN_WIKI_TOPICS: Record<string, string[]> = Object.fromEntries(
