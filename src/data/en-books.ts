@@ -52,6 +52,60 @@ They carry it through the door. The girl carries Mei's bag. They stop outside to
 
 Mei tells them her name. Then she looks up the street. Her new home is at the top of a hill.`,
   },
+  {
+    id: "en-book-blue-table-2", lang: "en", level: 2,
+    seriesId: "en-book-blue-table", seriesTitle: "Room for a Table", chapter: 2,
+    title: "Chapter 2: Four Legs Too Many",
+    blurb: "The blue table reaches Mei's building, but it cannot get up the stairs.",
+    kind: "sample", category: "novel", featured: false,
+    createdAt: 210_001, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+    body: `Mei walks up the hill with one end of the table. Tom carries the other end. Ava walks in front of them.
+
+"Car coming," she says.
+
+They wait on the side of the road. Mei's hands hurt. She puts her end down. Tom puts his end down too.
+
+"Do you live far from here?" Mei asks.
+
+"Across from the shop," says Tom. "The house with the red door."
+
+Mei knows that door. She sees it from her window every morning.
+
+At last they reach her building. The front door is wide. The table goes through it. But the stairs turn to the left. There is a wall in the way.
+
+Mei goes up two steps. Tom stays below her. They turn the table. One leg hits the wall.
+
+"Stop," says Mei.
+
+They try the other way. Now two legs hit the wall.
+
+Mei looks at the stairs. Her room is so close. She can see her door.
+
+"Perhaps it can stay here," she says. "I can eat on the stairs."
+
+Tom laughs, but Mei does not laugh much.
+
+Ava sits on the bottom step. She looks under the table.
+
+"Our table came in a box," she says. "Dad put its legs on."
+
+Tom bends down. There is a small metal piece at the top of each leg. He turns one with his hand. It does not move.
+
+"I need a tool," he says. "I have one at home."
+
+Ten minutes later, Tom is back. Ava holds the table while he works. Soon one leg is off. Then the other legs come off too.
+
+Now Mei and Tom can carry the top upstairs. Ava brings the legs, one at a time.
+
+They put the table together in Mei's room. It stands by the window. Mei sits down in her only chair.
+
+"It fits," she says.
+
+"Where do we sit?" asks Ava.
+
+Mei looks at the table. Then she looks at the chair. She has a little more work to do.`,
+  },
 ];
 
 /** Topic ids are shared with the Mandarin library; every chapter has its own entry. */
