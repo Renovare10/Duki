@@ -342,4 +342,37 @@ He looked at her, then nodded. They stood for a moment among the chair stacks, b
 
 At her desk, Priya opened a new document. Before describing the next study, she wrote down who they needed to ask. The receptionist's name went first.`,
   },
+  {
+    id: "en-l9-a-garden-without-an-audience", lang: "en", level: 9,
+    title: "A Garden Without an Audience",
+    blurb: "A personal essay on growing things badly without turning failure into content.",
+    kind: "sample", category: "graded", featured: false,
+    createdAt: 280_006, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+    body: `My first gardening photograph was a fraud of composition. I had grown six radishes, four of them respectable. I placed the respectable ones on a wooden board, pushed the other two out of view, and moved a bag of compost away from the window. In the photograph I appeared to be a person who grew radishes. Outside the frame I was a person who had spent a surprising amount of money producing part of a salad.
+
+There is nothing particularly wicked about this. Photographs select. Nobody expects a portrait to include the overflowing laundry basket behind the chair. But after I shared the picture, I found myself gardening with an imaginary visitor beside me. I considered whether the pots looked harmonious before I considered whether the plants had room. A successful afternoon was one that ended with something recognisable to show.
+
+This was awkward because plants spend much of their time looking unpromising. Seeds are invisible after you put them in soil. A useful root system does not pose for photographs. Leaves may remain almost unchanged for days while I, who have watered them, require some acknowledgement of my effort. Then a slug arrives overnight and produces a result so definite that it feels like criticism.
+
+I began with the cheerful idea that a garden would get me away from screens. Instead I carried a screen outside to identify insects, check advice, compare progress, and find out whether anyone else had successfully grown the variety I had just failed to grow. Much of this was useful. Some of it was a way of being absent from a place I had deliberately gone to be present in.
+
+The advice often contradicted itself. One person watered by schedule; another said a schedule was foolish. A third had invented a test involving a finger and the soil, which sounded simple until I realised that I had no clear idea what the correct result should feel like. My pots differed from their beds. Their weather differed from mine. The confident conclusions generally arrived before the conditions under which those conclusions might apply.
+
+What helped was keeping a notebook too dull to share. I wrote the date, what I had planted, and where. When something died, I recorded what I had done rather than what I believed it deserved. A page might say: moved to wall, leaves pale, pot still wet on Friday. It did not explain the failure, but it stopped my memory from quietly improving my performance afterwards.
+
+The notebook also made certain successes less impressive. A tomato plant produced a bowlful of fruit after weeks in which I had congratulated myself on my patience. Looking back, I discovered that most of the waiting had been done by a neighbour while I was away. I had provided the pot and the sense of achievement. She had provided the water.
+
+I don't want to turn this into another claim that the garden teaches us how to live. Plants do not exist to supply metaphors for a person with a notebook. Their fortunes are affected by weather, soil, insects, and a great deal I have not learned to notice. When a seedling dies, it is not necessarily a lesson about letting go. Sometimes I have left it in a dark corner and forgotten it.
+
+Nor has gardening made me tranquil. I remain capable of unreasonable anger towards a creature smaller than my thumbnail. I have stood in a doorway at midnight wearing a coat over my pyjamas, asking the darkness what it wants from me. My family has wisely declined to answer. Gardening gives me different things to worry about, which is an improvement on some evenings and merely a change on others.
+
+The private pleasure is more modest. I can spend time doing something at which I am neither outstanding nor paid. I can move a pot, discover that moving it was a mistake, and move it back without producing a public account of my growth. An audience, even an affectionate one, makes explanation tempting. Soon the mistake needs a comic caption or a useful conclusion. Alone, it can remain a mistake until I understand it, or until I forget.
+
+I still take photographs. A flower opening after a long wait is worth sending to somebody who will be pleased. I try to distinguish that small pleasure from the wish to appear to have an attractive and well-managed life. The distinction is not always flattering. Occasionally I discover that I am more disappointed by bad light than by a damaged leaf, and put the phone indoors.
+
+This year I planted radishes again, in a wider container. The packet was the same brand, but I resisted treating it as a rematch. I thinned the seedlings reluctantly, watered them, and waited. Some grew well. Some remained thin red strings with leaves attached. I ate the good ones while standing at the sink, with a little salt on a saucer.
+
+The others went into the compost. There was no photograph, partly on principle and partly because I had dirt on my hands. Later I wrote down the date.`,
+  },
 ];
