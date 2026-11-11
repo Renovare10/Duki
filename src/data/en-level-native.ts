@@ -97,4 +97,37 @@ When the pipe was fixed, they stood together while Daniel turned the water back 
 
 He put the phone down, then took the estimate from the passenger seat and checked that he had included the second visit. He had. He filed his copy, started the engine, and pulled out carefully past Mr Vale's narrow gate.`,
   },
+  {
+    id: "en-l9-in-praise-of-the-spare-room", lang: "en", level: 9,
+    title: "In Praise of the Spare Room",
+    blurb: "An opinion essay on leaving a little space without an assigned purpose.",
+    kind: "sample", category: "graded", featured: false,
+    createdAt: 280_001, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+    body: `The room in my grandmother's house was officially a bedroom, although its bed had disappeared before I was born. During my childhood it contained a broken sewing machine, four chairs of which only two matched, and a painting nobody liked enough to hang or disliked enough to throw away. When visitors came, we made room among these objects. When nobody came, the room remained available for purposes we hadn't yet thought of.
+
+I hesitate to praise it. A spare room is an expensive thing to be nostalgic about. People who sleep behind curtains in shared flats do not need a lecture on the spiritual benefits of unused square metres. My grandmother had her room because she had bought a modest house in a cheap town at a time when her modest income could pay for it. What looks like wisdom in a family memory may, on inspection, turn out to be favourable property prices.
+
+Still, the room taught me something I keep forgetting: a space can be useful before we know exactly what it is for. I learned to mend a bicycle there. My cousin rehearsed an unsuccessful audition there, with the door shut and the rest of us forbidden to listen. After a quarrel, my uncle once sat in it for so long that someone quietly took him a sandwich. None of these activities would have justified a room of its own.
+
+My current flat has no such room. It does, however, have a small table which I have repeatedly tried to improve. First I called it a reading corner and bought a lamp. Then I called it a workspace and bought a better chair. Eventually I noticed that the chair prevented anyone from reaching the window. The table had been quite good at being a table, but I kept making it audition for a career.
+
+This is an argument for a little unallocated capacity, wherever we can afford it. A shelf need not be filled when it is put up. An evening need not become a project because it happens to be free. We are often told to make time for the unexpected, a charming contradiction: the unexpected is supposed to submit a request before it arrives. Sometimes the practical preparation consists of leaving a gap and tolerating the feeling that the gap looks wasteful.
+
+There are respectable objections. A room without a purpose tends to fill with objects without a home, and clutter imposes work on whoever eventually clears it. My grandmother's broken sewing machine did not repair itself through patient hospitality. She died, and my mother paid two men to carry it downstairs. The spare room was both a generous possibility and an arrangement by which certain decisions were deferred to her children.
+
+Nor is an overfull calendar always a personal failure. Some people are holding together several jobs, care responsibilities, and a bus timetable that has apparently been designed by their enemies. They cannot recover an afternoon merely by changing their attitude. Advice about leaving space becomes insulting when it treats a shortage of resources as a shortage of imagination.
+
+The same distinction matters in public life. A local hall that stands empty on Tuesday morning can look like an obvious inefficiency. Give every hour to a paying tenant, however, and there may be nowhere for a tenants' meeting on Wednesday evening after a sudden rent increase. A school with no spare classroom has made excellent use of its rooms until a pipe bursts. Capacity held in reserve costs money; the lack of it also costs money, often at the least convenient moment.
+
+I am not proposing that every empty building be preserved in the hope that an interesting need will wander past. Buildings require maintenance. Public money has competing claims. We should ask who gets to decide which spaces remain available and who actually feels welcome in them. A room described as belonging to everybody can still be effectively owned by the person with the loudest voice and the key.
+
+But the calculation should include uses that cannot be listed in advance. There is a difference between waste and readiness, even if the two look similar in a photograph. An empty chair may be evidence of poor planning, or it may mean that someone arriving late will have a place to sit. We have to know something about the people around the chair before we can tell.
+
+Last winter I moved the impressive chair away from my little table. A neighbour came upstairs one evening because her heating had failed. She brought a bag containing her laptop, a pair of socks, and a tomato she had feared would freeze, although the flat was nowhere near that cold. She sat at the table while I cooked. We had never previously had a conversation longer than a lift journey.
+
+The table did not become a community hub. We did not start a supper club or discover that we had been waiting all our lives to meet. She answered emails; I burned the onions. Later, when her landlord called, she had somewhere warm and reasonably quiet to explain the problem. I was pleased that I hadn't put the printer there, as I had been meaning to do.
+
+The next morning the table was empty again. I caught myself considering a bowl, a plant, something to make it look finished. For now, I have left it alone.`,
+  },
 ];
