@@ -444,6 +444,39 @@ Rosa moved the board where she could reach it. Tomorrow she would use it as plan
     createdAt: 250_012, readAt: null, bookmark: null,
     source: "Original (Duki) · AI-drafted",
   },
+  {
+    id: "en-l4-the-bird-we-could-not-name", lang: "en", level: 4,
+    title: "The Bird We Could Not Name",
+    blurb: "During a bird count, two friends disagree about what to write on their form.",
+    body: `I joined the park's spring bird count because my friend Ellis promised there would be breakfast afterward. We met the other volunteers at seven, while the grass was still wet.
+
+Our leader gave each pair a map and a form. We had one path to follow and an hour to record what we saw. If a bird was too far away to identify, we could describe it instead of guessing its name.
+
+Ellis knew most of the common birds. I carried the form and tried to keep it dry. For twenty minutes, I wrote down everything he said.
+
+Then a small yellow bird landed on a branch above the pond. Ellis lifted his binoculars, but the bird flew away before he got a clear view.
+
+"Probably the same kind we saw by the gate," he said.
+
+I started writing the name, then stopped. The bird by the gate had looked yellow too, but that was all I remembered.
+
+"Should we just write 'small yellow bird'?"
+
+Ellis frowned. "That won't be very useful."
+
+We waited by the pond for another ten minutes. The bird did not return. In the end, we wrote its color, its size, and where we had seen it.
+
+When we handed in our form, the leader asked about the unknown bird. She did not supply a name. She added a note beside our description and thanked us for leaving the question open.
+
+Over breakfast, Ellis opened his bird guide. Several birds on the page had yellow feathers.
+
+"Next time, look at the wings," he told me.
+
+"Next time, I'll bring my own binoculars," I said. I still wanted breakfast, but I wanted a better look at the birds too.`,
+    kind: "sample", category: "graded", featured: false,
+    createdAt: 250_013, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+  },
 ];
 
 export const EN_ELEMENTARY_TOPICS: Record<string, string[]> = {
@@ -460,4 +493,5 @@ export const EN_ELEMENTARY_TOPICS: Record<string, string[]> = {
   "en-l4-the-broken-zip": ["family", "daily-life", "shopping"],
   "en-l4-a-recipe-with-sound": ["food", "family", "daily-life"],
   "en-l4-someone-at-the-door": ["arts", "school", "humor"],
+  "en-l4-the-bird-we-could-not-name": ["nature", "science", "feelings"],
 };
