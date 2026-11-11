@@ -114,6 +114,21 @@ In cold weather, bees can gather closely together inside their nest. The workers
 
 Honey bees also carry pollen between flowers. This helps many plants produce seeds and fruit. Honey is useful to people, but the bees' work in fields and orchards matters too.`,
   },
+  {
+    id: "en-wiki-iceland", level: 5, title: "Iceland",
+    blurb: "An island where glaciers sit above a restless underground world.",
+    wikiTitle: "Iceland", sourceUrl: "https://en.wikipedia.org/wiki/Iceland",
+    createdAt: 220_007, topics: ["encyclopedia", "travel", "nature"],
+    body: `Iceland is an island country in the North Atlantic Ocean, close to the Arctic Circle. Its capital is Reykjavik. Many people live in or near the capital, while large parts of the island's interior have few residents.
+
+The name suggests a country covered only in ice, but Iceland has volcanoes, hot springs, and broad areas of old lava. It lies on a boundary where two huge sections of Earth's outer layer move apart. Heat from below the ground warms water, and Icelanders use this energy to heat buildings and produce electricity.
+
+Glaciers cover parts of the island. Rivers carry water from the ice toward the coast. There are also mountains and waterfalls, and some volcanoes lie beneath glaciers.
+
+The surrounding ocean affects the climate. Winters are milder than the island's northern position might suggest, although summers remain cool.
+
+Iceland's history includes settlement by Norse people more than a thousand years ago. The country later came under Norwegian and then Danish rule. It became a republic in 1944. Today its parliament is called the Althing, a name with roots in the island's early history.`,
+  },
 ];
 
 export const EN_WIKI_TOPICS: Record<string, string[]> = Object.fromEntries(
