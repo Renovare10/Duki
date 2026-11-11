@@ -1,5 +1,5 @@
 // Builds src/data/en-glosses.generated.ts: short Chinese glosses for every word in the English
-// stories, taken from ECDICT (MIT, https://github.com/skywind3000/ECDICT).
+// stories (every file in SOURCES), taken from ECDICT (MIT, https://github.com/skywind3000/ECDICT).
 // Usage: ECDICT_CSV=/path/to/ecdict.csv node scripts/build-en-glosses.mjs
 import fs from "node:fs";
 import path from "node:path";
@@ -10,7 +10,9 @@ const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const csv = process.env.ECDICT_CSV;
 if (!csv) throw new Error("Set ECDICT_CSV to ecdict.csv");
 
-const src = fs.readFileSync(path.join(root, "src/data/en-stories.ts"), "utf8");
+/** Every English data file whose titles and bodies a reader can tap. Add new section files here. */
+const SOURCES = ["src/data/en-stories.ts", "src/data/en-level-elementary.ts"];
+const src = SOURCES.map((f) => fs.readFileSync(path.join(root, f), "utf8")).join("\n");
 const bodies = [...src.matchAll(/(?:title: "([^"]*)"|body: `([^`]*)`)/g)].map((m) => m[1] ?? m[2]).join("\n");
 const keys = new Set((bodies.match(/[A-Za-z]+(?:['’][A-Za-z]+)*/g) ?? []).map((w) => w.toLowerCase().replaceAll("’", "'")));
 
@@ -52,7 +54,10 @@ for await (const line of rl) {
 /** Character names in the stories: glossed as names, not as dictionary senses. */
 const NAMES = new Set(["max", "ben", "lily", "anna", "sam", "maria", "lopez", "david", "grace", "harris", "mei",
   "frank", "nadia", "walter", "brooks", "elena", "tom", "harold", "robert", "priya", "claire", "margaret", "james",
-  "ruth", "alder"]);
+  "ruth", "alder",
+  // Elementary section (en-level-elementary.ts)
+  "ali", "amir", "ava", "beth", "daniel", "ellis", "emma", "helen", "jack", "jo", "kate", "leo", "lila", "luis",
+  "maya", "mina", "nina", "nora", "owen", "paul", "pip", "rosa", "sara", "sophie"]);
 
 function short(translation) {
   const lines = translation.split("\\n").map((l) => l.replace(/\\r/g, "").trim())
@@ -64,7 +69,7 @@ function short(translation) {
 /** Hand fixes where ECDICT's first senses mislead a learner, or it has no entry. */
 const OVERRIDES = {
   a: "art. 一（个）", an: "art. 一（个）", the: "art. 这个；那个", internet: "n. 互联网",
-  online: "adv. 在网上", overreaction: "n. 反应过度",
+  online: "adv. 在网上", overreaction: "n. 反应过度", does: "v. 做；aux. 助动词（do 的第三人称单数）",
 };
 
 function lookup(key) {

@@ -32,8 +32,9 @@ describe("English stories", () => {
     for (let level = 2; level <= 10; level++) expect(avg(level)).toBeGreaterThan(avg(level - 1));
   });
 
-  it("has a Chinese gloss for every word a reader can tap", () => {
-    for (const t of EN_STORY_TEXTS) {
+  it("has a Chinese gloss for every word a reader can tap, in every English story (starter + Elementary)", () => {
+    expect(EN_SAMPLES.length).toBe(EN_STORY_TEXTS.length + EN_ELEMENTARY_TEXTS.length);
+    for (const t of EN_SAMPLES) {
       for (const tok of [...words(t.title), ...words(t.body)]) {
         expect(EN_GLOSSES[tok.key!], `${t.id}: ${tok.text}`).toBeTruthy();
         expect(getGloss(tok.key!, "en").english).not.toBe("—");
@@ -90,6 +91,10 @@ describe("English stories", () => {
         expect(matchesFilters(entry, { ...NO_FILTERS, topic })).toBe(true);
       }
     }
+  });
+
+  it("glosses character names as names, not dictionary senses", () => {
+    for (const name of ["nina", "leo", "maya", "jack", "pip", "sophie"]) expect(EN_GLOSSES[name]).toBe("（人名）");
   });
 
   it("keeps a safe fallback for English words awaiting the gloss rebuild", () => {
