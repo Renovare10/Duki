@@ -179,6 +179,39 @@ She carefully moved all seven onto her plate. Next year, she says, we need two p
     createdAt: 250_004, readAt: null, bookmark: null,
     source: "Original (Duki) · AI-drafted",
   },
+  {
+    id: "en-l3-the-station-piano", lang: "en", level: 3,
+    title: "The Station Piano",
+    blurb: "Maya has forty minutes before her train and a song she cannot quite remember.",
+    body: `Maya's train was late. The board above the station shop said she had forty minutes to wait. She bought a cup of tea and looked for somewhere to sit.
+
+Near the windows stood a piano. A sign on it said, "Please play me."
+
+Maya had played as a child. She still remembered the beginning of a song her mother liked. She sat down, put her tea on the floor, and tried it.
+
+The first part sounded right. Then she forgot what came next. She started again and stopped in the same place.
+
+"Is there more?" asked a small boy. He was standing beside her with his father.
+
+"There is," Maya said. "But I don't remember it."
+
+The father sang a few notes. Maya found them on the piano. He sang the next part, and she tried that too.
+
+By the third try, she could play the whole song. The boy sat on the floor to listen. His father sang quietly, with his hands in his coat pockets.
+
+When they finished, a station worker called out a platform number. The boy jumped up. His train was ready.
+
+"Again!" he said.
+
+"Next time," his father told him. They hurried away with their bags.
+
+Maya picked up her tea. It was cold now. She sent her mother a message: "Can you send me the music for our old song?"
+
+Then she returned to the piano. Her own train was still twenty minutes away.`,
+    kind: "sample", category: "graded", featured: false,
+    createdAt: 250_005, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+  },
 ];
 
 export const EN_ELEMENTARY_TOPICS: Record<string, string[]> = {
@@ -187,4 +220,5 @@ export const EN_ELEMENTARY_TOPICS: Record<string, string[]> = {
   "en-l3-the-photo-in-the-book": ["family", "daily-life", "humor"],
   "en-l3-a-slower-saturday": ["sports", "health", "feelings"],
   "en-l3-beans-on-the-balcony": ["nature", "family", "daily-life"],
+  "en-l3-the-station-piano": ["arts", "travel", "feelings"],
 };
