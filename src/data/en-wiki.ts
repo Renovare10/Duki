@@ -129,6 +129,21 @@ The surrounding ocean affects the climate. Winters are milder than the island's 
 
 Iceland's history includes settlement by Norse people more than a thousand years ago. The country later came under Norwegian and then Danish rule. It became a republic in 1944. Today its parliament is called the Althing, a name with roots in the island's early history.`,
   },
+  {
+    id: "en-wiki-tea", level: 5, title: "Tea",
+    blurb: "How one plant produces green tea, black tea, and oolong.",
+    wikiTitle: "Tea", sourceUrl: "https://en.wikipedia.org/wiki/Tea",
+    createdAt: 220_008, topics: ["encyclopedia", "food", "culture"],
+    body: `Green tea and black tea look and taste different, yet both come from the same plant species, Camellia sinensis. Oolong comes from this plant too. The way the leaves are treated after picking helps decide what kind of tea they become.
+
+When picked leaves are damaged, substances inside them react with oxygen. This process, called oxidation, changes their color and flavor. Makers of green tea heat the leaves early to stop much of this change. Black tea is allowed to oxidize much further. Oolong is partly oxidized before the process is stopped.
+
+People have been drinking tea in China for many centuries. During the Tang dynasty, it became an important social drink. Tea drinking spread to other parts of Asia and later became common in Europe and elsewhere.
+
+People prepare it in different ways. Some drink it plain, while others add milk, sugar, or spices. It can be served hot or cold.
+
+The word tea is also used for drinks made from other plants, such as mint. These are often called herbal teas. They do not come from the tea plant, even though people prepare them in a similar way.`,
+  },
 ];
 
 export const EN_WIKI_TOPICS: Record<string, string[]> = Object.fromEntries(
