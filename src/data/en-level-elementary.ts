@@ -506,6 +506,39 @@ Helen took the old bill off the fridge. Under it, she found their shopping list,
     createdAt: 250_014, readAt: null, bookmark: null,
     source: "Original (Duki) · AI-drafted",
   },
+  {
+    id: "en-l4-below-the-clouds", lang: "en", level: 4,
+    title: "Below the Clouds",
+    blurb: "After months of planning a mountain walk, two friends face a difficult decision.",
+    body: `The photograph on Beth's kitchen wall showed a mountain lake under a clear blue sky. She and her friend Luis had planned for months to walk there. They had booked a room, checked the route, and practiced on shorter paths near home.
+
+On the morning of the walk, the sky was gray. The forecast said the clouds would get lower during the afternoon. Their host suggested a path in the valley instead.
+
+"We can start early and see how far we get," Beth said.
+
+Luis agreed, but they chose a point on the map where they would decide whether to continue. Beyond it, the path crossed open ground with few clear landmarks.
+
+They reached that point before noon. The lake was still an hour away. Ahead of them, the upper path disappeared into cloud.
+
+"We came all this way," Beth said.
+
+Luis took out the map, although they both knew what it showed.
+
+"The path will still be there next year."
+
+Beth wanted to argue. Instead, she sat on a rock and ate half her sandwich. Her hands were cold. After a few minutes, she put the rest away and stood up.
+
+"Let's go down."
+
+They followed their route back to the valley. By the time they reached the village, they could no longer see the place where they had stopped.
+
+In the cafe, Luis ordered tea. Beth sent their host a message to say they were back safely. She did not feel pleased with their decision yet, only tired and disappointed.
+
+At home, she left the photograph on the wall. Beside it, she put their map. She had marked the turning point in pencil, and she kept the mark.`,
+    kind: "sample", category: "graded", featured: false,
+    createdAt: 250_015, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+  },
 ];
 
 export const EN_ELEMENTARY_TOPICS: Record<string, string[]> = {
@@ -524,4 +557,5 @@ export const EN_ELEMENTARY_TOPICS: Record<string, string[]> = {
   "en-l4-someone-at-the-door": ["arts", "school", "humor"],
   "en-l4-the-bird-we-could-not-name": ["nature", "science", "feelings"],
   "en-l4-the-warmer-room": ["daily-life", "weather", "science"],
+  "en-l4-below-the-clouds": ["adventure", "travel", "weather"],
 };
