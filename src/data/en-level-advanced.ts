@@ -318,6 +318,33 @@ This ambiguity becomes visible in ordinary life when people arrange a remote mee
 
 It is tempting to describe standardization as a clean victory of scientific accuracy over local confusion. That misses the practical negotiation involved. The sun was not wrong before standard time, nor did local communities misunderstand their own afternoons. Their system addressed a different set of needs. Railways and later communication networks changed the scale at which people had to cooperate. The clocks became more useful when enough people agreed what their readings would mean, even where those readings no longer matched local noon.`
   },
+  {
+    id: "en-l8-the-sentence-between-them", level: 8,
+    title: "The Sentence Between Them",
+    blurb: "At a factory negotiation, an interpreter is asked to make disagreement sound polite.",
+    topics: ["work", "culture", "literature"],
+    body: `By the second hour of the negotiation, Nina could predict which sentences would cause trouble before their speakers had finished them. The factory director softened every refusal with a long account of his company's difficulties. The visiting buyer responded with cheerful statements that sounded like compliments until Nina reached the condition attached at the end. Between them sat a sample jacket, folded so precisely that nobody dared touch it.
+
+She had been hired by the buyer for two days, with the possibility of regular work if the visit succeeded. Her fee was modest; the possibility was not. Since leaving her agency, she had learned to treat expressions of future interest as both encouragement and a danger. People could ask a great deal of someone they had not quite promised to employ.
+
+The dispute concerned a delivery date. The buyer wanted the first shipment before a holiday sales period. The director said his production line was already committed. Nina interpreted both positions in the first person, as she had been trained to do, watching each speaker rather than the disappointed assistant who kept refreshing a spreadsheet on her laptop.
+
+During a break, the buyer drew Nina aside. "You understand what I'm trying to achieve," he said. "Make it sound a little less final when he says no. These things are always negotiable."
+
+Nina said she could preserve the director's tone but could not change his answer. The buyer smiled as if she had made an unnecessary distinction. He was not asking her to change anything, he explained, only to help the conversation move forward. Across the room, the director was pouring tea into paper cups, giving each one the same amount.
+
+When the meeting resumed, he offered a smaller shipment by the requested date and the remainder three weeks later. The buyer asked whether the factory could increase overtime. The director's reply was brief: his workers had already been promised days off. Nina interpreted it without adding an apology. She felt the buyer's attention shift toward her, although he continued looking at the director.
+
+Then the assistant spoke. Until that moment, she had contributed only figures. She explained that the buyer's warehouse would actually close for part of the holiday period. A full shipment arriving on the original date would have to sit outside the normal receiving schedule. A partial shipment might be easier to handle, provided the product mix matched the stores' needs.
+
+The buyer interrupted her. Nina began interpreting the interruption, then stopped because the director was speaking too. All three waited for her. It was the first silence that afternoon in which nobody seemed to know whose words belonged next. She asked them to speak one at a time, beginning with the assistant, whose explanation had not yet been completed.
+
+The eventual agreement was narrower than either opening proposal. There would be a limited first shipment, with written confirmation of which jacket sizes it would contain. Nina read the terms back in both languages. The director unfolded the sample jacket and pointed out a stitching detail near the pocket. Everyone examined it with relief, grateful for a subject that could be settled by looking.
+
+Afterwards, the buyer told Nina she was very accurate. He made accuracy sound like a personality defect. There was no further mention of regular work. She sent her invoice that evening and spent too long checking whether its wording appeared unfriendly. At home, a friend said she should be proud of having stood her ground. Nina wished pride would pay the rent.
+
+Three weeks later, the assistant emailed to ask if Nina was available for another assignment. She now worked for a different importer. Nina was pleased, then irritated by her own relief, as if the earlier decision required a reward to justify it. She replied with her availability and a higher fee. Before sending, she removed a sentence offering to negotiate the rate. There would be time for that conversation if the client wanted one.`
+  },
   // NEXT_READING
 ];
 
