@@ -159,6 +159,21 @@ Braille is therefore not a separate spoken language. People use it to write many
 
 Readers can use paper or an electronic display with dots that rise and fall. Such a display can connect to a computer or phone. Although speech software can read text aloud, braille allows direct contact with spelling and punctuation, just as print does for sighted readers.`,
   },
+  {
+    id: "en-wiki-coral-reef", level: 6, title: "Coral Reef",
+    blurb: "Tiny animals build structures that shelter a crowded sea community.",
+    wikiTitle: "Coral reef", sourceUrl: "https://en.wikipedia.org/wiki/Coral_reef",
+    createdAt: 220_010, topics: ["encyclopedia", "nature", "science"],
+    body: `A coral reef may look like an underwater garden, but the animals that build it are not plants. They are small creatures called polyps. Many reef-building polyps live together in colonies and produce hard skeletons made of calcium carbonate. Over time, these skeletons help form the reef's structure.
+
+Many shallow-water corals have a close relationship with microscopic algae living inside their tissues. The algae use sunlight to make food and pass some of it to the coral. The coral provides shelter and substances the algae need. This partnership helps explain why many reefs grow best in clear, shallow water where sunlight can reach them.
+
+The reef's uneven surface creates many hiding places. Fish can shelter in gaps, and other animals live on or within the structure. Reefs also support fishing and tourism, while their physical shape can reduce the force of waves reaching a shore.
+
+When the water becomes unusually warm, stressed corals may lose their algae. Their pale skeletons then show through the tissues, making them look white. This is called coral bleaching. A bleached coral is not necessarily dead, but it has lost an important source of food. It may recover if conditions improve; prolonged stress can kill it.
+
+Pollution, destructive fishing, and changes in ocean conditions threaten reefs. Their survival depends on both the living polyps and the conditions that allow the whole community to function.`,
+  },
 ];
 
 export const EN_WIKI_TOPICS: Record<string, string[]> = Object.fromEntries(
