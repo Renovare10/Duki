@@ -166,6 +166,58 @@ When they go, Tom takes the chairs. Mei washes three plates. She dries Ava's pla
 
 She can take it back tomorrow. Now she knows someone on her street.`,
   },
+  {
+    id: "en-book-saturday-team-1", lang: "en", level: 3,
+    seriesId: "en-book-saturday-team", seriesTitle: "The Saturday Team", chapter: 1,
+    title: "Chapter 1: Behind the Fence",
+    blurb: "Lin usually watches football through a fence. This week, the team needs him.",
+    kind: "sample", category: "novel", featured: false,
+    createdAt: 210_003, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+    body: `Every Saturday, Lin walked past the football field on his way to the library. He always stopped at the same place. From behind the fence, he could see both goals.
+
+The players wore different shirts. Some were fast. Some were not. A woman with a red hat stood beside the field and shouted their names. Everyone called her Jo.
+
+One morning, the ball flew over the fence. Lin stopped it with his foot and sent it back through an open gate.
+
+"Thanks," said Jo. "Do you want to join us?"
+
+Lin shook his head. "I'm just going to the library."
+
+"You must have a lot of books. You go there every week."
+
+She smiled. Lin smiled back, but he did not move away from the fence.
+
+On the field, a tall boy was putting on his coat.
+
+"That's Ben," said Jo. "He works at a bakery now. He has to leave early. Can you stand in goal for ten minutes?"
+
+Lin looked at his shoes. They were old running shoes. He had never played for a team. At school, he usually ran around the field while the other boys played football.
+
+"You don't have to be good," Jo said. "We just need someone at that end."
+
+Lin left his bag beside her red hat and walked between the goalposts. The goal looked much bigger from there.
+
+The first ball went past his left hand. The second went past his right. A small boy called Dan ran up to him.
+
+"You can use your hands," Dan said.
+
+"I know. I'm trying to get them there in time."
+
+Dan laughed. He showed Lin how to bend his knees and keep his hands ready.
+
+The next ball came low. Lin got both hands to it. It hurt his fingers, but he held it.
+
+"Good save!" Jo called.
+
+At the end of practice, she gave him his bag.
+
+"We're playing Hill Road next Saturday. Ben can't come. Would you like to try again on Wednesday?"
+
+Lin thought about the two balls he had missed. Then he thought about the one in his hands.
+
+"What time?" he asked.`,
+  },
 ];
 
 /** Topic ids are shared with the Mandarin library; every chapter has its own entry. */
