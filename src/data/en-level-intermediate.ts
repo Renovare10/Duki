@@ -139,6 +139,35 @@ When Daniel returned to the piano, he chose a shorter piece. The woman sat nearb
 
 She clapped softly, then checked the board. They were taking the same train. On the platform, she asked how long he had studied music. He asked about her sister. There was no video to remember the morning by, but he could still hear the last few notes as the train pulled out.`,
   },
+  {
+    ...DEFAULTS,
+    id: "en-l5-a-room-above-the-kitchen", level: 5, createdAt: 260_005,
+    title: "A Room Above the Kitchen",
+    blurb: "A hotel guest explains what went wrong and asks for a specific response.",
+    topics: ["letters", "travel"],
+    body: `Dear Hotel Manager,
+
+I stayed at the Willow Hotel last weekend, from Friday to Sunday, in room twelve. My booking was under the name Alice Wong. I am writing about the noise from the kitchen below my room and about the way my complaint was handled on Saturday morning.
+
+I booked through your website because it described the hotel as a quiet place for a weekend break. I understand that a hotel kitchen cannot be silent. People need to prepare breakfast, and some noise during the day is reasonable. However, on both mornings, loud voices and the sound of heavy equipment woke me before five thirty.
+
+On Friday night, I thought it might be a single delivery. After breakfast on Saturday, I asked the person at reception whether I could move. She checked the room list and said the hotel was full. I accepted that answer. I did not expect you to ask another guest to leave so that I could have their room.
+
+I then asked whether the kitchen could keep the noise down early the next morning. The receptionist said she would speak to the kitchen manager. Unfortunately, the noise began at the same time on Sunday. When I mentioned it while checking out, a different receptionist said she knew nothing about my earlier complaint.
+
+That second conversation was more upsetting than the noise itself. I had explained the problem calmly and thought someone was dealing with it. Being asked to explain it again, while a taxi waited outside, made me feel that the first conversation had been forgotten.
+
+Several parts of my stay were good. The room was clean, and the evening receptionist helped me find a bus to the coast. Please do not read this letter as a complaint about every member of your staff. I am concerned about this room and about how information passes between shifts.
+
+I would like a partial refund for the two nights. I paid two hundred pounds in total, and I think a refund of sixty pounds would be reasonable. If you disagree, please explain what you can offer. I would also like you to check whether future guests should be warned about early kitchen noise before booking room twelve.
+
+I have attached my booking confirmation and receipt. Please reply by email within two weeks. I am at work during most of your reception hours, so a phone call would be difficult to answer. If you need another detail about the booking, you can ask me by email.
+
+I hope you will discuss the complaint with both reception and kitchen staff. The problem might be difficult to remove completely, but guests should know what to expect.
+
+Yours sincerely,
+Alice Wong`,
+  },
 ];
 
 export const EN_INTERMEDIATE_TEXTS: LibraryText[] = INTERMEDIATE_DRAFTS.map(({ topics: _topics, ...text }) => text);
