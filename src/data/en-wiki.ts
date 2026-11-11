@@ -302,6 +302,23 @@ Lovelace recognized that a machine manipulating symbols might work with more tha
 
 The Analytical Engine was not completed in her lifetime, so her procedure was not run on the intended machine. Lovelace died in 1852. The programming language Ada was later named in her honor.`,
   },
+  {
+    id: "en-wiki-printing-press", level: 7, title: "The Printing Press",
+    blurb: "Reusable type and a press changed the economics of making books.",
+    wikiTitle: "Printing press", sourceUrl: "https://en.wikipedia.org/wiki/Printing_press",
+    createdAt: 220_019, topics: ["encyclopedia", "history", "science"],
+    body: `A printing press applies pressure to transfer ink from a prepared surface onto paper or another material. In Europe, Johannes Gutenberg developed a successful system using movable metal type around 1440. His achievement combined several technologies into a practical method of producing many copies of a text.
+
+Printing itself was much older. East Asian printers had long used carved wooden blocks. In eleventh-century China, Bi Sheng developed movable type made from baked clay. Korea later used metal movable type; the surviving book Jikji was printed with it in 1377. Gutenberg did not invent the general idea of arranging reusable characters to form a page.
+
+His system brought together a press, cast metal letters, suitable ink, and a reliable way to make more type. A printer arranged the individual characters, inked them, and pressed paper against them. Once a print run was finished, the letters could be rearranged for another text.
+
+Preparing a page still required skilled labor. The advantage became clear when producing many copies: workers did not need to write each copy by hand. The relatively small number of letters in the Latin alphabet also made a complete set of type easier to supply than a set covering thousands of Chinese characters.
+
+As presses spread, books became more widely available, and religious and scientific arguments could reach larger audiences. This change did not make every book cheap immediately or give everyone the ability to read. It altered the costs and speed of reproduction, creating conditions in which written ideas could circulate much more extensively.
+
+Later presses used iron construction, steam power, and rotating cylinders to increase output further.`,
+  },
 ];
 
 export const EN_WIKI_TOPICS: Record<string, string[]> = Object.fromEntries(
