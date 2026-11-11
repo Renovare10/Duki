@@ -109,10 +109,48 @@ Emma went home with a new book. This time she checked between all the pages befo
     createdAt: 250_002, readAt: null, bookmark: null,
     source: "Original (Duki) · AI-drafted",
   },
+  {
+    id: "en-l3-a-slower-saturday", lang: "en", level: 3,
+    title: "A Slower Saturday",
+    blurb: "Leo joins a running group and tries to keep up with the wrong person.",
+    body: `Leo bought new running shoes on Friday. On Saturday morning, he went to the park for his first run with a local group.
+
+"We run around the lake," said the group leader. "You can go at your own speed."
+
+A tall man in a blue shirt started quickly. Leo followed him. For the first minute, it felt easy. Then the path went up a hill.
+
+Leo's legs grew heavy. The blue shirt got farther away. Before Leo reached the top, he had to stop.
+
+He sat on a bench and looked at his new shoes. Perhaps running was not for him.
+
+An older woman came along the path. She was running slowly.
+
+"Are you hurt?" she asked.
+
+"No. Just tired."
+
+"Would you like to walk with me for a bit?"
+
+They walked to the next tree. Then they ran slowly to a gate. After that, they walked again. Leo could talk without stopping for air.
+
+The woman told him she had started running last year. On her first day, she had only reached that gate.
+
+When they got back to the meeting place, the tall man was waiting. He was training for a long race.
+
+"See you next week?" the woman asked Leo.
+
+Leo nodded. His shoes were covered in brown mud now, but his legs felt better.
+
+At home, he put the shoes beside the door. He set his alarm for the same time next Saturday.`,
+    kind: "sample", category: "graded", featured: false,
+    createdAt: 250_003, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+  },
 ];
 
 export const EN_ELEMENTARY_TOPICS: Record<string, string[]> = {
   "en-l3-the-last-peaches": ["shopping", "food", "family"],
   "en-l3-lunch-on-the-roof": ["work", "feelings", "daily-life"],
   "en-l3-the-photo-in-the-book": ["family", "daily-life", "humor"],
+  "en-l3-a-slower-saturday": ["sports", "health", "feelings"],
 };
