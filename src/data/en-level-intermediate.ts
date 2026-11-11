@@ -371,6 +371,38 @@ There is no method that protects everything at once. The purpose and setting of 
 
 When a translated joke fails, the reader is not necessarily missing something obvious. The joke may depend on a connection the new language does not provide. Recognising that possibility makes reading less frustrating. It can also send a curious reader back to the original, where an ordinary little word suddenly has two jobs.`,
   },
+  {
+    ...DEFAULTS,
+    id: "en-l6-the-woman-outside-the-frame", level: 6, createdAt: 260_014,
+    title: "The Woman Outside the Frame",
+    blurb: "A familiar photograph unsettles a small museum's account of a local photographer.",
+    topics: ["history", "arts", "family"],
+    body: `At the centre of the exhibition was a photograph of Market Street under snow. A horse stood outside the bakery, and a woman leaned from an upstairs window. The label credited Arthur Bell, a local photographer whose grandson had donated a box of glass negatives to the museum.
+
+Jo had written that label herself. She was pleased with its short account of Bell's career until a visitor in a purple coat asked why the museum was certain he had taken the picture.
+
+"It was in his collection," Jo explained.
+
+"That doesn't mean he was behind the camera," the visitor said. She introduced herself as Bell's great-granddaughter, Frances. According to Frances's mother, Bell's sister Rose had worked in the studio for years. The family called her an assistant, although nobody seemed able to explain what she assisted with.
+
+Jo had twenty minutes before a school group arrived. She suggested that Frances leave an email address. Frances did, but her expression made the suggestion feel like a polite way of ending the conversation.
+
+That evening, Jo checked the donation records. They described the negatives as coming from Bell's studio, not as photographs taken personally by Bell. Jo had turned one statement into the other while shortening the label. She had no evidence that Rose took the street photograph. She also had less evidence for Arthur than she had assumed.
+
+Frances sent copies of two family letters. One mentioned Rose taking pictures while her brother was away. Neither identified the snowy street. A newspaper advertisement listed only Arthur's name, but that proved who advertised the business, not who operated the camera on every occasion.
+
+Jo told the museum director they needed to change the label. The director agreed to correct the unsupported claim, but questioned Jo's first replacement: "Photograph by Arthur or Rose Bell." What about another employee? What about a negative bought from elsewhere? Naming two possibilities could make them sound like the only ones.
+
+They settled on "Market Street under snow. From the Bell studio collection; individual photographer unknown." A longer note explained the evidence about Rose's work without claiming this particular image as hers.
+
+Frances was disappointed. She had hoped to see her great-aunt's name directly beneath the photograph. Jo understood the wish, but explained why uncertainty could not be repaired with a more appealing guess. She invited Frances to help examine the remaining family papers, if she wanted to.
+
+A month later, Frances returned with a small notebook and a very large envelope. They booked a table in the study room. Before sitting down, she stopped beside the photograph and read the new label.
+
+"At least," she said, "you've made room for the question."
+
+Jo fetched two pencils. They still had several hundred photographs to look through, and the handwriting on the envelopes was difficult.`,
+  },
 ];
 
 export const EN_INTERMEDIATE_TEXTS: LibraryText[] = INTERMEDIATE_DRAFTS.map(({ topics: _topics, ...text }) => text);
