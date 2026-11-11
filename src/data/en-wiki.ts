@@ -174,6 +174,21 @@ When the water becomes unusually warm, stressed corals may lose their algae. The
 
 Pollution, destructive fishing, and changes in ocean conditions threaten reefs. Their survival depends on both the living polyps and the conditions that allow the whole community to function.`,
   },
+  {
+    id: "en-wiki-water-cycle", level: 6, title: "The Water Cycle",
+    blurb: "Water takes many routes between the ocean, air, ice, and ground.",
+    wikiTitle: "Water cycle", sourceUrl: "https://en.wikipedia.org/wiki/Water_cycle",
+    createdAt: 220_011, topics: ["encyclopedia", "science", "weather"],
+    body: `Rain falling on a mountain may eventually reach the sea, but its journey need not be direct. Some water runs into streams. Some enters the soil, and some becomes part of a glacier. The water cycle describes the movement of water between these different places and forms.
+
+Energy from the Sun helps liquid water evaporate from oceans, lakes, and land. Evaporation turns it into water vapor, an invisible gas. Plants also release water vapor through their leaves. Together, these processes send large amounts of water into the atmosphere.
+
+As moist air cools, some vapor can condense into tiny liquid droplets. Clouds contain these droplets, ice crystals, or both. When particles grow large enough, water falls as precipitation, including rain or snow.
+
+Water reaching the ground may flow over the surface or soak into it. Below the surface, it can move through spaces in soil and rock. This groundwater can later feed springs and rivers. Other water remains stored as ice for a very long time.
+
+A diagram often draws the cycle as a simple circle. Real water follows many paths, and different parts of the journey take very different amounts of time. Human activities can alter these paths. Pumping groundwater removes stored water, while paving land changes how much rain soaks into the soil and how much runs away over the surface.`,
+  },
 ];
 
 export const EN_WIKI_TOPICS: Record<string, string[]> = Object.fromEntries(
