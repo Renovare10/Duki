@@ -336,6 +336,23 @@ The modern theory developed from earlier ideas about continental drift. Matching
 
 The theory links observations that previously seemed separate: the creation of oceanic crust, the destruction of old lithosphere, and the changing arrangement of continents. It also explains why a quiet-looking landscape can have a history of major movement.`,
   },
+  {
+    id: "en-wiki-mangrove", level: 8, title: "Mangroves",
+    blurb: "Coastal trees cope with salt, shifting tides, and oxygen-poor mud.",
+    wikiTitle: "Mangrove", sourceUrl: "https://en.wikipedia.org/wiki/Mangrove",
+    createdAt: 220_021, topics: ["encyclopedia", "nature", "science"],
+    body: `A tree growing at the edge of a tropical sea faces problems that an inland tree may never encounter. Its roots can stand in salty water and waterlogged mud, while the tide repeatedly changes its surroundings. Mangroves are trees and shrubs adapted to these conditions. The word also describes the coastal vegetation they form.
+
+Mangroves are not all members of one closely related group. Different plant families have independently evolved ways to occupy this environment. Their similarities are examples of convergent evolution: comparable pressures have produced comparable solutions in distinct lineages.
+
+Salt and oxygen pose separate difficulties. Depending on the species, mangroves can limit the salt entering through their roots or remove some salt through their leaves. Some have specialized roots that project above the mud and allow gases to move between the atmosphere and submerged tissues. A conspicuous root system may also help anchor a tree in unstable sediment.
+
+These adaptations affect other organisms. The roots create shelter for young fish and invertebrates, while trapped sediment contributes to the development of the coastal habitat. Mangrove forests can reduce wave energy and help protect shorelines, though their effectiveness depends on the width and condition of the forest and the force of the event. They do not provide unlimited protection against every storm.
+
+Mangrove soils can also store substantial amounts of carbon. Damage to these forests therefore affects both local habitats and carbon storage. Clearing for coastal development and other uses has reduced mangrove cover in many places.
+
+Restoration requires more than placing seedlings wherever a coastline is bare. Tidal flow, elevation, sediment, and the choice of species influence whether trees survive. Working with local communities also matters because fishing, land use, and conservation take place in the same inhabited landscape.`,
+  },
 ];
 
 export const EN_WIKI_TOPICS: Record<string, string[]> = Object.fromEntries(
