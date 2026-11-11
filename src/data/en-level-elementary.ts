@@ -249,6 +249,41 @@ Sara replied first. "No flowers. Understood."`,
     createdAt: 250_006, readAt: null, bookmark: null,
     source: "Original (Duki) · AI-drafted",
   },
+  {
+    id: "en-l3-the-picture-map", lang: "en", level: 3,
+    title: "The Picture Map",
+    blurb: "An old drawing sends two cousins looking for a shop that is no longer there.",
+    body: `When we visited my aunt, my cousin Jack showed me an old drawing. It was a map he had made at school. There were no street names, only pictures.
+
+"This was my walk home," he said. "The blue square is the school. The big brown circle is the bakery."
+
+I pointed to a green shape near the middle.
+
+"What's that?"
+
+Jack could not remember. It looked like a tree, but it had a door. We decided to follow the map and find out.
+
+The school was easy to find. We turned left at the gates and walked past a house with a red roof. Jack had drawn that too.
+
+At the next corner, there was no bakery. A bike shop stood in its place. We looked through the window at the rows of wheels.
+
+"We used to get warm bread here," Jack said.
+
+Farther along, we found the green building. It was a little shop with a flat roof. A man was painting its door white.
+
+"Was this always a shop?" Jack asked him.
+
+"No," the man said. "My mother sold ice cream here in summer. She painted the whole place green. Even the door."
+
+Jack looked at me. "Now I remember! That's the ice cream shop."
+
+We took the long way home and drew a new map. This one had a bike wheel and a white door.
+
+In the corner, Jack drew a small green ice cream, where the old shop used to be.`,
+    kind: "sample", category: "graded", featured: false,
+    createdAt: 250_007, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+  },
 ];
 
 export const EN_ELEMENTARY_TOPICS: Record<string, string[]> = {
@@ -259,4 +294,5 @@ export const EN_ELEMENTARY_TOPICS: Record<string, string[]> = {
   "en-l3-beans-on-the-balcony": ["nature", "family", "daily-life"],
   "en-l3-the-station-piano": ["arts", "travel", "feelings"],
   "en-l3-a-table-for-six": ["humor", "food", "daily-life"],
+  "en-l3-the-picture-map": ["adventure", "family", "arts"],
 };
