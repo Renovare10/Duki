@@ -442,6 +442,25 @@ The response involves prevention as well as drug development. Better sanitation,
 
 New medicines can extend treatment options, but they enter the same evolutionary setting as older ones. Surveillance and responsible use remain necessary after a drug is introduced. The challenge is to sustain effective treatment while reducing the conditions that repeatedly undermine it.`,
   },
+  {
+    id: "en-wiki-angkor", level: 9, title: "Angkor",
+    blurb: "Temples and waterworks reveal the scale of a Khmer urban landscape.",
+    wikiTitle: "Angkor", sourceUrl: "https://en.wikipedia.org/wiki/Angkor",
+    createdAt: 220_027, topics: ["encyclopedia", "history", "travel"],
+    body: `Angkor was a major center of the Khmer Empire in present-day Cambodia. Its surviving temples attract much of the attention, but they occupied a far larger inhabited landscape. Roads, reservoirs, canals, and agricultural areas connected monumental buildings with the everyday work of supporting a substantial population.
+
+The Angkorian period is conventionally associated with the centuries between the ninth and fifteenth centuries. Successive rulers built religious monuments expressing political authority and devotion. Angkor Wat is the best-known temple complex in the region, but it is neither a name for the whole city nor the only important site. Other monuments record changing forms of Hindu and Buddhist worship.
+
+The stone structures are unusually visible because they endured. Many houses and other buildings were constructed from materials less likely to survive in the same way. Judging the city only by its standing monuments would therefore leave much of its population out of the picture.
+
+Modern surveys have helped reconstruct that missing landscape. Satellite images and archaeological mapping revealed extensive settlement and an elaborate water-management network. Researchers have described Angkor as a low-density urban complex rather than a compact city bounded neatly by a single wall. Estimates of its population vary because different methods and geographical boundaries produce different answers.
+
+Water management was essential in a region with strong seasonal changes in rainfall. Reservoirs and channels helped collect, store, and distribute water, supporting agriculture and settlement. Maintaining such a connected system also created dependencies: damage or altered flow in one section could affect conditions elsewhere.
+
+Angkor's decline has no universally accepted single explanation. Warfare, political changes, and environmental pressures have all been investigated. Evidence of prolonged droughts and episodes of intense rainfall suggests that climatic instability strained the water infrastructure. These findings complicate any account in which one invasion abruptly ended an otherwise untroubled city.
+
+Decline also did not mean that every religious site ceased to function. Angkor Wat remained a place of Buddhist worship. The landscape preserved both major disruptions and continuities, which is why the familiar image of a completely forgotten city reclaimed by forest provides only a partial account of its history.`,
+  },
 ];
 
 export const EN_WIKI_TOPICS: Record<string, string[]> = Object.fromEntries(
