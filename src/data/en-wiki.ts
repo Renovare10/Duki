@@ -406,6 +406,23 @@ The transition also displaced workers and changed port cities. Traditional docks
 
 Efficiency did not eliminate coordination problems. The system depends on the availability of compatible equipment and on keeping containers moving through connected transport networks. Its success came from redesigning those connections along with the cargo unit itself.`,
   },
+  {
+    id: "en-wiki-natural-selection", level: 9, title: "Natural Selection",
+    blurb: "Inherited variation changes populations without a predetermined goal.",
+    wikiTitle: "Natural selection", sourceUrl: "https://en.wikipedia.org/wiki/Natural_selection",
+    createdAt: 220_025, topics: ["encyclopedia", "science", "nature"],
+    body: `Natural selection occurs when heritable differences affect organisms' chances of leaving descendants. Individuals within a population vary, and some of that variation passes from parents to offspring. If a particular inherited characteristic consistently contributes to reproductive success in a given environment, it can become more common over successive generations.
+
+The emphasis on reproduction is important. An organism's evolutionary fitness is not simply its strength, longevity, or ability to win a fight. A characteristic matters to selection insofar as it influences the contribution of inherited traits to later generations. Cooperation, camouflage, or a particular flowering time can be advantageous under appropriate conditions.
+
+Consider a hypothetical population of insects whose colors vary. If predators more easily notice one color against the background, insects of another color may survive to reproduce more often. Provided the relevant differences are inherited, the population's composition may change. Individual insects do not need to alter their color deliberately, and predators need not intend to reshape the population.
+
+Selection therefore has no foresight. A useful trait in one environment can become disadvantageous when conditions change, and an adaptation is not evidence that evolution was aiming toward a perfect final form. Existing anatomy and developmental processes also constrain the variations available. Selection operates on differences that arise, rather than manufacturing whatever an organism needs on demand.
+
+Charles Darwin and Alfred Russel Wallace presented the principle jointly in 1858. Darwin developed the argument at length in On the Origin of Species the following year. Neither had access to the modern understanding of genes and inheritance. Later work connected evolutionary explanations with genetics and supplied mechanisms that their original accounts lacked.
+
+Natural selection is one mechanism of evolution, not a synonym for every evolutionary change. Chance fluctuations, known as genetic drift, can also alter the frequency of inherited variants. Distinguishing these processes allows biologists to ask whether a particular pattern reflects an adaptive advantage, a historical accident, or several causes acting together. The explanation must be investigated in the population concerned rather than inferred solely from the apparent usefulness of a trait.`,
+  },
 ];
 
 export const EN_WIKI_TOPICS: Record<string, string[]> = Object.fromEntries(
