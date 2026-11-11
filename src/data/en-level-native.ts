@@ -242,4 +242,37 @@ My daughter was waiting on the platform beyond her usual stop, wearing slippers 
 
 She took my bag, and we went to find somewhere to have lunch while the plumber finished. I left the papers folded in my coat.`,
   },
+  {
+    id: "en-l9-against-the-perfect-recipe", lang: "en", level: 9,
+    title: "Against the Perfect Recipe",
+    blurb: "An essay on recipes, honest instructions, and the limits of precision.",
+    kind: "sample", category: "graded", featured: false,
+    createdAt: 280_004, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+    body: `A recipe on my kitchen shelf instructs me to cook onions for five minutes, until deeply caramelised. I have tried this. After five minutes, the onions are warm and beginning to suspect that something is happening. They are not deeply caramelised. I used to assume that the fault lay with my pan, my stove, or a deficiency of character. Now I suspect the writer wanted dinner to look possible within half an hour.
+
+The promise of a perfect recipe is attractive because cooking involves so many opportunities for uncertainty. Ingredients are expensive. Guests arrive hungry. A person who has spent the day making decisions may reasonably want somebody else to specify the quantity of salt. Precision offers relief, and I am grateful for it. I own scales. When I bake, I use them. My objection is to precision that pretends the kitchen can be removed from the cooking.
+
+An onion has a size, a water content, and a history before it reaches the chopping board. A pan has a shape. A stove has its own interpretation of medium heat. These differences do not make instructions useless. They make it necessary to tell the cook what to observe as well as what to do. "Cook for roughly this long, until it looks like this" is more honest than a time presented as a guarantee.
+
+I learned this distinction from a handwritten recipe for my aunt's bean stew. Under onions she had written plenty. Under water she had written enough. I thought the recipe charming, then useless, then annoying. My aunt could reproduce the stew because she knew what plenty and enough looked like in that particular pot. I could not. What felt to her like a complete instruction was really a reminder to someone who already possessed the missing knowledge.
+
+We eventually cooked it together. I measured things while she worked, which she tolerated until I tried to weigh a half-used lemon. The resulting document contained useful numbers, but the most helpful sentence was one she hadn't thought worth writing: the liquid should move lazily when you stir, not run around the spoon like soup. I had been adding too much water and then blaming the beans.
+
+That sentence did not abolish judgement. It gave my judgement something to work on. Good instructions allow a beginner to notice a difference and respond to it. They do not require the beginner to become the author's identical twin, equipped with the same saucepan, the same appetite, and the same mysterious cupboard full of small jars.
+
+There is also a social pressure hidden inside the perfect recipe. A dish becomes correct when it resembles the published photograph; every household variation becomes a deviation requiring permission. I have watched people apologise for replacing an expensive ingredient in a Tuesday dinner as though they were confessing to academic fraud. Sometimes the replacement changes the dish substantially. It may still make a decent dinner. The cook is allowed to prefer it.
+
+This freedom has limits. A claim about tradition is a claim that can be wrong, and naming a dish accurately matters when the name describes somebody else's food. Food safety is not an arena for cheerful improvisation either. A cooking temperature or a tested preservation method may have a reason that isn't visible in a photograph. "Trust your instincts" is poor advice to someone whose instincts have never encountered the problem.
+
+The useful distinction is between constraints and preferences. The writer should tell us which features affect safety or the structure of the dish, which affect flavour, and which merely reflect the writer's taste. If a substitution will prevent a dough from behaving as intended, say so. If it will produce a different but perfectly edible supper, say that instead. The explanation may take an extra sentence. It earns its place.
+
+I wish we applied the same courtesy to ourselves after dinner. We ask whether a recipe worked as though there were a single verdict. Perhaps the sauce was thinner than expected but everyone liked it. Perhaps the cake rose beautifully and tasted of very little. Perhaps the meal was technically fine and required more washing-up than the evening could bear. These are different outcomes. They deserve different notes in the margin.
+
+My own notes are not elegant. Beside one dish I have written: good, but start before the football. Beside another: half the chilli if Peter comes. Neither comment would improve a professional cookbook. Both improve the chances of the meal succeeding in my house. The page is gradually becoming less authoritative and more useful.
+
+I still make my aunt's stew. I use the quantities we wrote down, then adjust the water according to what is actually in the pot. Sometimes I serve it with rice, sometimes bread. Once I scorched the bottom while looking for an email, and no philosophical defence of improvisation could rescue it. We ate eggs that evening.
+
+The onion recipe remains on the shelf too. I have crossed out five minutes and written a longer estimate, with a question mark. If the onions are not ready when the estimate expires, I let them continue. Dinner is later than the book promised. So far, everybody has survived the delay.`,
+  },
 ];
