@@ -189,6 +189,31 @@ Replacing the barrel cost more than expected. Ben suggested moving it away from 
 
 Then somebody began leaving the shared tools in the wrong cupboard. Priya proposed a sign-out book. Ben said he would help paint labels but would not, under any circumstances, spend another night behind the shed. His repaired chair was now reserved for sitting beside his own small, slightly disappointing potatoes.`
   },
+  {
+    id: "en-l7-what-a-menu-translates", level: 7,
+    title: "What a Menu Translates",
+    blurb: "A restaurant menu has to carry ingredients, expectations, and a little history.",
+    topics: ["culture", "food", "travel"],
+    body: `An unfamiliar menu can make a confident adult feel helpless. You may recognize every translated word and still have no clear idea what will arrive. A dish called "family happiness" sounds welcoming, but it does not tell you whether lunch contains pork, seafood, or vegetables. A phrase that works perfectly for regular customers may fail a visitor who lacks the same background knowledge.
+
+Translating a menu therefore requires decisions about the reader. A local name can be part of a dish's appeal, especially when it connects the food with a place or tradition. Replacing every name with a list of ingredients may make the menu easier to understand but less distinctive. Keeping every original name can have the opposite effect. The translator has to decide what to preserve and what to explain.
+
+One practical solution is a name followed by a short description. The name introduces the dish as people actually call it. The description explains the main ingredient, the cooking method, or the texture. A visitor can then connect a cultural name with something they can imagine eating. This approach takes more space, which becomes a real problem on a small printed card.
+
+Literal translation is not always the most accurate choice. Food names may contain jokes, references to appearance, or memories of people and places. An English reader might interpret a translated animal name as an ingredient when it actually describes a shape. Accuracy means conveying what the expression does in context, not merely matching each word with a dictionary entry.
+
+Texture can be especially difficult. Languages divide tastes and physical sensations in different ways, and ordinary food words carry different associations. "Chewy" may sound pleasant for one food and disappointing for another. "Soft" can suggest tenderness or a lack of freshness. A useful description sometimes needs a familiar comparison, but comparisons can mislead too. Calling something a cake may lead a diner to expect sweetness that is not there.
+
+Ingredients also change from kitchen to kitchen. The same dish name does not guarantee the same recipe. A translation copied from another restaurant may be grammatically excellent and factually wrong. The translator needs to ask the cooks what they actually use. This is particularly important when diners have allergies or other dietary needs. A poetic title should never replace a reliable conversation about ingredients and preparation.
+
+There is a difference between explaining a dish and making claims about an entire culture. A menu does not need to announce that everyone in a country loves a particular food, or that one recipe has remained unchanged for centuries. Those statements are often too broad to defend. A precise description of this restaurant's version is usually more useful, and it leaves room for regional and family differences.
+
+Price and service expectations can also require translation. Is the dish intended for one person or for sharing? Does a bowl of rice come with it? Can the kitchen reduce the heat of the seasoning, or is the sauce prepared in advance? These questions are not failures of language learning. They concern restaurant habits that an experienced local diner may take for granted.
+
+Pictures can help, provided they show the food customers will receive. A photograph cannot reliably communicate temperature, texture, or every hidden ingredient. It can also create an expectation about quantity that the actual serving does not meet. Like a short written description, an image selects some information and leaves the rest outside the frame.
+
+The best test of a translated menu is an ordinary order. Give it to someone unfamiliar with the dishes, ask what they expect, and listen for surprises. If their imagined meal is very different from the one the kitchen serves, the wording needs work. A menu has succeeded when the customer can choose with reasonable confidence and still discover something new on the plate. Perfect word matching is less important than a lunch that makes sense when it arrives.`
+  },
   // NEXT_READING
 ];
 
