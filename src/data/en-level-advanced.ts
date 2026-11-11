@@ -58,6 +58,35 @@ Residents can contribute observations that official maps miss. They know which b
 
 On the next summer evening, notice where the pavement is still warm beneath your shoes. Look up at the sky between the buildings, then compare that view with the one from an open field. The evening air has a history. Much of the heat you feel arrived hours earlier, when the sun was still high.`
   },
+  {
+    id: "en-l7-the-wrong-end-of-the-route", level: 7,
+    title: "The Wrong End of the Route",
+    blurb: "A trainee bus driver discovers why one passenger refuses to get off.",
+    topics: ["travel", "work", "feelings"],
+    body: `On my third morning as a bus driver, I reached the final stop with one passenger still aboard. She was sitting behind the empty space for wheelchairs, holding a paper bag against her knees. I switched off the engine and told her we had arrived. She looked through the window, then back at me. This was not where she wanted to be.
+
+I had spent the whole route worrying about small mistakes. At the market I had stopped too far from the pavement. Outside the hospital I had shut the doors before a man with a walking stick reached them, then opened them again in embarrassment. Now I wondered whether I had missed a turn. I checked the route number on the dashboard. It was correct.
+
+The woman showed me an appointment letter. She needed the eye clinic on West Road. We were at the sports center on East Road, several kilometers away. She said the number 18 had always taken her to the clinic. Until the previous month, that was true. A route change had sent it through the new housing district instead. The replacement service was the number 31.
+
+I explained this twice, each time less successfully. She became quiet. I recognized the expression because my mother wore it when a machine at the railway station rejected her payment. It was the look of someone trying not to cause trouble while realizing that everyone nearby was waiting for her to disappear.
+
+My break was twelve minutes long. The clinic appointment was in twenty. I thought about driving her there. The road was wide enough, and there were no other passengers. For a moment it seemed obvious. Then I remembered the controller's warning: a bus was not a private car, and we could not invent routes. I used the radio to explain the situation.
+
+The controller asked whether the passenger was safe and whether she needed medical assistance. I said she seemed well, just worried. He told me to stay at the stop while he checked the connecting services. Through the open front door came the sounds of a swimming lesson. Children were shouting behind the sports center wall. The woman folded her letter until the clinic address disappeared inside it.
+
+"My son offered to come," she said. "I told him I could manage a bus."
+
+I admitted that I had been driving one for only three days and was not sure I could manage it either. She gave a short laugh. Then the radio sounded. The 31 would leave from the next street in eight minutes, but its journey to the clinic would take half an hour. There was no way to reach her appointment on time by bus.
+
+I asked if she wanted help calling the clinic. She handed me the letter, then changed her mind and took out her own phone. I pointed to the number. While she spoke to the receptionist, I drew a small map on the back of an old duty sheet. I marked our stop, the crossing with traffic lights, and the shelter for the 31.
+
+The receptionist said she could still be seen, though she might have to wait. Relief made the woman suddenly talkative. She told me about the trouble with her left eye, her son's new baby, and the mistake in the bus company's printed leaflet. The controller asked over the radio whether I was ready to begin the return service. My break had ended.
+
+At the door, the woman studied my map. "You draw like my grandson," she said. I apologized. "He's six," she added, and smiled before stepping down.
+
+I watched until she reached the crossing, then started the engine. That afternoon I reported the outdated leaflet to my supervisor. I wanted the story to end with a corrected notice appearing the next morning, but it took two weeks. In the meantime, I learned to ask passengers for destinations when they seemed uncertain. I also learned where the connecting services stopped. These were not questions on the driving test, although I needed the answers almost every day.`
+  },
   // NEXT_READING
 ];
 
