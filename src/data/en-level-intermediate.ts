@@ -430,6 +430,28 @@ Come for lunch next month when your rota allows it. Bring no bread. I intend to 
 Love,
 Jean`,
   },
+  {
+    ...DEFAULTS,
+    id: "en-l6-a-meeting-with-an-ending", level: 6, createdAt: 260_016,
+    title: "A Meeting with an Ending",
+    blurb: "How a small neighbourhood group can discuss a proposal and reach a clear decision.",
+    topics: ["how-to", "news", "daily-life"],
+    body: `Your neighbourhood group has an hour to decide how to use a small shared garden. One person wants vegetable beds, another wants benches, and several people simply want the discussion to end. A useful meeting begins before anyone takes a seat. People need to know what can be decided, who has the authority to decide it, and which limits already exist.
+
+Send a short agenda in advance. State the actual question rather than a broad subject such as "The garden." For example, the group might be choosing between two plans within an agreed budget. Include the plans and explain any voting rules. If the group has formal rules, follow them rather than inventing a new procedure on the night.
+
+Think about access as well as attendance. Can people enter the room, hear the discussion, and read the documents? Provide a way to raise needs beforehand. Where practical, accept written comments from people who cannot attend, and explain how those comments will be considered. Do not imply that a written comment automatically counts as a vote if the rules say otherwise.
+
+At the start, confirm the finishing time and the purpose. Choose someone to guide the discussion and someone to record decisions. These jobs are easier when separate people do them. The person taking notes does not need to write every sentence, but should record the proposal accurately before the group decides.
+
+Allow a short period for questions about facts before debating preferences. The cost of a bench is a factual question; whether a bench is a better use of space is a judgment. If an essential fact is unknown, identify who will check it. Confidence and volume are not evidence that a price or permission has been confirmed.
+
+During discussion, invite people who have not spoken to contribute without forcing them. Give each speaker a reasonable opportunity, and stop repeated interruptions. Summarise disagreements fairly. Saying "Everyone wants benches" because the three loudest people want them can make quieter members feel that the result has already been chosen.
+
+Before any vote, read the exact proposal aloud. Include conditions, costs, and responsibilities that form part of it. Record the outcome using the group's agreed method. If a decision must be postponed, record what information is missing and when the group will return to it. Postponement should have a next step, not an indefinite promise.
+
+Finish by confirming who will do what and by when. Share a brief record afterwards and provide a way to correct factual errors. A clear result may still disappoint someone who preferred vegetables to benches. They should nevertheless be able to understand how the decision was reached, what was approved, and whether they volunteered to buy anything.`,
+  },
 ];
 
 export const EN_INTERMEDIATE_TEXTS: LibraryText[] = INTERMEDIATE_DRAFTS.map(({ topics: _topics, ...text }) => text);
