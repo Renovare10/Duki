@@ -327,6 +327,28 @@ Please don't feel you have to decide before I visit. If you would rather wait, s
 Love,
 Helen`,
   },
+  {
+    ...DEFAULTS,
+    id: "en-l6-a-fair-test-for-paper-towels", level: 6, createdAt: 260_012,
+    title: "A Fair Test for Paper Towels",
+    blurb: "A simple household comparison shows why the question matters as much as the result.",
+    topics: ["how-to", "science", "shopping"],
+    body: `Two brands of paper towel are on sale. One roll costs less, but its advertisement claims that each sheet absorbs more water. You could accept the claim, choose the prettier packet, or design a small comparison. Before reaching for a jug, decide what you want to find out. The best towel per sheet may not be the best towel for the money.
+
+Start with a narrow question, such as how much water equal areas of the two towels can hold under the same conditions. Equal areas matter because the brands may sell different sheet sizes. Comparing one large sheet with one small sheet would mix up the effect of the material with the amount of material being tested.
+
+Write down a method before starting. For a simple classroom demonstration, you might weigh each dry sample, wet it thoroughly in a shallow tray, let it drip for a fixed time, and weigh it again. The increase in mass gives a way to compare retained water. Use the same water, handling method, and waiting time for both brands. Work on a stable surface away from electrical equipment.
+
+The method will still have weaknesses. Holding one sample more tightly could squeeze water out. A kitchen scale may be too rough to detect small differences. A towel might tear while wet, making the result difficult to compare. Record these problems instead of quietly removing an inconvenient trial.
+
+Repeat the comparison with fresh samples. One result can reflect a mistake or an unusual piece of paper. Several trials let you see whether the differences are reasonably consistent. Alternate which brand you test first, and label the samples clearly. If possible, use simple codes so the person measuring does not know which brand they expected to win.
+
+Keep the original measurements, including units, and calculate the results in the same way for each brand. An average can summarise the trials, but also look at how widely the results vary. If the difference between brands is smaller than the uncertainty in your measurements, the sensible conclusion may be that your test cannot distinguish them.
+
+Finally, return to the shopping question. Holding more water per equal area does not tell you how easily a towel tears, how well it removes grease, or how much you need for a real spill. Price per roll is also incomplete if rolls contain different amounts of paper.
+
+A useful report explains what was tested, how it was measured, and what remains unknown. You do not need to announce a universal winner. You might conclude that one brand held more water in your particular test, while the cheaper brand still met your household's needs. That is a less exciting claim than an advertisement, but a much easier one to defend.`,
+  },
 ];
 
 export const EN_INTERMEDIATE_TEXTS: LibraryText[] = INTERMEDIATE_DRAFTS.map(({ topics: _topics, ...text }) => text);
