@@ -285,6 +285,23 @@ Fermentation is not restricted to food factories or kitchens. Microbes carry it 
 
 Everyday use of the word is broader than its strict biochemical meaning. An industrial fermentation process may refer generally to growing microorganisms to manufacture a useful product, even when oxygen is supplied. Understanding the context matters: the name on a food process and the name of a cellular energy pathway do not always describe exactly the same thing.`,
   },
+  {
+    id: "en-wiki-ada-lovelace", level: 7, title: "Ada Lovelace",
+    blurb: "Notes on an unbuilt machine imagined more than arithmetic.",
+    wikiTitle: "Ada Lovelace", sourceUrl: "https://en.wikipedia.org/wiki/Ada_Lovelace",
+    createdAt: 220_018, topics: ["encyclopedia", "biography", "science"],
+    body: `In the nineteenth century, a computer could be imagined as a machine of wheels and mechanical parts rather than electronic circuits. Ada Lovelace studied one such design: Charles Babbage's Analytical Engine. Her writing explored both how it might calculate and what calculation could represent.
+
+Born in England in 1815, Lovelace was the daughter of the poet Lord Byron and Anne Isabella Milbanke. She studied mathematics and met Babbage in 1833. Their long friendship gave her opportunities to discuss his proposed machines and their possibilities.
+
+In 1843, she published an English translation of an article about the Analytical Engine by the Italian engineer Luigi Menabrea. She added extensive notes of her own. One described a sequence of operations for calculating Bernoulli numbers, a particular family of numbers used in mathematics.
+
+This sequence is often called the first published computer program, and Lovelace is frequently described as the first computer programmer. Historians debate how these descriptions should account for Babbage's earlier work and their collaboration. The significance of her notes does not depend entirely on assigning a single person the title of first.
+
+Lovelace recognized that a machine manipulating symbols might work with more than quantities. If musical relationships could be expressed in suitable terms, she suggested, such a machine might work with music. This was an unusually broad view of a device commonly discussed as a calculating engine.
+
+The Analytical Engine was not completed in her lifetime, so her procedure was not run on the intended machine. Lovelace died in 1852. The programming language Ada was later named in her honor.`,
+  },
 ];
 
 export const EN_WIKI_TOPICS: Record<string, string[]> = Object.fromEntries(
