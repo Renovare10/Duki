@@ -275,4 +275,71 @@ I still make my aunt's stew. I use the quantities we wrote down, then adjust the
 
 The onion recipe remains on the shelf too. I have crossed out five minutes and written a longer estimate, with a question mark. If the onions are not ready when the estimate expires, I let them continue. Dinner is later than the book promised. So far, everybody has survived the delay.`,
   },
+  {
+    id: "en-l9-the-last-slide", lang: "en", level: 9,
+    title: "The Last Slide",
+    blurb: "A researcher finds a missing qualification in a presentation she helped prepare.",
+    kind: "sample", category: "graded", featured: false,
+    createdAt: 280_005, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+    body: `By nine that morning, the sentence had become a headline. At seven it had said that the new scheduling tool might reduce missed appointments under certain conditions. At eight it had said that it could reduce them. Now, on the screen behind the lectern, it said: Fewer Missed Appointments. Better Care. Priya stood at the back of the conference room holding a paper cup that had begun to soften along its seam.
+
+She was not the person giving the presentation. That was Oliver, whose jacket fitted so well that even his haste looked planned. He had asked her to check the numbers on slide twelve. She had done so, late the previous evening, and sent back two corrections. The numbers were now correct. Their meaning had become less certain.
+
+The study involved four clinics. Patients in two had received reminders using the new system; patients in the others had received the existing reminders. Attendance had improved more in the first pair, but those clinics had also extended their evening hours during the trial. Priya's report explained the difficulty of separating the effects. The presentation mentioned the evening hours in a small note. The headline didn't.
+
+"You look worried," Oliver said, appearing beside her.
+
+"The final claim is stronger than the report."
+
+He looked at the screen. "It's a title, Priya. The explanation's in the talk."
+
+"Is it?"
+
+"It was when we practised."
+
+She had missed the rehearsal because her daughter had a fever. He hadn't said this unkindly, but she heard it anyway. Around them, staff were arranging chairs into straighter lines. A tray of pastries went past, releasing a warm, buttery smell into the room's refrigerated air.
+
+The audience would include the clinic managers and the foundation considering another year's funding. Nobody had asked Priya to lie. That was part of the trouble. She had encountered no moment at which she could point to a request and refuse it. The title had simply become shorter with every revision, losing qualifications as a suitcase loses spare clothing when someone discovers the baggage allowance.
+
+She opened the slide deck on her laptop. Beneath the last chart she typed: Attendance improved; this trial cannot establish how much of the improvement came from the software. The sentence looked heavy beneath the clean blue columns. She could almost hear the audience losing interest.
+
+Oliver watched her. "Can we not make it sound like the whole trial was pointless?"
+
+"It wasn't pointless. It tells us what to test next."
+
+"We need the money to test anything next."
+
+There it was, said without menace or cynicism. Priya was paid from the same grant. The junior analyst she supervised had signed a lease on the assumption that the project would continue. An honest sentence did not suspend those facts. She hated the ease with which her private version of this argument had made her the only adult in the room.
+
+"Put the evening-hours point back in the spoken part," she said. "And I'll take the questions about the design."
+
+Oliver rubbed the bridge of his nose. "Fine. But don't tell them we learned nothing."
+
+At ten, he began. He was good at this. He described the practical frustration of patients missing visits they had waited months to obtain. He showed how the tool allowed staff to move reminders without entering the same information twice. Priya recognised the interviews she had conducted, reduced to quotations that were fair, if unusually tidy. Then came the chart.
+
+Oliver explained the comparison and mentioned the extended hours. He gave the qualification a full sentence. Priya felt relief, followed by an uncomfortable awareness that she had wanted him to fail to say it, so that her suspicion of him could remain uncomplicated.
+
+The first question concerned cost. The next concerned whether the software could work with an older booking system. Then a clinic manager near the front raised her hand.
+
+"At ours," she said, "people started answering because the messages finally had a number they could call back. Was that the same in the other clinics?"
+
+Priya looked at her notes. It hadn't been. The callback number had changed in one of the trial clinics after a receptionist complained. Priya had logged the change but treated it as an implementation detail. Now it was suddenly a plausible explanation rather than an administrative footnote.
+
+She went to the microphone. "We didn't keep that consistent. We should have. It means we have another difference to account for."
+
+The manager nodded. She didn't look disappointed. "I'd like to know whether we need the whole system or just somebody who answers the phone."
+
+There was a little laughter, including Oliver's. Priya answered that she would like to know too. She explained how they could compare those possibilities in a follow-up, while admitting that they couldn't retrieve the answer from the existing data simply by asking it more forcefully.
+
+Afterwards the funding officer requested a revised proposal. There was no promise attached. Oliver shut his laptop and helped stack the chairs, his jacket folded over a table. Priya carried the discarded cups to a bin.
+
+"The callback number," he said. "Was that in your report?"
+
+"In the appendix. I didn't think it mattered enough."
+
+He looked at her, then nodded. They stood for a moment among the chair stacks, both spared the burden of having been entirely right.
+
+At her desk, Priya opened a new document. Before describing the next study, she wrote down who they needed to ask. The receptionist's name went first.`,
+  },
 ];
