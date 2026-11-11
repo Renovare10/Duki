@@ -63,6 +63,28 @@ I'll be back next Thursday for the last boxes. Please leave the green chair wher
 Love,
 Maya`,
   },
+  {
+    ...DEFAULTS,
+    id: "en-l5-your-first-repair-cafe", level: 5, createdAt: 260_002,
+    title: "Your First Repair Cafe",
+    blurb: "How to prepare for a visit to a repair cafe run by volunteers.",
+    topics: ["how-to", "daily-life"],
+    body: `A repair cafe is an event where volunteers help people examine broken things. Some events accept clothes and small household objects; others have people who understand bicycles or particular machines. The service may be free, although you might be asked to pay for parts or leave a donation. A repair is never certain.
+
+Before carrying your broken object across town, read the event's information. Check what the volunteers accept, whether you need an appointment, and when they stop taking new jobs. A volunteer who can mend a jacket may not be able to examine a printer. Ask first if the information is unclear.
+
+Write down what went wrong. "It doesn't work" is a start, but a short history is more useful. Did your bag's zip stop closing after something caught in it? Does your radio fail every time, or only sometimes? Say what you noticed without pretending you know the cause. You don't need technical language.
+
+Bring the parts that belong with the object, such as its instructions or a loose button. Ask the organisers what else they need. If it is an electronic device, protect your private information before handing it over. Don't share passwords simply because someone is helping you. For anything involving electricity, heat, or a damaged battery, ask for specific safety advice before transporting or using it.
+
+Clean ordinary dirt from the object where it is safe to do so. Empty the pockets of a coat and remove food from a lunch bag. Volunteers are giving their time, and a clean item is easier to handle. However, don't open a case or try a risky repair just to prepare for the visit.
+
+At the event, explain the problem and then listen. The volunteer might ask to see how you usually use the item. If the event allows you to watch, ask questions without touching tools or parts unexpectedly. You may discover how to look after the object, even if it cannot be repaired that day.
+
+Agree on costs before anyone orders a part. Also ask what happens if the repair fails. A volunteer may explain that an item needs a professional repair, or that replacing it makes more sense. That answer can be disappointing, especially if the object means a lot to you.
+
+Before leaving, ask whether the item is ready to use and whether any work remains. Don't assume that being examined means it is safe. Take your belongings and any loose pieces with you. If the repair succeeds, you can thank the volunteer by explaining how you use the object. A mended backpack that goes to school every day has a more interesting future than one that stays in a cupboard.`,
+  },
 ];
 
 export const EN_INTERMEDIATE_TEXTS: LibraryText[] = INTERMEDIATE_DRAFTS.map(({ topics: _topics, ...text }) => text);
