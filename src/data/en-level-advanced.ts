@@ -497,7 +497,31 @@ During the interval, Sandra rewrote three lines so the detective could discover 
 
 The next morning, the repaired sound system arrived. Sandra tested the recorded storm twice, then asked me to keep the metal sheet ready as a backup. The local review praised the production's comic timing, particularly the unexpected exchange before the murder. We kept those lines for the remaining performances. The victim insisted on receiving credit for them, although the doctor argued that a man carrying a dagger had done most of the difficult work.`
   },
-  // NEXT_READING
+  {
+    id: "en-l8-the-price-of-a-free-ticket", level: 8,
+    title: "The Price of a Free Ticket",
+    blurb: "A free concert raises difficult questions about who gets scarce seats.",
+    topics: ["culture", "daily-life", "news"],
+    body: `Suppose a town offers a free concert in a hall containing five hundred seats. Thousands of residents would like to attend. Removing the ticket price has made the event affordable, but it has not created additional space. The organizers still need a way to decide who enters. Whatever method they choose will distribute inconvenience and opportunity as well as seats.
+
+The simplest announcement might be "first come, first served." People who arrive early receive tickets until none remain. This sounds neutral because everyone faces the same rule. In practice, the ability to wait differs greatly. A person with a flexible schedule can spend an afternoon in line. A nurse finishing a shift, a parent collecting children, or someone unable to stand for long may have no comparable opportunity.
+
+The tickets therefore have a cost even when no money changes hands. Waiting requires time, and that time could have been spent doing something else. Economists use the idea of opportunity cost to describe the value of the best alternative forgone. It does not mean every hour must be priced at a person's wage. An unpaid afternoon with a child can matter greatly even though nobody issues an invoice for losing it.
+
+Moving the queue online changes the burden rather than necessarily removing it. A release at exactly noon rewards people who can be at a device then, understand the booking process, and complete it quickly. An unstable connection or an inaccessible form can determine the result. If automated tools capture places faster than people can click, the formal promise of equal access becomes less convincing still.
+
+A lottery offers another approach. Residents apply during a stated period, and the organizers select recipients at random. Applying at the beginning or end makes no difference if the rules are followed. People need not spend hours waiting for a small advantage. However, the organizers must define who is eligible, prevent repeated applications, and explain how group bookings will work. Random selection is a procedure, not a substitute for those decisions.
+
+No-shows introduce a further problem. When a ticket costs nothing and requires little effort to obtain, someone may reserve one without being certain they will attend. Charging a deposit could encourage commitment, but it may exclude people who cannot spare the money or manage the payment process. A confirmation message and a straightforward cancellation option might recover some seats without creating that financial barrier.
+
+A waiting list can help, provided replacements have enough notice to use the offer. A seat released ten minutes before the performance is more useful to someone living next door than to someone traveling from another district. Even an efficient cancellation system therefore interacts with geography. The organizers cannot judge success solely by counting how many messages they send.
+
+They might reserve some seats for particular groups, such as local students, while distributing the rest by lottery. That could serve the concert's purpose, but the purpose should be stated openly. A rule designed to introduce young people to live music differs from one intended to give every resident an identical chance. Disagreement may concern the goal itself rather than whether the selection software works correctly.
+
+There is no requirement that every scarce good be distributed through payment. Libraries, public events, and community services regularly use other arrangements. Nor does a hidden cost prove that a free event is a bad idea. The point is to examine the actual burdens instead of assuming that a zero price makes them disappear. A policy can remove one obstacle while leaving another firmly in place.
+
+After the concert, the town could ask who applied, who received seats, who attended, and where people encountered difficulty. Empty chairs would tell only part of the story. A full hall might still contain a narrow slice of the intended audience. If the aim was broad participation, the next concert's booking process should be judged against that aim, not simply against how quickly every available ticket was claimed.`
+  },
 ];
 
 export const EN_ADVANCED_TEXTS: LibraryText[] = READINGS.map(({ topics: _topics, ...text }, index) => ({
