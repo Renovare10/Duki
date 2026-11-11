@@ -312,6 +312,37 @@ Kate`,
     createdAt: 250_008, readAt: null, bookmark: null,
     source: "Original (Duki) · AI-drafted",
   },
+  {
+    id: "en-l3-the-afternoon-shadow", lang: "en", level: 3,
+    title: "The Afternoon Shadow",
+    blurb: "A chalk mark helps two students notice a change during the school day.",
+    body: `At ten in the morning, our teacher took us outside with a box of chalk. She stood a short pole on a flat part of the playground.
+
+"Draw around its shadow," she said. "Write the time beside your line."
+
+My friend Ali held the chalk while I checked the clock. Our line was a little wider than the shadow, but we could see its shape clearly.
+
+At lunchtime, we returned. The pole was still in the same place. Its shadow was not inside our line anymore. It was shorter and pointed in a different direction.
+
+"Did someone move the pole?" Ali asked.
+
+The teacher showed us the tape around its base. Nobody had moved it.
+
+"The sun appears in different places in the sky during the day," she explained. "That changes the shadow. The pole blocks the sunlight."
+
+We drew a second line in blue. Before we went home, we added a third line in red. This time the shadow was longer again.
+
+I wanted to show Dad, but he was working late. I took a photo of the pole and our colored lines.
+
+At dinner, I put a pencil upright on the table. Dad held a small lamp. When he moved the lamp around the pencil, we watched the shadow move too.
+
+Then my little sister put her toy horse in front of the light. Its shadow covered my plate.
+
+We spent the next few minutes making animals on the wall. My dinner got cold.`,
+    kind: "sample", category: "graded", featured: false,
+    createdAt: 250_009, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+  },
 ];
 
 export const EN_ELEMENTARY_TOPICS: Record<string, string[]> = {
@@ -324,4 +355,5 @@ export const EN_ELEMENTARY_TOPICS: Record<string, string[]> = {
   "en-l3-a-table-for-six": ["humor", "food", "daily-life"],
   "en-l3-the-picture-map": ["adventure", "family", "arts"],
   "en-l3-the-dog-behind-the-door": ["letters", "nature", "humor"],
+  "en-l3-the-afternoon-shadow": ["science", "school", "family"],
 };
