@@ -345,6 +345,31 @@ Afterwards, the buyer told Nina she was very accurate. He made accuracy sound li
 
 Three weeks later, the assistant emailed to ask if Nina was available for another assignment. She now worked for a different importer. Nina was pleased, then irritated by her own relief, as if the earlier decision required a reward to justify it. She replied with her availability and a higher fee. Before sending, she removed a sentence offering to negotiate the rate. There would be time for that conversation if the client wanted one.`
   },
+  {
+    id: "en-l8-the-useful-distortions-of-a-map", level: 8,
+    title: "The Useful Distortions of a Map",
+    blurb: "A map must leave things out; its purpose determines which omissions make sense.",
+    topics: ["science", "travel", "culture"],
+    body: `A railway map can guide you successfully across a city while giving you a remarkably poor idea of the city's shape. Stations appear evenly spaced, lines turn at tidy angles, and a short walk may look like a long journey. These distortions are not necessarily mistakes. The map has sacrificed geographical resemblance so that a passenger can see connections without first studying the entire street network.
+
+Every map makes selections. Even a detailed street map omits objects that would overwhelm its surface: individual benches, temporary roadworks, the precise shape of each tree. The familiar phrase "to scale" does not mean that everything has been included. It means that specified distances have a consistent relationship to distances in the world, within the limits of the map's design and projection.
+
+A flat world map faces a further problem. The curved surface of Earth cannot be spread onto a plane without distortion. Different projections preserve different properties, such as local angles or relative areas, while altering others. A projection useful for one task may be misleading for another. Asking which world map is simply correct avoids the more useful question of what a particular projection preserves.
+
+Consider size. On some widely used maps, regions closer to the poles appear much larger relative to equatorial regions than they really are. A reader who mistakes visible area on the page for actual area may develop a distorted sense of the world's proportions. A different projection can correct that relationship while making familiar coastlines appear stretched or compressed. Changing the compromise does not abolish compromise.
+
+Orientation is another convention that can feel like a natural law once we are accustomed to it. A map need not place north at the top. For a walker trying to match a sign with the street ahead, an orientation aligned with the direction of travel may be more helpful. The surprise of seeing a familiar region rotated reveals how much of map reading depends on learned habits.
+
+Labels require choices too. A place may have multiple names used by different communities or at different historical moments. A mapmaker must decide which to print, in what language, and at what size. These decisions can acknowledge a community or make it harder to see. Even without a deliberate political message, a map can carry assumptions about whose knowledge its readers are expected to share.
+
+Digital maps do not escape these problems. They can update quickly and offer different layers, but they still depend on incomplete records and design decisions. A route suggested for driving may be unsuitable for walking. A path marked as accessible might include a temporary obstruction that the database has not recorded. The polished appearance of a screen does not guarantee that its information is current.
+
+Missing information can matter more than a visible error. A traveler may notice a wrongly named street and correct course. Someone planning a journey with limited mobility may not discover the absence of a working lift until reaching the station. A map that records tracks but not barriers serves different users unequally, even if every line it does draw is accurate.
+
+Good map reading therefore involves checking the legend, scale, date, and intended use. A beautiful historical map can be evidence of what its makers believed without being dependable for modern navigation. A simple evacuation diagram may be excellent at showing an exit and useless for estimating travel time across the rest of a building. Its limits are part of understanding it.
+
+The demand that a map include everything would make it impossible to use. What we need is enough information about the selection to judge whether it suits our purpose. Before trusting a map, imagine a decision you will make with it and identify the details that decision requires. The railway diagram may get you across town perfectly. To discover whether the station is actually closer on foot, you may need to put it down and consult another map.`
+  },
   // NEXT_READING
 ];
 
