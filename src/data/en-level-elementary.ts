@@ -212,6 +212,43 @@ Then she returned to the piano. Her own train was still twenty minutes away.`,
     createdAt: 250_005, readAt: null, bookmark: null,
     source: "Original (Duki) · AI-drafted",
   },
+  {
+    id: "en-l3-a-table-for-six", lang: "en", level: 3,
+    title: "A Table for Six",
+    blurb: "Tom's dinner guests send quick replies, and he gets the wrong idea.",
+    body: `Tom invited five friends to dinner in his new apartment. It was small, but he had a table and six chairs. He wanted everyone to have a good evening.
+
+On Thursday, he sent a message to the group. "I'm making soup. Please bring something for the table."
+
+The replies came quickly. "Of course!" "No problem!" "I'll bring something nice."
+
+Tom was pleased. Someone would bring bread. Someone else would bring a salad. He bought vegetables and made a big pot of soup.
+
+On Friday evening, his friends arrived together. Sara carried flowers. Ben had a candle. The others brought small plants.
+
+Tom looked at their bags.
+
+"Where's the food?" he asked.
+
+"You said something for the table," Sara replied. She held up the flowers.
+
+Everyone looked at the table. There were plenty of pretty things, but only one pot of soup.
+
+For a moment, nobody spoke. Then Tom started laughing.
+
+"It's going to be a beautiful, very small dinner."
+
+Ben checked his phone. The bread shop around the corner was still open. He and Sara went out while the others set the table. Twenty minutes later, they returned with two large loaves and some cheese.
+
+They ate all the soup and most of the bread. After dinner, they played cards between the flowers and the plants.
+
+The next morning, Tom sent another message. "Dinner again next month? This time, bring something we can eat."
+
+Sara replied first. "No flowers. Understood."`,
+    kind: "sample", category: "graded", featured: false,
+    createdAt: 250_006, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+  },
 ];
 
 export const EN_ELEMENTARY_TOPICS: Record<string, string[]> = {
@@ -221,4 +258,5 @@ export const EN_ELEMENTARY_TOPICS: Record<string, string[]> = {
   "en-l3-a-slower-saturday": ["sports", "health", "feelings"],
   "en-l3-beans-on-the-balcony": ["nature", "family", "daily-life"],
   "en-l3-the-station-piano": ["arts", "travel", "feelings"],
+  "en-l3-a-table-for-six": ["humor", "food", "daily-life"],
 };
