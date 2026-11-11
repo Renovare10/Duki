@@ -3,6 +3,7 @@ import { AddText } from "./components/AddText";
 import { Home } from "./components/Home";
 import { EnglishHome } from "./components/EnglishHome";
 import { EN_SAMPLES } from "./data/en-samples";
+import { isEnglishWordKey, languageWordsView, mandarinOnly, previewNoSync, readLanguage, wordStorageKey, writeLanguage } from "./lib/language";
 import { Reader } from "./components/Reader";
 import { Review } from "./components/Review";
 import { Stats } from "./components/Stats";
@@ -110,8 +111,9 @@ import type {
   WordStatus,
 } from "./types";
 
-// This branch is a private, device-only prototype. Never sign in or sync its stub data.
-const LOCAL_DRAFT = true;
+// Preview / no-sync mode (default for this branch): no sign-in, no cloud pulls or PUTs.
+// Opt out only with VITE_DUKI_CLOUD_SYNC=on, after the v2 client + backend ship together.
+const LOCAL_DRAFT = previewNoSync();
 
 type View =
   | { name: "home"; shelf?: string }
@@ -177,10 +179,7 @@ function hashToView(hash: string): View {
 }
 
 export default function App() {
-  const [lang, setLang] = useState<Language>(() => {
-    try { return window.localStorage.getItem("duki.language") === "en" ? "en" : "zh"; }
-    catch { return "zh"; }
-  });
+  const [lang, setLang] = useState<Language>(() => readLanguage(window.localStorage));
   const [view, setView] = useState<View>(() => hashToView(window.location.hash));
   const [ready, setReady] = useState(false);
   const [bootError, setBootError] = useState<string | null>(null);
@@ -554,7 +553,10 @@ export default function App() {
   }
 
   async function onSignIn(signup = false) {
-    if (LOCAL_DRAFT) return;
+    if (LOCAL_DRAFT) {
+      setSyncError("Sign-in is off in this local preview. Progress stays on this device.");
+      return;
+    }
     const pkce = await createPkce();
     window.sessionStorage.setItem(PKCE_VERIFIER_KEY, pkce.verifier);
     const url = signup ? signupUrl : authorizeUrl;
@@ -588,12 +590,13 @@ export default function App() {
   }
 
   function localSnapshot() {
-    return packSnapshot({
+    // The v1 account protocol is Mandarin-only: English rows never leave the device.
+    return packSnapshot(mandarinOnly({
       words: [...wordsRef.current.values()],
       texts: textsRef.current,
       sessions: sessionsRef.current,
       settings: settingsRef.current,
-    });
+    }));
   }
 
   async function runCloudSync(retried = false) {
@@ -622,7 +625,7 @@ export default function App() {
         const pulled = await pullSnapshotWithTag(tokens.idToken);
         const remote = pulled.snapshot;
         if (remote) {
-          next = mergeSnapshots(next, remote);
+          next = mergeSnapshots(next, mandarinOnly(remote));
           await applySyncState(next);
           const loaded = await loadAll();
           const sorted = loaded.texts.sort(
@@ -633,12 +636,12 @@ export default function App() {
           setWords(new Map(loaded.words.map((w) => [w.hanzi, w])));
           setSessions(loaded.sessions);
           setSettings(loaded.settings);
-          next = packSnapshot({
+          next = packSnapshot(mandarinOnly({
             words: loaded.words,
             texts: sorted,
             sessions: loaded.sessions,
             settings: loaded.settings,
-          });
+          }));
         }
         setAccountSettled(true);
         await pushSnapshot(tokens.idToken, next, fetch, remote?.texts ?? [], { ifMatch: pulled.etag });
@@ -746,10 +749,8 @@ export default function App() {
     };
   }, []);
 
-  // English keys are the segmenter's lowercase Latin words; legacy Han keys stay untouched.
-  const languageWords = useMemo(() => new Map([...words].filter(([key]) =>
-    (lang === "en") === /^[a-z]+(?:'[a-z]+)*$/i.test(key),
-  )), [words, lang]);
+  // English records are stored under an "en:" prefix; every other key is Mandarin, as before.
+  const languageWords = useMemo(() => languageWordsView(words, lang), [words, lang]);
   const statuses = useMemo(() => {
     const map = new Map<string, WordStatus>();
     for (const [hanzi, rec] of languageWords) map.set(hanzi, rec.status);
@@ -777,7 +778,7 @@ export default function App() {
   const languageTextIds = useMemo(() => new Set(languageTexts.map((t) => t.id)), [languageTexts]);
   const languageScores = useMemo(() => new Map([...scores].filter(([id]) => languageTextIds.has(id))), [scores, languageTextIds]);
   const languageSessions = useMemo(() => sessions.filter((s) => languageTextIds.has(s.textId)), [sessions, languageTextIds]);
-  const languageEvents = useMemo(() => wordEvents.filter((e) => languageWords.has(e.hanzi)), [wordEvents, languageWords]);
+  const languageEvents = useMemo(() => wordEvents.filter((e) => (lang === "en") === isEnglishWordKey(e.hanzi)), [wordEvents, languageWords]);
   const currentRow =
     view.name === "reader"
       ? languageTexts.find((t) => t.id === view.id)
@@ -812,10 +813,6 @@ export default function App() {
 
   async function hydrateRemote(seeded: Map<string, LibraryText>) {
     void seeded;
-    if (LOCAL_DRAFT) {
-      mergeIncoming(wikisourceStubs(800));
-      return;
-    }
     try {
       const extra = await randomWikipedia();
       mergeIncoming(extra);
@@ -1474,7 +1471,7 @@ export default function App() {
             <button type="button" key={choice} className="chip" aria-pressed={lang === choice}
               disabled={!ready} onClick={() => {
                 setLang(choice);
-                try { window.localStorage.setItem("duki.language", choice); } catch { /* session only */ }
+                writeLanguage(window.localStorage, choice);
                 navigate({ name: "home" });
               }}>{choice === "zh" ? "Mandarin" : "English"}</button>
           ))}
@@ -1487,11 +1484,11 @@ export default function App() {
             </div>
           ))}
         </nav>
-        {!LOCAL_DRAFT && lang === "zh" ? <AppBar
+        {lang === "zh" ? <AppBar
           email={auth?.email ?? null}
           signedIn={Boolean(auth)}
-          canSignOut={Boolean(auth) || hasStoredAuthKey() || shared.signedIn}
-          signInLabel={!auth && shared.signedIn && shared.email ? `Continue as ${shared.email}` : "Log in"}
+          canSignOut={!LOCAL_DRAFT && (Boolean(auth) || hasStoredAuthKey() || shared.signedIn)}
+          signInLabel={LOCAL_DRAFT ? "Log in (off in preview)" : !auth && shared.signedIn && shared.email ? `Continue as ${shared.email}` : "Log in"}
           items={[
             { label: MENU_ACTION_LABELS.review, onSelect: () => navigate({ name: "review" }) },
             { label: MENU_ACTION_LABELS.stats, onSelect: () => navigate({ name: "stats" }) },
@@ -1522,7 +1519,7 @@ export default function App() {
           }}
         />
       </header>
-      {lang === "en" ? <p className="draft-chip" role="status">Draft · local only</p> : null}
+      {lang === "en" || LOCAL_DRAFT ? <p className="draft-chip" role="status">{lang === "en" ? "English · preview" : "Preview"} · local only, cloud sync off</p> : null}
 
       {!LOCAL_DRAFT && !auth && !authPending && shared.signedIn && !continueDismissed ? (
         <div className="sso-continue" role="region" aria-label="Signed in on chadmurchison.com">
@@ -1660,7 +1657,7 @@ export default function App() {
           text={current}
           words={languageWords}
           settings={{ ...settings, theme: displayTheme }}
-          onSetStatus={(hanzi, status) => void setStatus(hanzi, status)}
+          onSetStatus={(hanzi, status) => void setStatus(wordStorageKey(lang, hanzi), status)}
           onBookmark={(bookmark) => void onBookmark(current.id, bookmark)}
           onDone={(durationMs) => void onDone(current.id, durationMs)}
           onSettings={onReaderSettings}

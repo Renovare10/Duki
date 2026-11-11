@@ -8,26 +8,31 @@ type Props = {
   onMarkRead: (id: string, read: boolean) => void;
 };
 
-/** Same cover cards and reader as Mandarin; no remote catalog or grading claims. */
+/** English side skeleton: same cover cards and reader as Mandarin once stories exist. */
 export function EnglishHome({ texts, scores, onOpen, onMarkRead }: Props) {
   return (
     <div className="home" lang="en">
       <div className="home-hero-copy">
-        <h1>English samples</h1>
-        <p>Three short stubs to try the reader. Real story packs and a full dictionary come later.</p>
+        <h1>English</h1>
+        <p>Your English library will live here. Stories are coming soon.</p>
       </div>
-      {[{ title: "Starter", items: texts.slice(0, 2) }, { title: "Next step", items: texts.slice(2) }].map((shelf) => (
-        <section className="shelf" key={shelf.title}>
-          <h2 className="shelf-title">{shelf.title}</h2>
+      <section className="shelf" aria-label="English stories">
+        <h2 className="shelf-title">Stories</h2>
+        {texts.length === 0 ? (
+          <div className="en-empty" role="status">
+            <p className="en-empty-title">No English stories yet</p>
+            <p className="en-empty-copy">When stories are added they'll show up here, ready to read.</p>
+          </div>
+        ) : (
           <div className="shelf-track">
-            {shelf.items.map((text) => (
+            {texts.map((text) => (
               <TitleCard key={text.id} text={text} score={scores.get(text.id)}
                 onOpen={onOpen} onMarkRead={onMarkRead} />
             ))}
           </div>
-        </section>
-      ))}
-      <p className="fine-print">Other English shelves, uploads, review and stats are deferred in this draft.</p>
+        )}
+      </section>
+      <p className="fine-print">Review, stats and adding your own text are Mandarin-only for now.</p>
     </div>
   );
 }

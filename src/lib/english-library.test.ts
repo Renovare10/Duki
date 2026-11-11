@@ -1,12 +1,13 @@
 import { expect, it } from "vitest";
 import { EN_SAMPLES } from "../data/en-samples";
+import type { LibraryText } from "../types";
 import { describeText, lengthLabel } from "./library";
-import { segment } from "./segment";
 
-it("labels English sample length in words instead of zero Han characters", () => {
-  for (const sample of EN_SAMPLES) {
-    const count = segment(sample.body, () => false, 8, "en").filter((t) => t.isWord).length;
-    expect(count).toBeGreaterThan(0);
-    expect(lengthLabel(describeText(sample))).toBe(`${count} words`);
-  }
+it("ships no English story content in the toggle skeleton", () => {
+  expect(EN_SAMPLES).toEqual([]);
+});
+
+it("labels English text length in words instead of zero Han characters", () => {
+  const fixture = { id: "en-fixture", lang: "en", title: "t", blurb: "", body: "one two three", createdAt: 1, readAt: null, bookmark: null } as LibraryText;
+  expect(lengthLabel(describeText(fixture))).toBe("3 words");
 });

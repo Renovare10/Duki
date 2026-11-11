@@ -2826,3 +2826,22 @@ button.badge {
     justify-self: start;
   }
 }
+
+.en-empty {
+  margin: 0.5rem 1rem 1rem;
+  padding: 1.5rem 1.25rem;
+  border: 1px dashed var(--ink-soft);
+  border-radius: 0.75rem;
+  text-align: center;
+  color: var(--ink-soft);
+}
+
+.en-empty-title {
+  margin: 0 0 0.35rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.en-empty-copy {
+  margin: 0;
+}
