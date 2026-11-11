@@ -552,6 +552,84 @@ A gust of wind lifted the sheet. The dragon's head twisted sideways, and Ruby di
 
 Marcus began to laugh. Eli stopped recording. On the screen, his mountain looked exactly like a small wet hill.`,
   },
+  {
+    id: "en-book-borrowed-camera-2", lang: "en", level: 5,
+    seriesId: "en-book-borrowed-camera", seriesTitle: "The Borrowed Camera", chapter: 2,
+    title: "Chapter 2: The Person Inside the Box",
+    blurb: "A failed afternoon forces Eli to listen to the person playing his dragon.",
+    kind: "sample", category: "novel", featured: false,
+    createdAt: 210_010, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+    body: `They got home before the heavy rain began. Eli dried the outside of the camera case, checked the camera, and carried it upstairs. Marcus followed him. Ruby stayed in the kitchen with the broken dragon's head.
+
+On Eli's computer, the pictures looked worse than they had on the camera screen. The wind was so loud that they could hardly hear Marcus. In one shot, a bus appeared to drive straight through the dragon's neck.
+
+Marcus laughed. Eli closed the video.
+
+"It's not funny."
+
+"That bit was."
+
+"You weren't even trying. You laughed all the time."
+
+Marcus pulled off the brown coat and laid it on the bed. "I climbed your hill about twenty times. I carried half your stuff. Don't tell me I wasn't trying."
+
+Eli knew that was fair, but knowing did not make him less angry. He began opening the drawers of his desk, looking for nothing in particular.
+
+Marcus went home. A few minutes later, Ruby appeared at the door. She was holding the dragon's head under one arm. One paper eye hung by a piece of tape.
+
+"I'm not doing that again tomorrow," she said.
+
+"I haven't asked you to."
+
+"Good."
+
+She stayed in the doorway. Eli wished she would leave, or say something else. At last he turned his chair towards her.
+
+"What?"
+
+"Why did he take the egg?"
+
+Eli stared at her. "He's a thief."
+
+"Then why does he bring it back?"
+
+"Because the dragon comes after him."
+
+"So what was I doing before that? Just waiting to be angry?"
+
+He had drawn the dragon in seven different positions. He had never thought about her day before the traveller arrived.
+
+Ruby put the head on his desk. "Maybe she didn't know it was missing. Maybe she was at work. Maybe she's tired of people coming to her cave with swords."
+
+Eli almost told her that dragons did not have jobs. Instead, he opened his notebook.
+
+"What kind of job?"
+
+"Anything. She's got a child. She has to buy food."
+
+They began talking about a dragon coming home after a long day. She would find a traveller at her kitchen table, waiting for a fight. He had read a book about dragons and thought that was what travellers were supposed to do.
+
+"She could ask him to take his muddy boots off," Ruby said.
+
+"He'd have to put the sword down to do it."
+
+"Then she gives him the washing-up."
+
+Eli wrote that down. The broken bridge disappeared from the story. So did the mountain. They could film the whole thing in the kitchen, if Mum agreed.
+
+Before bed, Eli called Marcus. He apologised without explaining how disappointed he had been. Marcus had been there; he already knew.
+
+"We've got a different story," Eli said. "Ruby's writing it with me. Would you read it?"
+
+"Does it have a hill?"
+
+"No hill."
+
+"Send it, then."
+
+Eli sent the page. Then he plugged in the charger, checked both batteries, and took the broken dragon downstairs for repairs.`,
+  },
 ];
 
 /** Topic ids are shared with the Mandarin library; every chapter has its own entry. */
