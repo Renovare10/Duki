@@ -378,6 +378,37 @@ On the bus, his mother held the bag on her knees. Amir asked her what she had pa
     createdAt: 250_010, readAt: null, bookmark: null,
     source: "Original (Duki) · AI-drafted",
   },
+  {
+    id: "en-l4-a-recipe-with-sound", lang: "en", level: 4,
+    title: "A Recipe with Sound",
+    blurb: "June tries to turn her father's cooking instructions into a recipe she can use.",
+    body: `Whenever June asked her father how to make his noodles, he gave the same answer: "Watch me. It's easy."
+
+Watching did not help much. He poured sauce straight from the bottle and added water without measuring it. By the time June had written one step, he was already doing the next.
+
+She was moving to another city in a week. This time, she brought measuring spoons and asked if she could record him on her phone.
+
+Her father agreed, although he thought the spoons were unnecessary. June placed an empty bowl beneath the bottle before he poured the sauce. Then she measured what was in the bowl.
+
+"That's more than a little," she said, writing it down.
+
+They worked slowly. He kept reaching for things that she had moved. She kept asking him to wait. When he said the pan was ready, she asked how he knew.
+
+"Listen."
+
+The onions made a soft frying sound. June held the phone closer, safely away from the hot pan.
+
+A week after moving, she opened her notebook in her new kitchen. She followed the amounts carefully, but her sauce became thick before the noodles were ready. Her new pan was wider than her father's.
+
+She called him. He asked what she could see and hear, then suggested adding a little more water.
+
+The noodles were slightly too soft, but the taste was close. June ate from a bowl on a moving box because her table had not arrived.
+
+Later, she played the recording again. Between the cooking instructions, her father could be heard asking where she had hidden his favorite spoon. She kept that part too.`,
+    kind: "sample", category: "graded", featured: false,
+    createdAt: 250_011, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+  },
 ];
 
 export const EN_ELEMENTARY_TOPICS: Record<string, string[]> = {
@@ -392,4 +423,5 @@ export const EN_ELEMENTARY_TOPICS: Record<string, string[]> = {
   "en-l3-the-dog-behind-the-door": ["letters", "nature", "humor"],
   "en-l3-the-afternoon-shadow": ["science", "school", "family"],
   "en-l4-the-broken-zip": ["family", "daily-life", "shopping"],
+  "en-l4-a-recipe-with-sound": ["food", "family", "daily-life"],
 };
