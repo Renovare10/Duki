@@ -370,6 +370,23 @@ The work continued after that announcement. Reading inscriptions confidently req
 
 The stone's surviving text concerns royal authority and the relationship between the ruler and priests. Its fame now rests less on that decree's particular instructions than on the evidence its parallel versions supplied for understanding a much larger body of writing.`,
   },
+  {
+    id: "en-wiki-tu-youyou", level: 8, title: "Tu Youyou",
+    blurb: "An old medical text supplied a clue for modern malaria research.",
+    wikiTitle: "Tu Youyou", sourceUrl: "https://en.wikipedia.org/wiki/Tu_Youyou",
+    createdAt: 220_023, topics: ["encyclopedia", "biography", "science"],
+    body: `Tu Youyou is a Chinese pharmaceutical researcher whose work led to the discovery of artemisinin, a substance used in malaria treatment. Born in Ningbo in 1930, she studied pharmacy in Beijing and later received training in traditional Chinese medicine. Her research brought those two bodies of knowledge into contact through laboratory investigation.
+
+In 1969, Tu became head of a research group within Project 523, a Chinese effort to find antimalarial drugs. Resistance to existing medicines had made the search urgent. Her team examined traditional prescriptions and tested extracts from numerous plants rather than assuming that a historical remedy was effective simply because it had been recorded.
+
+Sweet wormwood, Artemisia annua, was a promising candidate, but early extracts did not produce consistent results. Tu reconsidered the preparation after reading a description attributed to the fourth-century scholar Ge Hong. The account suggested using the plant without the high temperatures common in other extraction methods.
+
+She developed a lower-temperature method using ether to extract the active material. This produced much better results in animal tests. Further work isolated and investigated artemisinin and related compounds, contributing to a new class of antimalarial medicines.
+
+The discovery is sometimes reduced to the story of an ancient recipe being rediscovered. That misses the experimental work separating a clue from a dependable drug. Researchers had to change the extraction process, test the material, and establish which substance produced the effect. The medicinal compound and a casually prepared herbal drink are not interchangeable.
+
+Tu received the Lasker Award in 2011 and shared the 2015 Nobel Prize in Physiology or Medicine with William C. Campbell and Satoshi Omura, whose work concerned other treatments for parasitic disease. Her contribution was recognized for its role in a treatment that reached patients far beyond the country where the research took place.`,
+  },
 ];
 
 export const EN_WIKI_TOPICS: Record<string, string[]> = Object.fromEntries(
