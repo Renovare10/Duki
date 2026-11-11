@@ -395,7 +395,7 @@ Jo told the museum director they needed to change the label. The director agreed
 
 They settled on "Market Street under snow. From the Bell studio collection; individual photographer unknown." A longer note explained the evidence about Rose's work without claiming this particular image as hers.
 
-Frances was disappointed. She had hoped to see her great-aunt's name directly beneath the photograph. Jo understood the wish, but explained why uncertainty could not be repaired with a more appealing guess. She invited Frances to help examine the remaining family papers, if she wanted to.
+Frances was disappointed. She had hoped to see her great-great-aunt's name directly beneath the photograph. Jo understood the wish, but explained why uncertainty could not be repaired with a more appealing guess. She invited Frances to help examine the remaining family papers, if she wanted to.
 
 A month later, Frances returned with a small notebook and a very large envelope. They booked a table in the study room. Before sitting down, she stopped beside the photograph and read the new label.
 
