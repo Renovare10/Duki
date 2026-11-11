@@ -387,6 +387,25 @@ The discovery is sometimes reduced to the story of an ancient recipe being redis
 
 Tu received the Lasker Award in 2011 and shared the 2015 Nobel Prize in Physiology or Medicine with William C. Campbell and Satoshi Omura, whose work concerned other treatments for parasitic disease. Her contribution was recognized for its role in a treatment that reached patients far beyond the country where the research took place.`,
   },
+  {
+    id: "en-wiki-containerization", level: 8, title: "Containerization",
+    blurb: "Standard boxes changed how cargo moved between ships, trains, and trucks.",
+    wikiTitle: "Containerization", sourceUrl: "https://en.wikipedia.org/wiki/Containerization",
+    createdAt: 220_024, topics: ["encyclopedia", "science", "work"],
+    body: `Before standardized shipping containers became common, moving cargo through a port involved handling separate crates, sacks, and barrels. Goods could be unloaded into a warehouse, stored, and then moved again before reaching a ship. Every transfer required labor and time, and each created opportunities for damage or theft.
+
+Containerization reorganized this work around a large reusable box. Goods packed into a container could travel by truck, ship, and train without being unpacked at every change of vehicle. This is intermodal transport: different modes carry the same loading unit.
+
+The box alone was not enough. Containers needed compatible dimensions and fittings so that cranes, vehicles, and storage areas could handle them efficiently. Standardization allowed equipment at one end of a journey to work with a container arriving from the other side of the world. Identification systems made individual containers easier to track.
+
+Earlier forms of transferable containers existed in mining and railway transport. The modern system expanded rapidly after the Second World War, supported by specialized ships and purpose-built terminals. The commercial advantage came largely from reducing the expensive and slow work at the points where cargo changed hands.
+
+Faster handling lowered transport costs and helped make long-distance supply chains practical for more products. Manufacturers could organize production and distribution across greater distances. Shipping containers became part of the infrastructure supporting international trade rather than simply a different way to package goods.
+
+The transition also displaced workers and changed port cities. Traditional dockside jobs declined as cranes and specialized machinery took over much of the handling. Large terminals required space and connections to roads and railways, shifting activity away from some older waterfronts.
+
+Efficiency did not eliminate coordination problems. The system depends on the availability of compatible equipment and on keeping containers moving through connected transport networks. Its success came from redesigning those connections along with the cargo unit itself.`,
+  },
 ];
 
 export const EN_WIKI_TOPICS: Record<string, string[]> = Object.fromEntries(
