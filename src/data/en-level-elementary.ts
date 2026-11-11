@@ -477,6 +477,35 @@ Over breakfast, Ellis opened his bird guide. Several birds on the page had yello
     createdAt: 250_013, readAt: null, bookmark: null,
     source: "Original (Duki) · AI-drafted",
   },
+  {
+    id: "en-l4-the-warmer-room", lang: "en", level: 4,
+    title: "The Warmer Room",
+    blurb: "Two flatmates blame each other for a high heating bill until they compare rooms.",
+    body: `The heating bill arrived on the coldest morning of January. Helen read the amount twice, then put the bill beside her flatmate's breakfast.
+
+"We need to use less heat," she said.
+
+"I'm already cold," replied Ava. She was wearing a thick sweater over her work clothes.
+
+Helen thought Ava kept the heating on too long. Ava thought Helen did not notice the cold because her bedroom was smaller. They had the same argument that evening, without getting anywhere.
+
+On Saturday, they borrowed two thermometers from Helen's father. First, they left both in the living room to check that they showed similar numbers. Then they put one in each bedroom and left the heating controls unchanged.
+
+An hour later, Ava's room was several degrees colder. Helen felt air coming in around its window, although the window was shut.
+
+Their landlord came on Monday and found that the window did not close properly. He arranged a repair. When it was finished, Ava could sit at her desk without feeling cold air against her back.
+
+The flatmates also agreed on times to turn the heating down when they were both out. They put the plan on the fridge, beside the bill.
+
+The next bill was lower, but the weather had been milder too. They could not tell how much of the change came from the repair or their new plan.
+
+"At least we're arguing about smaller numbers," Ava said.
+
+Helen took the old bill off the fridge. Under it, she found their shopping list, which had been there since December. They still needed washing liquid. Neither of them could blame the window for that.`,
+    kind: "sample", category: "graded", featured: false,
+    createdAt: 250_014, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+  },
 ];
 
 export const EN_ELEMENTARY_TOPICS: Record<string, string[]> = {
@@ -494,4 +523,5 @@ export const EN_ELEMENTARY_TOPICS: Record<string, string[]> = {
   "en-l4-a-recipe-with-sound": ["food", "family", "daily-life"],
   "en-l4-someone-at-the-door": ["arts", "school", "humor"],
   "en-l4-the-bird-we-could-not-name": ["nature", "science", "feelings"],
+  "en-l4-the-warmer-room": ["daily-life", "weather", "science"],
 };
