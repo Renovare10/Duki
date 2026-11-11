@@ -500,4 +500,63 @@ My imaginary café need not throw away its booking system. It might simply allow
 
 I would probably still visit. I might even tell the owner that the coffee was good. What I want is for the compliment to remain something I chose to give, rather than the final task required to complete my breakfast.`,
   },
+  {
+    id: "en-l10-a-small-correction", lang: "en", level: 10,
+    title: "A Small Correction",
+    blurb: "An archive volunteer finds her mother's handwriting in an inconvenient place.",
+    kind: "sample", category: "graded", featured: false,
+    createdAt: 280_010, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+    body: `The photograph was labelled Women outside the North Mill, approximately 1948. Ellen had catalogued it herself, eleven years earlier, using information supplied by her mother. Now a researcher in a red waterproof jacket had placed it on the reading-room table and was asking why the date differed from the one on the reverse.
+
+"The reverse?" Ellen said.
+
+He turned it over. In her mother's handwriting, small and unexpectedly jaunty, were the words: First day, September 1951. Underneath, someone had added three names. The middle one was her mother's maiden name. Ellen recognised the capital R, with its extravagant downward stroke. Her mother had taught her to write it that way and then complained that her writing looked old-fashioned.
+
+"We can change the date," Ellen said. "That happens quite often."
+
+The researcher, whose name was Sami, leaned back to give her room to take the photograph. He was studying women who had arrived in the town to work after the war. The archive's catalogue had led him to this picture. He wanted to know whether there were employment records or letters from any of the women shown. Ellen said she would look.
+
+Her mother had said she came to the town in 1947. Ellen knew the year as she knew the year of her own birth. There had been a suitcase, a missed connection, and an aunt who met the wrong train. The story was repeated whenever someone complained about the inconvenience of travel. Its details had acquired the smoothness of something handled often. Ellen had never thought to ask why no photograph accompanied it.
+
+She took the picture into the office. Three women stood outside a brick wall, their faces narrowed against the sun. Her mother was in the middle, holding a handbag with both hands. She looked older than she should have looked in 1948 and exactly as old as she would have been in 1951. Ellen disliked herself for conducting this absurd inspection. Faces were not calendars. A person could look tired.
+
+The archive's back room smelled of cardboard and instant coffee. Ellen had begun volunteering there after her mother died, first one morning a week, then three. She liked the particularity of the work: a box belonged on a numbered shelf, a name could be checked against a directory. Unlike clearing her mother's house, cataloguing did not require her to decide which memories she could bear to discard.
+
+She found the old donation form. Her mother had signed it, granting the archive the photographs and some mill newsletters. In the space for additional information, Ellen had written down what her mother told her. Arrived 1947. Started at North Mill shortly afterwards. The date 1948 on the catalogue was Ellen's own approximation. Somewhere between a conversation and a database entry, an approximation had hardened into a fact.
+
+She phoned her brother. He was in a supermarket and asked her to repeat the question over an announcement about fresh bread.
+
+"Does it matter?" he said.
+
+"It's wrong in the catalogue."
+
+"Then change the catalogue."
+
+"I mean the story. The one she told us."
+
+He was silent for a moment. Then he said, "Maybe she came twice."
+
+The suggestion was so simple that Ellen resented him for offering it. She had already begun constructing alternatives with the private energy of a detective: a job omitted, a relationship concealed, a first attempt at independence that had failed. Her mother might merely have returned home for a while. Or remembered badly. Or written first day to mean the first day after a holiday. The photograph could not adjudicate among these possibilities.
+
+When Ellen returned, Sami was reading a newsletter through a sheet of clear protective material. She explained that the inscription contradicted the estimated date and that they would amend the record.
+
+"Can I see the original note?" he asked.
+
+She showed him the donation form. He read it twice, without the expression of discovery she had feared.
+
+"It's possible she arrived before she started there," he said. "But I shouldn't assume. Do you have anything from those years?"
+
+At home she had a tin containing tickets, receipts, and birthday cards that had not yet found an agreed destination. There might be something in it. She said she would check, and heard herself make the promise more confidently than the contents justified.
+
+That evening she spread the tin's contents over the dining table. A receipt for a coat, dated 1950, placed her mother in another town. It explained nothing about how long she had been there or why. A postcard showed a seaside promenade and carried only a message about the weather. Ellen turned it in the light, trying to make ordinary words surrender an extraordinary account.
+
+At the bottom was a photograph of her mother much later, sitting on a wall with a paper bag of chips. Ellen remembered taking it. They had argued that morning about something she could no longer retrieve. Her mother was looking away from the camera, smiling at someone outside the frame. For once Ellen wanted to know who had been standing there rather than what the smile meant.
+
+She brought the receipt to the archive. Sami asked permission to make a copy. He did not call it proof. Together they read the date and the shop's address, establishing the few things it could establish without help from either of them.
+
+The amended catalogue entry read: Women outside the North Mill. Inscription on reverse dated September 1951; previous catalogue estimate 1948. She retained the earlier entry in the change history. In the biographical note she wrote that the date of arrival remained uncertain.
+
+Before saving, she put the cursor after uncertain. She wanted to add a sentence explaining that her mother had been accurate about many things, that she had kept every rent receipt, that she had never knowingly short-changed anyone. The box was intended for information about the photograph. Ellen saved the entry as it was and returned the picture to its sleeve.`,
+  },
 ];
