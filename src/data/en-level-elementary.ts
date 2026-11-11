@@ -146,6 +146,39 @@ At home, he put the shoes beside the door. He set his alarm for the same time ne
     createdAt: 250_003, readAt: null, bookmark: null,
     source: "Original (Duki) · AI-drafted",
   },
+  {
+    id: "en-l3-beans-on-the-balcony", lang: "en", level: 3,
+    title: "Beans on the Balcony",
+    blurb: "A pot of beans grows well until the family leaves for the weekend.",
+    body: `My daughter wanted a garden. We lived on the fourth floor, so I bought a large pot, some soil, and a small packet of bean seeds.
+
+We put the pot on our balcony. Every morning, Lila checked it before breakfast. For five days, there was only brown soil. On the sixth day, she called me outside in my night clothes.
+
+"There's something green!"
+
+Soon there were leaves. Later, we put long sticks in the soil for the plants to climb. Lila measured the tallest plant with a ruler.
+
+In July, we went away for a weekend. The weather report said it would rain. I thought the plants would be fine.
+
+When we returned, the soil was dry. The balcony roof had kept the rain out. Some of the leaves were hanging down.
+
+Lila touched one leaf but said nothing. We watered the pot slowly and waited.
+
+By morning, most of the leaves had lifted again. Two small ones stayed brown. Lila cut them off with my help.
+
+After that, we checked the soil even on rainy days. Before our next trip, we asked a neighbor to water the pot.
+
+We picked our first beans in August. There were only seven, too few for a family dinner.
+
+I cooked them with some beans from the shop. Lila wanted to know which ones were ours.
+
+"The short ones," I said.
+
+She carefully moved all seven onto her plate. Next year, she says, we need two pots.`,
+    kind: "sample", category: "graded", featured: false,
+    createdAt: 250_004, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+  },
 ];
 
 export const EN_ELEMENTARY_TOPICS: Record<string, string[]> = {
@@ -153,4 +186,5 @@ export const EN_ELEMENTARY_TOPICS: Record<string, string[]> = {
   "en-l3-lunch-on-the-roof": ["work", "feelings", "daily-life"],
   "en-l3-the-photo-in-the-book": ["family", "daily-life", "humor"],
   "en-l3-a-slower-saturday": ["sports", "health", "feelings"],
+  "en-l3-beans-on-the-balcony": ["nature", "family", "daily-life"],
 };
