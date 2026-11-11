@@ -597,6 +597,35 @@ At seven, the day receptionist asked how his shift had gone.
     createdAt: 250_017, readAt: null, bookmark: null,
     source: "Original (Duki) · AI-drafted",
   },
+  {
+    id: "en-l4-the-bench-at-stop-six", lang: "en", level: 4,
+    title: "The Bench at Stop Six",
+    blurb: "Mina asks for a bus-stop bench and discovers that choosing a place is not simple.",
+    body: `Every Thursday, Mina took the bus to the market with her grandfather. He could walk around the stalls slowly, but standing still made his knees ache. At stop six, there was nowhere to sit.
+
+Mina wrote to the council asking for a bench. She included a photograph of her grandfather waiting with his shopping bag.
+
+A week later, an officer replied. There was enough money for a small bench, but they needed to choose a safe position. She invited Mina to meet her at the stop.
+
+Mina pointed to the space directly beside the bus sign. It seemed obvious.
+
+The officer measured the pavement. With a bench there, people using wheelchairs would have too little room to pass. Mina had never thought about that. She looked again at the narrow gap between the wall and the bus sign.
+
+They looked farther along the pavement. Outside the bakery, there was more space, although the bus would stop several steps away.
+
+The baker came out to ask what they were measuring. He worried that people sitting there might block his door. They moved the chalk marks toward the side of his window and checked the gap again.
+
+It took another month before the bench arrived. By then, Mina's grandfather was tired of hearing about it.
+
+"I'll believe it when I sit on it," he said.
+
+The following Thursday, he did. Mina stood beside him, holding their bags. A woman pushed a child in a wheelchair past them, with room to spare.
+
+When the bus came, Mina's grandfather got up carefully and walked toward it. He still needed help with his bag. The bench had not changed that, but they had waited for twenty minutes, and he was no longer starting the journey in pain.`,
+    kind: "sample", category: "graded", featured: false,
+    createdAt: 250_018, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+  },
 ];
 
 export const EN_ELEMENTARY_TOPICS: Record<string, string[]> = {
@@ -618,4 +647,5 @@ export const EN_ELEMENTARY_TOPICS: Record<string, string[]> = {
   "en-l4-below-the-clouds": ["adventure", "travel", "weather"],
   "en-l4-one-last-film": ["culture", "arts", "family"],
   "en-l4-the-night-receptionist": ["work", "daily-life", "adventure"],
+  "en-l4-the-bench-at-stop-six": ["daily-life", "family", "travel"],
 };
