@@ -830,6 +830,60 @@ It was the first useful thing either of them had said for several minutes. Nina 
 
 This time, her father sat beside her rather than standing behind the chair. They left the shop phone ringing when it sounded after closing time. Whoever it was could leave a message.`,
   },
+  {
+    id: "en-book-repair-list-3", lang: "en", level: 7,
+    seriesId: "en-book-repair-list", seriesTitle: "The Repair List", chapter: 3,
+    title: "Chapter 3: A Place on the Sheet",
+    blurb: "The workshop tests a plan that makes room for generosity without hiding its cost.",
+    kind: "sample", category: "novel", featured: false,
+    createdAt: 210_014, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+    body: `The new repair list had ruled columns, which Hugo distrusted, and plenty of room for notes, which he liked. They had not transferred all the old promises to it. First, he and Sal called each customer, established what had actually been agreed, and offered dates they thought they could keep.
+
+Some people were annoyed. A woman who had been waiting for a bookcase said that she had heard "next week" so often she no longer knew which week it meant. Hugo apologised. Nina heard him resist the temptation to promise it for Thursday.
+
+The notice went back beside the door. Beneath it, Sal added a line in plain black pen: We will contact you before doing work beyond the agreed estimate.
+
+Nina would work two paid mornings a week for a month. They wrote down the hours and the rate. It was less money than she needed, so she kept applying for other jobs. Hugo looked disappointed when she told him, although he said he understood. She made herself leave that disappointment with him.
+
+They also set aside two hours of Hugo's time each week for repairs he chose to do without charging. Materials would come from a small, fixed allowance. Sal could help if the paid schedule allowed, but nobody would put an unpriced job on her bench and expect it to disappear.
+
+"What happens when someone comes in on Friday and I've used the time?" Hugo asked.
+
+"You tell them when you can do it," Sal said.
+
+"And if they can't wait?"
+
+"Then we have to decide whether it's an emergency. Together."
+
+They argued over that word for a while. A broken leg on someone's only chair was different from a scratch on a spare table, but even a single chair might be replaceable temporarily. Nina began to see why her father preferred to decide everything privately. Discussing fairness took much longer than feeling generous.
+
+On Thursday, the man with six chairs came back. He brought only one this time.
+
+"This is the worst one," he told Sal. "Could you repair this and let the others wait?"
+
+Sal inspected it again and offered a date after the family party. The man sighed, called his wife, and agreed. Nina had imagined him buying six cheap replacements out of spite. He had simply been trying to solve a problem with a budget, much as they were.
+
+The cabinet was delivered on Friday. Hugo and Sal loaded it into the van without rushing, because Nina had stopped accepting quick jobs that morning. There were still empty spaces in the following month's accounts. No notice on the wall could fill those by itself.
+
+When they returned, Mrs Shaw was at the desk, paying for her table. Hugo asked whether the drawer moved easily. She said it did, then asked if they knew anyone who needed an old sewing box.
+
+"I'm clearing things out," she said. "I have more than I can use."
+
+Hugo opened his mouth. Nina saw him glance towards the crowded back room.
+
+"There's a charity shop on Bell Street," he said. "They might be glad of it. I can write down the number."
+
+That evening, Nina finished the weekly entries and closed the folder. Her father was still at his bench. He wanted to show her a joint that someone had repaired badly years earlier. For once, she was interested without also feeling responsible for fixing it.
+
+They talked for ten minutes. Then she put on her coat.
+
+"Your application?" he asked.
+
+"Due tonight."
+
+He nodded and turned off the lamp above the desk. As she left, Nina noticed that he had pinned the old calendar beside the new list. The yellow boat was still there. Under it, in a space cleared of crossed-out promises, he had written the date of their next accounts meeting.`,
+  },
 ];
 
 /** Topic ids are shared with the Mandarin library; every chapter has its own entry. */
