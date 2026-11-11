@@ -414,4 +414,57 @@ Outside, rain had gathered in the loading bay. Leila found her sandwich where sh
 
 On the bus, Leila opened the script. A man across the aisle asked if she'd been in something he might have seen. She said probably not. Then she marked the letter scene in pencil and tried to hear the other actor's line all the way to its end.`,
   },
+  {
+    id: "en-l10-the-minutes", lang: "en", level: 10,
+    title: "The Minutes",
+    blurb: "A council clerk must record an agreement that nobody remembers making.",
+    kind: "sample", category: "graded", featured: false,
+    createdAt: 280_008, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+    body: `In the draft minutes, the pond had already been saved. Mara knew this because she had written the sentence herself: Members agreed that the existing water feature should be retained wherever practicable. It was an excellent sentence, sufficiently reassuring to survive circulation and sufficiently qualified to accommodate almost anything that might subsequently be done with a bulldozer.
+
+She had worked for the council for nineteen years. She did not consider herself dishonest. Minutes were a record of decisions, not a transcript of everything people had managed to say before the chair regained control. If she included every repetition, interruption, and question addressed to the wrong officer, no decision would ever emerge from the paperwork. Part of her job was to make an evening's confusion available for use on a weekday morning.
+
+The phrase water feature belonged to the consultant. Residents called it the pond, though in August it was often a shallow basin of mud, shopping trolleys, and a single indignant heron. Mara had no sentimental attachment to it. Her son had once fallen in, necessitating a tetanus discussion and the disposal of his shoes. She remembered this each time somebody described the site as an untouched haven.
+
+The regeneration plan proposed flats, shops, and a path around a smaller area of water. Whether this counted as retaining the pond had occupied forty minutes of the meeting. The drawings showed a blue oval surrounded by trees whose mature crowns would not fit the space allotted to their roots. A resident had asked where the heron would go. The consultant had said that biodiversity would be considered at the appropriate stage.
+
+At home that night, Mara typed until the words lost their argumentative edges. She removed an allegation about a developer's cousin because no evidence had been offered. She retained the request for a drainage assessment because it had been repeated by the chair. She recorded the vote on commissioning further work: six in favour, three against. Then she wrote the sentence about the water feature, under the heading Discussion.
+
+The following afternoon, a woman called Mrs Dyer left a message. She had attended the meeting. She wanted to know why the minutes said everyone agreed when she had spent her allotted three minutes explaining that she did not. Mara returned the call and explained that members meant councillors, not members of the public. Mrs Dyer asked whether the councillors had agreed.
+
+"The discussion indicated broad support," Mara said.
+
+"Broad enough to include the people who said no?"
+
+Mara disliked the question's shape. It had been made for someone to repeat to an ally afterwards. She explained that the minutes were a draft and would be considered at the next meeting. Mrs Dyer thanked her with excessive politeness and hung up.
+
+Mara opened the recording. She listened through the fire-exit announcement, the apologies, the declaration of an interest. At one point her own voice could be heard asking a speaker to move closer to the microphone. It sounded patient in a manner she did not remember feeling.
+
+The chair had indeed said, "I think we're all agreed we want to keep the pond." A councillor had replied, "Subject to the engineers." Another had said, "If we can afford it." Somebody else had said, "That's not what this vote is about." There was a scrape of chairs, then the formal motion. Mara listened again. The sentence she had written described the intention the chair had announced. It did not describe an agreement anyone had tested.
+
+She could delete it. That would leave the recorded decision perfectly clear: commission more work. It would also remove the only apparent assurance given to the residents. By correcting an overstatement, she might make the record less useful to the people who had challenged it. She found this irritating. A mistake ought not to acquire moral protection merely because somebody might benefit from it.
+
+She sent a revised paragraph to her manager. The chair expressed a preference for retention of the pond; members raised qualifications concerning feasibility and cost. Her manager replied that this was more precise, though perhaps unnecessarily detailed. Could they keep the existing wording? It was only a discussion note, and the chair had already approved the draft for circulation.
+
+Mara stared at the message. Through the office window she could see a maintenance worker trying to disentangle a strip of plastic from a tree. He had a long pole with a hook, and the plastic repeatedly surrendered one end while tightening the other. She watched for longer than was reasonable.
+
+She replied with the recording's timestamp. Then she went to make tea. She was aware of the little drama she had created for herself: a lone clerk defending accuracy against the institution. It omitted the nineteen years in which the institution had trusted her to decide what accuracy required. It omitted the fact that her manager was trying to finish a budget submission with two staff absent. None of that made the sentence correct.
+
+At the next meeting, the chair proposed approving the minutes. Mara asked to note a correction to the discussion paragraph. Her voice came out dry; she took a sip of water. The chair read the replacement, looked up, and said, "Yes, that is what we meant." Nobody objected. The correction took less than a minute.
+
+Afterwards Mrs Dyer waited by the door. She was carrying a plastic folder swollen with papers.
+
+"So they can still drain it," she said.
+
+"They haven't decided that."
+
+"But this doesn't stop them."
+
+"No. It doesn't."
+
+Mrs Dyer looked past Mara into the chamber, where an officer was folding away the projector screen. "I preferred your first version," she said. Then she tucked the folder under her arm and went down the corridor.
+
+Mara returned to her desk. In the new minutes she recorded the correction without describing the conversation at the door. Later she opened the next meeting's agenda and added the drainage assessment to her list of papers still outstanding.`,
+  },
 ];
