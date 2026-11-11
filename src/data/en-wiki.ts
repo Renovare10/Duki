@@ -251,6 +251,23 @@ Ideas traveled with people. Buddhism spread through parts of Asia along these co
 
 The term Silk Road became popular long after the routes' ancient history. It is a useful label, but it can make a diverse and uneven system look more unified than it was. The actual exchanges changed as political power, commercial opportunities, and available routes changed.`,
   },
+  {
+    id: "en-wiki-galapagos-islands", level: 7, title: "The Galapagos Islands",
+    blurb: "Volcanic islands whose isolation helped produce unusual wildlife.",
+    wikiTitle: "Galápagos Islands", sourceUrl: "https://en.wikipedia.org/wiki/Gal%C3%A1pagos_Islands",
+    createdAt: 220_016, topics: ["encyclopedia", "nature", "travel"],
+    body: `The Galapagos Islands lie in the eastern Pacific Ocean, roughly nine hundred kilometers west of mainland South America. They belong to Ecuador and straddle the equator. Although distant from the continent, they support communities of people as well as wildlife found nowhere else.
+
+The islands formed through volcanic activity. They sit above a region where hot material rises from deep within Earth. As the oceanic plate moves, the locations of volcanic activity and the growing islands change relative to one another. Some islands still have active volcanoes.
+
+Reaching an isolated island is difficult for many organisms. Those that arrive may encounter environments and competitors unlike those on the mainland. Over many generations, separated populations can develop different characteristics. The Galapagos became famous for this process and for animals such as giant tortoises and marine iguanas.
+
+Charles Darwin visited during the voyage of HMS Beagle in 1835. His observations of island wildlife later contributed to his thinking about evolution. The theory did not arrive as a complete explanation the moment he stepped ashore; he continued examining evidence after the voyage.
+
+Human arrivals have also changed the islands. Introduced animals, including goats and rats, damaged habitats and threatened native species. An animal that causes little difficulty in one place can have severe effects in a community without defenses against it.
+
+Much of the archipelago is protected through a national park and marine reserve. Conservation work includes controlling introduced species and managing tourism. The islands' isolation helped shape their wildlife, but it cannot by itself protect that wildlife from changes brought by visitors, settlers, and ships.`,
+  },
 ];
 
 export const EN_WIKI_TOPICS: Record<string, string[]> = Object.fromEntries(
