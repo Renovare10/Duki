@@ -72,9 +72,47 @@ Back at his desk, he still had to check the paper to remember his new password. 
     createdAt: 250_001, readAt: null, bookmark: null,
     source: "Original (Duki) · AI-drafted",
   },
+  {
+    id: "en-l3-the-photo-in-the-book", lang: "en", level: 3,
+    title: "The Photo in the Book",
+    blurb: "A library book holds a photo of a girl, a cake, and a very large dog.",
+    body: `Something fell out of the library book when Emma opened it. It was a small photo. A girl stood beside a birthday cake. Behind her, a large dog had its nose close to the cake.
+
+Emma turned the photo over. There was no name on the back, only a date from twenty years ago.
+
+"That dog is going to eat the cake," her father said.
+
+"Maybe he already did," said Emma. One corner of the cake was missing.
+
+The next day, she took the photo to the library. The woman at the desk looked at it and laughed.
+
+"Where did you get this?"
+
+"In a book about gardens. Is it yours?"
+
+"The little girl is my sister," the woman said. "I used that photo to keep my place. Then I returned the book and forgot about it."
+
+"Did the dog eat the cake?" Emma asked.
+
+"Just the corner. We moved the cake, but he followed it."
+
+She asked if Emma would wait a moment. Then she found a photo on her phone. The same girl was there, now grown up. She was holding a small baby.
+
+Emma looked from the old photo to the new one.
+
+"Does she still have a dog?"
+
+"Two dogs," the woman said. "She keeps birthday cakes on top of the fridge now."
+
+Emma went home with a new book. This time she checked between all the pages before she started reading.`,
+    kind: "sample", category: "graded", featured: false,
+    createdAt: 250_002, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+  },
 ];
 
 export const EN_ELEMENTARY_TOPICS: Record<string, string[]> = {
   "en-l3-the-last-peaches": ["shopping", "food", "family"],
   "en-l3-lunch-on-the-roof": ["work", "feelings", "daily-life"],
+  "en-l3-the-photo-in-the-book": ["family", "daily-life", "humor"],
 };
