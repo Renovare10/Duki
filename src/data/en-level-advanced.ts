@@ -445,6 +445,31 @@ It was my brother who called the woman in green. She had left her number with th
 
 Our mother visited the class a month later, at the woman's invitation. Afterwards she sent us a photograph of six people eating noodles around the familiar scratches. My brother complained that strangers were getting more use from the table than we ever had. Mother replied that this had been her intention in selling it. Then she asked whether we wanted the ice skates. She had discovered them in a cupboard, and neither blade had ever been sharpened properly.`
   },
+  {
+    id: "en-l8-why-a-river-bends", level: 8,
+    title: "Why a River Bends",
+    blurb: "A winding river is constantly rebuilding the route drawn on a map.",
+    topics: ["nature", "science"],
+    body: `From an airplane, a winding river can look strangely indecisive. Instead of crossing a flat valley directly, it doubles back through a sequence of broad curves. Some loops almost meet themselves. Beside the active channel, curved lakes and faint marks in fields suggest routes the water has abandoned. The apparent indecision has physical causes, and the river is still revising its course.
+
+A river moves water downhill, but it also transports material. Depending on the conditions, it can carry fine particles suspended in the water, roll larger grains along the bed, or leave material behind. Its channel is not merely a fixed pipe through which water passes. The flow and the shape of the channel affect one another. Changing a bank changes the flow; changing the flow can reshape the bank.
+
+A perfectly straight, uniform channel would require unusually uniform conditions. Natural valleys contain variations in sediment, vegetation, bank strength, and slope. Small irregularities can disturb the current. Where a bend develops, the flow becomes uneven across and through the channel. Faster water and stronger erosion often occur near the outside bank, while sediment tends to accumulate toward the inside. The bend can consequently grow rather than straighten itself.
+
+The water does not move around a bend like a flat ribbon sliding across a table. There is also circulation through the depth of the flow. This secondary movement helps transfer sediment across the channel and contributes to the development of the sloping bed. A simple statement about faster outside water is useful, but the three-dimensional pattern explains more than a sketch containing two arrows can show.
+
+On the inside of a bend, accumulated sediment can form a point bar. Across from it, the outside bank may become steep as material is removed or collapses into the water. Over time, erosion on one side and deposition on the other can shift the entire bend sideways. A fence beside a river may therefore become closer to the channel even if nobody has moved the fence and the average water level appears unchanged.
+
+Neighboring bends do not necessarily grow at identical rates or in identical directions. As a loop becomes more pronounced, the strip of land between its approaching arms may narrow. Eventually the river can establish a shorter connection, sometimes during a flood. Much of the flow then follows the new route. Sediment can gradually isolate the old loop, leaving a curved body of water known as an oxbow lake.
+
+This is one reason old maps can disagree with a modern riverbank without either having been carelessly drawn. The channel may genuinely have moved. Historical channels can also leave differences in soil and ground conditions that remain after visible water disappears. A field that looks dry and ordinary may occupy part of a former river course, which matters when people investigate drainage or plan construction.
+
+Not every river forms broad meanders. Steep gradients, abundant coarse sediment, confined valleys, and resistant banks can produce different channel patterns. Some rivers divide into shifting threads around exposed sediment bars. Others are constrained by rock or human engineering. Describing meanders explains a common form, not a universal stage that every river must eventually reach.
+
+People often try to stop movement by reinforcing a bank or cutting a shorter channel. Such work can protect a particular site, but it also changes where water and sediment go. The effects may extend beyond the engineered stretch. A decision that appears local on a property plan can alter conditions upstream or downstream, so river management requires more than drawing the desired bank line.
+
+The curved lakes visible from an airplane are evidence of earlier arrangements between moving water and movable ground. They also warn against imagining a river as a permanent blue line. Its route is a condition recorded at a particular time. To understand what the river may do next, we need to examine the material around that line, the water moving through it, and the history of how both have changed.`
+  },
   // NEXT_READING
 ];
 
