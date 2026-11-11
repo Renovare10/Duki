@@ -58,6 +58,19 @@ The Moon also turns as it travels. It turns at just the right speed to keep near
 
 The Moon's surface has many round holes called craters. Rocks from space made many of them when they hit the ground. In 1969, people first walked on this surface during the Apollo 11 mission.`,
   },
+  {
+    id: "en-wiki-bread", level: 4, title: "Bread",
+    blurb: "Flour, water, and the tiny living things that make dough rise.",
+    wikiTitle: "Bread", sourceUrl: "https://en.wikipedia.org/wiki/Bread",
+    createdAt: 220_003, topics: ["encyclopedia", "food", "culture"],
+    body: `People have made bread for thousands of years. The basic ingredients are simple: flour and water. Mix them together, and they form dough. Baking changes this soft mixture into food that people can carry, share, and eat with many meals.
+
+Some bread is flat. Other bread rises before or during baking. Many bakers add yeast to make this happen. Yeast is a tiny living thing that uses sugars in the dough. It makes gas, which forms bubbles. These bubbles help make the bread light.
+
+Sourdough bread uses a mixture of flour and water that contains living yeast and bacteria. Bakers keep some of this mixture to help make the next loaf. It can also give the bread a sour taste.
+
+Bread looks different around the world. A loaf may have a hard outside and a soft middle. Flatbread may be thin enough to wrap around other food. The grain and the way people make it change the result.`,
+  },
 ];
 
 export const EN_WIKI_TOPICS: Record<string, string[]> = Object.fromEntries(
