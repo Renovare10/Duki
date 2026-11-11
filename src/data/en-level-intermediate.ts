@@ -349,6 +349,28 @@ Finally, return to the shopping question. Holding more water per equal area does
 
 A useful report explains what was tested, how it was measured, and what remains unknown. You do not need to announce a universal winner. You might conclude that one brand held more water in your particular test, while the cheaper brand still met your household's needs. That is a less exciting claim than an advertisement, but a much easier one to defend.`,
   },
+  {
+    ...DEFAULTS,
+    id: "en-l6-the-joke-that-needed-a-note", level: 6, createdAt: 260_013,
+    title: "The Joke That Needed a Note",
+    blurb: "Translating a small joke raises a larger question about what to preserve.",
+    topics: ["culture", "humor", "literature"],
+    body: `Suppose a cartoon shows a fish working alone in an office. Underneath, the artist has written, "Our sole employee." In English, sole can mean only, but it is also the name of a kind of fish. The sentence describes both the lonely worker and the creature sitting at the desk. A reader who knows both meanings can understand the joke almost immediately.
+
+Now imagine translating that caption into a language whose word for the fish has no connection with the word for only. A completely accurate translation of the sentence may describe the picture and lose the joke. Nothing has been translated incorrectly at the level of separate facts, yet an important part of the cartoon has disappeared.
+
+A translator has several choices. One is to explain the double meaning in a note. That works in a book about language, where the explanation may be more interesting than the original joke. It works less well beneath a cartoon on a greeting card. By the time the reader finishes the note, the moment for a quick laugh has passed.
+
+Another choice is to create a different joke that suits the picture. The wording may move further from the original while giving readers a similar experience. This requires judgment. The translator should not quietly introduce an insult or a reference that changes the artist's attitude towards the character. A funny sentence can still be the wrong sentence for that cartoon.
+
+The difficulty becomes greater when humour depends on shared experience rather than on a single word. A joke about a school examination may be obvious to people who took it and confusing to everyone else. Replacing it with a familiar examination could help the new audience, but it could also make the story seem to happen in a different country.
+
+Readers sometimes treat any departure from the original wording as a failure. That is understandable when details matter: a contract and a medicine label should not be treated like a comedy script. In literature, however, rhythm, surprise, and the speaker's personality also carry meaning. Preserving every word order may damage those parts.
+
+There is no method that protects everything at once. The purpose and setting of the translation affect the choice. A student edition may benefit from notes. A performance needs lines that actors can speak and an audience can follow in real time. A bilingual cartoon might simply keep both captions and let the picture help.
+
+When a translated joke fails, the reader is not necessarily missing something obvious. The joke may depend on a connection the new language does not provide. Recognising that possibility makes reading less frustrating. It can also send a curious reader back to the original, where an ordinary little word suddenly has two jobs.`,
+  },
 ];
 
 export const EN_INTERMEDIATE_TEXTS: LibraryText[] = INTERMEDIATE_DRAFTS.map(({ topics: _topics, ...text }) => text);
