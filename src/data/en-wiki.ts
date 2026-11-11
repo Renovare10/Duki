@@ -189,6 +189,21 @@ Water reaching the ground may flow over the surface or soak into it. Below the s
 
 A diagram often draws the cycle as a simple circle. Real water follows many paths, and different parts of the journey take very different amounts of time. Human activities can alter these paths. Pumping groundwater removes stored water, while paving land changes how much rain soaks into the soil and how much runs away over the surface.`,
   },
+  {
+    id: "en-wiki-pompeii", level: 6, title: "Pompeii",
+    blurb: "A buried Roman city preserves evidence of ordinary life.",
+    wikiTitle: "Pompeii", sourceUrl: "https://en.wikipedia.org/wiki/Pompeii",
+    createdAt: 220_012, topics: ["encyclopedia", "history", "travel"],
+    body: `Pompeii was a city near Naples in what is now Italy. In AD 79, Mount Vesuvius erupted and buried it under volcanic material. The disaster killed many people and ended the city's life as a Roman community. It also preserved evidence that would normally have disappeared.
+
+Archaeologists have uncovered houses, streets, shops, and public buildings. Wall paintings show how some residents decorated their rooms. Writing scratched or painted on walls records everyday messages as well as political life. These traces help historians look beyond the rulers and battles described in ancient books.
+
+The city was not made up only of wealthy households. Its buildings and businesses reveal differences in work, living conditions, and social position. Studying a bakery or a small home can answer different questions from studying a grand house.
+
+Some of the most familiar objects from Pompeii are casts of people who died there. As buried bodies decayed, they left spaces in the surrounding material. Excavators filled some of these spaces to record the shapes. The casts are not stone bodies created by lava.
+
+Uncovering the city has also exposed it to damage from weather and visitors. Earlier excavation sometimes destroyed evidence through careless digging. Modern work therefore includes conserving what has already been found. At Pompeii, finding more of the past and keeping it safe are separate tasks that must be considered together.`,
+  },
 ];
 
 export const EN_WIKI_TOPICS: Record<string, string[]> = Object.fromEntries(
