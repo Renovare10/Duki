@@ -45,6 +45,19 @@ Not all penguins live among ice and snow. Some live in warmer places. The Galapa
 
 Penguins come onto land or ice to have their young. Most kinds lay two eggs, but emperor penguins lay just one. A male emperor penguin keeps the egg warm on his feet while the female goes to sea to feed.`,
   },
+  {
+    id: "en-wiki-moon", level: 4, title: "The Moon",
+    blurb: "Why the Moon seems to change shape during the month.",
+    wikiTitle: "Moon", sourceUrl: "https://en.wikipedia.org/wiki/Moon",
+    createdAt: 220_002, topics: ["encyclopedia", "science"],
+    body: `The Moon is Earth's natural companion in space. It travels around Earth, and we often see it in the night sky. Sometimes we can see it during the day too.
+
+The Moon does not make its own light like the Sun. We see sunlight that comes back from its surface. As the Moon moves around Earth, we see different amounts of its sunlit half. That is why it seems to change shape. It takes about a month to go through these changes.
+
+The Moon also turns as it travels. It turns at just the right speed to keep nearly the same side facing Earth. The other side is not always dark. It gets sunlight too.
+
+The Moon's surface has many round holes called craters. Rocks from space made many of them when they hit the ground. In 1969, people first walked on this surface during the Apollo 11 mission.`,
+  },
 ];
 
 export const EN_WIKI_TOPICS: Record<string, string[]> = Object.fromEntries(
