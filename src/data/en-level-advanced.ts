@@ -470,6 +470,33 @@ People often try to stop movement by reinforcing a bank or cutting a shorter cha
 
 The curved lakes visible from an airplane are evidence of earlier arrangements between moving water and movable ground. They also warn against imagining a river as a permanent blue line. Its route is a condition recorded at a particular time. To understand what the river may do next, we need to examine the material around that line, the water moving through it, and the history of how both have changed.`
   },
+  {
+    id: "en-l8-the-storm-in-scene-three", level: 8,
+    title: "The Storm in Scene Three",
+    blurb: "A theater's missing thunder threatens to expose a very unconvincing murder.",
+    topics: ["arts", "humor", "work"],
+    body: `The murder was supposed to happen during a thunderstorm. Without thunder, the audience would hear the study door open and realize that the apparently innocent doctor had returned. This was the only part of our production that depended on perfect timing. Unfortunately, it depended on me, a borrowed laptop, and a cable that had been repaired with tape.
+
+At the afternoon rehearsal, everything worked. The doctor slipped through the door, thunder rolled around the little theater, and the victim fell onto the carpet with the graceful economy of a man who had injured his shoulder doing it badly the previous week. Our director, Sandra, asked us to repeat the sequence. The second time, the thunder sounded like a distant saucepan. The third time, nothing happened.
+
+By six, the technician had identified a fault in the sound unit rather than the laptop. He could obtain a replacement the following morning. Our first audience, however, was due at seven thirty. Sandra stared at the silent equipment as though disappointment might repair it. Then she asked whether anyone could make thunder without electricity.
+
+Several people demonstrated noises that were more appropriate to a sick animal. Our stage manager found a large sheet of thin metal behind the scenery. It belonged to a previous production, in which someone had used it to suggest a collapsing bridge. When shaken, it produced a promising rumble. Sandra assigned me to operate it behind the study wall. We rehearsed once before the doors opened.
+
+The first two scenes passed without incident, apart from a detective losing his glasses while still wearing them. I stood in the narrow space behind the wall with the metal sheet against my knees. Through a gap, I could see the doctor's shoes waiting beside the door. His entrance depended on the victim finishing a sentence about changing his will.
+
+The victim reached the sentence. I raised the sheet. At that moment, a loose edge caught the curtain cord, which pulled a small curtain halfway across the study window. I freed the metal with a jerk. The thunder arrived too early and far too loudly. The victim stopped speaking. The doctor, obeying the sound rather than the words, opened the door before the victim had turned away.
+
+For a dreadful second, the two men stared at each other. The doctor was holding the theatrical dagger in plain view. Then the victim said, "You might at least knock before examining me." Someone in the audience laughed. The doctor looked down at the dagger and replied that he had come to open a letter. There was no letter on the stage.
+
+The victim searched his desk with impressive irritation. He found the envelope containing the will, which was supposed to appear in the final scene, and handed it over. The doctor cut it open. Both men were now reading information their characters should not yet possess. Behind the wall, I lowered the metal sheet and waited for Sandra to end my theatrical career.
+
+Instead, she gestured for more thunder. I shook the sheet gently. The victim went to close the window, turning his back at last. The doctor folded the will into his pocket, followed him, and completed the murder. This time the thunder covered the door, the falling body, and a small involuntary cry from me. The lights faded on schedule.
+
+During the interval, Sandra rewrote three lines so the detective could discover the missing will in the doctor's coat rather than in the desk. The actor playing the doctor asked whether his invention about the letter had been clever. Sandra said they would discuss cleverness after he had learned where to put the envelope. I used a strip of cloth to secure the curtain cord well away from my equipment.
+
+The next morning, the repaired sound system arrived. Sandra tested the recorded storm twice, then asked me to keep the metal sheet ready as a backup. The local review praised the production's comic timing, particularly the unexpected exchange before the murder. We kept those lines for the remaining performances. The victim insisted on receiving credit for them, although the doctor argued that a man carrying a dagger had done most of the difficult work.`
+  },
   // NEXT_READING
 ];
 
