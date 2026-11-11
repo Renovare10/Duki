@@ -168,6 +168,28 @@ I hope you will discuss the complaint with both reception and kitchen staff. The
 Yours sincerely,
 Alice Wong`,
   },
+  {
+    ...DEFAULTS,
+    id: "en-l5-recording-a-family-interview", level: 5, createdAt: 260_006,
+    title: "Recording a Family Interview",
+    blurb: "How to collect a relative's memories without turning a visit into an exam.",
+    topics: ["how-to", "family", "history"],
+    body: `A family interview can begin with a very ordinary question: "What was your first job?" The answer may lead to a crowded bus, an unpleasant manager, or a friend whose name you have never heard. Recording that conversation lets you return to the details later. It also needs more care than simply putting a phone on the table.
+
+Ask the person before you record. Explain why you want the interview and who might hear it. A recording for your own family is different from one for a school website. If your plans change, ask again. Being related does not give you permission to publish someone's voice or private memories.
+
+Choose a quiet place where both of you can sit comfortably. Test the recorder with a short conversation, then play it back. You need to hear both voices clearly. Check the battery and storage space too. These small checks are easier to do before somebody tells a story they may not feel like repeating.
+
+Prepare a few questions, but leave room to follow the answers. "Did you enjoy school?" may get a simple yes or no. "What happened on a normal school morning?" gives the person more to describe. Ask one question at a time, and allow pauses. Someone searching for a memory may need silence rather than another question.
+
+Listen for details you don't understand. If your aunt mentions "the old place," ask where that was. If your grandfather uses the name of a tool, ask what it did. Future listeners may know even less than you do. You can ask for explanations without making the conversation feel like a test.
+
+Memories are not always certain. Two people can remember the same event differently. Don't force a choice during the interview just because you want a clear answer. You can note the disagreement and compare dates or documents afterwards. A phrase such as "I think it was winter" should not become "It was winter" when you write up the conversation.
+
+Agree that the speaker can skip a question or stop. If a subject becomes uncomfortable, offer to take a break or move on. A dramatic story isn't worth making a relative feel trapped at their own kitchen table.
+
+Afterwards, save a clearly named copy and keep another copy somewhere safe. Write down the date, the speakers' names, and any limits on sharing. Let the person listen or read what you plan to use. Correct mistakes, respect anything they ask you to remove, and thank them for their time. You may finish with fewer stories than you expected, but the ones you keep will have been shared willingly.`,
+  },
 ];
 
 export const EN_INTERMEDIATE_TEXTS: LibraryText[] = INTERMEDIATE_DRAFTS.map(({ topics: _topics, ...text }) => text);
