@@ -204,6 +204,21 @@ Some of the most familiar objects from Pompeii are casts of people who died ther
 
 Uncovering the city has also exposed it to damage from weather and visitors. Earlier excavation sometimes destroyed evidence through careless digging. Modern work therefore includes conserving what has already been found. At Pompeii, finding more of the past and keeping it safe are separate tasks that must be considered together.`,
   },
+  {
+    id: "en-wiki-wangari-maathai", level: 6, title: "Wangari Maathai",
+    blurb: "The Kenyan scientist who linked tree planting with women's rights.",
+    wikiTitle: "Wangari Maathai", sourceUrl: "https://en.wikipedia.org/wiki/Wangari_Maathai",
+    createdAt: 220_013, topics: ["encyclopedia", "biography", "nature"],
+    body: `Wangari Maathai was a Kenyan scientist and environmental campaigner. Born in 1940, she studied biology in the United States before returning to Kenya. She earned a doctorate at the University of Nairobi and later taught there. At the university, she also argued for equal benefits for women on the staff.
+
+Her best-known project began in 1977. The Green Belt Movement encouraged women to grow and plant trees. Participants collected seeds of local trees and raised seedlings in nurseries. Women could receive a small payment for seedlings that were later planted elsewhere.
+
+Tree planting addressed practical problems caused by environmental damage. Trees could provide useful materials and help protect the land. The movement also gave women a way to organize, earn money, and take part in decisions affecting their communities.
+
+Maathai's campaigning brought her into conflict with political leaders. She opposed the destruction of public green spaces and supported democratic rights. Her public work involved protests and arrests as well as planting trees. She later served in Kenya's parliament and as an assistant minister responsible for environmental issues.
+
+In 2004, she became the first African woman to receive the Nobel Peace Prize. The award recognized connections between environmental protection, democracy, and peace. Maathai died in 2011, leaving a movement that had made local tree planting part of a much larger public effort.`,
+  },
 ];
 
 export const EN_WIKI_TOPICS: Record<string, string[]> = Object.fromEntries(
