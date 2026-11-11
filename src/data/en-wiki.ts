@@ -423,6 +423,25 @@ Charles Darwin and Alfred Russel Wallace presented the principle jointly in 1858
 
 Natural selection is one mechanism of evolution, not a synonym for every evolutionary change. Chance fluctuations, known as genetic drift, can also alter the frequency of inherited variants. Distinguishing these processes allows biologists to ask whether a particular pattern reflects an adaptive advantage, a historical accident, or several causes acting together. The explanation must be investigated in the population concerned rather than inferred solely from the apparent usefulness of a trait.`,
   },
+  {
+    id: "en-wiki-antimicrobial-resistance", level: 9, title: "Antimicrobial Resistance",
+    blurb: "Why microbes can survive medicines that once controlled them.",
+    wikiTitle: "Antimicrobial resistance", sourceUrl: "https://en.wikipedia.org/wiki/Antimicrobial_resistance",
+    createdAt: 220_026, topics: ["encyclopedia", "science", "health"],
+    body: `Antimicrobial resistance occurs when microorganisms can withstand medicines intended to control them. The category includes bacteria resistant to antibiotics, but also resistant viruses, fungi, and parasites. The organism causing an infection becomes resistant; the patient's body does not become immune to the medicine.
+
+Resistance can arise through genetic changes. Bacteria may acquire mutations or obtain resistance genes from other bacteria, including through processes that transfer genetic material between cells. A resistant variant need not first encounter a drug in order to exist. Exposure can then change which variants survive and multiply.
+
+When a medicine removes susceptible microbes more effectively than resistant ones, it changes the competitive environment. The survivors can reproduce, and resistance may become more prevalent. This is natural selection operating in a setting shaped by medical treatment. Certain resistance mechanisms destroy or modify a drug, while others alter its target or reduce the amount reaching that target.
+
+Antimicrobial use is not confined to human medicine. Veterinary treatment and agricultural practices also influence the environments in which resistance develops and spreads. Resistant organisms and genes can move between people, animals, and their surroundings, making the problem difficult to contain within a single institution or country.
+
+Resistance does not necessarily mean that every available treatment has failed. A microbe may resist one medicine yet remain susceptible to another. Nevertheless, alternatives can be more expensive, less accessible, or associated with greater adverse effects. Infections that are difficult to treat also complicate procedures that depend on reliable infection control.
+
+The response involves prevention as well as drug development. Better sanitation, hygiene, and appropriate infection-control measures reduce opportunities for transmission. Careful prescribing can limit unnecessary antimicrobial exposure while preserving access for patients who need treatment. These aims must be pursued together: withholding effective treatment indiscriminately is not a solution to resistance.
+
+New medicines can extend treatment options, but they enter the same evolutionary setting as older ones. Surveillance and responsible use remain necessary after a drug is introduced. The challenge is to sustain effective treatment while reducing the conditions that repeatedly undermine it.`,
+  },
 ];
 
 export const EN_WIKI_TOPICS: Record<string, string[]> = Object.fromEntries(
