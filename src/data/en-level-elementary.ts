@@ -284,6 +284,34 @@ In the corner, Jack drew a small green ice cream, where the old shop used to be.
     createdAt: 250_007, readAt: null, bookmark: null,
     source: "Original (Duki) · AI-drafted",
   },
+  {
+    id: "en-l3-the-dog-behind-the-door", lang: "en", level: 3,
+    title: "The Dog Behind the Door",
+    blurb: "In a letter to her brother, Kate reports on her first week with his dog.",
+    body: `Dear Owen,
+
+Your dog is fine. My shoes are not.
+
+On Monday, Pip took my left shoe into his bed. I found it under his blanket. On Tuesday, he took the right one. I keep them in a cupboard now.
+
+You told me he was quiet. Yesterday, he stood behind the front door and barked for ten minutes. I looked outside, but nobody was there. Then I noticed the letter on the floor. Perhaps he thought the letter was dangerous.
+
+I wasn't sure how we would manage a whole week together. I work at home, and Pip seemed to have a different plan for every hour.
+
+This morning, though, I stayed at my desk too long. When I finally looked up, he was sitting beside me with his lead in his mouth. I put on my coat and took him to the park.
+
+It was sunny after two days of rain. We walked beside the river. Pip stopped at every tree, so I had time to see the little boats on the water. I usually hurry past that part of town.
+
+Now he is asleep under my desk. His head is on my foot. I need another cup of tea, but I don't want to move him yet.
+
+Enjoy the rest of your trip. When you come home on Sunday, please bring Pip's brush. You forgot it, and there is dog hair on everything I own.
+
+Your sister,
+Kate`,
+    kind: "sample", category: "graded", featured: false,
+    createdAt: 250_008, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+  },
 ];
 
 export const EN_ELEMENTARY_TOPICS: Record<string, string[]> = {
@@ -295,4 +323,5 @@ export const EN_ELEMENTARY_TOPICS: Record<string, string[]> = {
   "en-l3-the-station-piano": ["arts", "travel", "feelings"],
   "en-l3-a-table-for-six": ["humor", "food", "daily-life"],
   "en-l3-the-picture-map": ["adventure", "family", "arts"],
+  "en-l3-the-dog-behind-the-door": ["letters", "nature", "humor"],
 };
