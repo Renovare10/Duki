@@ -434,6 +434,64 @@ The elderly man pushed the paper towards Sara. He had written seven words beginn
 
 Sara took the pencil. Outside, the windows had grown dark. Inside, someone had opened a packet of biscuits. She ate one, then another, before she checked her phone again.`,
   },
+  {
+    id: "en-book-alder-station-3", lang: "en", level: 4,
+    seriesId: "en-book-alder-station", seriesTitle: "A Night at Alder Station", chapter: 3,
+    title: "Chapter 3: The Last Part of the Journey",
+    blurb: "A late bus arrives, and Sara learns what her mother actually needs from her.",
+    kind: "sample", category: "novel", featured: false,
+    createdAt: 210_008, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+    body: `At half past seven, Sara's sister called. The baby had finally gone to sleep.
+
+"Are you still at Alder?" she asked.
+
+"Yes. We've had a picnic in the station. Mum is winning a word game."
+
+"Do you want to come tomorrow instead?"
+
+Sara looked at Ruth. "We haven't decided. I'll call when we know. Please don't wait outside for us."
+
+For the first time that evening, she gave her sister the whole story. She did not call it a small delay.
+
+Owen's father arrived soon afterwards. The elderly man caught a bus to another town. Ruth and Sara stayed at the cafe table, with the paper between them. Sara had won one round. Ruth said it was because she was tired.
+
+At nine, Helen came over.
+
+"There's a bus coming for Marsh Bay. It has a low entrance. The driver says he should be here in twenty minutes."
+
+"Should be?" Sara asked.
+
+"That's the best information I have."
+
+Twenty minutes became forty. Sara bought tea from a machine. It tasted mostly of hot water, but Ruth wrapped both hands around the cup.
+
+When the bus finally pulled up, Sara began putting everything into bags. Tickets, paper, empty sandwich box. She reached for her mother's coat, but Ruth already had it on.
+
+"Do you want my arm?" Sara asked.
+
+"On the wet bit outside, yes."
+
+They walked slowly across the entrance. The driver lowered the bus for Ruth. She climbed aboard and chose a seat near the front. Sara put their bags on the rack and sat beside her.
+
+The bus took a longer route to avoid the flooded road. Beyond the windows, there were few lights. Ruth fell asleep before they had left Alder. Her head moved with each turn, until Sara folded her own coat and put it between Ruth's head and the window.
+
+They reached Marsh Bay just before midnight. Sara's sister was waiting in the car, wearing slippers under a long coat. Her partner was at home with the baby.
+
+"You came all this way," she said, hugging Ruth carefully.
+
+"Don't make me stand in this car park all night talking about it," Ruth answered. "Where's my granddaughter?"
+
+At the house, they took off their wet shoes and washed their hands. The baby was awake again. Ruth sat in an armchair, and her daughter placed the baby in her arms.
+
+Sara stood beside them. In the clear folder, the printed plan was soft and bent from the rain. She took out the photograph and compared it with the small face in front of her.
+
+"She still looks cross," she whispered.
+
+Ruth looked up. "She's had a long day too."
+
+Sara pulled up a chair. She could tell them about the station tomorrow. For now, she wanted to sit down and look at her niece.`,
+  },
 ];
 
 /** Topic ids are shared with the Mandarin library; every chapter has its own entry. */
