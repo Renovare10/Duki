@@ -99,6 +99,21 @@ Inside its body are three hearts. Two move blood through the gills, where it tak
 
 Octopuses can learn and solve problems. Their arms contain many nerve cells, so the control of movement is spread through the body rather than handled entirely by the brain.`,
   },
+  {
+    id: "en-wiki-honey-bee", level: 5, title: "Honey Bee",
+    blurb: "Inside a colony that stores flowers' sugar for later.",
+    wikiTitle: "Honey bee", sourceUrl: "https://en.wikipedia.org/wiki/Honey_bee",
+    createdAt: 220_006, topics: ["encyclopedia", "nature", "food"],
+    body: `A jar of honey begins with bees visiting flowers. They collect nectar, a sweet liquid, and bring it back to their colony. They process the nectar and reduce its water content to make honey. The colony stores this food in wax cells, ready for times when flowers are hard to find.
+
+A honey bee colony contains different kinds of bees. The queen lays eggs. Most of the other females are workers, which collect food, care for young bees, and do other jobs. The males are called drones, and their main role is to mate with queens.
+
+Workers build the comb from wax they produce themselves. Its cells have six sides. Some cells hold food; others are used for raising young bees.
+
+In cold weather, bees can gather closely together inside their nest. The workers use their muscles to make heat and eat stored honey for energy. They move between the warmer center and the cooler outside of the group.
+
+Honey bees also carry pollen between flowers. This helps many plants produce seeds and fruit. Honey is useful to people, but the bees' work in fields and orchards matters too.`,
+  },
 ];
 
 export const EN_WIKI_TOPICS: Record<string, string[]> = Object.fromEntries(
