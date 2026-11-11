@@ -71,6 +71,19 @@ Sourdough bread uses a mixture of flour and water that contains living yeast and
 
 Bread looks different around the world. A loaf may have a hard outside and a soft middle. Flatbread may be thin enough to wrap around other food. The grain and the way people make it change the result.`,
   },
+  {
+    id: "en-wiki-bicycle", level: 4, title: "Bicycle",
+    blurb: "How a machine with two wheels became everyday transport.",
+    wikiTitle: "Bicycle", sourceUrl: "https://en.wikipedia.org/wiki/Bicycle",
+    createdAt: 220_004, topics: ["encyclopedia", "science", "travel"],
+    body: `A bicycle usually has two wheels, one behind the other. The rider sits on a seat, holds the handlebars, and pushes the pedals. On most bicycles, a chain carries this movement to the back wheel.
+
+The bicycle did not appear in its modern form all at once. In 1817, Karl von Drais showed a two-wheeled machine without pedals. The rider moved it by pushing against the ground with their feet.
+
+Later bicycles had pedals on a large front wheel. Some had a very big front wheel and a small back wheel. Their high seats made them difficult to get on and off. A fall could be dangerous.
+
+By the late nineteenth century, the safety bicycle had become a better choice. Its wheels were closer in size, and a chain drove the back wheel. Modern bicycles still often have this shape. People use them to get to work, carry shopping, exercise, and race.`,
+  },
 ];
 
 export const EN_WIKI_TOPICS: Record<string, string[]> = Object.fromEntries(
