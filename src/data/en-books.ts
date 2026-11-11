@@ -320,6 +320,64 @@ Lin's sister was waiting by the fence. She held up his library bag.
 
 They walked to the library together. Lin still had time to choose a book. He also had grass on his knees and something to tell the woman at the desk when she asked about his morning.`,
   },
+  {
+    id: "en-book-alder-station-1", lang: "en", level: 4,
+    seriesId: "en-book-alder-station", seriesTitle: "A Night at Alder Station", chapter: 1,
+    title: "Chapter 1: The Connection",
+    blurb: "Sara plans every part of a journey with her mother, except a cancelled train.",
+    kind: "sample", category: "novel", featured: false,
+    createdAt: 210_006, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+    body: `Sara had put the tickets in a clear folder. Behind them were a map, a hotel address, and a photograph of her new niece. The baby was only six days old. In the photograph, she looked angry about something.
+
+"She has your face," Sara's mother said.
+
+"I don't look like that."
+
+"You did when you were six days old."
+
+They were going to visit Sara's older sister, who lived near the coast. Her mother, Ruth, had not travelled by train for years. Since an operation on her knee, she had avoided long journeys. Sara had persuaded her to come by promising to arrange everything.
+
+So far, everything had worked. They had found their seats, bought tea, and changed trains without climbing any stairs. Ruth's folding walking stick rested against her leg.
+
+At Alder, they had twelve minutes to catch their final train. Sara knew they needed platform three. She also knew the quickest way to the lift.
+
+But the train did not appear on the board.
+
+They stood under the station clock while rain struck the glass roof. A woman in a yellow coat was speaking into a radio. Sara waited for her to finish and asked about the coastal train.
+
+"There's a tree across the line," the woman said. "No trains can go through. We're arranging buses, but I can't give you a time yet."
+
+"Our train leaves in eight minutes."
+
+The woman looked at Sara's tickets. "I'm afraid it won't. Please wait in the main hall. We'll make an announcement."
+
+Sara called her sister. The phone rang without an answer. Her sister was probably feeding the baby. Sara sent a message instead: Small delay at Alder. Will let you know.
+
+She found a bench for Ruth, then searched for another route on her phone. There was a station called West Alder, four miles away. From there, a different line went towards the coast. A train would leave in seventy minutes.
+
+"We could get a taxi," Sara said.
+
+The first company had no cars nearby. The second could come in two hours. The third did not answer.
+
+Ruth took a sandwich from her bag and broke it in half.
+
+"Have something to eat."
+
+"In a minute. I'm working this out."
+
+"You've been working it out for half an hour."
+
+Sara looked at the map. Four miles was not far for her. She could walk it in a little over an hour. She looked at her mother's stick and closed the map.
+
+"There might be a local bus," she said.
+
+"Then ask the woman in the yellow coat."
+
+The woman was now surrounded by passengers. Sara did not want to join the crowd with another question. She stood up and put the folder under her arm.
+
+"I'll look outside first."`,
+  },
 ];
 
 /** Topic ids are shared with the Mandarin library; every chapter has its own entry. */
