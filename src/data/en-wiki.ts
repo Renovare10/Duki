@@ -32,6 +32,19 @@ Pandas usually live alone. They leave smells on trees and rocks to send messages
 
 A baby panda is very small when it is born. It has no teeth and cannot see. Its mother cares for it as it grows. Protecting forests gives these bears space to feed and raise their young.`,
   },
+  {
+    id: "en-wiki-penguin", level: 4, title: "Penguin",
+    blurb: "A bird whose wings are better for swimming than flying.",
+    wikiTitle: "Penguin", sourceUrl: "https://en.wikipedia.org/wiki/Penguin",
+    createdAt: 220_001, topics: ["encyclopedia", "nature"],
+    body: `Penguins are birds, but they cannot fly. Their wings work like flippers. They use them to move through the sea, where they catch fish, squid, and other small animals.
+
+A penguin's back is dark, and its front is light. These colors help hide it in the water. From above, the dark back is hard to see against the deep sea. From below, the light front looks more like the bright surface.
+
+Not all penguins live among ice and snow. Some live in warmer places. The Galapagos penguin even lives near the equator. Almost all penguins live in the southern half of the world.
+
+Penguins come onto land or ice to have their young. Most kinds lay two eggs, but emperor penguins lay just one. A male emperor penguin keeps the egg warm on his feet while the female goes to sea to feed.`,
+  },
 ];
 
 export const EN_WIKI_TOPICS: Record<string, string[]> = Object.fromEntries(
