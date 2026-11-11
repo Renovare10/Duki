@@ -266,6 +266,33 @@ Repeating an experiment can test whether a pattern is dependable. A result that 
 
 These habits apply far beyond pots of basil. Whenever someone says a change caused an improvement, ask what comparison supports the claim. Notice what else changed, how the outcome was measured, and how much variation there was. You need not turn every household decision into a formal study. But you can learn to separate a promising observation from a conclusion it has not yet earned.`
   },
+  {
+    id: "en-l8-the-missing-signature", level: 8,
+    title: "The Missing Signature",
+    blurb: "An archivist finds that the document she needs is also the one she damaged.",
+    topics: ["history", "work", "feelings"],
+    body: `The envelope had been filed under drainage, which was why nobody looking for a petition had found it. Leila discovered it while preparing an exhibition about the reservoir that had submerged the old valley. Inside lay six pages of signatures and a letter opposing the project. The letter was polite, persistent, and entirely unlike the angry fragments quoted in the council's published history.
+
+She recognized one surname immediately. Her grandfather had grown up in the valley, although he rarely mentioned it. In the official photographs, former residents appeared smiling beside new houses on higher ground. At home, he kept a photograph of an orchard in a drawer with his passport. Leila had never asked why it was stored among documents rather than displayed with the family pictures.
+
+The petition could anchor the exhibition's final section, which until then consisted mainly of engineering diagrams. She photographed the envelope and noted its position in the box. Then, reaching across her desk for a weight to hold the curling pages flat, she struck her mug. Tea spread beneath the last sheet before she managed to lift it. A brown tide crossed the signatures.
+
+For a few seconds she did nothing. The room was silent except for the printer beyond the door. The archive's rules about food and drink were posted above her desk; she had helped revise them. She imagined reporting the accident, then imagined quietly allowing the paper to dry and mentioning only the older stains visible on its upper edge. Nobody else had seen it that morning.
+
+She called the conservation officer. Following his instructions, she left the wet sheet supported and avoided rubbing or separating any fibers. He arrived with suitable materials, took charge of the damaged document, and asked her to write down exactly what had happened. His matter-of-fact questions were worse than anger. She answered them while staring at the handle of the mug.
+
+The exhibition deadline did not move. Her manager reassigned the original document for assessment and told Leila to work from the photographs she had already taken. Unfortunately, she had photographed only the first five pages before the accident. The sixth contained names that now had to be examined through a stain she herself had created. She could no longer pretend to be a neutral observer of the document's history.
+
+That weekend she visited her grandfather with a copy of the letter. He read it twice. His own father had circulated the petition, he said, going from house to house after work. Some neighbors had refused to sign because they welcomed the reservoir; others feared that opposition would affect their compensation. The village had not spoken with one voice, whatever later accounts suggested.
+
+Leila asked about the orchard. Her grandfather shrugged. The trees had belonged to his uncle, who had supported the project and used the compensation to open a garage. The photograph was no simple symbol of resistance. It showed the place where Leila's grandfather had spent his happiest summers, taken by a man who had been willing to leave it.
+
+She told him about the tea. He listened without offering the comfort she had hoped for. Then he asked whether the other documents in the box were safe. They were. He said he would lend the orchard photograph if she wanted it, provided the label did not make his uncle into a person he had never been.
+
+When the exhibition opened, the petition appeared as a reproduction of its first page. The original remained with the conservator. A note explained its provenance, and the archive's internal record included the accidental damage and subsequent treatment. Leila stood nearby during the first visiting hour, prepared for questions about the reservoir and afraid of questions about the paper.
+
+An older visitor studied the reproduction, then pointed to a signature halfway down. Her mother had signed, she said, but had changed her mind before construction began. Could that be included somewhere? Leila fetched the visitor feedback form, then put it aside and asked whether they could arrange a recorded interview. She wanted time to hear the whole account before deciding what a label could honestly say.`
+  },
   // NEXT_READING
 ];
 
