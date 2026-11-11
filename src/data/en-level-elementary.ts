@@ -409,6 +409,41 @@ Later, she played the recording again. Between the cooking instructions, her fat
     createdAt: 250_011, readAt: null, bookmark: null,
     source: "Original (Duki) · AI-drafted",
   },
+  {
+    id: "en-l4-someone-at-the-door", lang: "en", level: 4,
+    title: "Someone at the Door",
+    blurb: "A school play nearly stops when the person making the door sound goes missing.",
+    body: `For the school play, Rosa wanted to be the detective. Instead, she got a job behind the stage. She had to make the sound of someone knocking on a door.
+
+"Only three knocks," the teacher said. "Wait until the detective puts down her cup."
+
+During practice, Rosa learned everyone's lines because she heard them so often. She also learned that knocking too early could make the detective spill her tea.
+
+On the night of the show, the first half went well. During the break, other students carried chairs into the space where Rosa was standing. She moved aside to let them pass. Someone moved the box where she had left her wooden board.
+
+When the next scene began, Rosa reached for the board, but it was gone. She looked behind the curtain and under a chair. Then she heard the detective say her line.
+
+On stage, the detective put down her cup. Silence followed.
+
+Rosa saw the board on the other side of the pile of chairs. She could not reach it in time. She knocked three times on the floor instead.
+
+The detective looked down.
+
+"Someone's at the door," she said. Then, after a pause, she added, "Unless they're under the house."
+
+The audience laughed. Rosa pressed her hand over her mouth so they would not hear her laughing too.
+
+After the show, the detective found her behind the curtain.
+
+"Sorry about the floor," Rosa said.
+
+"Can you do it again tomorrow?" the girl asked. "My grandparents are coming."
+
+Rosa moved the board where she could reach it. Tomorrow she would use it as planned. She did not want to make the same mistake just because it had been funny once.`,
+    kind: "sample", category: "graded", featured: false,
+    createdAt: 250_012, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+  },
 ];
 
 export const EN_ELEMENTARY_TOPICS: Record<string, string[]> = {
@@ -424,4 +459,5 @@ export const EN_ELEMENTARY_TOPICS: Record<string, string[]> = {
   "en-l3-the-afternoon-shadow": ["science", "school", "family"],
   "en-l4-the-broken-zip": ["family", "daily-life", "shopping"],
   "en-l4-a-recipe-with-sound": ["food", "family", "daily-life"],
+  "en-l4-someone-at-the-door": ["arts", "school", "humor"],
 };
