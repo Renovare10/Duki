@@ -144,6 +144,21 @@ People prepare it in different ways. Some drink it plain, while others add milk,
 
 The word tea is also used for drinks made from other plants, such as mint. These are often called herbal teas. They do not come from the tea plant, even though people prepare them in a similar way.`,
   },
+  {
+    id: "en-wiki-braille", level: 5, title: "Braille",
+    blurb: "A writing system that readers feel with their fingertips.",
+    wikiTitle: "Braille", sourceUrl: "https://en.wikipedia.org/wiki/Braille",
+    createdAt: 220_009, topics: ["encyclopedia", "science", "culture"],
+    body: `A braille page carries patterns of raised dots. Readers move their fingers over these patterns to read by touch. Braille gives blind and partially sighted people a way to read and write without depending on printed letters.
+
+The system takes its name from Louis Braille, who grew up in France and lost his sight after a childhood accident. In 1824, when he was fifteen, he developed an early version of his system. He improved an existing method that used larger groups of dots.
+
+A standard braille cell has six possible dot positions, arranged in two columns of three. Different combinations can represent letters, punctuation, or other signs. Some combinations stand for whole words or parts of words. The meanings depend on the language and the braille system being used.
+
+Braille is therefore not a separate spoken language. People use it to write many languages. There are also braille systems for music and mathematics.
+
+Readers can use paper or an electronic display with dots that rise and fall. Such a display can connect to a computer or phone. Although speech software can read text aloud, braille allows direct contact with spelling and punctuation, just as print does for sighted readers.`,
+  },
 ];
 
 export const EN_WIKI_TOPICS: Record<string, string[]> = Object.fromEntries(
