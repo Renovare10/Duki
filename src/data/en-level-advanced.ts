@@ -137,6 +137,31 @@ By opening day, the museum had located a staff newsletter containing another cop
 
 Grandmother came wearing the same coat. She read the new label in silence, then walked through the rest of the exhibition. At the radio display she stopped and described a test the factory workers used to check each finished set. None of us had known about it. This time I fetched a notebook. Before writing down her account, I asked if I could record her name and the years she had worked there. She gave me the dates slowly and made me read them back.`
   },
+  {
+    id: "en-l7-the-box-that-changed-the-port", level: 7,
+    title: "The Box That Changed the Port",
+    blurb: "Standard shipping containers changed ports, jobs, and the journey of everyday goods.",
+    topics: ["history", "work", "travel"],
+    body: `At a modern container port, a crane can lift an entire metal box from a ship and place it on a waiting vehicle. Inside might be shoes, machine parts, or flat boxes containing furniture. The crane operator need not examine any of these products. The outside of the container gives the equipment what it needs: a known shape, strong corners, and places where lifting devices can connect.
+
+For much of shipping history, loading a vessel involved many separate objects. Workers carried or lifted sacks, barrels, wooden cases, and other packages into the hold. They arranged the cargo to use space efficiently and keep it secure. Each shape presented a different problem. At the destination, people had to reverse the process. A ship could spend a considerable part of its working life beside a dock.
+
+Putting goods in boxes was not a new idea. The important development was a transport system built around containers that different businesses could handle. If a box fitted a ship but could not travel conveniently by rail or road, someone still had to unpack it. The benefits grew when ports, shipping lines, railways, and road carriers could transfer the same loaded container between them.
+
+Standard dimensions and common fittings made that cooperation easier. A manufacturer did not need to design a unique crane for every customer's box. A shipping company could plan how containers would fit aboard a vessel before they arrived. A sealed container could move between several forms of transport without workers handling its contents at each stage. This is often called intermodal transport.
+
+The savings involved more than lifting speed. Less handling could reduce damage and opportunities for theft, although it could not eliminate either. More predictable loading times helped companies schedule journeys. Businesses could organize production and sales over longer distances when transport became cheaper and more reliable. Containers were part of this change, alongside developments in roads, communication, trade rules, and manufacturing.
+
+The change was disruptive for workers. Traditional dock work depended on experience with many kinds of cargo and on teams working together around it. Container ports needed different equipment and often fewer people to move a given amount of freight. Some workers learned new skills; others lost jobs. Arguments about wages, safety, and job security were part of containerization, not a small detail beside a story of mechanical progress.
+
+Older city docks were not always suitable for the new system. Large vessels needed deep water, while cranes and container storage required extensive space. Nearby roads had to cope with heavy vehicles. In many places, activity shifted toward larger terminals away from historic waterfronts. Former warehouses later became homes, museums, or offices. Visitors enjoying those districts today may be walking where a very different economy once operated.
+
+Standardization also creates dependence. A container is useful because so much equipment accepts it, but moving millions of them requires coordination. Empty boxes must return to places where exporters need them. If goods flow mostly in one direction, containers accumulate at the other end. A port full of empty boxes can coexist with a shortage somewhere else. The metal itself is available, but it is in the wrong location.
+
+There are costs beyond the port fence. Ships burn fuel, trucks contribute to traffic and air pollution, and very large terminals can disturb surrounding environments. A low transport price paid by a customer does not necessarily include every cost experienced by nearby residents. Assessing the system means looking at these effects as well as the price of an imported shirt.
+
+The container's strength is its ordinary appearance. Goods can travel far because people have agreed on the outside of the box, even when they know little about what is inside. Look at the different company names on containers passing a railway station. Their shared fittings record years of negotiation and investment. The box works because a large number of people, many of whom will never meet, have arranged to handle it in compatible ways.`
+  },
   // NEXT_READING
 ];
 
