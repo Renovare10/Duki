@@ -272,6 +272,54 @@ After ten throws, their father opened the door.
 
 Lin put the ball down. He could hear his sister laughing as he went to wash his hands.`,
   },
+  {
+    id: "en-book-saturday-team-3", lang: "en", level: 3,
+    seriesId: "en-book-saturday-team", seriesTitle: "The Saturday Team", chapter: 3,
+    title: "Chapter 3: Someone at That End",
+    blurb: "A difficult match gives Lin another chance to call for the ball.",
+    kind: "sample", category: "novel", featured: false,
+    createdAt: 210_005, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+    body: `By Saturday morning, everyone in Lin's family wanted to come to the match. Lin asked them to stand away from his goal. He did not want to hear advice from his sister all morning.
+
+Jo gave him a yellow shirt. It reached almost to his knees.
+
+"Ben is taller than you," she said. "We'll find a smaller one next week."
+
+Lin liked hearing "next week."
+
+Hill Road scored after five minutes. A boy kicked the ball from close to the goal. Lin moved, but he was too late. He picked the ball out of the net and looked down at his gloves.
+
+Dan ran past him. "Hard one to stop," he said. "Come on."
+
+For a while, the ball stayed at the other end. Lin watched the players move. He began to understand why Ben was always talking. From here, he could see spaces that Dan could not see.
+
+"On your left!" he called.
+
+Dan turned and found a player running behind him. He reached the ball first and passed it forward. A minute later, Lin's team scored.
+
+After the break, Hill Road attacked again. One ball hit Lin's leg and went out. Another went over the top of the goal. Lin's mouth was dry. He took a drink while Jo shouted for everyone to move back.
+
+Then a long ball came towards the space between Lin and Dan. It was like Wednesday's ball. Dan started running. Lin stepped forward.
+
+"Mine!" Lin shouted.
+
+Dan moved aside. Lin reached the ball, bent down, and held it against his chest. For a moment, he stayed there. He could feel his heart beating under the ball.
+
+The match ended one goal each. Nobody carried Lin on their shoulders. Jo asked him to help take the nets down.
+
+While they worked, Dan asked, "Are you coming next Saturday?"
+
+"Yes," said Lin. "But Ben might be back."
+
+"We need people outside the goal too."
+
+Lin's sister was waiting by the fence. She held up his library bag.
+
+"You left this at home."
+
+They walked to the library together. Lin still had time to choose a book. He also had grass on his knees and something to tell the woman at the desk when she asked about his morning.`,
+  },
 ];
 
 /** Topic ids are shared with the Mandarin library; every chapter has its own entry. */
