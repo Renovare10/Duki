@@ -474,6 +474,36 @@ There are ways to reduce urban heat, but each needs planning. Trees can provide 
 
 These details matter because heat is experienced locally. A citywide forecast cannot describe every bus stop or upstairs bedroom. Knowing why one place stays warm helps planners ask better questions about shade, housing, and public space. It also explains why an evening weather report can sound comfortable while the pavement outside your front door is still giving back the afternoon's heat.`,
   },
+  {
+    ...DEFAULTS,
+    id: "en-l6-the-away-supporter", level: 6, createdAt: 260_018,
+    title: "The Away Supporter",
+    blurb: "A football fan recognises the voice complaining beside her in the stands.",
+    topics: ["sports", "family", "humor"],
+    body: `Leah had promised not to talk about work on Saturday. She put her office phone in a drawer, found her blue scarf, and took the early train to watch Riverside play North Town. It was the first match she had attended alone, and she intended to shout as much as she liked.
+
+Her seat was beside an older man who had folded a red scarf into his coat pocket. North Town's colour. When she glanced at it, he put a finger to his lips. "My daughter's idea," he said. "She bought the tickets before asking which end I wanted."
+
+Leah smiled politely and opened her programme. Then the man complained about the small print, and she recognised his voice. He was Mr Harris, the customer who had spent forty minutes on the phone with her on Friday disputing a delivery charge. She worked for the company that supplied his restaurant.
+
+He hadn't recognised her. To him, she was simply a stranger in a blue scarf. Leah considered telling him, but the teams were coming onto the pitch and she had promised herself a day without work. She folded the programme and faced the field.
+
+For twenty minutes, they discussed the game without difficulty. Harris knew the players on both sides and remembered matches from before Leah was born. He said Riverside's young goalkeeper looked nervous. Leah defended him, then watched him drop a simple ball. Harris was kind enough not to comment.
+
+At half-time, a woman arrived carrying tea and two pies. "Dad, did you get the delivery sorted?" she asked. "You've been talking about nothing else all week."
+
+Leah stared at the far end of the pitch. Harris said somebody at the office had finally agreed to investigate. "Probably a computer error," he added. "The woman was quite patient, actually. I wasn't in a pleasant mood."
+
+"That was me," Leah said before she could decide whether it was wise.
+
+For a moment, neither of them moved. His daughter looked from one face to the other, then held out a pie. "I think you've earned his."
+
+Harris apologised for interrupting her afternoon. Leah said she couldn't give him an update at a football match, especially with her phone at home. He looked relieved. He didn't want another update; he wanted to know whether he had been rude. She said he had been frustrated, and left it there.
+
+In the second half, North Town scored twice. Harris made an obvious effort not to celebrate too loudly, which irritated Leah more than cheering would have. She told him so. He laughed and stopped pretending.
+
+On Monday, Leah found the delivery problem: their company had entered the wrong order size. She called to explain the refund. Harris thanked her, then asked whether she thought the goalkeeper would recover his confidence. She said she hoped so, but declined to investigate that as well.`,
+  },
 ];
 
 export const EN_INTERMEDIATE_TEXTS: LibraryText[] = INTERMEDIATE_DRAFTS.map(({ topics: _topics, ...text }) => text);
