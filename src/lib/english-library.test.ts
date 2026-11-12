@@ -1,9 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { EN_GLOSSES, EN_SAMPLES } from "../data/en-samples";
-import { EN_STORIES, EN_STORY_TEXTS } from "../data/en-stories";
+import { EN_STORIES, EN_STORY_TEXTS, EN_TOPICS } from "../data/en-stories";
 import { EN_ELEMENTARY_TEXTS, EN_ELEMENTARY_TOPICS } from "../data/en-level-elementary";
 import { EN_INTERMEDIATE_TEXTS, EN_INTERMEDIATE_TOPICS } from "../data/en-level-intermediate";
 import { EN_ADVANCED_TEXTS, EN_ADVANCED_TOPICS } from "../data/en-level-advanced";
+import { EN_NATIVE_TEXTS, EN_NATIVE_TOPICS } from "../data/en-level-native";
 import { isTopic } from "../data/topics";
 import type { LibraryText } from "../types";
 import { getGloss } from "./glossary";
@@ -34,8 +35,8 @@ describe("English stories", () => {
     for (let level = 2; level <= 10; level++) expect(avg(level)).toBeGreaterThan(avg(level - 1));
   });
 
-  it("has a Chinese gloss for every word a reader can tap, in every English story (starter + Elementary + Intermediate + Advanced)", () => {
-    expect(EN_SAMPLES.length).toBe(EN_STORY_TEXTS.length + EN_ELEMENTARY_TEXTS.length + EN_INTERMEDIATE_TEXTS.length + EN_ADVANCED_TEXTS.length);
+  it("has a Chinese gloss for every word a reader can tap, in every English story (starter + Elementary + Intermediate + Advanced + Native)", () => {
+    expect(EN_SAMPLES.length).toBe(EN_STORY_TEXTS.length + EN_ELEMENTARY_TEXTS.length + EN_INTERMEDIATE_TEXTS.length + EN_ADVANCED_TEXTS.length + EN_NATIVE_TEXTS.length);
     for (const t of EN_SAMPLES) {
       for (const tok of [...words(t.title), ...words(t.body)]) {
         expect(EN_GLOSSES[tok.key!], `${t.id}: ${tok.text}`).toBeTruthy();
@@ -46,8 +47,8 @@ describe("English stories", () => {
   });
 
   it("keeps every English section in order without duplicating ids or timestamps", () => {
-    expect(EN_SAMPLES).toEqual([...EN_STORY_TEXTS, ...EN_ELEMENTARY_TEXTS, ...EN_INTERMEDIATE_TEXTS, ...EN_ADVANCED_TEXTS]);
-    expect(EN_SAMPLES).toHaveLength(80);
+    expect(EN_SAMPLES).toEqual([...EN_STORY_TEXTS, ...EN_ELEMENTARY_TEXTS, ...EN_INTERMEDIATE_TEXTS, ...EN_ADVANCED_TEXTS, ...EN_NATIVE_TEXTS]);
+    expect(EN_SAMPLES).toHaveLength(95);
     expect(new Set(EN_SAMPLES.map((t) => t.id)).size).toBe(EN_SAMPLES.length);
     expect(new Set(EN_SAMPLES.map((t) => t.createdAt)).size).toBe(EN_SAMPLES.length);
   });
@@ -193,6 +194,62 @@ describe("English stories", () => {
       for (const topic of topics) {
         expect(matchesFilters(entry, { ...NO_FILTERS, topic })).toBe(true);
       }
+    }
+  });
+
+  it("adds eight L9 and seven L10 readings without duplicate library rows", () => {
+    expect(EN_NATIVE_TEXTS).toHaveLength(15);
+    expect(EN_NATIVE_TEXTS.filter((t) => t.level === 9)).toHaveLength(8);
+    expect(EN_NATIVE_TEXTS.filter((t) => t.level === 10)).toHaveLength(7);
+    for (const t of [...EN_STORY_TEXTS, ...EN_NATIVE_TEXTS]) {
+      expect(EN_SAMPLES.filter((sample) => sample.id === t.id)).toEqual([t]);
+    }
+    expect(new Set(EN_SAMPLES.map((t) => t.id)).size).toBe(EN_SAMPLES.length);
+    expect(new Set(EN_SAMPLES.map((t) => t.createdAt)).size).toBe(EN_SAMPLES.length);
+  });
+
+  it("gives every Native reading complete metadata and 800–1500 readable words", () => {
+    for (const [index, t] of EN_NATIVE_TEXTS.entries()) {
+      expect(t.id).toMatch(/^en-l(?:9|10)-[a-z0-9-]+$/);
+      expect(t.lang).toBe("en");
+      expect(Number.isInteger(t.level)).toBe(true);
+      expect([9, 10]).toContain(t.level);
+      expect(t.title.trim()).not.toBe("");
+      expect(t.blurb.trim()).not.toBe("");
+      expect(t.blurb.length).toBeLessThanOrEqual(90);
+      expect(t.body).toMatch(/\n\n/);
+      expect(words(t.body).length, t.id).toBeGreaterThanOrEqual(800);
+      expect(words(t.body).length, t.id).toBeLessThanOrEqual(1500);
+      expect(t.kind).toBe("sample");
+      expect(t.category).toBe("graded");
+      expect(t.source).toBe("Original (Duki) · AI-drafted");
+      expect(t.featured).toBe(false);
+      expect(t.createdAt).toBe(280_000 + index);
+      expect(t.readAt).toBeNull();
+      expect(t.bookmark).toBeNull();
+    }
+  });
+
+  it("resolves Native topics without mutating seed topics or leaking to Mandarin", () => {
+    expect(Object.keys(EN_NATIVE_TOPICS).sort()).toEqual(EN_NATIVE_TEXTS.map((t) => t.id).sort());
+    for (const t of EN_NATIVE_TEXTS) {
+      expect(EN_TOPICS[t.id]).toBeUndefined();
+      const topics = EN_NATIVE_TOPICS[t.id];
+      expect(topics.length).toBeGreaterThan(0);
+      expect(topics.length).toBeLessThanOrEqual(3);
+      expect(new Set(topics).size).toBe(topics.length);
+      expect(topics.every(isTopic)).toBe(true);
+      const entry = textEntry(t, undefined);
+      expect(entry.info.topics).toEqual(topics);
+      expect(entry.info.badge).toBe(`L${t.level}`);
+      expect(entry.info.words).toBe(words(t.body).length);
+      expect(matchesFilters(entry, { ...NO_FILTERS, band: "native" })).toBe(true);
+      expect(matchesFilters(entry, { ...NO_FILTERS, band: "advanced" })).toBe(false);
+      for (const topic of topics) {
+        expect(matchesFilters(entry, { ...NO_FILTERS, topic })).toBe(true);
+      }
+      expect(matchesFilters(entry, { ...NO_FILTERS, topic: "classics" })).toBe(false);
+      expect(describeText({ ...t, lang: "zh" }).topics).toEqual([]);
     }
   });
 
