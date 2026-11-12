@@ -243,7 +243,7 @@ export function Home({
     const wiki = entries.filter((e) => e.type === "text" && (e.text.kind === "wiki" || e.text.category === "wiki"));
     if (wiki.length) out.push({ id: "wiki", title: "Wikipedia · native Chinese", entries: wiki });
     const classics = entries.filter((e) => isClassicEntry(e));
-    if (classics.length) out.push({ id: "classics", title: "Classics", hint: "Simplified, with the original traditional text", entries: classics });
+    if (classics.length) out.push({ id: "classics", title: "Classics", hint: lang === "en" ? "Public-domain stories retold, and original poems" : "Simplified, with the original traditional text", entries: classics });
     const yours = entries.filter((e) => e.type === "text" && e.text.kind === "paste");
     if (yours.length) out.push({ id: "yours", title: "Yours", entries: yours });
     return out;

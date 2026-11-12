@@ -8,6 +8,7 @@ import { TEXT_META } from "../data/text-meta";
 import { LIBRARY_TOPICS } from "../data/library/index";
 import { TEXT_TOPICS } from "../data/topics";
 import { EN_TOPICS } from "../data/en-stories";
+import { EN_CLASSICS_TOPICS } from "../data/en-classics";
 import { REMOTE_META } from "../data/remote-meta.generated";
 import type { Book } from "./books";
 import { scoreSource } from "./books";
@@ -76,7 +77,7 @@ function measured(level: number, levelMax: number | null, score: number, chars: 
 }
 
 function topicTags(text: LibraryText, topics: Record<string, string[]>): string[] {
-  const listed = topics[text.id] ?? LIBRARY_TOPICS[text.id] ?? (text.lang === "en" ? EN_TOPICS[text.id] : undefined) ?? [];
+  const listed = topics[text.id] ?? LIBRARY_TOPICS[text.id] ?? (text.lang === "en" ? EN_TOPICS[text.id] ?? EN_CLASSICS_TOPICS[text.id] : undefined) ?? [];
   if (listed.length) return listed;
   if (text.kind === "wiki" || text.category === "wiki") return ["encyclopedia"];
   if (text.kind === "wikisource" || text.category === "wikisource") return ["classics"];
@@ -128,7 +129,7 @@ export function describeText(
 
 export function isClassicText(text: LibraryText): boolean {
   if (text.kind === "wikisource" || text.category === "wikisource") return true;
-  return (TEXT_TOPICS[text.id] ?? LIBRARY_TOPICS[text.id] ?? []).includes("classics");
+  return topicTags(text, TEXT_TOPICS).includes("classics");
 }
 
 export function describeBook(book: Book, meta = TEXT_META, topics = TEXT_TOPICS): EntryInfo {
