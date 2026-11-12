@@ -93,6 +93,27 @@ Tom looks at her bag. She looks at his.
 
 She does. They change bags.`,
   },
+  {
+    ...original,
+    id: "en-l1-the-blue-sock", level: 1, title: "The Blue Sock",
+    blurb: "One blue sock is missing. May hears it before she sees it.",
+    createdAt: 240_004,
+    body: `May has one blue sock on her foot. Where is the other one?
+
+She looks under the bed. She looks in her shoes. No sock.
+
+"Mom, do you have my blue sock?"
+
+"No. Look in your room."
+
+May goes back to her room. She hears a little laugh. It comes from behind the door.
+
+Her baby brother is there. He has a blue sock on his hand.
+
+"Hello!" he says. He opens and closes his hand. The sock has a mouth now.
+
+May laughs too. "Hello, Sock. Can you come and sit on my foot?"`,
+  },
 ];
 
 export const EN_BEGINNER_TOPICS: Record<string, string[]> = {
@@ -100,4 +121,5 @@ export const EN_BEGINNER_TOPICS: Record<string, string[]> = {
   "en-l1-the-wet-chair": ["daily-life", "nature", "humor"],
   "en-l1-a-seat-for-two": ["school", "feelings", "food"],
   "en-l1-the-small-bag": ["shopping", "family"],
+  "en-l1-the-blue-sock": ["daily-life", "family", "humor"],
 };
