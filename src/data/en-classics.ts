@@ -78,6 +78,29 @@ The lion steps out of the net.
 
 The lion looks down at his little friend. This time he does not laugh.`,
   },
+  {
+    id: "en-classic-aesop-wind-sun", level: 2,
+    title: "The North Wind and the Sun",
+    blurb: "Aesop · two rivals try to make a man take off his coat. Simply retold.",
+    author: "Aesop", source: "Public domain (Aesop), retold for Duki · AI-drafted",
+    sourceUrl: "https://www.gutenberg.org/ebooks/19994",
+    topics: ["classics", "folk-tales", "weather"],
+    body: `The North Wind and the Sun look down at a road. A man is walking along it. He has a warm coat.
+
+"I am stronger than you," says the Wind.
+
+"Can you make that man take off his coat?" asks the Sun. "Let us try. You can go first."
+
+The Wind blows hard. The man feels cold. He holds his coat close to his body.
+
+The Wind blows harder. The man holds his coat even closer. At last the Wind stops. The coat is still on the man.
+
+Now the Sun comes out. The road grows warm. The man opens his coat and keeps walking.
+
+The Sun shines on him. Soon he is very hot. He takes off his coat and sits under a tree.
+
+The Wind looks at the coat beside the man. It is off at last, but the Wind did not blow it off.`,
+  },
 ];
 
 export const EN_CLASSICS_TEXTS: LibraryText[] = READINGS.map(({ topics: _topics, ...reading }, index) => ({
