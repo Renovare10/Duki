@@ -309,6 +309,38 @@ The child's father tried to explain away the remark, but nearby people had heard
 
 The emperor heard them. He suspected they were right, yet he could not bring himself to stop the procession. He straightened his back and walked on with greater dignity than ever. Behind him, the servants continued to carry the train.`,
   },
+  {
+    id: "en-classic-grimm-six-swans", level: 6,
+    title: "The Six Swans",
+    blurb: "Brothers Grimm · six shirts and six years of silence. An abridged retelling; includes threatened execution.",
+    author: "Jacob and Wilhelm Grimm",
+    source: "Public domain (Brothers Grimm; Margaret Hunt translation), retold for Duki · AI-drafted",
+    sourceUrl: "https://www.gutenberg.org/ebooks/5314",
+    topics: ["classics", "folk-tales", "family"],
+    body: `A king had six sons and a daughter. After he married again, he feared that his new wife might hurt the children, so he hid them in a castle deep in the forest. To find it, he followed a magic ball of thread that unwound before him.
+
+The queen discovered his secret. She stole the ball and used it to reach the castle while the king was away. The six boys ran out, expecting their father. She threw enchanted shirts over them, and they changed into swans. Their sister, who had remained inside, escaped the spell.
+
+That night the girl left the castle to search for her brothers. After a long journey, she found a hut with six beds. At sunset six swans flew through its window. Their feathers fell away, and for a quarter of an hour they became her brothers again.
+
+They told her how to break the spell. For six years she must neither speak nor laugh. During that time she must make six shirts from a plant called starwort. One word would undo all her work.
+
+The girl gathered the plants and began to sew. She worked alone in the forest until hunters discovered her sitting in a tree. They took her to the king who ruled that country, a different king from her father. He questioned her, but she could not answer.
+
+The king fell in love with her and made her his queen. She lived in his palace, still sewing, still silent.
+
+His mother hated the marriage. When the young queen had a baby, the old woman secretly took it away and accused her of killing it. The king refused to believe the accusation. But the same thing happened after the births of two more children, and the queen would not say a word in her defense.
+
+At last she was condemned to be burned. The day of the execution was also the final day of the six years. Five shirts were finished. The sixth still lacked its left sleeve.
+
+She carried the shirts with her to the place where the fire had been prepared. Before it could be lit, six swans appeared overhead. They flew down, and she threw a shirt over each one.
+
+Her brothers stood before her again. Only the youngest was not completely restored: where his left arm should have been, he still had a swan's wing.
+
+Now the six years were over. The queen could finally speak. She told her husband about the spell, her work, and his mother's crimes. Her children had not been killed; the old woman had hidden them. They were found and brought back to her.
+
+The king's mother was punished, and the family lived in peace. The sister had recovered her voice and her children. Her youngest brother kept the wing left by the unfinished shirt.`,
+  },
 ];
 
 export const EN_CLASSICS_TEXTS: LibraryText[] = READINGS.map(({ topics: _topics, ...reading }, index) => ({
