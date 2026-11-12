@@ -704,4 +704,126 @@ At the centre meeting, we eventually agreed to recommend an earlier closing time
 
 The proposal was postponed while staff spoke to those users. I cannot report a glorious resolution; I moved away before the final decision. What I remember is the embarrassment of reopening the document I had made so clear, then deleting the sentence that said the proposed hours reflected the needs of the community. We had consulted the community that could attend. I sent the revised document to the staff member and asked whether we could join her at the centre one evening before discussing it again.`,
   },
+  {
+    id: "en-l10-in-the-interests-of-clarity", lang: "en", level: 10,
+    title: "In the Interests of Clarity",
+    blurb: "A shared room acquires a booking policy, then a policy for interpreting the policy.",
+    kind: "sample", category: "graded", featured: false,
+    createdAt: 280_014, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+    body: `Monday, 9:14 a.m.
+From: Graham, Residents' Committee
+To: All residents
+Subject: A small clarification
+
+Several residents have asked whether the common room is available for general use. It is. The purpose of the booking calendar is to protect organised activities, not to discourage spontaneous enjoyment of the space. Where no booking is displayed, residents should feel free to make themselves comfortable. Please leave the room as you would wish to find it.
+
+Monday, 10:02 a.m.
+From: Ada, Flat 12
+To: Graham
+Subject: Re: A small clarification
+
+Thank you. I went downstairs yesterday with my newspaper and found the room empty, but there was a cardigan over one chair and a mug on the table. I didn't know whether this counted as an activity in progress. I came back upstairs. I would like to read downstairs sometimes because the light is better, but I don't want to interrupt anything.
+
+Monday, 11:38 a.m.
+From: Graham
+To: Ada
+
+An unattended cardigan does not constitute a booking. Nor does a mug, unless associated with a person who has briefly left the room during a booked activity. You were entirely entitled to sit down. I hope this reassures you.
+
+Monday, 12:16 p.m.
+From: Ada
+To: Graham
+
+It does, mostly. How briefly?
+
+Tuesday, 8:45 a.m.
+From: Graham
+To: All residents
+Subject: Common room: further guidance
+
+Following a useful exchange, the committee has agreed that personal belongings should not be used to reserve seating for more than fifteen minutes. Anyone leaving for longer should remove their things. This does not affect the rights of groups with bookings. There is no intention to create an atmosphere of enforcement. The committee would prefer residents to exercise common sense.
+
+Tuesday, 9:07 a.m.
+From: Jo, Flat 6
+To: Graham
+
+I think it was my cardigan. I was helping someone bring their shopping up. I didn't time it. Am I meant to take the tea too? It would have spilled on the stairs.
+
+Tuesday, 9:26 a.m.
+From: Graham
+To: Jo
+
+Of course not. The guidance is directed at the principle rather than any individual. Your assistance to a neighbour is appreciated. There will inevitably be exceptions to any reasonable rule.
+
+Tuesday, 9:41 a.m.
+From: Jo
+To: Graham
+
+Could we put that on the notice? The bit about helping people. Someone has already moved my cardigan to the lost property box. I live here. It isn't lost.
+
+Wednesday, 2:30 p.m.
+From: Graham
+To: All residents
+Subject: Updated notice
+
+Please disregard the earlier notice, which has been replaced. We have clarified that the fifteen-minute limit is advisory and should not be applied where a resident is assisting another resident, responding to an urgent call, or attending to an immediate personal need. We cannot list every circumstance, and I would ask residents not to submit hypothetical examples. The room remains open to everyone.
+
+Wednesday, 3:05 p.m.
+From: Ada
+To: Graham
+
+This isn't hypothetical. There are six people playing cards downstairs. The calendar says Reading Group, so I thought I could read there. They said they are the Reading Group but the book was disappointing. Do they still have the booking? They asked me to join the cards, which was kind, but I had my newspaper.
+
+Wednesday, 3:40 p.m.
+From: Graham
+To: Ada
+
+A group does not forfeit its booking by discussing matters beyond its stated remit. However, the common room is a shared facility, and bookings are not intended to confer exclusive possession unless privacy has been requested and approved. There would have been no objection to your reading quietly alongside them.
+
+Wednesday, 4:03 p.m.
+From: Ada
+To: Graham
+
+There was no quiet alongside them. I don't mean that as a complaint. They were having a very good time. I would just like to know when I can read.
+
+Thursday, 10:00 a.m.
+From: Graham
+To: All residents
+Subject: Trial quiet period
+
+In response to requests, the common room will observe a quiet period on Friday between two and four. Conversation should be kept to a minimum. This is a trial and will be reviewed. Please hold further questions until after the trial. Existing bookings take precedence. I have attached the current calendar so that everyone can see the position. Please note that I maintain it as a volunteer.
+
+Thursday, 10:19 a.m.
+From: Jo
+To: Graham
+
+There's a booking for Quiet Period from two to four. Who booked it? If it's a group, can other people come? Also, I can't see the calendar on my phone. I can see a grey rectangle and an offer to buy more storage. I don't want more storage. I want to know if my sister can bring her knitting.
+
+Thursday, 11:52 a.m.
+From: Graham
+To: Jo
+
+I entered Quiet Period for administrative purposes. It is not a group and requires no membership. Your sister may knit, provided the activity does not disturb others. I cannot advise on the storage message, which sounds like an issue with your device. I will print a copy of the calendar.
+
+Friday, 4:48 p.m.
+From: Ada
+To: Graham
+
+I tried the quiet period. The heating was off, so Jo and I went to the café. I didn't finish the paper, but she told me about the card game and I might go next week. The café is expensive, though. Could we have the heating on downstairs? I would have asked sooner, but your last email said not to submit further questions until after the trial.
+
+Friday, 5:12 p.m.
+From: Graham
+To: Building manager
+Subject: Heating
+
+Can someone look at the common room thermostat? I spent an hour downstairs putting up notices yesterday and it was freezing. I assumed somebody had turned it down for the exercise class, but apparently they have been meeting in coats. Please call me rather than replying to all. My inbox has become difficult to manage.
+
+Monday, 8:10 a.m.
+From: Jo
+To: All residents
+Subject: Tuesday
+
+The heating is fixed. Ada and I will be downstairs at two tomorrow. Bring whatever you are reading, or don't. I'll make tea. Graham, you left your scarf on the radiator. I've put it over a chair.`,
+  },
 ];
