@@ -3,6 +3,7 @@ import { EN_GLOSSES, EN_SAMPLES } from "../data/en-samples";
 import { EN_STORIES, EN_STORY_TEXTS } from "../data/en-stories";
 import { EN_ELEMENTARY_TEXTS, EN_ELEMENTARY_TOPICS } from "../data/en-level-elementary";
 import { EN_INTERMEDIATE_TEXTS, EN_INTERMEDIATE_TOPICS } from "../data/en-level-intermediate";
+import { EN_ADVANCED_TEXTS, EN_ADVANCED_TOPICS } from "../data/en-level-advanced";
 import { isTopic } from "../data/topics";
 import type { LibraryText } from "../types";
 import { getGloss } from "./glossary";
@@ -33,8 +34,8 @@ describe("English stories", () => {
     for (let level = 2; level <= 10; level++) expect(avg(level)).toBeGreaterThan(avg(level - 1));
   });
 
-  it("has a Chinese gloss for every word a reader can tap, in every English story (starter + Elementary + Intermediate)", () => {
-    expect(EN_SAMPLES.length).toBe(EN_STORY_TEXTS.length + EN_ELEMENTARY_TEXTS.length + EN_INTERMEDIATE_TEXTS.length);
+  it("has a Chinese gloss for every word a reader can tap, in every English story (starter + Elementary + Intermediate + Advanced)", () => {
+    expect(EN_SAMPLES.length).toBe(EN_STORY_TEXTS.length + EN_ELEMENTARY_TEXTS.length + EN_INTERMEDIATE_TEXTS.length + EN_ADVANCED_TEXTS.length);
     for (const t of EN_SAMPLES) {
       for (const tok of [...words(t.title), ...words(t.body)]) {
         expect(EN_GLOSSES[tok.key!], `${t.id}: ${tok.text}`).toBeTruthy();
@@ -45,8 +46,8 @@ describe("English stories", () => {
   });
 
   it("keeps every English section in order without duplicating ids or timestamps", () => {
-    expect(EN_SAMPLES).toEqual([...EN_STORY_TEXTS, ...EN_ELEMENTARY_TEXTS, ...EN_INTERMEDIATE_TEXTS]);
-    expect(EN_SAMPLES).toHaveLength(60);
+    expect(EN_SAMPLES).toEqual([...EN_STORY_TEXTS, ...EN_ELEMENTARY_TEXTS, ...EN_INTERMEDIATE_TEXTS, ...EN_ADVANCED_TEXTS]);
+    expect(EN_SAMPLES).toHaveLength(80);
     expect(new Set(EN_SAMPLES.map((t) => t.id)).size).toBe(EN_SAMPLES.length);
     expect(new Set(EN_SAMPLES.map((t) => t.createdAt)).size).toBe(EN_SAMPLES.length);
   });
@@ -141,6 +142,54 @@ describe("English stories", () => {
       expect(entry.info.words).toBe(words(t.body).length);
       expect(matchesFilters(entry, { ...NO_FILTERS, band: "intermediate" })).toBe(true);
       expect(matchesFilters(entry, { ...NO_FILTERS, band: "elementary" })).toBe(false);
+      for (const topic of topics) {
+        expect(matchesFilters(entry, { ...NO_FILTERS, topic })).toBe(true);
+      }
+    }
+  });
+
+  it("adds ten Advanced readings per level on top of the two seed stories", () => {
+    expect(EN_ADVANCED_TEXTS).toHaveLength(20);
+    for (const level of [7, 8]) {
+      expect(EN_ADVANCED_TEXTS.filter((t) => t.level === level)).toHaveLength(10);
+      expect(EN_SAMPLES.filter((t) => t.level === level)).toHaveLength(12);
+    }
+  });
+
+  it("gives every Advanced text complete metadata and 600–1000 readable words", () => {
+    for (const [index, t] of EN_ADVANCED_TEXTS.entries()) {
+      expect(t.id).toMatch(/^en-l[78]-[a-z0-9-]+$/);
+      expect(t.lang).toBe("en");
+      expect(Number.isInteger(t.level)).toBe(true);
+      expect([7, 8]).toContain(t.level);
+      expect(t.title.trim()).not.toBe("");
+      expect(t.blurb.trim()).not.toBe("");
+      expect(t.body).toMatch(/\n\n/);
+      expect(words(t.body).length, t.id).toBeGreaterThanOrEqual(600);
+      expect(words(t.body).length, t.id).toBeLessThanOrEqual(1000);
+      expect(t.kind).toBe("sample");
+      expect(t.category).toBe("graded");
+      expect(t.source).toBe("Original (Duki) · AI-drafted");
+      expect(t.featured).toBe(false);
+      expect(t.createdAt).toBe(270_000 + index);
+      expect(t.readAt).toBeNull();
+      expect(t.bookmark).toBeNull();
+    }
+  });
+
+  it("exposes each Advanced text's valid topics through the shared filters", () => {
+    expect(Object.keys(EN_ADVANCED_TOPICS).sort()).toEqual(EN_ADVANCED_TEXTS.map((t) => t.id).sort());
+    for (const t of EN_ADVANCED_TEXTS) {
+      const topics = EN_ADVANCED_TOPICS[t.id];
+      expect(topics.length).toBeGreaterThan(0);
+      expect(topics.length).toBeLessThanOrEqual(3);
+      expect(topics.every(isTopic)).toBe(true);
+      const entry = textEntry(t, undefined);
+      expect(entry.info.topics).toEqual(topics);
+      expect(entry.info.badge).toBe(`L${t.level}`);
+      expect(entry.info.words).toBe(words(t.body).length);
+      expect(matchesFilters(entry, { ...NO_FILTERS, band: "advanced" })).toBe(true);
+      expect(matchesFilters(entry, { ...NO_FILTERS, band: "native" })).toBe(false);
       for (const topic of topics) {
         expect(matchesFilters(entry, { ...NO_FILTERS, topic })).toBe(true);
       }
