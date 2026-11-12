@@ -391,6 +391,27 @@ This morning, I took the book to the library. I asked if I could keep it for ano
 
 Tonight, I can find out about that door. First, I am putting the new date on my phone.`,
   },
+  {
+    ...original,
+    id: "en-l2-snow-on-the-phone", level: 2, title: "Snow on the Phone",
+    blurb: "Ken's phone says snow. The view from his new room says something else.",
+    createdAt: 240_018,
+    body: `Ken moves to a new city for work. On his first morning, he looks at the weather on his phone. There is a picture of snow. The temperature is below zero.
+
+He takes his warmest coat out of a box. He puts on a hat too.
+
+Downstairs, he opens the front door. Warm air comes in. A man walks past in a T-shirt.
+
+Ken looks at his phone again. Above the picture of snow is the name of his old city.
+
+He goes back upstairs and changes his clothes. Then he calls his sister at home.
+
+"Is it snowing there?" he asks.
+
+"Yes. Can you see it on your phone?"
+
+"Yes," he says. "I got dressed for your weather this morning."`,
+  },
 ];
 
 export const EN_BEGINNER_TOPICS: Record<string, string[]> = {
@@ -412,4 +433,5 @@ export const EN_BEGINNER_TOPICS: Record<string, string[]> = {
   "en-l2-three-soft-tomatoes": ["shopping", "food", "daily-life"],
   "en-l2-the-last-ten-minutes": ["sports", "feelings"],
   "en-l2-the-library-bookmark": ["daily-life", "literature"],
+  "en-l2-snow-on-the-phone": ["weather", "daily-life", "humor"],
 };
