@@ -288,6 +288,29 @@ Outside, they can hear birds and cars, but there is no music. Jo puts her bowl d
 
 Sara does. Soon their noodles are cold, but they keep talking.`,
   },
+  {
+    ...original,
+    id: "en-l2-a-photo-for-grandpa", level: 2, title: "A Photo for Grandpa",
+    blurb: "A family photo is almost ready. The baby has other plans.",
+    createdAt: 240_013,
+    body: `Grandpa lives far away. Today is his birthday, so we want to send him a new family photo.
+
+Dad puts his phone on a shelf. We all stand in front of it. The phone will take the picture in ten seconds.
+
+Mom holds my baby sister. My brother stands beside me.
+
+"Look at the phone," Dad says.
+
+My sister looks at Dad instead. She takes his glasses off his face.
+
+We all laugh. The phone takes the photo.
+
+"Let's do it again," my brother says.
+
+We take another picture. This time, we stand still and smile.
+
+We send both photos to Grandpa. A message comes back: "Please send the first one on paper. I want that one on my wall."`,
+  },
 ];
 
 export const EN_BEGINNER_TOPICS: Record<string, string[]> = {
@@ -304,4 +327,5 @@ export const EN_BEGINNER_TOPICS: Record<string, string[]> = {
   "en-l2-the-shirt-with-a-name": ["school", "family", "feelings"],
   "en-l2-the-first-pay": ["work", "shopping", "daily-life"],
   "en-l2-the-quiet-table": ["food", "feelings", "daily-life"],
+  "en-l2-a-photo-for-grandpa": ["family", "daily-life", "humor"],
 };
