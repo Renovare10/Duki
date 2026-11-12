@@ -671,4 +671,37 @@ Ruth told her.
 
 Her mother said there was a hook above the sideboard, provided it wasn't too big. Then she asked Ruth to hold on because somebody on the television was about to reveal what they had paid for a bungalow. Ruth stayed on the line.`,
   },
+  {
+    id: "en-l10-the-price-of-an-empty-chair", lang: "en", level: 10,
+    title: "The Price of an Empty Chair",
+    blurb: "An opinion essay on unpaid participation and who can afford to be consulted.",
+    kind: "sample", category: "graded", featured: false,
+    createdAt: 280_013, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+    body: `At a meeting about changing the opening hours of a community centre, I once heard someone complain that the people who would be most affected had failed to attend. The complaint annoyed me mainly because I agreed with it. Invitations had been sent. Notices had been displayed. There were biscuits. The people present had given up their evenings, and the absentees would presumably complain about whatever they decided.
+
+I was there because I worked from home, had no one to collect from school, and could walk to the centre. I had given up an evening too, but mine had been comparatively cheap. The invitation asked everyone for the same thing. It did not follow that everyone was being asked to pay the same price.
+
+We know this when money is involved. A fee of twenty pounds excludes some people more efficiently than others. Time appears more democratic because everyone receives the same daily allowance. Yet an hour at six in the evening cannot be exchanged for an unused hour at eleven, and it cannot be borrowed from next week. People with authority over their schedules possess something more useful than time in the abstract. They can move it to the place where a decision is being made.
+
+The missing person may be working a shift. She may be waiting for a bus whose arrival will determine whether she gets home in time to relieve someone else. She may simply have spent the day doing work that leaves her incapable of sitting under fluorescent lights while strangers debate the word reasonable. Calling her disengaged converts a practical obstacle into a defect of character. It also improves the opinion the people in the room have of themselves.
+
+This is a convenient argument for me to make. I enjoy meetings more than I admit. I like an agenda, a disputed adjective, the minor triumph of suggesting wording that other people accept. Somebody has to draft the letter afterwards, and I like doing that too. My preferences are not shameful, but they are preferences. They do not qualify me to represent people who would rather endure a dental appointment than help compose a joint statement.
+
+There is a familiar proposed remedy: pay people to participate. Pay for their time, cover travel, arrange childcare. These are sensible measures. A consultation described as essential should have a budget beyond printing and refreshments. If the organiser can pay a facilitator to ask the questions, it ought at least to consider paying the people whose experience is required to answer them.
+
+Payment changes the situation, though, and we should be candid about how. A voucher may be welcome without replacing wages lost from a shift. A payment made six weeks later does not buy tonight's bus fare. Someone may have reasons for not wanting to complete the paperwork or disclose the information required to receive it. Meanwhile, a person paid to attend can feel pressure to supply the kind of contribution that makes the organiser think the money was well spent. Silence begins to look like a failure to deliver.
+
+None of these objections justifies expecting free labour. They suggest asking people how participation could fit into their lives before announcing the arrangement that will supposedly include them. It may mean a short conversation near the school gate, with consent and somewhere private to follow up. It may mean accepting a voice message rather than requiring a written submission. It may mean choosing between two imperfect times instead of assuming the organiser's working hours are a natural property of the subject.
+
+Remote attendance solves some problems and introduces others. A person can join without travelling, but may still be unable to speak freely in a shared room. A microphone that works at the kitchen table does not provide the confidence to interrupt six people seated together elsewhere. The chair has to notice whose unfinished sentence keeps disappearing beneath the conversation. A link in an invitation cannot do that work.
+
+Even excellent arrangements will leave some people absent. We should resist treating attendance as a referendum on how much a service matters. Someone may depend on the centre and never attend a consultation about it. Dependence can make spare time harder to find. Conversely, a person may attend every meeting because the building opposite their house annoys them. The intensity of a contribution is evidence of intensity, not automatically of the contributor's exposure to the consequences.
+
+The obligation therefore falls partly on those of us who do attend. We can distinguish what we know from what we imagine the absentees would say. We can ask for information about current users instead of promoting our impressions into a mandate. Most uncomfortably, we can accept that our willingness to do the administrative work does not entitle us to have our preferred outcome accepted in gratitude.
+
+At the centre meeting, we eventually agreed to recommend an earlier closing time. I helped write the recommendation. Before it went forward, a staff member pointed out that the last hour was used by people coming off a late shift, who rarely crossed paths with the committee. We had counted how few people came through the door. We hadn't asked whether those few had another hour available to them.
+
+The proposal was postponed while staff spoke to those users. I cannot report a glorious resolution; I moved away before the final decision. What I remember is the embarrassment of reopening the document I had made so clear, then deleting the sentence that said the proposed hours reflected the needs of the community. We had consulted the community that could attend. I sent the revised document to the staff member and asked whether we could join her at the centre one evening before discussing it again.`,
+  },
 ];
