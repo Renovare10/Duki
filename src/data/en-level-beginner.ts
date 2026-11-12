@@ -70,10 +70,34 @@ He opens his box. I have an apple. He has two small oranges.
 
 I do. We put the fruit in the middle of the table. Now we both have apples and oranges.`,
   },
+  {
+    ...original,
+    id: "en-l1-the-small-bag", level: 1, title: "The Small Bag",
+    blurb: "Tom buys a small bag, but his books will not fit.",
+    createdAt: 240_003,
+    body: `Tom needs a bag for his books. He goes to a shop.
+
+He sees a small green bag. It looks good. He buys it and takes it home.
+
+He puts one book in. He puts two books in. There is no room for his big book.
+
+"Oh," he says. "The bag is too small."
+
+His sister comes into the room. She has a big bag and one little book.
+
+"I like green," she says.
+
+Tom looks at her bag. She looks at his.
+
+"Do you want this one?" he asks.
+
+She does. They change bags.`,
+  },
 ];
 
 export const EN_BEGINNER_TOPICS: Record<string, string[]> = {
   "en-l1-dads-egg": ["food", "family"],
   "en-l1-the-wet-chair": ["daily-life", "nature", "humor"],
   "en-l1-a-seat-for-two": ["school", "feelings", "food"],
+  "en-l1-the-small-bag": ["shopping", "family"],
 };
