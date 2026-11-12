@@ -458,6 +458,39 @@ Two roads diverged in a wood, and I--
 I took the one less traveled by,
 And that has made all the difference.`,
   },
+  {
+    id: "en-classic-dickinson-chariot", level: 8,
+    title: "The Chariot",
+    blurb: "Emily Dickinson · a quiet carriage ride with Death. The five-stanza, edited 1890 text, not the later manuscript version.",
+    author: "Emily Dickinson",
+    source: "Public domain (Emily Dickinson), Poems, Series One (1890), edited by Mabel Loomis Todd and T. W. Higginson",
+    sourceUrl: "https://www.gutenberg.org/ebooks/2678",
+    topics: ["classics", "poetry", "literature"],
+    body: `Because I could not stop for Death,
+He kindly stopped for me;
+The carriage held but just ourselves
+And Immortality.
+
+We slowly drove, he knew no haste,
+And I had put away
+My labor, and my leisure too,
+For his civility.
+
+We passed the school where children played,
+Their lessons scarcely done;
+We passed the fields of gazing grain,
+We passed the setting sun.
+
+We paused before a house that seemed
+A swelling of the ground;
+The roof was scarcely visible,
+The cornice but a mound.
+
+Since then 't is centuries; but each
+Feels shorter than the day
+I first surmised the horses' heads
+Were toward eternity.`,
+  },
 ];
 
 export const EN_CLASSICS_TEXTS: LibraryText[] = READINGS.map(({ topics: _topics, ...reading }, index) => ({
