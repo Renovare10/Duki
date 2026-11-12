@@ -180,6 +180,35 @@ Now the hare ran as fast as he could. His feet barely touched the ground. But ju
 
 The fox announced the winner. The tortoise stopped to rest, and the hare stood beside him, too out of breath to say a word.`,
   },
+  {
+    id: "en-classic-aesop-farmer-sons", level: 4,
+    title: "The Farmer's Treasure",
+    blurb: "Aesop · three brothers dig for a fortune on their father's farm. Retold.",
+    author: "Aesop", source: "Public domain (Aesop), retold for Duki · AI-drafted",
+    sourceUrl: "https://www.gutenberg.org/ebooks/19994",
+    topics: ["classics", "folk-tales", "work"],
+    body: `An old farmer called his three sons to his bed. He was very ill, and he knew that he would not live much longer.
+
+"Keep the farm after I'm gone," he told them. "Don't sell it. There is a treasure hidden in the land."
+
+The brothers leaned closer.
+
+"Where?" asked the oldest. "Under the big tree? Near the house?"
+
+Their father would not name a place. "You'll have to search," he said. "Turn over the earth. Don't leave any part of the farm untouched."
+
+After their father died, the sons brought out their tools. They began near the house, where they thought he might have buried something. They dug down into the soil and broke the hard earth apart. They found roots and stones, but no treasure.
+
+They moved farther into the fields. Every morning they chose another place to dig. By evening their backs hurt and their hands were sore. Still they went on. None of them wanted to stop just before they found the gold.
+
+At last they had turned over all the land, some of it more than once. There was no box of coins anywhere.
+
+"We've done all this digging," said one brother. "We might as well plant something."
+
+So they planted the fields and cared for the young plants. That year the crops grew better than ever. At harvest time, the brothers had more to sell than their neighbors. After paying their costs, they counted the money they had left.
+
+Then they understood their father's words. The treasure had come from the land, though they had not dug up a single gold coin.`,
+  },
 ];
 
 export const EN_CLASSICS_TEXTS: LibraryText[] = READINGS.map(({ topics: _topics, ...reading }, index) => ({
