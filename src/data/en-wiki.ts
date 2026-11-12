@@ -480,6 +480,25 @@ Al-Khwarizmi also compiled astronomical tables and revised geographical informat
 
 Calling him an inventor of all algebra would erase that longer history. His particular contribution was to organize and explain methods in works that other scholars could study, translate, and extend. The surviving vocabulary records part of that transmission, while the books reveal the mathematical teaching behind the names.`,
   },
+  {
+    id: "en-wiki-scientific-method", level: 9, title: "The Scientific Method",
+    blurb: "Testing explanations is more demanding than following a classroom checklist.",
+    wikiTitle: "Scientific method", sourceUrl: "https://en.wikipedia.org/wiki/Scientific_method",
+    createdAt: 220_029, topics: ["encyclopedia", "science", "school"],
+    body: `A classroom diagram may show scientific inquiry as a sequence: observe, form a hypothesis, conduct an experiment, and reach a conclusion. This can introduce useful habits, but working scientists rarely follow a single sequence so neatly. They revisit assumptions, improve instruments, and investigate results they had not expected. Scientific method is better understood as a collection of practices for testing explanations against evidence than as an automatic recipe for discovery.
+
+A hypothesis proposes an explanation that can be investigated. Researchers consider what they would expect to observe if it were correct, then compare those predictions with measurements. A meaningful test must leave open the possibility of an unfavorable result. An explanation that can accommodate every imaginable observation without changing gives investigators little basis for judging it against alternatives.
+
+Consider a hypothetical claim that a particular fertilizer improves plant growth. Comparing one treated plant with one untreated plant would provide weak evidence: their growth might differ for unrelated reasons. A better investigation would use more plants and account for differences in light, water, and other relevant conditions. The aim is to distinguish an effect of the treatment from variation that would have occurred anyway.
+
+Even a carefully designed experiment requires interpretation. Measurements have uncertainty, equipment can introduce errors, and an apparent pattern can arise by chance. Researchers must examine how data were collected and whether their analysis supports the conclusion. A result consistent with a hypothesis may also fit a competing explanation, so agreement is not always decisive proof.
+
+Not every scientific question permits a controlled experiment. Astronomers cannot rearrange distant stars to test an idea. They can nevertheless compare predictions with observations and ask whether an explanation accounts for evidence that alternatives cannot. Methods differ with the subject and the evidence available.
+
+Scientific inquiry also depends on communication. Describing procedures and sharing results allows other researchers to examine an argument and, where possible, repeat the work. Peer review provides scrutiny, but publication does not guarantee correctness. Later investigations may expose a flaw, narrow a claim, or strengthen confidence by obtaining similar results independently.
+
+A scientific theory is not simply an unsupported guess. The term can refer to a developed explanation supported by extensive evidence, although theories remain open to revision. That openness does not make all explanations equally credible. Confidence depends on the quality and range of the evidence and on how well an explanation withstands attempts to find where it fails.`,
+  },
 ];
 
 export const EN_WIKI_TOPICS: Record<string, string[]> = Object.fromEntries(
