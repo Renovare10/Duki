@@ -305,9 +305,9 @@ A child looked up from the crowd.
 
 "But he hasn't got anything on!"
 
-The child's father tried to explain away the remark, but nearby people had heard it. They whispered the words to one another. Soon the whisper had spread through the whole crowd, and people were saying aloud that the emperor wore nothing at all.
+The child's father called on the crowd to listen to that innocent voice. Nearby people whispered the child's words to one another. Soon the whisper had spread through the whole crowd, and people were saying aloud that the emperor wore nothing at all.
 
-The emperor heard them. He suspected they were right, yet he could not bring himself to stop the procession. He straightened his back and walked on with greater dignity than ever. Behind him, the servants continued to carry the train.`,
+The emperor heard them. He knew they were right, yet he could not bring himself to stop the procession. He straightened his back and walked on with greater dignity than ever. Behind him, the servants continued to carry the train.`,
   },
   {
     id: "en-classic-grimm-six-swans", level: 6,
