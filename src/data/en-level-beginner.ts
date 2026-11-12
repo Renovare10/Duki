@@ -200,6 +200,31 @@ I look inside. There is water at the bottom. The snow is very small now.
 
 We put on our coats. There is more snow outside. This time, we leave it there.`,
   },
+  {
+    ...original,
+    id: "en-l1-a-light-next-door", level: 1, title: "A Light Next Door",
+    blurb: "Dad works at night. A small light helps him find our door.",
+    createdAt: 240_009,
+    body: `Dad works at night. He comes home when I am in bed.
+
+Our front light does not work. Dad cannot see the steps well. Mom puts a small light in the window.
+
+At bedtime, I look out. The house next door has a light in the window too.
+
+"Is that for Dad?" I ask.
+
+"No," Mom says. "That is their kitchen light."
+
+In the morning, Dad is home.
+
+"Did you see our light?" I ask.
+
+"Yes. I could see the steps."
+
+"And the light next door?"
+
+"Our neighbor was making tea. He made me a cup too."`,
+  },
 ];
 
 export const EN_BEGINNER_TOPICS: Record<string, string[]> = {
@@ -212,4 +237,5 @@ export const EN_BEGINNER_TOPICS: Record<string, string[]> = {
   "en-l1-the-paper-fish": ["arts", "family", "nature"],
   "en-l1-not-that-ball": ["sports", "nature", "humor"],
   "en-l1-the-open-box": ["weather", "science", "family"],
+  "en-l1-a-light-next-door": ["family", "daily-life", "work"],
 };
