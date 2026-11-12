@@ -376,6 +376,21 @@ Their hour is over. Mia picks up the ball.
 
 "Next time," she says, "let's try for ten."`,
   },
+  {
+    ...original,
+    id: "en-l2-the-library-bookmark", level: 2, title: "The Library Bookmark",
+    blurb: "A date on a piece of paper interrupts a very good story.",
+    createdAt: 240_017,
+    body: `Last night, I was reading a library book in bed. A girl in the story was opening a strange door. I wanted to know what was behind it.
+
+Then my bookmark fell out. It was the little piece of paper from the library. I picked it up and read the date. I had to take the book back today.
+
+I still had half the book to read. I looked at the clock. It was almost midnight.
+
+This morning, I took the book to the library. I asked if I could keep it for another week. No one else was waiting for it, so the woman at the desk said yes.
+
+Tonight, I can find out about that door. First, I am putting the new date on my phone.`,
+  },
 ];
 
 export const EN_BEGINNER_TOPICS: Record<string, string[]> = {
@@ -396,4 +411,5 @@ export const EN_BEGINNER_TOPICS: Record<string, string[]> = {
   "en-l2-shoes-for-the-play": ["school", "arts", "feelings"],
   "en-l2-three-soft-tomatoes": ["shopping", "food", "daily-life"],
   "en-l2-the-last-ten-minutes": ["sports", "feelings"],
+  "en-l2-the-library-bookmark": ["daily-life", "literature"],
 };
