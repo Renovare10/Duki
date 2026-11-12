@@ -592,4 +592,83 @@ A useful translation can acknowledge its decisions without presenting an invento
 
 I kept both versions of the letter. The one I sent was plain, with a short explanation of the phrase we had discussed. Months later, my relative asked about the parcel. Neither of us remembered what it had contained. We had spent an afternoon weighing the emotional temperature of the visit and forgotten the question the writer had actually wanted answered.`,
   },
+  {
+    id: "en-l10-the-viewing", lang: "en", level: 10,
+    title: "The Viewing",
+    blurb: "A buyer discovers meanings in a photographer's portrait of her mother.",
+    kind: "sample", category: "graded", featured: false,
+    createdAt: 280_012, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+    body: `The buyer wanted to know whether the woman at the window had known she was being photographed. Ruth looked at the print, although she could have described every visible object without turning round: the washing-up liquid, the small radio, the woman's right hand resting on the sink. Beyond the glass, a factory chimney divided the sky into two unequal portions. The factory had since become flats. This was mentioned in the catalogue, as though the photograph had predicted it.
+
+"She knew I was there," Ruth said.
+
+"But she wasn't posing."
+
+"No."
+
+The buyer nodded with satisfaction. He had a way of standing back from the picture that made the rest of the room appear to belong to it. They were in his flat, where Ruth's dealer had arranged a private viewing. A woman had admitted them, taken their coats, and disappeared into a room from which the sound of a vacuum cleaner now rose. Ruth wondered whether they should wait until she had finished. The buyer showed no sign of hearing it.
+
+"My wife finds it rather melancholy," he said. "I don't. There's dignity in it."
+
+Ruth's dealer, Celia, glanced towards her. It was the smallest glance, almost a courtesy. Ruth had been known to obstruct a sale by answering a question too completely.
+
+The woman in the photograph was her mother. The catalogue called the series Domestic Interiors, which was accurate, and dated it to the year Ruth had returned to live at home after her marriage ended. Also accurate, though not included. She had come back with a camera, a car whose insurance she could barely afford, and an ability to make her mother feel that being observed was a contribution to a promising career.
+
+Her mother had agreed to the photographs. She had enjoyed some of them. For one she wore earrings she ordinarily saved for weddings; in another, she held a cup of tea and complained until Ruth let her drink it. But she hadn't liked this one. When Ruth showed her the contact sheet, she tapped the frame and said, "I look as though I'm waiting for someone who's never coming."
+
+"You were listening to the weather."
+
+"I know what I was doing. I said what I look like."
+
+Ruth had put the photograph into her first exhibition. Her mother came with a neighbour, drank a glass of wine, and told everyone she was very proud. Later, in the car, she asked whether anybody had bought the one with the earrings. Nobody had. Ruth remembered replying too briskly that people didn't necessarily want the flattering ones.
+
+Now the buyer asked how many prints there were. Celia explained the edition. He wanted to know about the paper, then whether the image could be made a little larger. Celia said that the dimensions were part of the work. Ruth was grateful to her for this, although she had chosen the dimensions years ago because they matched the largest tray in a borrowed darkroom.
+
+The vacuum cleaner stopped. The woman who had admitted them came down the hall carrying it by the handle. At the doorway she shifted her grip, pressing one palm against her lower back. It was her mother's pose in the photograph: one hand braced, shoulders slightly twisted. Ruth had always read it as a turn towards the light. Now she could see the weight being taken off one hip.
+
+The buyer turned. "All finished?"
+
+"Except this room."
+
+"We won't be long."
+
+She waited a moment, then wheeled the cleaner away. He returned to the picture. Ruth looked towards the open door, irritated by the convenience with which the woman had appeared to furnish her with a revelation. She knew nothing about her. She had made a gesture, not submitted a statement on the photograph.
+
+"Your mother, isn't it?" the buyer asked.
+
+Celia had told him. Ruth said yes.
+
+"You must be pleased to have captured her like this."
+
+Her mother was still alive, living in a ground-floor flat near Ruth's sister. Captured was a word she would have enjoyed objecting to. Ruth almost said this. Instead she explained that her mother had been tired after an early shift and that the radio was on.
+
+"Yes," he said. "That's what I mean. The ordinary life behind the image."
+
+He was trying to say something appreciative. Ruth could hear herself preparing to punish him for not knowing the particular woman she had made available as a picture. It was a strange complaint to bring to a sales appointment. She asked whether he would like to see another print from the series. Celia opened the portfolio on the dining table.
+
+They looked at the earrings photograph. Her mother faced the camera with an expression of unembarrassed readiness. One earring had caught the flash. The buyer considered it politely, then returned to the window.
+
+"The first one has more mystery."
+
+"It does," Ruth said.
+
+He bought it. Celia handled the paperwork while Ruth packed the other prints between their protective sheets. Nothing had been prevented or exposed. The price would pay the outstanding bill for her studio heating and leave enough to replace a damaged lens. She felt relief, then annoyance at having expected the afternoon to produce a feeling less dependent on the invoice.
+
+In the hall, the woman brought their coats. Ruth thanked her and stepped aside to let her through with the vacuum cleaner. Celia was already calling the lift.
+
+On the way home Ruth phoned her mother, who answered over the television. She had a programme about houses on and wanted to know whether the call was urgent.
+
+"I've sold another photograph."
+
+"Good. Which one?"
+
+Ruth told her.
+
+"That miserable one. Well, there's no accounting for people."
+
+"I was going to bring you the one with the earrings. If you've got room."
+
+Her mother said there was a hook above the sideboard, provided it wasn't too big. Then she asked Ruth to hold on because somebody on the television was about to reveal what they had paid for a bungalow. Ruth stayed on the line.`,
+  },
 ];
