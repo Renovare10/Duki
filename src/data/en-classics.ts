@@ -122,6 +122,35 @@ The crow went on picking up stones. He had to make many trips, but each stone br
 
 At last he bent his head over the opening once more. This time his beak touched the water. He drank until he was no longer thirsty, then flew away.`,
   },
+  {
+    id: "en-classic-aesop-two-mice", level: 3,
+    title: "The Town Mouse and the Country Mouse",
+    blurb: "Aesop · a fine dinner comes with some unwelcome guests. A simple retelling.",
+    author: "Aesop", source: "Public domain (Aesop), retold for Duki · AI-drafted",
+    sourceUrl: "https://www.gutenberg.org/ebooks/19994",
+    topics: ["classics", "folk-tales", "food"],
+    body: `A town mouse went to visit her cousin in the country. The country mouse brought out the best food she had: some seeds, roots, and nuts. They ate together beside a quiet field.
+
+"Thank you," said the town mouse. "But you should come to my house. We have much better things to eat."
+
+That night the country mouse dreamed of sweet cakes. In the morning she went to town with her cousin.
+
+They entered a large house through a small hole. The people had finished dinner, but food was still on the table. There was cheese, fruit, and a cake with a soft yellow middle.
+
+The country mouse climbed up and took a tiny bite. She had never tasted anything so good.
+
+Then a cat cried outside the door. Both mice ran to hide. They waited in the dark until everything was quiet.
+
+"We can go back now," said the town mouse.
+
+They came out, but before they could eat, the door opened. People walked in to clear the table. A large dog followed them.
+
+The country mouse ran straight to the hole in the wall.
+
+"Are you leaving?" her cousin called.
+
+"Yes," she answered. "Your cake is very good. But at home I can finish my dinner."`,
+  },
 ];
 
 export const EN_CLASSICS_TEXTS: LibraryText[] = READINGS.map(({ topics: _topics, ...reading }, index) => ({
