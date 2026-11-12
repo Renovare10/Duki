@@ -55,7 +55,7 @@ try {
     assert.ok(await page.getByLabel(label, { exact: true }).count(), `English keeps the ${label} filter`);
   }
   const enTitles = await page.locator(".title-card-name").allTextContents();
-  assert.equal(new Set(enTitles.map((s) => s.trim()).filter(Boolean)).size, 20, "two stories per level (unique titles)");
+  assert.equal(new Set(enTitles.map((s) => s.trim()).filter(Boolean)).size, 80, "20 starter + 60 section stories (unique titles)");
   await page.screenshot({ path: `${shots}/english-story-list.png` });
 
   await page.reload();
@@ -63,8 +63,12 @@ try {
   assert.equal(await page.getByRole("button", { name: "English", exact: true }).getAttribute("aria-pressed"), "true");
 
   // Shared search + Level filter, then open a story, tap a word, mark it.
+  for (const [band, label] of [["intermediate", "Intermediate is L5–6"], ["advanced", "Advanced is L7–8"]]) {
+    await page.getByLabel("Level", { exact: true }).selectOption(band);
+    assert.equal(await page.locator(".title-card").count(), 24, `${label} (4 starter + 20 section stories)`);
+  }
   await page.getByLabel("Level", { exact: true }).selectOption("elementary");
-  assert.equal(await page.locator(".title-card").count(), 4, "Elementary is L3–4 (four stories)");
+  assert.equal(await page.locator(".title-card").count(), 24, "Elementary is L3–4 (4 starter + 20 section stories)");
   await page.getByLabel("Search the library").fill("Wrong Train");
   await page.locator(".title-card", { hasText: "The Wrong Train" }).waitFor();
   assert.equal(await page.locator(".title-card").count(), 1);
