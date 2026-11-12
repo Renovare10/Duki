@@ -34,6 +34,25 @@ The fox sits down. He looks at the grapes. Then he gets up to go.
 
 But he does not know that. He has not had one grape. He walks away with no food.`,
   },
+  {
+    id: "en-classic-aesop-dog-reflection", level: 1,
+    title: "The Dog and the Water",
+    blurb: "Aesop · a dog sees another dog. Or does he? A very simple retelling.",
+    author: "Aesop", source: "Public domain (Aesop), retold for Duki · AI-drafted",
+    sourceUrl: "https://www.gutenberg.org/ebooks/19994",
+    topics: ["classics", "folk-tales", "nature"],
+    body: `A dog has a bone. He takes it home.
+
+On the way, he looks down at the water. He sees a dog with a bone.
+
+"That dog has a big bone," he thinks. "I want it."
+
+He opens his mouth. His own bone falls into the water. He jumps in to get the other bone.
+
+But there is no other dog. There is no other bone. He sees only water.
+
+The dog gets out. He is wet. Now he has no bone at all.`,
+  },
 ];
 
 export const EN_CLASSICS_TEXTS: LibraryText[] = READINGS.map(({ topics: _topics, ...reading }, index) => ({
