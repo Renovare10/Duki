@@ -581,6 +581,29 @@ When in eternal lines to time thou grow’st,
     So long as men can breathe, or eyes can see,
     So long lives this, and this gives life to thee.`,
   },
+  {
+    id: "en-classic-shakespeare-sonnet-116", level: 10,
+    title: "Sonnet 116: The Marriage of True Minds",
+    blurb: "William Shakespeare · love, navigation, and the reach of Time. Original sonnet, 1609.",
+    author: "William Shakespeare",
+    source: "Public domain (William Shakespeare), original poem from Shakespeare's Sonnets, CXVI",
+    sourceUrl: "https://www.gutenberg.org/ebooks/1041",
+    topics: ["classics", "poetry", "feelings"],
+    body: `Let me not to the marriage of true minds
+Admit impediments. Love is not love
+Which alters when it alteration finds,
+Or bends with the remover to remove:
+O, no! it is an ever-fixed mark,
+That looks on tempests and is never shaken;
+It is the star to every wandering bark,
+Whose worth’s unknown, although his height be taken.
+Love’s not Time’s fool, though rosy lips and cheeks
+Within his bending sickle’s compass come;
+Love alters not with his brief hours and weeks,
+But bears it out even to the edge of doom.
+    If this be error and upon me prov’d,
+    I never writ, nor no man ever lov’d.`,
+  },
 ];
 
 export const EN_CLASSICS_TEXTS: LibraryText[] = READINGS.map(({ topics: _topics, ...reading }, index) => ({
