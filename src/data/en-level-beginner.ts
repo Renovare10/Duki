@@ -412,6 +412,25 @@ He goes back upstairs and changes his clothes. Then he calls his sister at home.
 
 "Yes," he says. "I got dressed for your weather this morning."`,
   },
+  {
+    ...original,
+    id: "en-l2-the-new-key", level: 2, title: "The New Key",
+    blurb: "Ruth has her own home now. She is not used to opening the door.",
+    createdAt: 240_019,
+    body: `For six months, Ruth has lived with her sister. Today, she gets the key to a small apartment of her own.
+
+She carries her first box up the stairs. At the door, she knocks. Then she laughs at herself. There is no one inside. The key is in her pocket.
+
+The apartment has a bed but no table yet. Ruth puts down her box and sits on the floor. The room is very quiet. At her sister's home, someone is always talking or watching TV.
+
+Her phone rings. It is her sister.
+
+"Can I come over tomorrow?"
+
+"Yes," Ruth says. "Bring a chair. I haven't got any."
+
+The next afternoon, there is a knock at the door. This time, Ruth is on the other side. She gets up to let her sister in.`,
+  },
 ];
 
 export const EN_BEGINNER_TOPICS: Record<string, string[]> = {
@@ -434,4 +453,5 @@ export const EN_BEGINNER_TOPICS: Record<string, string[]> = {
   "en-l2-the-last-ten-minutes": ["sports", "feelings"],
   "en-l2-the-library-bookmark": ["daily-life", "literature"],
   "en-l2-snow-on-the-phone": ["weather", "daily-life", "humor"],
+  "en-l2-the-new-key": ["daily-life", "family", "feelings"],
 };
