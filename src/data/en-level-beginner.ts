@@ -49,9 +49,31 @@ The cat closes its eyes.
 
 Amy puts the towel on the grass. She sits on it and opens her book. The cat can have the wet chair.`,
   },
+  {
+    ...original,
+    id: "en-l1-a-seat-for-two", level: 1, title: "A Seat for Two",
+    blurb: "There is a new boy at school. Where can he sit?",
+    createdAt: 240_002,
+    body: `It is time for lunch at school. I sit with my friends. We talk and eat.
+
+A new boy stands by our table. He has a blue lunch box.
+
+"Can I sit here?" he asks.
+
+My bag is on the chair next to me. I put it under my feet.
+
+"Yes," I say. "This seat is for you."
+
+He opens his box. I have an apple. He has two small oranges.
+
+"Do you like oranges?" he asks.
+
+I do. We put the fruit in the middle of the table. Now we both have apples and oranges.`,
+  },
 ];
 
 export const EN_BEGINNER_TOPICS: Record<string, string[]> = {
   "en-l1-dads-egg": ["food", "family"],
   "en-l1-the-wet-chair": ["daily-life", "nature", "humor"],
+  "en-l1-a-seat-for-two": ["school", "feelings", "food"],
 };
