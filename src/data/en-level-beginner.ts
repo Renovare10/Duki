@@ -162,6 +162,25 @@ I write, "For Grandma," on the back.
 
 Grandma puts my fish on her wall. "This one can stay," she says. "I do not need to feed it."`,
   },
+  {
+    ...original,
+    id: "en-l1-not-that-ball", level: 1, title: "Not That Ball",
+    blurb: "Two boys want to play. Their dog wants to play too.",
+    createdAt: 240_007,
+    body: `Two boys are in the park. They put a ball on the grass.
+
+Their dog runs to it. He takes it in his mouth.
+
+"Not that ball!" one boy says. "That is for our game."
+
+The dog runs away. The boys run after him. He stops by a tree.
+
+One boy has a little red ball in his bag. He shows it to the dog.
+
+The dog drops the big ball. Now he wants the red one.
+
+One boy throws the red ball. The other boy gets their ball back. At last, everyone can play.`,
+  },
 ];
 
 export const EN_BEGINNER_TOPICS: Record<string, string[]> = {
@@ -172,4 +191,5 @@ export const EN_BEGINNER_TOPICS: Record<string, string[]> = {
   "en-l1-the-blue-sock": ["daily-life", "family", "humor"],
   "en-l1-five-minutes": ["family", "work", "humor"],
   "en-l1-the-paper-fish": ["arts", "family", "nature"],
+  "en-l1-not-that-ball": ["sports", "nature", "humor"],
 };
