@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { EN_GLOSSES, EN_SAMPLES } from "../data/en-samples";
 import { EN_STORIES, EN_STORY_TEXTS } from "../data/en-stories";
 import { EN_ELEMENTARY_TEXTS, EN_ELEMENTARY_TOPICS } from "../data/en-level-elementary";
+import { EN_INTERMEDIATE_TEXTS, EN_INTERMEDIATE_TOPICS } from "../data/en-level-intermediate";
 import { isTopic } from "../data/topics";
 import type { LibraryText } from "../types";
 import { getGloss } from "./glossary";
@@ -32,8 +33,8 @@ describe("English stories", () => {
     for (let level = 2; level <= 10; level++) expect(avg(level)).toBeGreaterThan(avg(level - 1));
   });
 
-  it("has a Chinese gloss for every word a reader can tap, in every English story (starter + Elementary)", () => {
-    expect(EN_SAMPLES.length).toBe(EN_STORY_TEXTS.length + EN_ELEMENTARY_TEXTS.length);
+  it("has a Chinese gloss for every word a reader can tap, in every English story (starter + Elementary + Intermediate)", () => {
+    expect(EN_SAMPLES.length).toBe(EN_STORY_TEXTS.length + EN_ELEMENTARY_TEXTS.length + EN_INTERMEDIATE_TEXTS.length);
     for (const t of EN_SAMPLES) {
       for (const tok of [...words(t.title), ...words(t.body)]) {
         expect(EN_GLOSSES[tok.key!], `${t.id}: ${tok.text}`).toBeTruthy();
@@ -43,18 +44,22 @@ describe("English stories", () => {
     expect(getGloss("cat", "en").pinyin).toBe("");
   });
 
-  it("adds ten Elementary stories per level without duplicating seed rows or timestamps", () => {
+  it("keeps every English section in order without duplicating ids or timestamps", () => {
+    expect(EN_SAMPLES).toEqual([...EN_STORY_TEXTS, ...EN_ELEMENTARY_TEXTS, ...EN_INTERMEDIATE_TEXTS]);
+    expect(EN_SAMPLES).toHaveLength(60);
+    expect(new Set(EN_SAMPLES.map((t) => t.id)).size).toBe(EN_SAMPLES.length);
+    expect(new Set(EN_SAMPLES.map((t) => t.createdAt)).size).toBe(EN_SAMPLES.length);
+  });
+
+  it("adds ten Elementary stories per level on top of the two seed stories", () => {
     expect(EN_ELEMENTARY_TEXTS).toHaveLength(20);
     for (const level of [3, 4]) {
       expect(EN_ELEMENTARY_TEXTS.filter((t) => t.level === level)).toHaveLength(10);
       expect(EN_SAMPLES.filter((t) => t.level === level)).toHaveLength(12);
     }
-    expect(EN_SAMPLES).toEqual([...EN_STORY_TEXTS, ...EN_ELEMENTARY_TEXTS]);
-    expect(new Set(EN_SAMPLES.map((t) => t.id)).size).toBe(EN_SAMPLES.length);
-    expect(new Set(EN_SAMPLES.map((t) => t.createdAt)).size).toBe(EN_SAMPLES.length);
   });
 
-  it("gives every new story complete metadata and 200–400 readable words", () => {
+  it("gives every Elementary text complete metadata and 200–400 readable words", () => {
     for (const [index, t] of EN_ELEMENTARY_TEXTS.entries()) {
       expect(t.id).toMatch(/^en-l[34]-[a-z0-9-]+$/);
       expect(t.lang).toBe("en");
@@ -75,7 +80,7 @@ describe("English stories", () => {
     }
   });
 
-  it("exposes each new story's valid topics through the shared filters", () => {
+  it("exposes each Elementary text's valid topics through the shared filters", () => {
     expect(Object.keys(EN_ELEMENTARY_TOPICS).sort()).toEqual(EN_ELEMENTARY_TEXTS.map((t) => t.id).sort());
     for (const t of EN_ELEMENTARY_TEXTS) {
       const topics = EN_ELEMENTARY_TOPICS[t.id];
@@ -85,8 +90,57 @@ describe("English stories", () => {
       const entry = textEntry(t, undefined);
       expect(entry.info.topics).toEqual(topics);
       expect(entry.info.badge).toBe(`L${t.level}`);
+      expect(entry.info.words).toBe(words(t.body).length);
       expect(matchesFilters(entry, { ...NO_FILTERS, band: "elementary" })).toBe(true);
       expect(matchesFilters(entry, { ...NO_FILTERS, band: "beginner" })).toBe(false);
+      for (const topic of topics) {
+        expect(matchesFilters(entry, { ...NO_FILTERS, topic })).toBe(true);
+      }
+    }
+  });
+
+  it("adds ten Intermediate texts per level on top of the two seed stories", () => {
+    expect(EN_INTERMEDIATE_TEXTS).toHaveLength(20);
+    for (const level of [5, 6]) {
+      expect(EN_INTERMEDIATE_TEXTS.filter((t) => t.level === level)).toHaveLength(10);
+      expect(EN_SAMPLES.filter((t) => t.level === level)).toHaveLength(12);
+    }
+  });
+
+  it("gives every Intermediate text complete metadata and 400–700 readable words", () => {
+    for (const [index, t] of EN_INTERMEDIATE_TEXTS.entries()) {
+      expect(t.id).toMatch(/^en-l[56]-[a-z0-9-]+$/);
+      expect(t.lang).toBe("en");
+      expect(Number.isInteger(t.level)).toBe(true);
+      expect([5, 6]).toContain(t.level);
+      expect(t.title.trim()).not.toBe("");
+      expect(t.blurb.trim()).not.toBe("");
+      expect(t.body).toMatch(/\n\n/);
+      expect(words(t.body).length, t.id).toBeGreaterThanOrEqual(400);
+      expect(words(t.body).length, t.id).toBeLessThanOrEqual(700);
+      expect(t.kind).toBe("sample");
+      expect(t.category).toBe("graded");
+      expect(t.source).toBe("Original (Duki) · AI-drafted");
+      expect(t.featured).toBe(false);
+      expect(t.createdAt).toBe(260_000 + index);
+      expect(t.readAt).toBeNull();
+      expect(t.bookmark).toBeNull();
+    }
+  });
+
+  it("exposes each Intermediate text's valid topics through the shared filters", () => {
+    expect(Object.keys(EN_INTERMEDIATE_TOPICS).sort()).toEqual(EN_INTERMEDIATE_TEXTS.map((t) => t.id).sort());
+    for (const t of EN_INTERMEDIATE_TEXTS) {
+      const topics = EN_INTERMEDIATE_TOPICS[t.id];
+      expect(topics.length).toBeGreaterThan(0);
+      expect(topics.length).toBeLessThanOrEqual(3);
+      expect(topics.every(isTopic)).toBe(true);
+      const entry = textEntry(t, undefined);
+      expect(entry.info.topics).toEqual(topics);
+      expect(entry.info.badge).toBe(`L${t.level}`);
+      expect(entry.info.words).toBe(words(t.body).length);
+      expect(matchesFilters(entry, { ...NO_FILTERS, band: "intermediate" })).toBe(true);
+      expect(matchesFilters(entry, { ...NO_FILTERS, band: "elementary" })).toBe(false);
       for (const topic of topics) {
         expect(matchesFilters(entry, { ...NO_FILTERS, topic })).toBe(true);
       }
