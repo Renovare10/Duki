@@ -5,6 +5,7 @@ import { EN_ELEMENTARY_TEXTS, EN_ELEMENTARY_TOPICS } from "../data/en-level-elem
 import { EN_INTERMEDIATE_TEXTS, EN_INTERMEDIATE_TOPICS } from "../data/en-level-intermediate";
 import { EN_ADVANCED_TEXTS, EN_ADVANCED_TOPICS } from "../data/en-level-advanced";
 import { EN_NATIVE_TEXTS, EN_NATIVE_TOPICS } from "../data/en-level-native";
+import { EN_WIKI_TEXTS, EN_WIKI_TOPICS } from "../data/en-wiki";
 import { isTopic } from "../data/topics";
 import type { LibraryText } from "../types";
 import { getGloss } from "./glossary";
@@ -35,8 +36,8 @@ describe("English stories", () => {
     for (let level = 2; level <= 10; level++) expect(avg(level)).toBeGreaterThan(avg(level - 1));
   });
 
-  it("has a Chinese gloss for every word a reader can tap, in every English story (starter + Elementary + Intermediate + Advanced + Native)", () => {
-    expect(EN_SAMPLES.length).toBe(EN_STORY_TEXTS.length + EN_ELEMENTARY_TEXTS.length + EN_INTERMEDIATE_TEXTS.length + EN_ADVANCED_TEXTS.length + EN_NATIVE_TEXTS.length);
+  it("has a Chinese gloss for every word a reader can tap, in every English story (starter + Elementary + Intermediate + Advanced + Native + Wikipedia)", () => {
+    expect(EN_SAMPLES.length).toBe(EN_STORY_TEXTS.length + EN_ELEMENTARY_TEXTS.length + EN_INTERMEDIATE_TEXTS.length + EN_ADVANCED_TEXTS.length + EN_NATIVE_TEXTS.length + EN_WIKI_TEXTS.length);
     for (const t of EN_SAMPLES) {
       for (const tok of [...words(t.title), ...words(t.body)]) {
         expect(EN_GLOSSES[tok.key!], `${t.id}: ${tok.text}`).toBeTruthy();
@@ -47,8 +48,8 @@ describe("English stories", () => {
   });
 
   it("keeps every English section in order without duplicating ids or timestamps", () => {
-    expect(EN_SAMPLES).toEqual([...EN_STORY_TEXTS, ...EN_ELEMENTARY_TEXTS, ...EN_INTERMEDIATE_TEXTS, ...EN_ADVANCED_TEXTS, ...EN_NATIVE_TEXTS]);
-    expect(EN_SAMPLES).toHaveLength(95);
+    expect(EN_SAMPLES).toEqual([...EN_STORY_TEXTS, ...EN_ELEMENTARY_TEXTS, ...EN_INTERMEDIATE_TEXTS, ...EN_ADVANCED_TEXTS, ...EN_NATIVE_TEXTS, ...EN_WIKI_TEXTS]);
+    expect(EN_SAMPLES).toHaveLength(125);
     expect(new Set(EN_SAMPLES.map((t) => t.id)).size).toBe(EN_SAMPLES.length);
     expect(new Set(EN_SAMPLES.map((t) => t.createdAt)).size).toBe(EN_SAMPLES.length);
   });
@@ -57,7 +58,8 @@ describe("English stories", () => {
     expect(EN_ELEMENTARY_TEXTS).toHaveLength(20);
     for (const level of [3, 4]) {
       expect(EN_ELEMENTARY_TEXTS.filter((t) => t.level === level)).toHaveLength(10);
-      expect(EN_SAMPLES.filter((t) => t.level === level)).toHaveLength(12);
+      expect(EN_SAMPLES.filter((t) => t.level === level && t.kind !== "wiki")).toHaveLength(12);
+      expect(EN_SAMPLES.filter((t) => t.level === level)).toHaveLength(level === 3 ? 12 : 17); // + five Wikipedia adaptations at L4–L9
     }
   });
 
@@ -105,7 +107,8 @@ describe("English stories", () => {
     expect(EN_INTERMEDIATE_TEXTS).toHaveLength(20);
     for (const level of [5, 6]) {
       expect(EN_INTERMEDIATE_TEXTS.filter((t) => t.level === level)).toHaveLength(10);
-      expect(EN_SAMPLES.filter((t) => t.level === level)).toHaveLength(12);
+      expect(EN_SAMPLES.filter((t) => t.level === level && t.kind !== "wiki")).toHaveLength(12);
+      expect(EN_SAMPLES.filter((t) => t.level === level)).toHaveLength(level === 3 ? 12 : 17); // + five Wikipedia adaptations at L4–L9
     }
   });
 
@@ -153,7 +156,8 @@ describe("English stories", () => {
     expect(EN_ADVANCED_TEXTS).toHaveLength(20);
     for (const level of [7, 8]) {
       expect(EN_ADVANCED_TEXTS.filter((t) => t.level === level)).toHaveLength(10);
-      expect(EN_SAMPLES.filter((t) => t.level === level)).toHaveLength(12);
+      expect(EN_SAMPLES.filter((t) => t.level === level && t.kind !== "wiki")).toHaveLength(12);
+      expect(EN_SAMPLES.filter((t) => t.level === level)).toHaveLength(level === 3 ? 12 : 17); // + five Wikipedia adaptations at L4–L9
     }
   });
 
@@ -250,6 +254,64 @@ describe("English stories", () => {
       }
       expect(matchesFilters(entry, { ...NO_FILTERS, topic: "classics" })).toBe(false);
       expect(describeText({ ...t, lang: "zh" }).topics).toEqual([]);
+    }
+  });
+
+  it("seeds all thirty Wikipedia adaptations once, five per level from L4 to L9", () => {
+    expect(EN_WIKI_TEXTS).toHaveLength(30);
+    for (const level of [4, 5, 6, 7, 8, 9]) {
+      expect(EN_WIKI_TEXTS.filter((t) => t.level === level)).toHaveLength(5);
+    }
+    expect(new Set(EN_SAMPLES.map((t) => t.id)).size).toBe(EN_SAMPLES.length);
+    expect(new Set(EN_SAMPLES.map((t) => t.createdAt)).size).toBe(EN_SAMPLES.length);
+    expect(new Set(EN_WIKI_TEXTS.map((t) => t.body)).size).toBe(30);
+  });
+
+  it("gives every Wikipedia item an inline body, permanent metadata, and source credit", () => {
+    for (const [index, t] of EN_WIKI_TEXTS.entries()) {
+      expect(t.id).toMatch(/^en-wiki-[a-z0-9-]+$/);
+      expect(t.lang).toBe("en");
+      expect(Number.isInteger(t.level)).toBe(true);
+      expect(t.level).toBeGreaterThanOrEqual(4);
+      expect(t.level).toBeLessThanOrEqual(9);
+      expect(t.title.trim()).not.toBe("");
+      expect(t.blurb.trim()).not.toBe("");
+      expect(t.blurb.length).toBeLessThanOrEqual(90);
+      expect(t.wikiTitle?.trim()).toBeTruthy();
+      expect(t.body).toMatch(/\n\n/);
+      expect(words(t.body).length, t.id).toBeGreaterThanOrEqual(140);
+      expect(t.kind).toBe("wiki");
+      expect(t.category).toBe("wiki");
+      expect(t.source).toBe("Adapted from English Wikipedia, CC BY-SA");
+      const url = new URL(t.sourceUrl!);
+      expect(url.origin).toBe("https://en.wikipedia.org");
+      expect(url.pathname).toBe(`/wiki/${encodeURIComponent(t.wikiTitle!.replaceAll(" ", "_"))}`);
+      expect(t.createdAt).toBe(220_000 + index);
+      expect(t.featured).toBe(false);
+      expect(t.readAt).toBeNull();
+      expect(t.bookmark).toBeNull();
+    }
+  });
+
+  it("exposes Wikipedia topics, levels, and English word counts through the shared filters", () => {
+    expect(Object.keys(EN_WIKI_TOPICS).sort()).toEqual(EN_WIKI_TEXTS.map((t) => t.id).sort());
+    for (const t of EN_WIKI_TEXTS) {
+      const topics = EN_WIKI_TOPICS[t.id];
+      expect(topics).toContain("encyclopedia");
+      expect(topics.length).toBeGreaterThanOrEqual(2);
+      expect(topics.every(isTopic)).toBe(true);
+      const entry = textEntry(t, undefined);
+      expect(entry.info.topics).toEqual(topics);
+      expect(entry.info.badge).toBe(`L${t.level}`);
+      expect(entry.info.words).toBe(words(t.body).length);
+      expect(entry.info.chars).toBeNull();
+      expect(entry.info.minutes).toBeGreaterThan(0);
+      for (const topic of topics) {
+        expect(matchesFilters(entry, { ...NO_FILTERS, topic })).toBe(true);
+      }
+      expect(matchesFilters(entry, { ...NO_FILTERS, topic: "letters" })).toBe(false);
+      // English topic lookups must not leak into Mandarin rows.
+      expect(describeText({ ...t, lang: "zh" }).topics).toEqual(["encyclopedia"]);
     }
   });
 
