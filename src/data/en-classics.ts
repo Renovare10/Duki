@@ -151,6 +151,35 @@ The country mouse ran straight to the hole in the wall.
 
 "Yes," she answered. "Your cake is very good. But at home I can finish my dinner."`,
   },
+  {
+    id: "en-classic-aesop-hare-tortoise", level: 4,
+    title: "The Hare and the Tortoise",
+    blurb: "Aesop · the fastest runner decides he has time for a sleep. Retold.",
+    author: "Aesop", source: "Public domain (Aesop), retold for Duki · AI-drafted",
+    sourceUrl: "https://www.gutenberg.org/ebooks/19994",
+    topics: ["classics", "folk-tales", "sports"],
+    body: `The hare liked to show everyone how fast he could run. One morning he passed a tortoise walking along the path. A tortoise carries a hard shell on its back and cannot move very quickly.
+
+"Do you ever arrive anywhere?" the hare asked. "I've seen stones move faster than you."
+
+The tortoise looked up. "I arrive where I'm going. I'll race you, if you like."
+
+The hare laughed so loudly that a fox came to find out what was happening. When she heard about the race, she agreed to be the judge. She chose a starting point and marked a finish line farther down the path.
+
+At her signal, the hare shot forward. The tortoise began to walk.
+
+Before long, the hare could no longer see his rival. He stopped beside some grass and looked back along the empty path. Winning would be easy. Perhaps it would be more amusing to wait for the tortoise, then run past him just before the finish.
+
+The hare lay down. The grass was comfortable, and soon he was asleep.
+
+The tortoise kept walking. He passed the sleeping hare without stopping. His legs were short, but they kept moving.
+
+When the hare woke, the light had changed. He jumped up and looked down the path. The tortoise was almost at the finish line.
+
+Now the hare ran as fast as he could. His feet barely touched the ground. But just before he reached the line, the tortoise crossed it.
+
+The fox announced the winner. The tortoise stopped to rest, and the hare stood beside him, too out of breath to say a word.`,
+  },
 ];
 
 export const EN_CLASSICS_TEXTS: LibraryText[] = READINGS.map(({ topics: _topics, ...reading }, index) => ({
