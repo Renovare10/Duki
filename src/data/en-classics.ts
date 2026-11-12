@@ -239,6 +239,34 @@ As she stood there, the stars began to fall. But what landed around her was not 
 
 At the same moment, the girl found that she was wearing a new shirt of the finest linen. She lifted its hem and gathered the coins into it. There were enough to support her for the rest of her life.`,
   },
+  {
+    id: "en-classic-andersen-real-princess", level: 5,
+    title: "The Real Princess",
+    blurb: "Hans Christian Andersen · a royal test with three peas, as in this early English edition. Retold.",
+    author: "Hans Christian Andersen",
+    source: "Public domain (Hans Christian Andersen), retold from the cited English edition for Duki · AI-drafted",
+    sourceUrl: "https://www.gutenberg.org/ebooks/1597",
+    topics: ["classics", "folk-tales", "humor"],
+    body: `A prince wanted to marry a princess, but she had to be a real one. He traveled from country to country, meeting princesses wherever he went. There were plenty of them. The difficulty was deciding whether they were genuine.
+
+Whenever he met someone, something did not seem quite right. At last he returned home without a wife, very disappointed.
+
+One evening a terrible storm broke over the palace. Thunder shook the windows, and rain poured down in the dark. Someone knocked at the gate. The old king went to open it himself.
+
+A young woman stood outside. Water ran from her hair, and her wet clothes stuck to her body. She hardly looked ready for a royal visit. Nevertheless, she said she was a real princess.
+
+The queen decided to find out. Without explaining her plan, she went into a bedroom and stripped the bed. On the bare bedstead she placed three little peas. Over them she piled twenty mattresses, followed by twenty thick feather beds.
+
+The visitor was shown to this enormous bed and left to spend the night.
+
+In the morning, the queen asked how she had slept.
+
+"Very badly," the young woman answered. "There was something hard under me. I hardly closed my eyes, and now I'm covered in bruises."
+
+That settled the question for the royal family. Only a real princess, they decided, could have felt three peas through so many layers of bedding. The prince had finally found the wife he wanted, and they were married.
+
+The peas were placed in a collection of rare objects, where, according to the story, you may still see them today. Unless, of course, somebody has lost them.`,
+  },
 ];
 
 export const EN_CLASSICS_TEXTS: LibraryText[] = READINGS.map(({ topics: _topics, ...reading }, index) => ({
