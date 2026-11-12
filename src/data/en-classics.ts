@@ -558,6 +558,29 @@ And full-grown lambs loud bleat from hilly bourn;
   The redbreast whistles from a garden-croft;
     And gathering swallows twitter in the skies.`,
   },
+  {
+    id: "en-classic-shakespeare-sonnet-18", level: 10,
+    title: "Sonnet 18: Shall I Compare Thee",
+    blurb: "William Shakespeare · beauty preserved in the poem that addresses it. Original sonnet, 1609.",
+    author: "William Shakespeare",
+    source: "Public domain (William Shakespeare), original poem from Shakespeare's Sonnets, XVIII",
+    sourceUrl: "https://www.gutenberg.org/ebooks/1041",
+    topics: ["classics", "poetry", "feelings"],
+    body: `Shall I compare thee to a summer’s day?
+Thou art more lovely and more temperate:
+Rough winds do shake the darling buds of May,
+And summer’s lease hath all too short a date:
+Sometime too hot the eye of heaven shines,
+And often is his gold complexion dimm’d,
+And every fair from fair sometime declines,
+By chance, or nature’s changing course untrimm’d:
+But thy eternal summer shall not fade,
+Nor lose possession of that fair thou ow’st,
+Nor shall death brag thou wander’st in his shade,
+When in eternal lines to time thou grow’st,
+    So long as men can breathe, or eyes can see,
+    So long lives this, and this gives life to thee.`,
+  },
 ];
 
 export const EN_CLASSICS_TEXTS: LibraryText[] = READINGS.map(({ topics: _topics, ...reading }, index) => ({
