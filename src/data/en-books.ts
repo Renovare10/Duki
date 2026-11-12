@@ -1014,6 +1014,66 @@ At the door, Elsie said she might write something new. Something short, about wo
 
 "And find a photograph with people in it," she added. "Not just that enormous building."`,
   },
+  {
+    id: "en-book-second-voice-3", lang: "en", level: 8,
+    seriesId: "en-book-second-voice", seriesTitle: "The Second Voice", chapter: 3,
+    title: "Chapter 3: Under the Photograph",
+    blurb: "Mara must finish the exhibition without turning uncertain memories into facts.",
+    kind: "sample", category: "novel", featured: false,
+    createdAt: 210_017, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+    body: `The printer could wait until Friday, but not until everyone agreed. Mara explained this to Leon over the phone. She regretted the wording as soon as she heard herself: it made the disagreement sound like a fault he ought to repair before her deadline.
+
+"I'm not changing what I said," he told her.
+
+"I'm not asking you to. I want to explain what I can put beneath the photograph."
+
+She read him a draft. It said that staff had evacuated the building, that nobody had been injured, and that later recollections differed over who opened which exit and when.
+
+"That makes it sound as though one of us is lying."
+
+"Would it be fairer to say that neither account establishes exactly when the last audience members left?"
+
+"I don't know what establishes means in a sentence like that."
+
+She crossed it out. He had a point. The language sounded like a committee refusing to take responsibility for its own words.
+
+They tried again. Leon grew tired, and she offered to send him the draft so he could read it without listening to her breathe at the other end of the phone. He agreed. Then he asked her to leave the fire passage out of the audio display entirely.
+
+Mara felt the loss of it. His description was vivid, the best recording she had found. But she had called to discuss his words, not to persuade him that signing a form twenty-three years ago had ended his interest in them.
+
+"Could we use the part about changing reels instead?"
+
+"If you like. Nobody ever asked about that before."
+
+Elsie's new account arrived on Thursday, written on both sides of a sheet of lined paper. She described opening the exit beside the screen and waiting in the alley. She also wrote that she could not know how many people had used the other doors. There was nothing about Leon's brother or the unsent letter. Mara did not add either detail.
+
+The two accounts would not fit beneath a small photograph. She gave the fire a separate panel, with a brief summary of what the contemporary newspaper reported. Beneath it, Elsie's statement appeared under her name and the date she had written it. With Leon's agreement, a short passage from his older interview appeared alongside it, also dated. The panel said that the archive had not found evidence to settle the order in which the exits were opened.
+
+Her colleague read the proof and asked whether the fire now occupied too much space. Mara had spent a week worrying about it and had allowed that week to spread across the wall.
+
+They reduced the panel. They did not reduce the lettering to squeeze everything in. Mara cut her own explanation first, then took the revised proof to Elsie and posted a copy to Leon. Both approved their attributed passages and the accompanying caption before it went to print. Leon enclosed a note saying he still believed his recollection was right.
+
+The rest of the display grew less solemn. Elsie lent a staff photograph from her album, with written permission for this exhibition. It showed seven people squinting into the sun, including Leon in his borrowed jacket. Elsie stood at the edge in a checked apron. Mara made a copy and returned the original.
+
+On opening morning, the headphones failed. The volunteer at the desk fetched another pair, and Mara crawled under the display table to reconnect a cable. When she emerged, Leon was standing in front of the photograph.
+
+"That's my jacket," he said.
+
+"You told me it was borrowed."
+
+"Well, that's me inside it."
+
+Elsie came later with her daughter. Mara did not arrange an introduction or suggest a joint photograph. The two former colleagues knew each other perfectly well. They spoke for a few minutes about somebody in the staff picture who had moved away, then Elsie sat down while Leon tried the headphones.
+
+A child beside him wanted to know why films needed changing in the middle. Leon lifted the headphones off one ear and began explaining reels. He used his hands to indicate their size. Mara heard him say that if you were late, the whole audience would start shouting.
+
+Elsie beckoned her over.
+
+"The apron," she said, pointing. "People will think that was a uniform. It was mine. We had to bring our own."
+
+Mara found a pencil. There was room for one more sentence under the photograph.`,
+  },
 ];
 
 /** Topic ids are shared with the Mandarin library; every chapter has its own entry. */
