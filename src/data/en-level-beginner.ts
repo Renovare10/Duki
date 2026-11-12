@@ -250,7 +250,7 @@ She puts on the shirt. It looks different on her.
   },
   {
     ...original,
-    id: "en-l2-the-first-pay", level: 2, title: "The First Pay",
+    id: "en-l2-the-first-pay", level: 2, title: "The First Payday",
     blurb: "Leo has his first pay and a long walk home.",
     createdAt: 240_011,
     body: `Leo works in a small food shop. At the end of his first week, he gets his pay. He checks the money in his bank account twice.
