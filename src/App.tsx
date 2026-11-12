@@ -1600,7 +1600,7 @@ export default function App() {
         />
       ) : null}
 
-      {ready && lang === "zh" && view.name === "book" ? (
+      {ready && view.name === "book" ? (
         findBook(languageTexts, view.id) ? (
           <BookScreen
             book={findBook(languageTexts, view.id)!}

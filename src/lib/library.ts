@@ -84,6 +84,11 @@ function topicTags(text: LibraryText, topics: Record<string, string[]>): string[
   return [];
 }
 
+function englishReadingMinutes(words: number, level: number | null): number | null {
+  const rate = level && level <= 2 ? 80 : level && level <= 5 ? 120 : 160;
+  return words ? Math.max(1, Math.round(words / rate)) : null;
+}
+
 export function describeText(
   text: LibraryText,
   meta: Record<string, readonly [number, number, number]> = TEXT_META,
@@ -98,7 +103,7 @@ export function describeText(
       level, levelMax: null,
       badge: level ? `L${level}` : "", badgeTitle: level ? LEVEL_NAMES[level] : "English text",
       band: level ? levelBand(level) : null, sortScore: level ?? UNMEASURED, chars: null,
-      minutes: words ? Math.max(1, Math.round(words / (level && level <= 2 ? 80 : level && level <= 5 ? 120 : 160))) : null,
+      minutes: englishReadingMinutes(words, level),
       topics: tags, words,
     };
   }
@@ -137,11 +142,14 @@ export function describeBook(book: Book, meta = TEXT_META, topics = TEXT_TOPICS)
   const levels = infos.map((i) => i.level).filter((l): l is number => l !== null);
   const chars = infos.reduce((s, i) => s + (i.chars ?? 0), 0);
   const tags = [...new Set(infos.flatMap((i) => i.topics))];
-  if (!levels.length) return { ...describeText(book.chapters[0], meta, topics), chars: chars || null, topics: tags };
-  const lo = Math.min(...levels);
-  const hi = Math.max(...levels);
-  const score = infos.reduce((s, i) => Math.min(s, i.sortScore), UNMEASURED);
-  return measured(lo, hi, score, chars, tags);
+  const info = levels.length
+    ? measured(Math.min(...levels), Math.max(...levels), infos.reduce((s, i) => Math.min(s, i.sortScore), UNMEASURED), chars, tags)
+    : { ...infos[0], chars: chars || null, topics: tags };
+  if (book.chapters[0].lang === "en") {
+    const words = infos.reduce((s, i) => s + (i.words ?? 0), 0);
+    return { ...info, chars: null, words, minutes: englishReadingMinutes(words, info.level) };
+  }
+  return info;
 }
 
 export function describeWork(work: WorkMeta, stats: WorkStats | undefined): EntryInfo {

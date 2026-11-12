@@ -6,9 +6,11 @@ import { LIBRARY_TOPICS } from "../data/library/index";
 import { isTopic, TEXT_TOPICS } from "../data/topics";
 import { WORKS } from "../data/works";
 import { WORK_STATS } from "../data/works.generated";
-import { hanCount } from "./difficulty";
+import { hanCount, readingMinutes } from "./difficulty";
+import { findBook } from "./books";
 import {
   describeText,
+  describeBook,
   describeWork,
   filterEntries,
   formatDuration,
@@ -112,6 +114,36 @@ describe("describeText", () => {
     expect(info.level).toBeNull();
     expect(info.badge).toBe("");
     expect(info.chars).toBe(6);
+  });
+});
+
+describe("describeBook", () => {
+  it.each([[2, 6], [3, 4], [7, 3]])("totals English words and uses the L%i reading rate", (level, minutes) => {
+    const chapters = [1, 2].map((chapter) => t({
+      id: `en-fixture-${chapter}`, lang: "en", level,
+      body: "word ".repeat(240), seriesId: "en-fixture", chapter,
+    }));
+    const info = describeBook(findBook(chapters, "en-fixture")!, {}, {});
+    expect(info).toMatchObject({ chars: null, words: 480, minutes, level, levelMax: level });
+    expect(lengthLabel(info)).toBe(`480 words · ${minutes} min`);
+  });
+
+  it.each(["word ".repeat(240), ""])("totals unlevelled English chapters, including empty bodies", (body) => {
+    const chapters = [1, 2].map((chapter) => t({
+      id: `en-own-${chapter}`, lang: "en", body, seriesId: "en-own", chapter,
+    }));
+    const info = describeBook(findBook(chapters, "en-own")!, {}, {});
+    expect(info).toMatchObject({ level: null, chars: null, words: body ? 480 : 0, minutes: body ? 3 : null });
+  });
+
+  it("preserves Mandarin character totals, level range, topics and reading time", () => {
+    const chapters = [1, 2].map((chapter) => t({ id: `zh-${chapter}`, seriesId: "zh", chapter }));
+    const info = describeBook(findBook(chapters, "zh")!, { "zh-1": [3, 345, 400], "zh-2": [5, 520, 800] }, {
+      "zh-1": ["family"], "zh-2": ["family", "food"],
+    });
+    expect(info).toMatchObject({ chars: 1200, level: 3, levelMax: 5, badge: "L3–5", topics: ["family", "food"], minutes: readingMinutes(1200, 3) });
+    expect(info.sortScore).toBeCloseTo(3.45);
+    expect(info.words).toBeUndefined();
   });
 });
 
