@@ -491,6 +491,29 @@ Feels shorter than the day
 I first surmised the horses' heads
 Were toward eternity.`,
   },
+  {
+    id: "en-classic-shelley-ozymandias", level: 9,
+    title: "Ozymandias",
+    blurb: "Percy Bysshe Shelley · a ruler's boast survives among the ruins. Original sonnet, 1818.",
+    author: "Percy Bysshe Shelley",
+    source: "Public domain (Percy Bysshe Shelley), original poem in The Complete Poetical Works",
+    sourceUrl: "https://www.gutenberg.org/ebooks/4800",
+    topics: ["classics", "poetry", "history"],
+    body: `I met a traveller from an antique land
+Who said: Two vast and trunkless legs of stone
+Stand in the desert...Near them, on the sand,
+Half sunk, a shattered visage lies, whose frown,
+And wrinkled lip, and sneer of cold command,
+Tell that its sculptor well those passions read
+Which yet survive, stamped on these lifeless things,
+The hand that mocked them, and the heart that fed:
+And on the pedestal these words appear:
+‘My name is Ozymandias, king of kings:
+Look on my works, ye Mighty, and despair!’
+Nothing beside remains. Round the decay
+Of that colossal wreck, boundless and bare
+The lone and level sands stretch far away.`,
+  },
 ];
 
 export const EN_CLASSICS_TEXTS: LibraryText[] = READINGS.map(({ topics: _topics, ...reading }, index) => ({
