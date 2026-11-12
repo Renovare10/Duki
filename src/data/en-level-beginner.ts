@@ -334,6 +334,27 @@ On the night of the play, Eli walks slowly onto the stage. Both shoes stay on. H
 
 "Welcome to my home!"`,
   },
+  {
+    ...original,
+    id: "en-l2-three-soft-tomatoes", level: 2, title: "Three Soft Tomatoes",
+    blurb: "Rose wants tomatoes for tonight, not for next week.",
+    createdAt: 240_015,
+    body: `At the market, Rose sees two boxes of tomatoes. One box has large, firm tomatoes. The other has small, soft ones. The soft ones cost less.
+
+"Are these still good?" she asks the seller.
+
+"Yes, but eat them soon. What are you making?"
+
+"Something for dinner. I don't know what yet."
+
+"They are good for a sauce," he says.
+
+Rose buys three soft tomatoes and an onion. At home, she cuts them up. She cooks the onion in a little oil, then adds the tomatoes. Soon the kitchen smells sweet.
+
+She puts the sauce on some rice and tastes it.
+
+Next week, her sister is coming for dinner. Rose writes a shopping list. At the top, she puts "soft tomatoes."`,
+  },
 ];
 
 export const EN_BEGINNER_TOPICS: Record<string, string[]> = {
@@ -352,4 +373,5 @@ export const EN_BEGINNER_TOPICS: Record<string, string[]> = {
   "en-l2-the-quiet-table": ["food", "feelings", "daily-life"],
   "en-l2-a-photo-for-grandpa": ["family", "daily-life", "humor"],
   "en-l2-shoes-for-the-play": ["school", "arts", "feelings"],
+  "en-l2-three-soft-tomatoes": ["shopping", "food", "daily-life"],
 };
