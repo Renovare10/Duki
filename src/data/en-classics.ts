@@ -514,6 +514,50 @@ Nothing beside remains. Round the decay
 Of that colossal wreck, boundless and bare
 The lone and level sands stretch far away.`,
   },
+  {
+    id: "en-classic-keats-to-autumn", level: 9,
+    title: "To Autumn",
+    blurb: "John Keats · harvest, stillness, and the season's own music. Original ode, 1819.",
+    author: "John Keats",
+    source: "Public domain (John Keats), original poem in The Oxford Book of English Verse, no. 627",
+    sourceUrl: "https://www.gutenberg.org/ebooks/1304",
+    topics: ["classics", "poetry", "nature"],
+    body: `SEASON of mists and mellow fruitfulness!
+  Close bosom-friend of the maturing sun;
+Conspiring with him how to load and bless
+  With fruit the vines that round the thatch-eaves run;
+To bend with apples the moss'd cottage-trees,
+  And fill all fruit with ripeness to the core;
+    To swell the gourd, and plump the hazel shells
+  With a sweet kernel; to set budding more,
+And still more, later flowers for the bees,
+Until they think warm days will never cease,
+  For Summer has o'er-brimm'd their clammy cells.
+
+Who hath not seen thee oft amid thy store?
+  Sometimes whoever seeks abroad may find
+Thee sitting careless on a granary floor,
+  Thy hair soft-lifted by the winnowing wind;
+Or on a half-reap'd furrow sound asleep,
+  Drowsed with the fume of poppies, while thy hook
+    Spares the next swath and all its twined flowers;
+And sometimes like a gleaner thou dost keep
+  Steady thy laden head across a brook;
+  Or by a cider-press, with patient look,
+    Thou watchest the last oozings hours by hours.
+
+Where are the songs of Spring? Ay, where are they?
+  Think not of them, thou hast thy music too,--
+While barred clouds bloom the soft-dying day,
+  And touch the stubble-plains with rosy hue;
+Then in a wailful choir the small gnats mourn
+  Among the river sallows, borne aloft
+    Or sinking as the light wind lives or dies;
+And full-grown lambs loud bleat from hilly bourn;
+  Hedge-crickets sing; and now with treble soft
+  The redbreast whistles from a garden-croft;
+    And gathering swallows twitter in the skies.`,
+  },
 ];
 
 export const EN_CLASSICS_TEXTS: LibraryText[] = READINGS.map(({ topics: _topics, ...reading }, index) => ({
