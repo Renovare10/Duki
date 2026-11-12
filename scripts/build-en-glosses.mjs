@@ -11,7 +11,8 @@ const csv = process.env.ECDICT_CSV;
 if (!csv) throw new Error("Set ECDICT_CSV to ecdict.csv");
 
 /** Every English data file whose titles and bodies a reader can tap. Add new section files here. */
-const SOURCES = ["src/data/en-stories.ts", "src/data/en-level-elementary.ts"];
+const SOURCES = ["src/data/en-stories.ts", "src/data/en-level-elementary.ts", "src/data/en-level-intermediate.ts",
+  "src/data/en-level-advanced.ts"];
 const src = SOURCES.map((f) => fs.readFileSync(path.join(root, f), "utf8")).join("\n");
 const bodies = [...src.matchAll(/(?:title: "([^"]*)"|body: `([^`]*)`)/g)].map((m) => m[1] ?? m[2]).join("\n");
 const keys = new Set((bodies.match(/[A-Za-z]+(?:['’][A-Za-z]+)*/g) ?? []).map((w) => w.toLowerCase().replaceAll("’", "'")));
@@ -57,7 +58,10 @@ const NAMES = new Set(["max", "ben", "lily", "anna", "sam", "maria", "lopez", "d
   "ruth", "alder",
   // Elementary section (en-level-elementary.ts)
   "ali", "amir", "ava", "beth", "daniel", "ellis", "emma", "helen", "jack", "jo", "kate", "leo", "lila", "luis",
-  "maya", "mina", "nina", "nora", "owen", "paul", "pip", "rosa", "sara", "sophie"]);
+  "maya", "mina", "nina", "nora", "owen", "paul", "pip", "rosa", "sara", "sophie",
+  // Intermediate and Advanced sections (en-level-intermediate.ts, en-level-advanced.ts)
+  "alice", "arthur", "bell", "cole", "ellen", "eva", "frances", "heinrich", "jean", "leah", "leila", "mara", "martin",
+  "olbers", "oliver", "rob", "rose", "sal", "sandra", "tess", "wilhelm", "wong"]);
 
 function short(translation) {
   const lines = translation.split("\\n").map((l) => l.replace(/\\r/g, "").trim())
@@ -70,6 +74,9 @@ function short(translation) {
 const OVERRIDES = {
   a: "art. 一（个）", an: "art. 一（个）", the: "art. 这个；那个", internet: "n. 互联网",
   online: "adv. 在网上", overreaction: "n. 反应过度", does: "v. 做；aux. 助动词（do 的第三人称单数）",
+  affordable: "a. 买得起的，负担得起的", laptop: "n. 笔记本电脑", randomization: "n. 随机化，随机分配",
+  standardization: "n. 标准化", timekeeping: "n. 计时，守时", unrelated: "a. 无关的，不相关的",
+  vapour: "n. 水汽，蒸气", mum: "n. 妈妈（英式）", june: "n. 六月；（也作人名）", mark: "n. 记号，分数；vt. 做记号；（也作人名）",
 };
 
 function lookup(key) {
