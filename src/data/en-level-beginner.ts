@@ -60,7 +60,7 @@ A new boy stands by our table. He has a blue lunch box.
 
 "Can I sit here?" he asks.
 
-My bag is on the chair next to me. I put it under my feet.
+My bag is on the chair next to me. I put it on the floor.
 
 "Yes," I say. "This seat is for you."
 
@@ -68,7 +68,7 @@ He opens his box. I have an apple. He has two small oranges.
 
 "Do you like oranges?" he asks.
 
-I do. We put the fruit in the middle of the table. Now we both have apples and oranges.`,
+I do. We put the fruit in the middle of the table. We share the apple and the oranges.`,
   },
   {
     ...original,
