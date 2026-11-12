@@ -12,7 +12,7 @@ if (!csv) throw new Error("Set ECDICT_CSV to ecdict.csv");
 
 /** Every English data file whose titles and bodies a reader can tap. Add new section files here. */
 const SOURCES = ["src/data/en-stories.ts", "src/data/en-level-elementary.ts", "src/data/en-level-intermediate.ts",
-  "src/data/en-level-advanced.ts"];
+  "src/data/en-level-advanced.ts", "src/data/en-level-native.ts", "src/data/en-wiki.ts"];
 const src = SOURCES.map((f) => fs.readFileSync(path.join(root, f), "utf8")).join("\n");
 const bodies = [...src.matchAll(/(?:title: "([^"]*)"|body: `([^`]*)`)/g)].map((m) => m[1] ?? m[2]).join("\n");
 const keys = new Set((bodies.match(/[A-Za-z]+(?:['’][A-Za-z]+)*/g) ?? []).map((w) => w.toLowerCase().replaceAll("’", "'")));
@@ -61,7 +61,9 @@ const NAMES = new Set(["max", "ben", "lily", "anna", "sam", "maria", "lopez", "d
   "maya", "mina", "nina", "nora", "owen", "paul", "pip", "rosa", "sara", "sophie",
   // Intermediate and Advanced sections (en-level-intermediate.ts, en-level-advanced.ts)
   "alice", "arthur", "bell", "cole", "ellen", "eva", "frances", "heinrich", "jean", "leah", "leila", "mara", "martin",
-  "olbers", "oliver", "rob", "rose", "sal", "sandra", "tess", "wilhelm", "wong"]);
+  "olbers", "oliver", "rob", "rose", "sal", "sandra", "tess", "wilhelm", "wong",
+  // Native section (en-level-native.ts)
+  "ada", "celia", "dyer", "graham", "peter", "reeves", "sami", "vale"]);
 
 function short(translation) {
   const lines = translation.split("\\n").map((l) => l.replace(/\\r/g, "").trim())
@@ -76,7 +78,21 @@ const OVERRIDES = {
   online: "adv. 在网上", overreaction: "n. 反应过度", does: "v. 做；aux. 助动词（do 的第三人称单数）",
   affordable: "a. 买得起的，负担得起的", laptop: "n. 笔记本电脑", randomization: "n. 随机化，随机分配",
   standardization: "n. 标准化", timekeeping: "n. 计时，守时", unrelated: "a. 无关的，不相关的",
-  vapour: "n. 水汽，蒸气", mum: "n. 妈妈（英式）", june: "n. 六月；（也作人名）", mark: "n. 记号，分数；vt. 做记号；（也作人名）",
+  vapour: "n. 水汽，蒸气", mum: "n. 妈妈（英式）",
+  // Native and Wikipedia sections: words ECDICT lacks, and senses that mislead in these texts.
+  antimalarial: "a. 抗疟疾的", app: "n. 应用程序，App", correctness: "n. 正确性", inbox: "n. 收件箱",
+  organiser: "n. 组织者", "organiser's": "n. 组织者的", overstatement: "n. 夸大，言过其实", subduction: "n. （地质）俯冲",
+  unallocated: "a. 未分配的", untreated: "a. 未经处理的，未治疗的", workspace: "n. 工作区，工作空间",
+  m: "（a.m. 中的 m）", r: "（字母）R", v: "（罗马数字）五", c: "（人名缩写）C", st: "abbr. 圣（用于名称，如 St Martin's）",
+  westbridge: "（地名）韦斯特布里奇", beijing: "n. 北京", angkorian: "a. 吴哥时期的", wat: "n. 寺（Angkor Wat 吴哥窟）",
+  tang: "n. 唐朝；强烈的味道", jikji: "n. 《直指》（现存最早的金属活字印本）", galapagos: "n. 加拉帕戈斯（群岛）",
+  beagle: "n. 比格犬；（HMS Beagle 小猎犬号）", annua: "（学名）Artemisia annua 黄花蒿", sinensis: "（学名）Camellia sinensis 茶树",
+  jabr: "（阿拉伯语）还原（algebra 一词的来源）", al: "（阿拉伯人名前缀）", von: "（德语人名中的）冯",
+  lovelace: "（人名）洛夫莱斯（英国数学家）", drais: "（人名）德莱斯（德国发明家）", wangari: "（人名）旺加里",
+  maathai: "（人名）马塔伊（肯尼亚环保人士）", "maathai's": "（人名）马塔伊的", khwarizmi: "（人名）花拉子米（数学家）",
+  musa: "（人名）穆萨", menabrea: "（人名）梅纳布雷亚", milbanke: "（人名）米尔班克", omura: "（人名）大村智",
+  tu: "（人名）屠（屠呦呦）", youyou: "（人名）呦呦（屠呦呦）", bi: "（人名）毕（毕昇）", sheng: "（人名）昇（毕昇）",
+  ge: "（人名）葛（葛洪）", hong: "（人名）洪（葛洪）", lasker: "（人名）拉斯克（拉斯克奖）", june: "n. 六月；（也作人名）", mark: "n. 记号，分数；vt. 做记号；（也作人名）",
 };
 
 function lookup(key) {
