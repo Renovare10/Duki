@@ -194,7 +194,7 @@ I put the open box on the kitchen table. Then I have breakfast.
 
 My brother comes down. "What is in the box?" he asks.
 
-I look inside. There is water at the bottom. The snow is very small now.
+I look inside. There is water at the bottom. There is not much snow now.
 
 "It is too warm in here," I say.
 
