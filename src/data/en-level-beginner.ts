@@ -143,6 +143,25 @@ Mom looks at the long legs. "Where can it sleep?"
 
 Dan gets his pencil. He needs to draw a bigger house.`,
   },
+  {
+    ...original,
+    id: "en-l1-the-paper-fish", level: 1, title: "The Paper Fish",
+    blurb: "Grandma cannot come to the sea. I make something for her.",
+    createdAt: 240_006,
+    body: `I am at the sea with Mom. Grandma is at home. She cannot come today.
+
+I want to take a fish home for her.
+
+"A real fish?" Mom asks.
+
+I look at the sea. The fish need water. Grandma has no big tank.
+
+Back at the house, I get some paper. I draw a fish. Mom helps me cut it out.
+
+I write, "For Grandma," on the back.
+
+Grandma puts my fish on her wall. "This one can stay," she says. "I do not need to feed it."`,
+  },
 ];
 
 export const EN_BEGINNER_TOPICS: Record<string, string[]> = {
@@ -152,4 +171,5 @@ export const EN_BEGINNER_TOPICS: Record<string, string[]> = {
   "en-l1-the-small-bag": ["shopping", "family"],
   "en-l1-the-blue-sock": ["daily-life", "family", "humor"],
   "en-l1-five-minutes": ["family", "work", "humor"],
+  "en-l1-the-paper-fish": ["arts", "family", "nature"],
 };
