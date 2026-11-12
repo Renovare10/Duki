@@ -311,6 +311,29 @@ We take another picture. This time, we stand still and smile.
 
 We send both photos to Grandpa. A message comes back: "Please send the first one on paper. I want that one on my wall."`,
   },
+  {
+    ...original,
+    id: "en-l2-shoes-for-the-play", level: 2, title: "Shoes for the Play",
+    blurb: "Eli knows his words for the school play. Walking is the hard part.",
+    createdAt: 240_014,
+    body: `Eli is the king in the school play. He knows all his words. He has a long coat and a gold hat made of paper.
+
+For the last practice, he wears black shoes from the school's clothes box. They are a little too big.
+
+He walks across the stage. One shoe comes off. He stops and goes back for it. Then he forgets his words.
+
+After practice, Eli sits on the floor. "I can't walk in these," he tells the teacher.
+
+"What shoes do you usually wear?" she asks.
+
+He shows her his red sports shoes.
+
+"Wear those. Your coat covers your feet."
+
+On the night of the play, Eli walks slowly onto the stage. Both shoes stay on. He looks at the people and remembers his first words.
+
+"Welcome to my home!"`,
+  },
 ];
 
 export const EN_BEGINNER_TOPICS: Record<string, string[]> = {
@@ -328,4 +351,5 @@ export const EN_BEGINNER_TOPICS: Record<string, string[]> = {
   "en-l2-the-first-pay": ["work", "shopping", "daily-life"],
   "en-l2-the-quiet-table": ["food", "feelings", "daily-life"],
   "en-l2-a-photo-for-grandpa": ["family", "daily-life", "humor"],
+  "en-l2-shoes-for-the-play": ["school", "arts", "feelings"],
 };
