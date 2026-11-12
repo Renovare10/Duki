@@ -376,7 +376,7 @@ describe("English stories", () => {
   });
 
   it("glosses character names as names, not dictionary senses", () => {
-    for (const name of ["nina", "leo", "maya", "jack", "pip", "sophie", "eva", "mara", "leah", "frances", "olbers", "bell", "vale", "graham", "reeves", "celia"]) expect(EN_GLOSSES[name]).toBe("（人名）");
+    for (const name of ["nina", "leo", "maya", "jack", "pip", "sophie", "eva", "mara", "leah", "frances", "olbers", "bell", "vale", "graham", "reeves", "celia", "amy", "mia", "ken", "dan"]) expect(EN_GLOSSES[name]).toBe("（人名）");
   });
 
   it("keeps a safe fallback for English words awaiting the gloss rebuild", () => {

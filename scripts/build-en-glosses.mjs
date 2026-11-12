@@ -12,7 +12,8 @@ if (!csv) throw new Error("Set ECDICT_CSV to ecdict.csv");
 
 /** Every English data file whose titles and bodies a reader can tap. Add new section files here. */
 const SOURCES = ["src/data/en-stories.ts", "src/data/en-level-elementary.ts", "src/data/en-level-intermediate.ts",
-  "src/data/en-level-advanced.ts", "src/data/en-level-native.ts", "src/data/en-wiki.ts"];
+  "src/data/en-level-advanced.ts", "src/data/en-level-native.ts", "src/data/en-wiki.ts", "src/data/en-level-beginner.ts",
+  "src/data/en-classics.ts"];
 const src = SOURCES.map((f) => fs.readFileSync(path.join(root, f), "utf8")).join("\n");
 const bodies = [...src.matchAll(/(?:title: "([^"]*)"|body: `([^`]*)`)/g)].map((m) => m[1] ?? m[2]).join("\n");
 const keys = new Set((bodies.match(/[A-Za-z]+(?:['’][A-Za-z]+)*/g) ?? []).map((w) => w.toLowerCase().replaceAll("’", "'")));
@@ -63,7 +64,9 @@ const NAMES = new Set(["max", "ben", "lily", "anna", "sam", "maria", "lopez", "d
   "alice", "arthur", "bell", "cole", "ellen", "eva", "frances", "heinrich", "jean", "leah", "leila", "mara", "martin",
   "olbers", "oliver", "rob", "rose", "sal", "sandra", "tess", "wilhelm", "wong",
   // Native section (en-level-native.ts)
-  "ada", "celia", "dyer", "graham", "peter", "reeves", "sami", "vale"]);
+  "ada", "celia", "dyer", "graham", "peter", "reeves", "sami", "vale",
+  // Beginner section (en-level-beginner.ts); "may", "rose" and "sock" are also common words, see OVERRIDES
+  "alex", "amy", "dan", "eli", "ken", "mia"]);
 
 function short(translation) {
   const lines = translation.split("\\n").map((l) => l.replace(/\\r/g, "").trim())
@@ -92,7 +95,15 @@ const OVERRIDES = {
   maathai: "（人名）马塔伊（肯尼亚环保人士）", "maathai's": "（人名）马塔伊的", khwarizmi: "（人名）花拉子米（数学家）",
   musa: "（人名）穆萨", menabrea: "（人名）梅纳布雷亚", milbanke: "（人名）米尔班克", omura: "（人名）大村智",
   tu: "（人名）屠（屠呦呦）", youyou: "（人名）呦呦（屠呦呦）", bi: "（人名）毕（毕昇）", sheng: "（人名）昇（毕昇）",
-  ge: "（人名）葛（葛洪）", hong: "（人名）洪（葛洪）", lasker: "（人名）拉斯克（拉斯克奖）", june: "n. 六月；（也作人名）", mark: "n. 记号，分数；vt. 做记号；（也作人名）",
+  ge: "（人名）葛（葛洪）", hong: "（人名）洪（葛洪）", lasker: "（人名）拉斯克（拉斯克奖）",
+  // Beginner and Classics sections: names that are also words, archaic poetry forms, and missing entries.
+  may: "aux. 可以，可能；n. 五月；（也作人名）", rose: "n. 玫瑰；v. 上升（rise 的过去式）；（也作人名）",
+  sock: "n. 短袜；（也作布偶名）", kolokolo: "（鸟名）Kolokolo 鸟（故事中的鸟）", t: "（'t 即 it，古诗用法；T-shirt 的 T）",
+  ye: "pron. （古）你们", art: "n. 艺术，技术；v. （古）是（thou art = you are）",
+  "brimm'd": "a. （古）盛满的（brimmed）", "dimm'd": "v. （古）使暗淡（dimmed）", "grow'st": "v. （古）你成长（grow）",
+  "lov'd": "v. （古）爱过（loved）", "moss'd": "a. （古）长满青苔的（mossed）", "ow'st": "v. （古）你拥有（owe = own）",
+  "prov'd": "v. （古）被证明（proved）", "reap'd": "a. （古）收割过的（reaped）", "untrimm'd": "a. （古）未修饰的（untrimmed）",
+  "wander'st": "v. （古）你漫游（wander）", watchest: "v. （古）你注视（watch）", starwort: "n. 繁缕；紫菀（植物）", june: "n. 六月；（也作人名）", mark: "n. 记号，分数；vt. 做记号；（也作人名）",
 };
 
 function lookup(key) {
