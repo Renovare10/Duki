@@ -461,6 +461,25 @@ Angkor's decline has no universally accepted single explanation. Warfare, politi
 
 Decline also did not mean that every religious site ceased to function. Angkor Wat remained a place of Buddhist worship. The landscape preserved both major disruptions and continuities, which is why the familiar image of a completely forgotten city reclaimed by forest provides only a partial account of its history.`,
   },
+  {
+    id: "en-wiki-al-khwarizmi", level: 9, title: "Al-Khwarizmi",
+    blurb: "A scholar's books helped give English the words algebra and algorithm.",
+    wikiTitle: "Al-Khwarizmi", sourceUrl: "https://en.wikipedia.org/wiki/Al-Khwarizmi",
+    createdAt: 220_028, topics: ["encyclopedia", "biography", "science"],
+    body: `The English words algebra and algorithm preserve traces of a scholar who worked in ninth-century Baghdad. Muhammad ibn Musa al-Khwarizmi wrote in Arabic about mathematics, astronomy, and geography. Few details of his personal life are certain, but his books helped mathematical ideas travel across languages and remain useful centuries after his death.
+
+His book on algebra presented systematic methods for solving linear and quadratic equations. These are equations involving an unknown quantity, sometimes multiplied by itself. Rather than merely collecting unrelated puzzles, he organized equations into standard forms and explained procedures for solving them. He also supplied geometrical arguments that showed why particular procedures worked.
+
+A modern student might express such a problem with letters and mathematical signs. Al-Khwarizmi described it in words. Reading his work therefore requires attention to the difference between the mathematical relationships being discussed and the notation used to record them. Familiar symbols were not a prerequisite for reasoning systematically about unknown quantities.
+
+The book connected its methods to practical questions, including trade, land measurement, and inheritance. Its title referred to operations often translated as completion and balancing. The word algebra developed from the Arabic term al-jabr. A Latin translation made by Robert of Chester in 1145 helped bring the work to European readers, where it remained influential in mathematical teaching.
+
+Another work explained calculation using the numeral system developed in India. Its original Arabic text has been lost, but versions of its methods survive in Latin. This positional system allows a digit's value to depend on its place within a number. Translating and explaining such methods helped spread ways of calculating that European readers could adopt and teach. Latin forms of the author's name eventually gave rise to the word algorithm, now commonly used for a sequence of computational instructions.
+
+Al-Khwarizmi also compiled astronomical tables and revised geographical information inherited from Ptolemy. His work drew on earlier traditions rather than emerging in isolation. Indian calculation, Greek mathematics, and other bodies of knowledge circulated through the scholarly world in which he worked.
+
+Calling him an inventor of all algebra would erase that longer history. His particular contribution was to organize and explain methods in works that other scholars could study, translate, and extend. The surviving vocabulary records part of that transmission, while the books reveal the mathematical teaching behind the names.`,
+  },
 ];
 
 export const EN_WIKI_TOPICS: Record<string, string[]> = Object.fromEntries(
