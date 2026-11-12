@@ -341,6 +341,50 @@ Now the six years were over. The queen could finally speak. She told her husband
 
 The king's mother was punished, and the family lived in peace. The sister had recovered her voice and her children. Her youngest brother kept the wing left by the unfinished shirt.`,
   },
+  {
+    id: "en-classic-kipling-elephants-child", level: 7,
+    title: "The Elephant's Child",
+    blurb: "Rudyard Kipling · an inconvenient question leads to a very useful nose. An abridged retelling.",
+    author: "Rudyard Kipling",
+    source: "Public domain (Rudyard Kipling), retold for Duki · AI-drafted",
+    sourceUrl: "https://www.gutenberg.org/ebooks/2781",
+    topics: ["classics", "folk-tales", "adventure"],
+    body: `Long ago, according to this story, elephants had short noses. They could wriggle them, but they could not pick anything up with them. Among these elephants was one young child whose curiosity caused considerable trouble in the family.
+
+He wanted to know why the ostrich's tail looked as it did, what had given the giraffe his spots, and why melons tasted so good. His aunts and uncles answered his questions by smacking him. This did nothing to reduce the number of questions.
+
+One morning he asked what a crocodile ate for dinner. Every relative told him to be quiet. After they had all punished him, he went to the Kolokolo Bird, who advised him to visit the Limpopo River and discover the answer for himself.
+
+So the Elephant's Child packed bananas, sugar cane, and melons, and set out across Africa. As he ate the melons, he left the rinds behind. With his short nose, he could not pick them up.
+
+At the river he met a python curled around a rock. The snake was no more helpful than the family had been, and struck him with its tail. The Elephant's Child continued along the bank until he stepped on what appeared to be a log.
+
+The log opened an eye. It was a crocodile, though the young elephant had never seen one and did not recognize it.
+
+He politely asked whether it knew where he could find a crocodile. The creature admitted that it was one. Delighted, the Elephant's Child knelt on the bank and asked his question about dinner.
+
+"Come closer," said the Crocodile. "I'll whisper."
+
+The Elephant's Child lowered his head. The Crocodile seized his nose between its jaws and announced that today's dinner would begin with him.
+
+He pulled backwards. The Crocodile pulled towards the water. Between them, the little nose began to stretch.
+
+The python, hearing the struggle, came down from its rock. Whatever its earlier manners, it now offered sensible advice: unless the elephant pulled much harder, he would shortly disappear into the river.
+
+He spread all four legs and pulled. His nose grew longer. The Crocodile thrashed its tail and dragged him forward. Just as the elephant's feet began to slip, the python wrapped itself around his hind legs and added its strength to his.
+
+At last the Crocodile lost its grip. The Elephant's Child landed heavily on the bank with a nose several feet longer than the one he had brought there.
+
+He thanked the python, wrapped the painful nose in cool leaves, and waited for it to shrink. He waited three days. It did not shrink at all.
+
+Then a fly bit his shoulder. Without thinking, he lifted his new nose and struck the fly. A little later he reached out, gathered grass, and put it into his mouth. When the sun grew hot, he scooped up mud and spread it on his head.
+
+The python pointed out that a short nose could have done none of these things. The stretched nose had become a trunk.
+
+On his way home, the Elephant's Child used it to pull fruit from trees and to pick up his discarded melon rinds. Once home, he also discovered that it gave him an advantage when his relatives wanted to smack him. He could now reach them before they reached him, and he made enthusiastic use of this discovery.
+
+Before long, his family hurried off to the Limpopo to obtain trunks of their own. When they returned, the smacking finally stopped. And that, the story says, is why elephants have trunks today.`,
+  },
 ];
 
 export const EN_CLASSICS_TEXTS: LibraryText[] = READINGS.map(({ topics: _topics, ...reading }, index) => ({
