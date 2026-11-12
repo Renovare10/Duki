@@ -241,13 +241,13 @@ export function Home({
       out.push({ id: `level-${band.id}`, title: band.label, entries: inBand });
     }
     const wiki = entries.filter((e) => e.type === "text" && (e.text.kind === "wiki" || e.text.category === "wiki"));
-    if (wiki.length) out.push({ id: "wiki", title: "Wikipedia · native Chinese", entries: wiki });
+    if (wiki.length) out.push({ id: "wiki", title: lang === "en" ? "Wikipedia · English" : "Wikipedia · native Chinese", entries: wiki });
     const classics = entries.filter((e) => isClassicEntry(e));
     if (classics.length) out.push({ id: "classics", title: "Classics", hint: "Simplified, with the original traditional text", entries: classics });
     const yours = entries.filter((e) => e.type === "text" && e.text.kind === "paste");
     if (yours.length) out.push({ id: "yours", title: "Yours", entries: yours });
     return out;
-  }, [entries, collapsed, scores, sessions, workInfo]);
+  }, [entries, collapsed, scores, sessions, workInfo, lang]);
 
   const shelfRow = openShelf ? rows.find((r) => r.id === openShelf) ?? legacyRow(openShelf) : null;
 
