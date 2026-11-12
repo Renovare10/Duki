@@ -8,7 +8,7 @@
  * and never written to IndexedDB or sync). That reuses the existing bookmark /
  * read / session machinery without any database schema change.
  */
-import type { LibraryText, TextCategory } from "../types";
+import type { Language, LibraryText, TextCategory } from "../types";
 import type { VocabProfile } from "./difficulty";
 
 export type WorkStats = {
@@ -16,6 +16,8 @@ export type WorkStats = {
   chapters: number;
   sections: number;
   chars: number;
+  /** English works use words; chars stays zero in their JSON. */
+  words?: number;
   level: number;
   score: number;
   levelMin: number;
@@ -28,6 +30,8 @@ export type WorkStats = {
 
 export type WorkMeta = {
   id: string;
+  /** Omitted for the existing Mandarin works. */
+  lang?: Language;
   title: string;
   /** Short English title for cards and the page title. */
   english: string;
@@ -44,13 +48,14 @@ export type WorkMeta = {
   notes?: string;
 };
 
-export type TocChapter = { key: string; title: string; label: string; chars: number; level: number };
+export type TocChapter = { key: string; title: string; label: string; chars: number; words?: number; level: number };
 export type TocSection = {
   key: string;
   title: string;
   part?: string;
   sourceUrl?: string;
   chars: number;
+  words?: number;
   level: number;
   chapters: TocChapter[];
 };
@@ -215,7 +220,7 @@ export function workRowSummary(texts: LibraryText[], workId: string): { read: nu
 
 /** The row saved when a chapter is opened: metadata only, never the body. */
 export function workChapterRow(
-  work: Pick<WorkMeta, "id" | "title" | "author" | "category" | "source" | "sourceUrl">,
+  work: Pick<WorkMeta, "id" | "title" | "author" | "category" | "source" | "sourceUrl" | "lang">,
   chapter: Pick<TocChapter, "key" | "title">,
   existing: LibraryText | undefined,
   now: number,
@@ -223,6 +228,7 @@ export function workChapterRow(
   if (existing) return { ...existing, body: "", openedAt: now };
   return {
     id: workRowId(work.id, chapter.key),
+    ...(work.lang === "en" ? { lang: "en" as const } : {}),
     title: chapter.title,
     blurb: work.title,
     body: "",

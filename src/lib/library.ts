@@ -84,7 +84,7 @@ function topicTags(text: LibraryText, topics: Record<string, string[]>): string[
   return [];
 }
 
-function englishReadingMinutes(words: number, level: number | null): number | null {
+export function englishReadingMinutes(words: number, level: number | null): number | null {
   const rate = level && level <= 2 ? 80 : level && level <= 5 ? 120 : 160;
   return words ? Math.max(1, Math.round(words / rate)) : null;
 }
@@ -157,7 +157,12 @@ export function describeWork(work: WorkMeta, stats: WorkStats | undefined): Entr
     return { level: null, levelMax: null, badge: "", badgeTitle: "", band: null, sortScore: UNMEASURED, chars: null, minutes: null, topics: work.topics };
   }
   // The range most chapters sit in (25th–75th percentile), not the outliers.
-  return measured(stats.levelLow, stats.levelHigh, stats.score, stats.chars, work.topics);
+  const info = measured(stats.levelLow, stats.levelHigh, stats.score, stats.chars, work.topics);
+  if (work.lang === "en") {
+    const words = stats.words ?? 0;
+    return { ...info, chars: null, words, minutes: englishReadingMinutes(words, info.level) };
+  }
+  return info;
 }
 
 // ------------------------------------------------------------------ personal
@@ -429,7 +434,7 @@ export function topicCounts(entries: Entry[]): Map<string, number> {
 export function lengthLabel(info: EntryInfo): string | null {
   if (info.words !== undefined) {
     const words = `${info.words.toLocaleString("en-US")} words`;
-    return info.minutes === null ? words : `${words} · ${info.minutes} min`;
+    return info.minutes === null ? words : `${words} · ${formatDuration(info.minutes)}`;
   }
   if (info.chars === null) return null;
   const chars = info.chars >= 10000 ? `${Math.round(info.chars / 1000).toLocaleString("en-US")}k 字` : `${info.chars.toLocaleString("en-US")} 字`;

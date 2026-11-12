@@ -156,6 +156,17 @@ describe("works", () => {
     expect(lengthLabel(info)).toMatch(/k 字 · \d+ h$/);
   });
 
+  it("uses English words and English reading rates for long works", () => {
+    const work = { ...WORKS[0], lang: "en" as const };
+    const stats = { ...WORK_STATS["bible-cuv"], chars: 999999, words: 960, levelLow: 9, levelHigh: 9 };
+    const info = describeWork(work, stats);
+    expect(info).toMatchObject({ words: 960, chars: null, minutes: 6 });
+    expect(lengthLabel(info)).toBe("960 words · 6 min");
+    expect(lengthLabel(describeWork(work, { ...stats, words: 16000 }))).toBe("16,000 words · 1.7 h");
+    const entry = workEntry(work, stats, null, { read: 0, total: 1189, started: false });
+    expect(filterEntries([entry], { ...NO_FILTERS, length: "long" })).toEqual([entry]);
+  });
+
   it("estimates personal known-% from the profile", () => {
     const statuses = new Map([["的", "known"]]);
     expect(workKnownShare({ tokens: 10, words: ["的", "神"], counts: [5, 3] }, statuses)).toBeCloseTo(0.5);
