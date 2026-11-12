@@ -884,6 +884,64 @@ They talked for ten minutes. Then she put on her coat.
 
 He nodded and turned off the lamp above the desk. As she left, Nina noticed that he had pinned the old calendar beside the new list. The yellow boat was still there. Under it, in a space cleared of crossed-out promises, he had written the date of their next accounts meeting.`,
   },
+  {
+    id: "en-book-second-voice-1", lang: "en", level: 8,
+    seriesId: "en-book-second-voice", seriesTitle: "The Second Voice", chapter: 1,
+    title: "Chapter 1: The Woman Beside the Microphone",
+    blurb: "An archivist hears an interruption in a recording about a cinema fire.",
+    kind: "sample", category: "novel", featured: false,
+    createdAt: 210_015, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+    body: `At the end of the recording, after the interviewer had thanked everyone, a woman said, "We'd already gone out by then."
+
+Mara took off her headphones. Across the archive's reading room, a student was photographing a bus timetable. The wall clock made a dry click. She put the headphones back on and moved the recording back ten seconds.
+
+A chair scraped. Someone coughed. Then the woman's voice, close enough to be distinct, although she appeared to be addressing someone beside her rather than the microphone.
+
+The interview was labelled LEON FINCH: RIALTO CINEMA, recorded twenty-three years earlier. Leon had been the projectionist when a small fire closed the cinema in 1978. According to his account, he had spotted smoke from the projection room, run downstairs, and opened the side exit to let the audience out. Nobody had been injured. The cinema never reopened.
+
+The archive was preparing an exhibition about the town's lost picture houses. Mara had chosen a ninety-second extract from Leon's interview. A photograph showed him outside the Rialto, looking almost offensively young, with hair falling over his collar. The proposed caption read: The projectionist who led the audience to safety.
+
+She had written that caption herself on Tuesday.
+
+There were three voices on the recording: Leon, the interviewer, and the woman. Occasionally a cup rattled against a saucer. Mara had assumed the woman was Leon's wife because the interview had taken place at his kitchen table. The catalogue did not identify her.
+
+Her colleague suggested checking the original paperwork. The consent form bore Leon's signature and gave permission for public use of his interview. Under People present, the interviewer had written L.F. + E.W. Nothing else.
+
+Mara searched the local newspaper. Its report from the week of the fire named the manager but no projectionist. The building had been evacuated, it said, after smoke was discovered in a store cupboard. A later anniversary article credited Leon with preventing a disaster. That article had been published after the interview was recorded.
+
+She could have shortened the audio extract. The interruption came well after the passage she planned to use. Nobody would accuse her of hiding something they had never heard. She listened again to Leon describing the stairs, his hands reaching for the exit bar. His voice became quicker as he spoke. He sounded frightened even after all those years.
+
+The archive's contact details were old, but a letter brought a phone call three days later. Leon still lived at the same address. He was eighty-six and wanted to know whether the exhibition would include the photograph in which he wore a white jacket.
+
+"That's the one," Mara said.
+
+"Borrowed. I couldn't have afforded it. The manager wanted us looking smart for a visiting actor."
+
+She asked who E.W. might be.
+
+"Elsie Ward. She did the cleaning and sold ice creams when we were busy. She came round that afternoon with a photograph album."
+
+"Was she at the cinema on the night of the fire?"
+
+"Elsie was always there."
+
+Mara explained what she had heard. A television murmured at his end of the line. For a moment she thought he had put the receiver down.
+
+"I opened that door," he said eventually.
+
+"I'm not saying you didn't."
+
+"I remember the cold bar under my hands. Funny, the things you remember."
+
+He gave her a number for Elsie's daughter, who might be willing to pass on a message. Before they ended the call, he asked whether Mara had ever been inside the Rialto.
+
+She had not. It had been demolished before she was born.
+
+"The ceiling was blue," he said. "You can't see it in any of the photographs. Blue, with little electric stars. Half of them never worked."
+
+Mara wrote that down separately. Then she opened the exhibition file and removed her caption. In its place she typed Leon Finch, projectionist. She left the rest blank. The printer was already asking for final copy, but she could give him his name and his job without deciding, that afternoon, what else he had been.`,
+  },
 ];
 
 /** Topic ids are shared with the Mandarin library; every chapter has its own entry. */
