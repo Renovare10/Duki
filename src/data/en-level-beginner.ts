@@ -355,6 +355,27 @@ She puts the sauce on some rice and tastes it.
 
 Next week, her sister is coming for dinner. Rose writes a shopping list. At the top, she puts "soft tomatoes."`,
   },
+  {
+    ...original,
+    id: "en-l2-the-last-ten-minutes", level: 2, title: "The Last Ten Minutes",
+    blurb: "Mia is ready to stop playing. Her friend suggests a different game.",
+    createdAt: 240_016,
+    body: `Mia is learning to play tennis. Her friend has played for years.
+
+They have the court for one hour. After fifty minutes, Mia is tired of running after balls. Most of her shots go into the net or over the line.
+
+"I'm not very good at this," she says. She puts down her racket.
+
+"We have ten minutes left," her friend says. "Let's try something else. No points. Just get the ball back to me."
+
+They stand closer to the net. Her friend hits the ball softly. Mia hits it back. They do it again.
+
+This time, Mia counts the shots, not the points. They reach eight before the ball falls.
+
+Their hour is over. Mia picks up the ball.
+
+"Next time," she says, "let's try for ten."`,
+  },
 ];
 
 export const EN_BEGINNER_TOPICS: Record<string, string[]> = {
@@ -374,4 +395,5 @@ export const EN_BEGINNER_TOPICS: Record<string, string[]> = {
   "en-l2-a-photo-for-grandpa": ["family", "daily-life", "humor"],
   "en-l2-shoes-for-the-play": ["school", "arts", "feelings"],
   "en-l2-three-soft-tomatoes": ["shopping", "food", "daily-life"],
+  "en-l2-the-last-ten-minutes": ["sports", "feelings"],
 };
