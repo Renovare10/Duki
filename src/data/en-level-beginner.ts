@@ -114,6 +114,35 @@ Her baby brother is there. He has a blue sock on his hand.
 
 May laughs too. "Hello, Sock. Can you come and sit on my foot?"`,
   },
+  {
+    ...original,
+    id: "en-l1-five-minutes", level: 1, title: "Five Minutes",
+    blurb: "Mom has work to do. Dan has something to show her.",
+    createdAt: 240_005,
+    body: `Mom is at her desk. Dan stands next to her.
+
+"Look at my picture," he says.
+
+"In five minutes. I need to finish this."
+
+Dan sits on the floor. He draws a house. He draws a tree. He draws a dog with very long legs.
+
+Mom closes her computer. "All done. Show me."
+
+Dan puts the picture on her desk.
+
+"Is that our house?" she asks.
+
+"Yes. And that is our dog."
+
+"We do not have a dog."
+
+"I know," says Dan. "Can we get one?"
+
+Mom looks at the long legs. "Where can it sleep?"
+
+Dan gets his pencil. He needs to draw a bigger house.`,
+  },
 ];
 
 export const EN_BEGINNER_TOPICS: Record<string, string[]> = {
@@ -122,4 +151,5 @@ export const EN_BEGINNER_TOPICS: Record<string, string[]> = {
   "en-l1-a-seat-for-two": ["school", "feelings", "food"],
   "en-l1-the-small-bag": ["shopping", "family"],
   "en-l1-the-blue-sock": ["daily-life", "family", "humor"],
+  "en-l1-five-minutes": ["family", "work", "humor"],
 };
