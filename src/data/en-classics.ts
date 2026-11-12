@@ -267,6 +267,48 @@ That settled the question for the royal family. Only a real princess, they decid
 
 The peas were placed in a collection of rare objects, where, according to the story, you may still see them today. Unless, of course, somebody has lost them.`,
   },
+  {
+    id: "en-classic-andersen-emperor-clothes", level: 6,
+    title: "The Emperor's New Clothes",
+    blurb: "Hans Christian Andersen · nobody wants to admit what they cannot see. An abridged retelling.",
+    author: "Hans Christian Andersen",
+    source: "Public domain (Hans Christian Andersen), retold for Duki · AI-drafted",
+    sourceUrl: "https://www.gutenberg.org/ebooks/1597",
+    topics: ["classics", "folk-tales", "humor"],
+    body: `There was once an emperor who cared more about clothes than about governing his country. He had an outfit for every hour of the day. When people wanted to know where he was, the answer was usually that he was changing.
+
+One day two strangers arrived in the capital. They claimed to be weavers who could produce a remarkable cloth. Its colors and patterns were beautiful, they said, but its greatest advantage was stranger still: anyone who was foolish, or unfit for their position, would be unable to see it.
+
+The emperor immediately ordered a suit. With clothes like these, he thought, he could discover which of his officials deserved their jobs.
+
+The strangers asked for silk, gold thread, and a large payment. They put the money and materials away, then sat at empty looms, moving their hands as though they were working.
+
+After a while, the emperor sent a trusted minister to inspect their progress. The minister entered the room and stared. He could see the looms perfectly well, but there was nothing on them.
+
+He felt cold with fear. Was he a fool? Had he been given a position he did not deserve? He must not let anyone find out.
+
+"What beautiful colors!" he said.
+
+The weavers described an elaborate pattern. The minister listened carefully so that he could repeat their description to the emperor. A second official visited and did exactly the same thing.
+
+At last the emperor went to see the cloth himself. He could not see it either. But since everyone around him was praising it, he smiled and praised it too.
+
+The weavers worked through the night before a grand procession. They cut the air with scissors and sewed with needles that carried no thread. In the morning they announced that the clothes were ready.
+
+The emperor took off his real clothes. The strangers pretended to dress him, lifting invisible sleeves and arranging an invisible train. His attendants admired the fit. No one dared to mention that there was nothing to fit.
+
+Then the emperor stepped out beneath a fine canopy and began his walk through the city. Behind him, servants held their hands above the ground, carrying the train they could not see.
+
+People lined the streets. They had all heard about the special cloth. Each person feared that everyone else could see something they could not, so they praised the emperor's magnificent new suit.
+
+A child looked up from the crowd.
+
+"But he hasn't got anything on!"
+
+The child's father tried to explain away the remark, but nearby people had heard it. They whispered the words to one another. Soon the whisper had spread through the whole crowd, and people were saying aloud that the emperor wore nothing at all.
+
+The emperor heard them. He suspected they were right, yet he could not bring himself to stop the procession. He straightened his back and walked on with greater dignity than ever. Behind him, the servants continued to carry the train.`,
+  },
 ];
 
 export const EN_CLASSICS_TEXTS: LibraryText[] = READINGS.map(({ topics: _topics, ...reading }, index) => ({
