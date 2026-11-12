@@ -48,11 +48,17 @@ try {
   const zhWikiRow = page.locator('section.shelf[data-row="wiki"]');
   const zhWiki = (await zhWikiRow.count()) ? { title: (await zhWikiRow.locator(".shelf-title-btn").first().innerText()).trim(), count: (await zhWikiRow.locator(".shelf-count").first().innerText()).trim() } : null;
   if (zhWiki) assert.match(zhWiki.title, /Wikipedia · native Chinese/, "Mandarin Wikipedia shelf keeps its heading");
+  const zhClassicsSub = page.locator('section.shelf[data-row="classics"] .shelf-sub');
+  if (await zhClassicsSub.count()) assert.equal((await zhClassicsSub.first().innerText()).trim(), "Simplified, with the original traditional text", "Mandarin Classics hint unchanged");
   await page.getByRole("button", { name: "English", exact: true }).click();
   await page.getByRole("heading", { name: "Read English at your level." }).waitFor();
   const enWikiRow = page.locator('section.shelf[data-row="wiki"]');
   assert.match((await enWikiRow.locator(".shelf-title-btn").first().innerText()).trim(), /Wikipedia · English/, "English Wikipedia shelf heading");
   assert.equal(Number((await enWikiRow.locator(".shelf-count").first().innerText()).trim()), 30, "English Wikipedia shelf has 30 adaptations");
+  const enClassicsRow = page.locator('section.shelf[data-row="classics"]');
+  assert.equal(Number((await enClassicsRow.locator(".shelf-count").first().innerText()).trim()), 20, "English Classics shelf has 20 texts");
+  assert.match(await enClassicsRow.locator(".shelf-sub").first().innerText(), /Public-domain stories retold/, "English Classics hint");
+  assert.equal(Number((await page.locator('section.shelf[data-row="level-beginner"] .shelf-count').first().innerText()).trim()), 24, "English Beginner row: 4 starter + 20 Beginner");
   for (const name of ["Review", "Stats", "Add text"]) {
     assert.ok(await page.getByRole("button", { name, exact: true }).count(), `English header has ${name}`);
   }
@@ -69,16 +75,16 @@ try {
   assert.equal(await page.getByRole("button", { name: "English", exact: true }).getAttribute("aria-pressed"), "true");
 
   // Shared search + Level filter, then open a story, tap a word, mark it.
-  // Level rows include the Wikipedia adaptations at their level (five each at L4–L9).
+  // Level filters include the Wikipedia adaptations (five each at L4–L9) and the Classics (two per level, own shelf on Home).
   const allTitles = new Set();
-  for (const [band, n, label] of [["beginner", 4, "Beginner is L1–2"], ["intermediate", 34, "Intermediate is L5–6"], ["advanced", 34, "Advanced is L7–8"], ["native", 24, "Native is L9–10"], ["elementary", 29, "Elementary is L3–4"]]) {
+  for (const [band, n, label] of [["beginner", 28, "Beginner is L1–2"], ["intermediate", 38, "Intermediate is L5–6"], ["advanced", 38, "Advanced is L7–8"], ["native", 28, "Native is L9–10"], ["elementary", 33, "Elementary is L3–4"]]) {
     await page.getByLabel("Level", { exact: true }).selectOption(band);
     assert.equal(await page.locator(".title-card").count(), n, `${label} (${n} texts)`);
     for (const t of await page.locator(".title-card-name").allTextContents()) allTitles.add(t.trim());
   }
-  assert.equal(allTitles.size, 125, "20 starter + 105 section texts across the level filters (unique titles)");
+  assert.equal(allTitles.size, 165, "20 starter + 145 section texts across the level filters (unique titles)");
   await page.getByLabel("Level", { exact: true }).selectOption("elementary");
-  assert.equal(await page.locator(".title-card").count(), 29, "Elementary is L3–4 (4 starter + 20 section stories + 5 L4 Wikipedia)");
+  assert.equal(await page.locator(".title-card").count(), 33, "Elementary is L3–4 (4 starter + 20 section stories + 5 L4 Wikipedia + 4 Classics)");
   await page.getByLabel("Search the library").fill("Wrong Train");
   await page.locator(".title-card", { hasText: "The Wrong Train" }).waitFor();
   assert.equal(await page.locator(".title-card").count(), 1);
