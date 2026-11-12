@@ -101,6 +101,27 @@ The Sun shines on him. Soon he is very hot. He takes off his coat and sits under
 
 The Wind looks at the coat beside the man. It is off at last, but the Wind did not blow it off.`,
   },
+  {
+    id: "en-classic-aesop-crow-pitcher", level: 3,
+    title: "The Crow and the Pitcher",
+    blurb: "Aesop · a thirsty bird cannot reach the water. A simple retelling.",
+    author: "Aesop", source: "Public domain (Aesop), retold for Duki · AI-drafted",
+    sourceUrl: "https://www.gutenberg.org/ebooks/19994",
+    topics: ["classics", "folk-tales", "nature"],
+    body: `It had not rained for days. A crow flew over the dry fields, looking for water. At last he saw a pitcher beside a house. A pitcher is a tall pot for holding drinks.
+
+The crow landed on its edge and looked inside. There was water at the bottom. He bent his head and tried to drink, but his beak could not reach it. The opening was too narrow for him to get his whole head in.
+
+He walked around the pitcher. He pushed it, but it was too heavy. He looked inside again. The water was there, just a little too far away.
+
+Near his feet were some small stones. The crow picked one up and dropped it into the pitcher. It fell into the water with a little splash.
+
+He dropped in another stone. Then another. The stones stayed at the bottom, and the water rose above them.
+
+The crow went on picking up stones. He had to make many trips, but each stone brought the water a little closer.
+
+At last he bent his head over the opening once more. This time his beak touched the water. He drank until he was no longer thirsty, then flew away.`,
+  },
 ];
 
 export const EN_CLASSICS_TEXTS: LibraryText[] = READINGS.map(({ topics: _topics, ...reading }, index) => ({
