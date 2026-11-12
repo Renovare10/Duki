@@ -427,6 +427,37 @@ The boy told him that these were the wounds of love. A strange awe came over the
 
 That afternoon, when the children ran in after school, they found the Giant dead beneath the tree. White blossoms covered his body.`,
   },
+  {
+    id: "en-classic-frost-road-not-taken", level: 8,
+    title: "The Road Not Taken",
+    blurb: "Robert Frost · a choice remembered, and perhaps changed in the telling. Original poem, 1916.",
+    author: "Robert Frost", source: "Public domain (Robert Frost), original poem from Mountain Interval (1916)",
+    sourceUrl: "https://www.gutenberg.org/ebooks/29345",
+    topics: ["classics", "poetry", "feelings"],
+    body: `Two roads diverged in a yellow wood,
+And sorry I could not travel both
+And be one traveler, long I stood
+And looked down one as far as I could
+To where it bent in the undergrowth;
+
+Then took the other, as just as fair,
+And having perhaps the better claim,
+Because it was grassy and wanted wear;
+Though as for that the passing there
+Had worn them really about the same,
+
+And both that morning equally lay
+In leaves no step had trodden black.
+Oh, I kept the first for another day!
+Yet knowing how way leads on to way,
+I doubted if I should ever come back.
+
+I shall be telling this with a sigh
+Somewhere ages and ages hence:
+Two roads diverged in a wood, and I--
+I took the one less traveled by,
+And that has made all the difference.`,
+  },
 ];
 
 export const EN_CLASSICS_TEXTS: LibraryText[] = READINGS.map(({ topics: _topics, ...reading }, index) => ({
