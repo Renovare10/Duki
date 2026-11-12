@@ -53,6 +53,31 @@ But there is no other dog. There is no other bone. He sees only water.
 
 The dog gets out. He is wet. Now he has no bone at all.`,
   },
+  {
+    id: "en-classic-aesop-lion-mouse", level: 2,
+    title: "The Lion and the Mouse",
+    blurb: "Aesop · a little mouse makes a big promise. Simply retold.",
+    author: "Aesop", source: "Public domain (Aesop), retold for Duki · AI-drafted",
+    sourceUrl: "https://www.gutenberg.org/ebooks/19994",
+    topics: ["classics", "folk-tales", "feelings"],
+    body: `A lion is asleep under a tree. A little mouse runs across his nose. The lion wakes up and puts his big foot on her.
+
+"Please let me go," says the mouse. "One day I can help you."
+
+The lion laughs. "You? Help me? You are so small!"
+
+But he lifts his foot. The mouse runs away.
+
+Some days later, the lion gets caught in a net. He pulls at it, but he cannot get out. He calls for help.
+
+The mouse hears him. She runs to the net and starts to bite a rope. Her teeth are small, but they are sharp. She bites and bites. At last, the rope breaks.
+
+The lion steps out of the net.
+
+"You laughed at me," says the mouse. "But here you are!"
+
+The lion looks down at his little friend. This time he does not laugh.`,
+  },
 ];
 
 export const EN_CLASSICS_TEXTS: LibraryText[] = READINGS.map(({ topics: _topics, ...reading }, index) => ({
