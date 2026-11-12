@@ -181,6 +181,25 @@ The dog drops the big ball. Now he wants the red one.
 
 One boy throws the red ball. The other boy gets their ball back. At last, everyone can play.`,
   },
+  {
+    ...original,
+    id: "en-l1-the-open-box", level: 1, title: "The Open Box",
+    blurb: "A box of snow does not stay a box of snow for long.",
+    createdAt: 240_008,
+    body: `There is snow in the garden. I fill a small plastic box with it.
+
+I take the box inside. I want to show my brother. He is still in bed.
+
+I put the open box on the kitchen table. Then I have breakfast.
+
+My brother comes down. "What is in the box?" he asks.
+
+I look inside. There is water at the bottom. The snow is very small now.
+
+"It is too warm in here," I say.
+
+We put on our coats. There is more snow outside. This time, we leave it there.`,
+  },
 ];
 
 export const EN_BEGINNER_TOPICS: Record<string, string[]> = {
@@ -192,4 +211,5 @@ export const EN_BEGINNER_TOPICS: Record<string, string[]> = {
   "en-l1-five-minutes": ["family", "work", "humor"],
   "en-l1-the-paper-fish": ["arts", "family", "nature"],
   "en-l1-not-that-ball": ["sports", "nature", "humor"],
+  "en-l1-the-open-box": ["weather", "science", "family"],
 };
