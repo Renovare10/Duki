@@ -1,15 +1,16 @@
 import { WIKI_TITLES } from "../data/wiki-titles";
-import type { LibraryText } from "../types";
+import type { Language, LibraryText } from "../types";
 
-export function wikiTextId(title: string): string {
-  return `wiki-${title}`;
+export function wikiTextId(title: string, lang: Language = "zh"): string {
+  return `${lang === "en" ? "en-wiki" : "wiki"}-${title}`;
 }
 
-export function wikiStub(title: string, createdAt: number, blurb?: string): LibraryText {
+export function wikiStub(title: string, createdAt: number, blurb?: string, lang: Language = "zh"): LibraryText {
   return {
-    id: wikiTextId(title),
+    id: wikiTextId(title, lang),
     title,
-    blurb: blurb || `Chinese Wikipedia · ${title}`,
+    blurb: blurb || `${lang === "en" ? "English" : "Chinese"} Wikipedia · ${title}`,
+    lang,
     body: "",
     kind: "wiki",
     category: "wiki",
@@ -38,7 +39,7 @@ export type WikiPage = {
   url: string;
 };
 
-export function parseWikiQuery(raw: unknown): WikiPage {
+export function parseWikiQuery(raw: unknown, lang: Language = "zh"): WikiPage {
   if (!raw || typeof raw !== "object") throw new Error("Could not read Wikipedia.");
   const pages = (raw as { query?: { pages?: Record<string, WikiPageRaw> } }).query?.pages;
   if (!pages) throw new Error("Could not read Wikipedia.");
@@ -50,7 +51,7 @@ export function parseWikiQuery(raw: unknown): WikiPage {
   if (!extract) throw new Error("That page has no text extract.");
   const url =
     page.fullurl ||
-    `https://zh.wikipedia.org/wiki/${encodeURIComponent(page.title || "")}`;
+    `https://${lang}.wikipedia.org/wiki/${encodeURIComponent(page.title || "")}`;
   return { title: page.title || "Wikipedia", extract, url };
 }
 
@@ -62,7 +63,7 @@ type WikiPageRaw = {
   invalid?: boolean | "";
 };
 
-export function wikiApiUrl(title: string, introOnly: boolean): string {
+export function wikiApiUrl(title: string, introOnly: boolean, lang: Language = "zh"): string {
   const params = new URLSearchParams({
     action: "query",
     format: "json",
@@ -72,13 +73,12 @@ export function wikiApiUrl(title: string, introOnly: boolean): string {
     inprop: "url",
     redirects: "1",
     titles: title,
-    // Simplified script. Without it zh.wikipedia returns each article in the
-    // script its editors used (often Traditional), which the glossary can't read.
-    variant: "zh-cn",
   });
+  // Keep Mandarin extracts simplified; English has no script variant.
+  if (lang === "zh") params.set("variant", "zh-cn");
   if (introOnly) params.set("exintro", "1");
   else params.set("exchars", "4500");
-  return `https://zh.wikipedia.org/w/api.php?${params.toString()}`;
+  return `https://${lang}.wikipedia.org/w/api.php?${params.toString()}`;
 }
 
 export function wikiSearchUrl(query: string, limit = 12): string {
@@ -128,13 +128,14 @@ function stripHtml(value: string): string {
 
 export async function fetchWikiPage(
   title: string,
-  opts?: { full?: boolean },
+  opts?: { full?: boolean; lang?: Language },
 ): Promise<WikiPage> {
-  const intro = await fetchJson(wikiApiUrl(title, true));
-  let page = parseWikiQuery(intro);
+  const lang = opts?.lang ?? "zh";
+  const intro = await fetchJson(wikiApiUrl(title, true, lang));
+  let page = parseWikiQuery(intro, lang);
   if (opts?.full || page.extract.length < 180) {
-    const longer = await fetchJson(wikiApiUrl(title, false));
-    page = parseWikiQuery(longer);
+    const longer = await fetchJson(wikiApiUrl(title, false, lang));
+    page = parseWikiQuery(longer, lang);
   }
   return page;
 }

@@ -1,9 +1,11 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import {
+  fetchWikiPage,
   parseWikiQuery,
   parseWikiSearch,
   wikiApiUrl,
   wikiSearchUrl,
+  wikiStub,
   wikiStubs,
   wikiTextId,
 } from "./wiki";
@@ -38,6 +40,45 @@ describe("parseWikiQuery", () => {
     expect(() =>
       parseWikiQuery({ query: { pages: { "-1": { title: "没有", missing: true } } } }),
     ).toThrow(/missing/i);
+  });
+});
+
+describe("shared Wikipedia language", () => {
+  afterEach(() => vi.unstubAllGlobals());
+
+  it.each(["en", "zh"] as const)("fetches both extracts from %s Wikipedia", async (lang) => {
+    // No fullurl: the reader's fallback source link must use the same language too.
+    const payload = { query: { pages: { "123": { title: "Test article", extract: "Article body." } } } };
+    const fetchMock = vi.fn(async (_url: string) => ({ ok: true, json: async () => payload }));
+    vi.stubGlobal("fetch", fetchMock);
+
+    const stub = wikiStub("Test article", 123, undefined, lang);
+    expect(stub.lang ?? "zh").toBe(lang);
+    expect(stub.id).toBe(wikiTextId("Test article", lang));
+    expect(stub.blurb).toBe(`${lang === "en" ? "English" : "Chinese"} Wikipedia · Test article`);
+
+    const page = await fetchWikiPage(stub.wikiTitle!, { full: true, lang: stub.lang });
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    const urls = fetchMock.mock.calls.map(([url]) => new URL(url));
+    for (const url of urls) {
+      expect(url.hostname).toBe(`${lang}.wikipedia.org`);
+      expect(url.searchParams.get("titles")).toBe("Test article");
+      expect(url.searchParams.get("variant")).toBe(lang === "zh" ? "zh-cn" : null);
+    }
+    expect(urls[0].searchParams.get("exintro")).toBe("1");
+    expect(urls[1].searchParams.get("exchars")).toBe("4500");
+    expect(page).toEqual({
+      title: "Test article", extract: "Article body.",
+      url: `https://${lang}.wikipedia.org/wiki/Test%20article`,
+    });
+  });
+
+  it("keeps Mandarin defaults and separates same-title articles by language", () => {
+    expect(wikiTextId("DNA")).toBe("wiki-DNA");
+    expect(wikiTextId("DNA", "zh")).toBe("wiki-DNA");
+    expect(wikiTextId("DNA", "en")).not.toBe(wikiTextId("DNA", "zh"));
+    expect(wikiStub("DNA", 123).lang ?? "zh").toBe("zh");
+    expect(new URL(wikiApiUrl("DNA", true)).hostname).toBe("zh.wikipedia.org");
   });
 });
 

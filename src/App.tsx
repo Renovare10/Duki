@@ -860,7 +860,7 @@ export default function App() {
     try {
       let next = { ...text };
       if (text.wikiTitle) {
-        const page = await fetchWikiPage(text.wikiTitle, { full: mode === "read" });
+        const page = await fetchWikiPage(text.wikiTitle, { full: mode === "read", lang: text.lang });
         next = {
           ...text,
           title: page.title,
@@ -1067,10 +1067,12 @@ export default function App() {
       return textsRef.current.find((t) => t.id === key) ?? null;
     }
     if (kind === "wiki") {
-      const id = wikiTextId(key);
-      const existing = textsRef.current.find((t) => t.id === id || t.wikiTitle === key);
+      const id = wikiTextId(key, lang);
+      const existing = textsRef.current.find(
+        (t) => (t.lang ?? "zh") === lang && (t.id === id || t.wikiTitle === key),
+      );
       if (existing) return existing;
-      const stub = wikiStub(key, Date.now());
+      const stub = wikiStub(key, Date.now(), undefined, lang);
       await saveText(stub);
       return stub;
     }
