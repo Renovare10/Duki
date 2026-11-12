@@ -265,6 +265,29 @@ On his way home, he buys a hot potato from a man by the road. He sits on a wall 
 
 It is a good dinner after all.`,
   },
+  {
+    ...original,
+    id: "en-l2-the-quiet-table", level: 2, title: "The Quiet Table",
+    blurb: "Sara chooses a busy place for lunch, but her friend cannot hear her.",
+    createdAt: 240_012,
+    body: `Sara meets her friend Jo for lunch. She chooses a place with good noodles. The room is full of people, and music comes from a speaker above their table.
+
+Sara starts a story about her new job. Jo leans across the table.
+
+"Sorry. What did you say?"
+
+Sara speaks again, louder this time. Jo still cannot hear every word. They eat for a while without talking.
+
+Then Sara sees a small table outside. No one is sitting there.
+
+"Can we move?" she asks the waiter.
+
+Outside, they can hear birds and cars, but there is no music. Jo puts her bowl down.
+
+"Now," she says, "tell me about that job. Start at the beginning."
+
+Sara does. Soon their noodles are cold, but they keep talking.`,
+  },
 ];
 
 export const EN_BEGINNER_TOPICS: Record<string, string[]> = {
@@ -280,4 +303,5 @@ export const EN_BEGINNER_TOPICS: Record<string, string[]> = {
   "en-l1-a-light-next-door": ["family", "daily-life", "work"],
   "en-l2-the-shirt-with-a-name": ["school", "family", "feelings"],
   "en-l2-the-first-pay": ["work", "shopping", "daily-life"],
+  "en-l2-the-quiet-table": ["food", "feelings", "daily-life"],
 };
