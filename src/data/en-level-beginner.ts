@@ -248,6 +248,23 @@ She puts on the shirt. It looks different on her.
 
 "You can write my name now," she tells Mom. "But leave his name too. I want to show my friends the tree's shirt."`,
   },
+  {
+    ...original,
+    id: "en-l2-the-first-pay", level: 2, title: "The First Pay",
+    blurb: "Leo has his first pay and a long walk home.",
+    createdAt: 240_011,
+    body: `Leo works in a small food shop. At the end of his first week, he gets his pay. He checks the money in his bank account twice.
+
+All week, he has walked to work. His bike has a broken wheel. The walk takes forty minutes.
+
+He wants to buy a good dinner. But he also wants to sleep a little later on Monday.
+
+He takes his bike to the bike shop. A new wheel costs less than he thought. There is still some money left.
+
+On his way home, he buys a hot potato from a man by the road. He sits on a wall to eat it. His bike stands beside him, ready for Monday.
+
+It is a good dinner after all.`,
+  },
 ];
 
 export const EN_BEGINNER_TOPICS: Record<string, string[]> = {
@@ -262,4 +279,5 @@ export const EN_BEGINNER_TOPICS: Record<string, string[]> = {
   "en-l1-the-open-box": ["weather", "science", "family"],
   "en-l1-a-light-next-door": ["family", "daily-life", "work"],
   "en-l2-the-shirt-with-a-name": ["school", "family", "feelings"],
+  "en-l2-the-first-pay": ["work", "shopping", "daily-life"],
 };
