@@ -225,6 +225,29 @@ In the morning, Dad is home.
 
 "Our neighbor was making tea. He made me a cup too."`,
   },
+  {
+    ...original,
+    id: "en-l2-the-shirt-with-a-name", level: 2, title: "The Shirt with a Name",
+    blurb: "Nina wears her brother's old school shirt, with his name still inside.",
+    createdAt: 240_010,
+    body: `Nina needs a white shirt for school. Her brother's old shirt fits her now. Mom washes it and puts it on Nina's bed.
+
+Inside the shirt, Nina finds a name: Alex. Mom wrote it there two years ago.
+
+"It still has his name," Nina says.
+
+"I can put your name under it," Mom says.
+
+Nina is quiet. She wants something new, with only her name on it.
+
+Alex comes to the door. "Is that my old shirt? I wore it for the school show."
+
+Nina remembers. He was a very bad tree. He fell over, and everyone laughed.
+
+She puts on the shirt. It looks different on her.
+
+"You can write my name now," she tells Mom. "But leave his name too. I want to show my friends the tree's shirt."`,
+  },
 ];
 
 export const EN_BEGINNER_TOPICS: Record<string, string[]> = {
@@ -238,4 +261,5 @@ export const EN_BEGINNER_TOPICS: Record<string, string[]> = {
   "en-l1-not-that-ball": ["sports", "nature", "humor"],
   "en-l1-the-open-box": ["weather", "science", "family"],
   "en-l1-a-light-next-door": ["family", "daily-life", "work"],
+  "en-l2-the-shirt-with-a-name": ["school", "family", "feelings"],
 };
