@@ -385,6 +385,48 @@ On his way home, the Elephant's Child used it to pull fruit from trees and to pi
 
 Before long, his family hurried off to the Limpopo to obtain trunks of their own. When they returned, the smacking finally stopped. And that, the story says, is why elephants have trunks today.`,
   },
+  {
+    id: "en-classic-wilde-selfish-giant", level: 7,
+    title: "The Selfish Giant",
+    blurb: "Oscar Wilde · a locked garden stays in winter. An abridged retelling with the original religious ending.",
+    author: "Oscar Wilde",
+    source: "Public domain (Oscar Wilde), retold for Duki · AI-drafted",
+    sourceUrl: "https://www.gutenberg.org/ebooks/902",
+    topics: ["classics", "literature", "faith"],
+    body: `Every afternoon after school, the children played in the Giant's garden. The grass was soft, the peach trees flowered in spring, and the birds sang so beautifully that the children sometimes interrupted their games to listen.
+
+The Giant had been away for seven years. When he returned and found strangers in his garden, he shouted at them until they fled. Then he built a high wall and put up a notice threatening anyone who entered without permission.
+
+Outside the wall, the children tried playing on the road, but it was dusty and covered with hard stones. Inside, the Giant had the garden entirely to himself.
+
+Spring arrived everywhere except behind his wall. There, snow covered the grass and frost silvered the branches. The birds would not sing where there were no children, and the trees would not blossom. The North Wind came to stay, bringing Hail as a guest. Together they battered the castle and raced around the empty garden.
+
+Summer passed, then autumn, but the Giant's winter continued. He sat at his window, puzzled by the weather.
+
+One morning he heard music. After so many months without birdsong, an ordinary little bird outside his window sounded like a whole company of musicians. He jumped out of bed and looked into the garden.
+
+The children had crept through a hole in the wall. They were sitting among the branches, and every tree they occupied was covered in flowers. Only one corner remained frozen. There a very small boy was crying because he could not reach a branch. The tree bent towards him, but he was still too small to climb.
+
+Watching from the window, the Giant understood what he had done. He went downstairs and into the garden.
+
+The children saw him and scattered. Winter returned immediately. Only the little boy remained; his tears prevented him from seeing the Giant approach. The Giant lifted him gently and set him in the tree. Blossoms opened overhead. The child threw his arms around the Giant's neck and kissed him.
+
+When the other children saw this, they returned, and spring came with them. The Giant knocked down the wall. From then on, the children could play in his garden whenever they wished.
+
+But that evening the smallest boy disappeared. None of the others knew where he lived. The Giant asked about him day after day, without success.
+
+Years passed. The Giant grew too old to join the games. Instead he sat in an enormous chair and watched the children playing. He was fond of them all, yet he never forgot the first child he had helped.
+
+One winter morning, he looked out and saw a tree covered in white blossoms. Its branches were gold, and silver fruit hung from them. Beneath it stood the little boy.
+
+The Giant hurried outside. Then his happiness changed to anger: there were marks of nails on the child's hands and feet. He demanded to know who had wounded him, so that he could punish them.
+
+The boy told him that these were the wounds of love. A strange awe came over the Giant, and he knelt.
+
+"You let me play once in your garden," the child said. "Today you shall come with me to my garden, which is Paradise."
+
+That afternoon, when the children ran in after school, they found the Giant dead beneath the tree. White blossoms covered his body.`,
+  },
 ];
 
 export const EN_CLASSICS_TEXTS: LibraryText[] = READINGS.map(({ topics: _topics, ...reading }, index) => ({
