@@ -942,6 +942,78 @@ She had not. It had been demolished before she was born.
 
 Mara wrote that down separately. Then she opened the exhibition file and removed her caption. In its place she typed Leon Finch, projectionist. She left the rest blank. The printer was already asking for final copy, but she could give him his name and his job without deciding, that afternoon, what else he had been.`,
   },
+  {
+    id: "en-book-second-voice-2", lang: "en", level: 8,
+    seriesId: "en-book-second-voice", seriesTitle: "The Second Voice", chapter: 2,
+    title: "Chapter 2: Elsie's Letter",
+    blurb: "Elsie supplies a different account of the fire, but not the interview Mara wants.",
+    kind: "sample", category: "novel", featured: false,
+    createdAt: 210_016, readAt: null, bookmark: null,
+    source: "Original (Duki) · AI-drafted",
+    body: `Elsie did not want a microphone in her sitting room. She had made that clear through her daughter, and repeated it when Mara arrived. Mara left the recorder zipped inside her bag.
+
+"You can write things down," Elsie said. "But don't expect me to talk at that thing. Last time, I sat there for an hour and came away with a terrible headache."
+
+She was ninety-one. A narrow table beside her chair held a magnifying glass and a bowl of wrapped sweets. She offered Mara a sweet, then asked her to open one for her too. The wrappers were difficult with her hands.
+
+Mara explained the exhibition. She mentioned the sentence at the end of the tape and asked what Elsie remembered about the evacuation.
+
+"Wet shoes," Elsie said.
+
+It had rained that evening. The audience had crowded into the alley beside the cinema, where water collected against a blocked drain. Elsie remembered a woman holding a newspaper over a child's head. She remembered being annoyed that her own coat was still in the staff room.
+
+"Leon says he opened the side exit."
+
+"He may well have done. There was more than one door."
+
+Mara had brought a copy of a floor plan, folded to fit her notebook. Elsie turned it several times, then laid her finger on a doorway near the front of the auditorium.
+
+"Here. I'd just finished selling the ice creams. The picture stopped, and the house lights came on. The manager shouted for everyone to leave. I pushed this open. We were all standing in the rain when I saw Leon."
+
+"Had everyone left the building?"
+
+"Everyone I could see. I couldn't see through walls, even then."
+
+Mara apologised. Her questions were becoming sharper as her certainty became smaller. She asked whether Elsie had ever written her recollections down.
+
+Elsie pointed to a biscuit tin beneath the table.
+
+Inside were folded letters, a photograph of a seaside boarding house, and an envelope addressed to a local newspaper. The letter in the envelope was dated the year the anniversary article appeared. It had never been posted.
+
+In it, Elsie corrected several details: the shop beside the cinema had sold shoes, not hats; the fire had been on a Thursday; she, rather than Leon, had opened the front side exit. The final paragraph asked why nobody had contacted the women who worked there.
+
+"Why didn't you send it?" Mara asked.
+
+"I showed it to my sister. She said people would think I was jealous. Then I thought I'd better write it again without all the bits about the shoe shop. I never did."
+
+Mara read it a second time. The letter was evidence that Elsie had disputed the story years ago, not proof that her recollection was correct. Still, its existence changed the convenient picture of one old man remembering and one old woman interrupting.
+
+"Could we include a copy in the exhibition?"
+
+Elsie shook her head.
+
+"That's a private letter."
+
+"Even though it was written to a newspaper?"
+
+"It didn't get there, did it?"
+
+Mara closed the envelope. She had imagined placing the letter beside Leon's portrait, an overlooked account finally getting its audience. Elsie, apparently, had not been waiting twenty years for Mara to arrive and make that happen.
+
+They talked instead about the work. Ice cream trays had straps that rubbed the back of Elsie's neck. Cleaning under the seats required kneeling in places where the floor was still sticky from the previous night. She disliked the sentimental photographs of cinemas full of empty seats. Somebody had always had to clean those seats.
+
+When Mara stood to leave, Elsie asked whether Leon knew about the visit.
+
+"Yes. He gave me your daughter's number."
+
+"He was very frightened that night. His brother had died in a house fire. Don't put that in your exhibition. It isn't yours to tell."
+
+Mara put her notebook away without adding it.
+
+At the door, Elsie said she might write something new. Something short, about working at the Rialto, if Mara would show her exactly how it would appear.
+
+"And find a photograph with people in it," she added. "Not just that enormous building."`,
+  },
 ];
 
 /** Topic ids are shared with the Mandarin library; every chapter has its own entry. */
