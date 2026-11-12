@@ -209,6 +209,36 @@ So they planted the fields and cared for the young plants. That year the crops g
 
 Then they understood their father's words. The treasure had come from the land, though they had not dug up a single gold coin.`,
   },
+  {
+    id: "en-classic-grimm-star-money", level: 5,
+    title: "The Star-Money",
+    blurb: "Brothers Grimm · a girl gives away the last things she owns. An abridged retelling.",
+    author: "Jacob and Wilhelm Grimm",
+    source: "Public domain (Brothers Grimm; Margaret Hunt translation), retold for Duki · AI-drafted",
+    sourceUrl: "https://www.gutenberg.org/ebooks/5314",
+    topics: ["classics", "folk-tales", "faith"],
+    body: `A little girl had lost both her parents. She had no house to return to and no bed in which to sleep. All she owned were the clothes she wore and a piece of bread that someone had given her.
+
+With the bread in her hand, she set off across the open country. She did not know where she would spend the night, but she trusted that God would look after her.
+
+Before she had gone far, she met a hungry man. He asked whether she had anything to eat. The girl looked at her bread. It was the only food she had, and she had not eaten it yet. Still, she put the whole piece into his hand.
+
+"May God bless it for you," she said, and walked on.
+
+Soon she met a child who was shivering. His head was bare, and he had nothing to keep it warm. The girl took off her hood and gave it to him.
+
+Farther along the road, another child needed a jacket. She gave away her own. Then she met a child who needed a dress, and she gave that away too.
+
+By the time she reached a forest, it was dark. She had only her thin shirt left. One more child came towards her and asked for something to wear.
+
+The girl stood among the trees. No one could see her in the darkness, she thought. She took off her shirt and handed it over.
+
+Now she had nothing at all.
+
+As she stood there, the stars began to fall. But what landed around her was not light or fire. Smooth silver coins dropped through the branches and lay shining on the ground.
+
+At the same moment, the girl found that she was wearing a new shirt of the finest linen. She lifted its hem and gathered the coins into it. There were enough to support her for the rest of her life.`,
+  },
 ];
 
 export const EN_CLASSICS_TEXTS: LibraryText[] = READINGS.map(({ topics: _topics, ...reading }, index) => ({
