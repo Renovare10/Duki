@@ -317,7 +317,7 @@ export function Home({
               aria-pressed={filters.topic === t.id}
               onClick={() => set({ topic: filters.topic === t.id ? "all" : t.id })}
             >
-              {t.label}
+              {topicLabel(t.id, lang)}
             </button>
           ))}
         </div>
@@ -661,7 +661,7 @@ function BookCard({ book, info, tag, onOpen }: { book: Book; info: EntryInfo; ta
           <span className={`read-pill${progress === "read" ? " on" : ""}`}>{label}</span>
           {book.author ? <span>{book.author}</span> : null}
           <span>{book.chapters.length} chapters</span>
-          {info.topics[0] ? <span className="cat-tag">{topicLabel(info.topics[0])}</span> : null}
+          {info.topics[0] ? <span className="cat-tag">{topicLabel(info.topics[0], book.chapters[0]?.lang)}</span> : null}
         </div>
       </div>
     </article>
@@ -778,7 +778,7 @@ function CardMeta({
         </button>
       ) : null}
       {score && score.total > 0 && score.uniqueUnknown > 0 ? <span>{score.uniqueUnknown} new words</span> : null}
-      {topic ? <span className="cat-tag">{topicLabel(topic)}</span> : <span className="cat-tag">{categoryLabel(text.category)}</span>}
+      {topic ? <span className="cat-tag">{topicLabel(topic, text.lang)}</span> : <span className="cat-tag">{categoryLabel(text.category)}</span>}
     </div>
   );
 }

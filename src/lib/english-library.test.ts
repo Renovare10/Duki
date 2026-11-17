@@ -9,6 +9,7 @@ import { EN_WIKI_TEXTS, EN_WIKI_TOPICS } from "../data/en-wiki";
 import { EN_BEGINNER_TEXTS, EN_BEGINNER_TOPICS } from "../data/en-level-beginner";
 import { EN_CLASSICS_TEXTS, EN_CLASSICS_TOPICS } from "../data/en-classics";
 import { EN_BOOK_TEXTS, EN_BOOK_TOPICS } from "../data/en-books";
+import { topicLabel } from "../data/topics";
 import { collapseTexts } from "./books";
 import { isTopic } from "../data/topics";
 import type { LibraryText } from "../types";
@@ -375,6 +376,13 @@ describe("English stories", () => {
       expect(matchesFilters(entry, { ...NO_FILTERS, topic: "classics" })).toBe(false);
       expect(describeText({ ...t, lang: "zh" }).topics).toEqual([]);
     }
+  });
+
+  it("labels the classics topic plainly for English and keeps the Mandarin label", () => {
+    expect(topicLabel("classics", "en")).toBe("Classics");
+    expect(topicLabel("classics", "zh")).toBe("Chinese classics");
+    expect(topicLabel("classics")).toBe("Chinese classics");
+    expect(topicLabel("history", "en")).toBe("History");
   });
 
   it("adds six books without duplicating seed rows or timestamps", () => {

@@ -37,7 +37,9 @@ export const TOPICS: Topic[] = [
 
 const TOPIC_IDS = new Set(TOPICS.map((t) => t.id));
 
-export function topicLabel(id: string): string {
+/** English readers see plain "Classics": their classics shelf is English literature, not Chinese. */
+export function topicLabel(id: string, lang?: string): string {
+  if (lang === "en" && id === "classics") return "Classics";
   return TOPICS.find((t) => t.id === id)?.label ?? id;
 }
 
