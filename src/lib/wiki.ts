@@ -10,7 +10,8 @@ export function wikiStub(title: string, createdAt: number, blurb?: string, lang:
     id: wikiTextId(title, lang),
     title,
     blurb: blurb || `${lang === "en" ? "English" : "Chinese"} Wikipedia · ${title}`,
-    lang,
+    // Mandarin stubs keep their original shape (no lang field), so seeded and synced rows are unchanged.
+    ...(lang === "en" ? { lang } : {}),
     body: "",
     kind: "wiki",
     category: "wiki",
