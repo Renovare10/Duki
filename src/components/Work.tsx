@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { LibraryText, WordStatus } from "../types";
 import { workStats } from "../data/works";
 import { LEVEL_NAMES, levelBand, readingMinutes } from "../lib/difficulty";
-import { describeWork, fitOfShare, formatDuration, workKnownShare } from "../lib/library";
+import { describeWork, englishReadingMinutes, fitOfShare, formatDuration, workKnownShare } from "../lib/library";
 import {
   chapterState,
   loadToc,
@@ -32,6 +32,7 @@ export function WorkScreen({ work, texts, statuses, personal, onBack, onOpenChap
   const profiles = useWorkProfiles([work.id], personal);
   const known = personal ? workKnownShare(profiles.get(work.id), statuses) : null;
   const info = describeWork(work, stats);
+  const english = work.lang === "en";
 
   useEffect(() => {
     let cancelled = false;
@@ -55,9 +56,9 @@ export function WorkScreen({ work, texts, statuses, personal, onBack, onOpenChap
         ← Library
       </button>
       <header className="work-head">
-        <Cover category={work.category} title={work.title} />
+        <Cover category={work.category} title={work.title} lang={work.lang} />
         <div className="work-head-copy">
-          <h1 lang="zh-CN">{work.title}</h1>
+          <h1 lang={english ? "en" : "zh-CN"}>{work.title}</h1>
           <p className="work-sub">
             {work.english} · {work.author} · {work.year}
           </p>
@@ -92,7 +93,7 @@ export function WorkScreen({ work, texts, statuses, personal, onBack, onOpenChap
               <strong>Copyright:</strong> {work.license}
             </p>
             {work.notes ? <p>{work.notes}</p> : null}
-            {stats ? (
+            {stats && english ? <p>{(stats.words ?? 0).toLocaleString("en-US")} words · L{stats.level} editorial native-English placement.</p> : stats ? (
               <p>
                 {stats.chars.toLocaleString("en-US")} characters · most chapters at {LEVEL_NAMES[stats.levelLow]}
                 {stats.levelHigh !== stats.levelLow ? `–${LEVEL_NAMES[stats.levelHigh]}` : ""} level (easiest L
@@ -114,6 +115,7 @@ export function WorkScreen({ work, texts, statuses, personal, onBack, onOpenChap
               <SectionRow
                 key={section.key}
                 section={section}
+                english={english}
                 rows={rows}
                 nextKey={progress?.next.key ?? null}
                 onOpen={onOpenChapter}
@@ -146,13 +148,23 @@ function LevelTag({ level }: { level: number }) {
   );
 }
 
+function tocSize(item: TocChapter | TocSection, english: boolean): string {
+  return english ? `${(item.words ?? 0).toLocaleString("en-US")} words` : `${item.chars.toLocaleString("en-US")} 字`;
+}
+
+function tocDuration(item: TocChapter | TocSection, english: boolean): string {
+  return formatDuration(english ? englishReadingMinutes(item.words ?? 0, item.level) ?? 0 : readingMinutes(item.chars, item.level));
+}
+
 function SectionRow({
   section,
+  english,
   rows,
   nextKey,
   onOpen,
 }: {
   section: TocSection;
+  english: boolean;
   rows: Map<string, LibraryText>;
   nextKey: string | null;
   onOpen: (key: string) => void;
@@ -167,13 +179,13 @@ function SectionRow({
         onClick={() => onOpen(ch.key)}
       >
         <span className="toc-dot" aria-hidden="true" />
-        <span className="toc-title" lang="zh-CN">
+        <span className="toc-title" lang={english ? "en" : "zh-CN"}>
           {section.title}
         </span>
         <span className="toc-meta">
           <LevelTag level={ch.level} />
           <span>
-            {ch.chars.toLocaleString("en-US")} 字 · {formatDuration(readingMinutes(ch.chars, ch.level))}
+            {tocSize(ch, english)} · {tocDuration(ch, english)}
           </span>
           {state === "read" ? <span className="toc-state">Read</span> : state === "started" ? <span className="toc-state">Started</span> : null}
         </span>
@@ -186,13 +198,13 @@ function SectionRow({
   return (
     <details className={`toc-section${read === section.chapters.length ? " all-read" : ""}`} open={holdsNext}>
       <summary>
-        <span className="toc-title" lang="zh-CN">
+        <span className="toc-title" lang={english ? "en" : "zh-CN"}>
           {section.title}
         </span>
         <span className="toc-meta">
           <LevelTag level={section.level} />
           <span>
-            {section.chapters.length} ch · {formatDuration(readingMinutes(section.chars, section.level))}
+            {section.chapters.length} ch · {english ? `${tocSize(section, true)} · ` : ""}{tocDuration(section, english)}
           </span>
           {read ? (
             <span className="toc-state">
@@ -203,7 +215,7 @@ function SectionRow({
       </summary>
       <div className={numeric ? "ch-grid" : "toc-sublist"}>
         {section.chapters.map((ch) => (
-          <ChapterChip key={ch.key} ch={ch} numeric={numeric} row={rows.get(ch.key)} next={ch.key === nextKey} onOpen={onOpen} />
+          <ChapterChip key={ch.key} ch={ch} english={english} numeric={numeric} row={rows.get(ch.key)} next={ch.key === nextKey} onOpen={onOpen} />
         ))}
       </div>
     </details>
@@ -212,19 +224,21 @@ function SectionRow({
 
 function ChapterChip({
   ch,
+  english,
   numeric,
   row,
   next,
   onOpen,
 }: {
   ch: TocChapter;
+  english: boolean;
   numeric: boolean;
   row: LibraryText | undefined;
   next: boolean;
   onOpen: (key: string) => void;
 }) {
   const state = chapterState(row);
-  const label = `${ch.title} · L${ch.level} · ${ch.chars} 字${state === "read" ? " · read" : state === "started" ? " · started" : ""}`;
+  const label = `${ch.title} · L${ch.level} · ${english ? tocSize(ch, true) : `${ch.chars} 字`}${state === "read" ? " · read" : state === "started" ? " · started" : ""}`;
   if (numeric) {
     return (
       <button
@@ -241,12 +255,12 @@ function ChapterChip({
   return (
     <button type="button" className={`toc-row sub state-${state}${next ? " is-next" : ""}`} onClick={() => onOpen(ch.key)}>
       <span className="toc-dot" aria-hidden="true" />
-      <span className="toc-title" lang="zh-CN">
+      <span className="toc-title" lang={english ? "en" : "zh-CN"}>
         {ch.label}
       </span>
       <span className="toc-meta">
         <LevelTag level={ch.level} />
-        <span>{ch.chars.toLocaleString("en-US")} 字</span>
+        <span>{tocSize(ch, english)}</span>
       </span>
     </button>
   );

@@ -8,6 +8,8 @@ import { EN_NATIVE_TEXTS, EN_NATIVE_TOPICS } from "../data/en-level-native";
 import { EN_WIKI_TEXTS, EN_WIKI_TOPICS } from "../data/en-wiki";
 import { EN_BEGINNER_TEXTS, EN_BEGINNER_TOPICS } from "../data/en-level-beginner";
 import { EN_CLASSICS_TEXTS, EN_CLASSICS_TOPICS } from "../data/en-classics";
+import { EN_BOOK_TEXTS, EN_BOOK_TOPICS } from "../data/en-books";
+import { collapseTexts } from "./books";
 import { isTopic } from "../data/topics";
 import type { LibraryText } from "../types";
 import { getGloss } from "./glossary";
@@ -38,8 +40,8 @@ describe("English stories", () => {
     for (let level = 2; level <= 10; level++) expect(avg(level)).toBeGreaterThan(avg(level - 1));
   });
 
-  it("has a Chinese gloss for every word a reader can tap, in every English story (starter + Elementary + Intermediate + Advanced + Native + Wikipedia + Beginner + Classics)", () => {
-    expect(EN_SAMPLES.length).toBe(EN_STORY_TEXTS.length + EN_ELEMENTARY_TEXTS.length + EN_INTERMEDIATE_TEXTS.length + EN_ADVANCED_TEXTS.length + EN_NATIVE_TEXTS.length + EN_WIKI_TEXTS.length + EN_BEGINNER_TEXTS.length + EN_CLASSICS_TEXTS.length);
+  it("has a Chinese gloss for every word a reader can tap, in every English story (starter + Elementary + Intermediate + Advanced + Native + Wikipedia + Beginner + Classics + Books)", () => {
+    expect(EN_SAMPLES.length).toBe(EN_STORY_TEXTS.length + EN_ELEMENTARY_TEXTS.length + EN_INTERMEDIATE_TEXTS.length + EN_ADVANCED_TEXTS.length + EN_NATIVE_TEXTS.length + EN_WIKI_TEXTS.length + EN_BEGINNER_TEXTS.length + EN_CLASSICS_TEXTS.length + EN_BOOK_TEXTS.length);
     for (const t of EN_SAMPLES) {
       for (const tok of [...words(t.title), ...words(t.body)]) {
         expect(EN_GLOSSES[tok.key!], `${t.id}: ${tok.text}`).toBeTruthy();
@@ -50,8 +52,8 @@ describe("English stories", () => {
   });
 
   it("keeps every English section in order without duplicating ids or timestamps", () => {
-    expect(EN_SAMPLES).toEqual([...EN_STORY_TEXTS, ...EN_ELEMENTARY_TEXTS, ...EN_INTERMEDIATE_TEXTS, ...EN_ADVANCED_TEXTS, ...EN_NATIVE_TEXTS, ...EN_WIKI_TEXTS, ...EN_BEGINNER_TEXTS, ...EN_CLASSICS_TEXTS]);
-    expect(EN_SAMPLES).toHaveLength(165);
+    expect(EN_SAMPLES).toEqual([...EN_STORY_TEXTS, ...EN_ELEMENTARY_TEXTS, ...EN_INTERMEDIATE_TEXTS, ...EN_ADVANCED_TEXTS, ...EN_NATIVE_TEXTS, ...EN_WIKI_TEXTS, ...EN_BEGINNER_TEXTS, ...EN_CLASSICS_TEXTS, ...EN_BOOK_TEXTS]);
+    expect(EN_SAMPLES).toHaveLength(183);
     expect(new Set(EN_SAMPLES.map((t) => t.id)).size).toBe(EN_SAMPLES.length);
     expect(new Set(EN_SAMPLES.map((t) => t.createdAt)).size).toBe(EN_SAMPLES.length);
   });
@@ -60,8 +62,8 @@ describe("English stories", () => {
     expect(EN_ELEMENTARY_TEXTS).toHaveLength(20);
     for (const level of [3, 4]) {
       expect(EN_ELEMENTARY_TEXTS.filter((t) => t.level === level)).toHaveLength(10);
-      expect(EN_SAMPLES.filter((t) => t.level === level && t.kind !== "wiki" && !isClassicText(t))).toHaveLength(12);
-      expect(EN_SAMPLES.filter((t) => t.level === level && !isClassicText(t))).toHaveLength(level === 3 ? 12 : 17); // + five Wikipedia adaptations at L4–L9
+      expect(EN_SAMPLES.filter((t) => t.level === level && t.kind !== "wiki" && !isClassicText(t) && !t.seriesId)).toHaveLength(12);
+      expect(EN_SAMPLES.filter((t) => t.level === level && !isClassicText(t) && !t.seriesId)).toHaveLength(level === 3 ? 12 : 17); // + five Wikipedia adaptations at L4–L9
     }
   });
 
@@ -109,8 +111,8 @@ describe("English stories", () => {
     expect(EN_INTERMEDIATE_TEXTS).toHaveLength(20);
     for (const level of [5, 6]) {
       expect(EN_INTERMEDIATE_TEXTS.filter((t) => t.level === level)).toHaveLength(10);
-      expect(EN_SAMPLES.filter((t) => t.level === level && t.kind !== "wiki" && !isClassicText(t))).toHaveLength(12);
-      expect(EN_SAMPLES.filter((t) => t.level === level && !isClassicText(t))).toHaveLength(level === 3 ? 12 : 17); // + five Wikipedia adaptations at L4–L9
+      expect(EN_SAMPLES.filter((t) => t.level === level && t.kind !== "wiki" && !isClassicText(t) && !t.seriesId)).toHaveLength(12);
+      expect(EN_SAMPLES.filter((t) => t.level === level && !isClassicText(t) && !t.seriesId)).toHaveLength(level === 3 ? 12 : 17); // + five Wikipedia adaptations at L4–L9
     }
   });
 
@@ -158,8 +160,8 @@ describe("English stories", () => {
     expect(EN_ADVANCED_TEXTS).toHaveLength(20);
     for (const level of [7, 8]) {
       expect(EN_ADVANCED_TEXTS.filter((t) => t.level === level)).toHaveLength(10);
-      expect(EN_SAMPLES.filter((t) => t.level === level && t.kind !== "wiki" && !isClassicText(t))).toHaveLength(12);
-      expect(EN_SAMPLES.filter((t) => t.level === level && !isClassicText(t))).toHaveLength(level === 3 ? 12 : 17); // + five Wikipedia adaptations at L4–L9
+      expect(EN_SAMPLES.filter((t) => t.level === level && t.kind !== "wiki" && !isClassicText(t) && !t.seriesId)).toHaveLength(12);
+      expect(EN_SAMPLES.filter((t) => t.level === level && !isClassicText(t) && !t.seriesId)).toHaveLength(level === 3 ? 12 : 17); // + five Wikipedia adaptations at L4–L9
     }
   });
 
@@ -321,7 +323,7 @@ describe("English stories", () => {
     expect(EN_BEGINNER_TEXTS).toHaveLength(20);
     for (const level of [1, 2]) {
       expect(EN_BEGINNER_TEXTS.filter((t) => t.level === level)).toHaveLength(10);
-      expect(EN_SAMPLES.filter((t) => t.level === level && !isClassicText(t))).toHaveLength(12); // classics sit on their own shelf
+      expect(EN_SAMPLES.filter((t) => t.level === level && !isClassicText(t) && !t.seriesId)).toHaveLength(12); // classics sit on their own shelf
     }
     expect(new Set(EN_SAMPLES.map((t) => t.id)).size).toBe(EN_SAMPLES.length);
     expect(new Set(EN_SAMPLES.map((t) => t.createdAt)).size).toBe(EN_SAMPLES.length);
@@ -371,6 +373,76 @@ describe("English stories", () => {
         expect(matchesFilters(entry, { ...NO_FILTERS, topic })).toBe(true);
       }
       expect(matchesFilters(entry, { ...NO_FILTERS, topic: "classics" })).toBe(false);
+      expect(describeText({ ...t, lang: "zh" }).topics).toEqual([]);
+    }
+  });
+
+  it("adds six books without duplicating seed rows or timestamps", () => {
+    expect(EN_BOOK_TEXTS).toHaveLength(18);
+    for (const level of [2, 3, 4, 5, 7, 8]) {
+      expect(EN_BOOK_TEXTS.filter((t) => t.level === level)).toHaveLength(3);
+    }
+    expect(new Set(EN_SAMPLES.map((t) => t.id)).size).toBe(EN_SAMPLES.length);
+    expect(new Set(EN_SAMPLES.map((t) => t.createdAt)).size).toBe(EN_SAMPLES.length);
+  });
+
+  it("gives every book chapter complete metadata and 300–900 readable words", () => {
+    for (const [index, t] of EN_BOOK_TEXTS.entries()) {
+      expect(t.id).toMatch(/^en-book-[a-z0-9-]+-[1-6]$/);
+      expect(t.lang).toBe("en");
+      expect(Number.isInteger(t.level)).toBe(true);
+      expect([2, 3, 4, 5, 7, 8]).toContain(t.level);
+      expect(t.title).toMatch(new RegExp(`^Chapter ${t.chapter}: .+`));
+      expect(t.blurb.trim()).not.toBe("");
+      expect(t.body).toMatch(/\n\n/);
+      expect(words(t.body).length, t.id).toBeGreaterThanOrEqual(300);
+      expect(words(t.body).length, t.id).toBeLessThanOrEqual(900);
+      expect(t.kind).toBe("sample");
+      expect(t.category).toBe("novel");
+      expect(t.source).toBe("Original (Duki) · AI-drafted");
+      expect(t.featured).toBe(false);
+      expect(t.createdAt).toBe(210_000 + index);
+      expect(t.readAt).toBeNull();
+      expect(t.bookmark).toBeNull();
+    }
+  });
+
+  it("collapses all chapters into six ordered Book cards, two in each target band", () => {
+    const cards = collapseTexts(EN_SAMPLES).filter((item) => item.type === "book");
+    expect(cards).toHaveLength(6);
+    const levels: number[] = [];
+    for (const item of cards) {
+      if (item.type !== "book") throw new Error("Expected a Book card");
+      const { book } = item;
+      expect(book.chapters).toHaveLength(3);
+      expect(book.chapters.map((t) => t.chapter)).toEqual([1, 2, 3]);
+      expect(book.id).toMatch(/^en-book-[a-z0-9-]+$/);
+      expect(book.title.trim()).not.toBe("");
+      expect(book.createdAt).toBe(book.chapters[0].createdAt);
+      for (const t of book.chapters) {
+        expect(t.seriesId).toBe(book.id);
+        expect(t.seriesTitle).toBe(book.title);
+        expect(t.level).toBe(book.chapters[0].level);
+      }
+      levels.push(book.chapters[0].level!);
+    }
+    expect(levels.sort((a, b) => a - b)).toEqual([2, 3, 4, 5, 7, 8]);
+    expect(collapseTexts([...EN_BOOK_TEXTS].reverse())).toEqual(collapseTexts(EN_BOOK_TEXTS));
+  });
+
+  it("exposes each chapter's valid topics through the shared English filters only", () => {
+    expect(Object.keys(EN_BOOK_TOPICS).sort()).toEqual(EN_BOOK_TEXTS.map((t) => t.id).sort());
+    for (const t of EN_BOOK_TEXTS) {
+      const topics = EN_BOOK_TOPICS[t.id];
+      expect(topics.length).toBeGreaterThan(0);
+      expect(topics.every(isTopic)).toBe(true);
+      const entry = textEntry(t, undefined);
+      expect(entry.info.topics).toEqual(topics);
+      expect(entry.info.badge).toBe(`L${t.level}`);
+      expect(entry.info.words).toBe(words(t.body).length);
+      for (const topic of topics) {
+        expect(matchesFilters(entry, { ...NO_FILTERS, topic })).toBe(true);
+      }
       expect(describeText({ ...t, lang: "zh" }).topics).toEqual([]);
     }
   });

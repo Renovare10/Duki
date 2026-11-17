@@ -5,6 +5,9 @@
  */
 import type { WorkMeta, WorkStats } from "../lib/works";
 import { WORK_STATS } from "./works.generated";
+import type { Language } from "../types";
+import { EN_WORKS } from "./en-works";
+import { EN_WORK_STATS } from "./en-works.generated";
 
 export const WORKS: WorkMeta[] = [
   {
@@ -77,10 +80,14 @@ export const WORKS: WorkMeta[] = [
   },
 ];
 
-export function findWork(id: string): WorkMeta | undefined {
-  return WORKS.find((w) => w.id === id);
+export function worksForLanguage(lang: Language): WorkMeta[] {
+  return lang === "en" ? EN_WORKS : WORKS;
+}
+
+export function findWork(id: string, lang: Language = "zh"): WorkMeta | undefined {
+  return worksForLanguage(lang).find((w) => w.id === id);
 }
 
 export function workStats(id: string): WorkStats | undefined {
-  return WORK_STATS[id];
+  return WORK_STATS[id] ?? EN_WORK_STATS[id];
 }

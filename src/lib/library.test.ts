@@ -6,9 +6,11 @@ import { LIBRARY_TOPICS } from "../data/library/index";
 import { isTopic, TEXT_TOPICS } from "../data/topics";
 import { WORKS } from "../data/works";
 import { WORK_STATS } from "../data/works.generated";
-import { hanCount } from "./difficulty";
+import { hanCount, readingMinutes } from "./difficulty";
+import { findBook } from "./books";
 import {
   describeText,
+  describeBook,
   describeWork,
   filterEntries,
   formatDuration,
@@ -115,6 +117,36 @@ describe("describeText", () => {
   });
 });
 
+describe("describeBook", () => {
+  it.each([[2, 6], [3, 4], [7, 3]])("totals English words and uses the L%i reading rate", (level, minutes) => {
+    const chapters = [1, 2].map((chapter) => t({
+      id: `en-fixture-${chapter}`, lang: "en", level,
+      body: "word ".repeat(240), seriesId: "en-fixture", chapter,
+    }));
+    const info = describeBook(findBook(chapters, "en-fixture")!, {}, {});
+    expect(info).toMatchObject({ chars: null, words: 480, minutes, level, levelMax: level });
+    expect(lengthLabel(info)).toBe(`480 words · ${minutes} min`);
+  });
+
+  it.each(["word ".repeat(240), ""])("totals unlevelled English chapters, including empty bodies", (body) => {
+    const chapters = [1, 2].map((chapter) => t({
+      id: `en-own-${chapter}`, lang: "en", body, seriesId: "en-own", chapter,
+    }));
+    const info = describeBook(findBook(chapters, "en-own")!, {}, {});
+    expect(info).toMatchObject({ level: null, chars: null, words: body ? 480 : 0, minutes: body ? 3 : null });
+  });
+
+  it("preserves Mandarin character totals, level range, topics and reading time", () => {
+    const chapters = [1, 2].map((chapter) => t({ id: `zh-${chapter}`, seriesId: "zh", chapter }));
+    const info = describeBook(findBook(chapters, "zh")!, { "zh-1": [3, 345, 400], "zh-2": [5, 520, 800] }, {
+      "zh-1": ["family"], "zh-2": ["family", "food"],
+    });
+    expect(info).toMatchObject({ chars: 1200, level: 3, levelMax: 5, badge: "L3–5", topics: ["family", "food"], minutes: readingMinutes(1200, 3) });
+    expect(info.sortScore).toBeCloseTo(3.45);
+    expect(info.words).toBeUndefined();
+  });
+});
+
 describe("works", () => {
   it("show the range most chapters sit in", () => {
     const bible = WORKS.find((w) => w.id === "bible-cuv")!;
@@ -122,6 +154,17 @@ describe("works", () => {
     expect(info.badge).toMatch(/^L\d+(–\d+)?$/);
     expect(info.chars).toBe(WORK_STATS["bible-cuv"].chars);
     expect(lengthLabel(info)).toMatch(/k 字 · \d+ h$/);
+  });
+
+  it("uses English words and English reading rates for long works", () => {
+    const work = { ...WORKS[0], lang: "en" as const };
+    const stats = { ...WORK_STATS["bible-cuv"], chars: 999999, words: 960, levelLow: 9, levelHigh: 9 };
+    const info = describeWork(work, stats);
+    expect(info).toMatchObject({ words: 960, chars: null, minutes: 6 });
+    expect(lengthLabel(info)).toBe("960 words · 6 min");
+    expect(lengthLabel(describeWork(work, { ...stats, words: 16000 }))).toBe("16,000 words · 1.7 h");
+    const entry = workEntry(work, stats, null, { read: 0, total: 1189, started: false });
+    expect(filterEntries([entry], { ...NO_FILTERS, length: "long" })).toEqual([entry]);
   });
 
   it("estimates personal known-% from the profile", () => {

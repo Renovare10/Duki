@@ -194,6 +194,15 @@ describe("workChapterRow", () => {
     expect(r).toMatchObject({ id: "w:demo:GEN.1", body: "", openedAt: 123, readAt: null, bookmark: null, kind: "sample" });
   });
 
+  it("tags English chapter progress for language isolation without tagging Mandarin rows", () => {
+    const english = { ...work, lang: "en" as const };
+    const chapter = { key: "GEN.1", title: "Genesis 1" };
+    expect(workChapterRow(english, chapter, undefined, 123).lang).toBe("en");
+    expect(workChapterRow(work, chapter, undefined, 123)).not.toHaveProperty("lang");
+    const existing = { ...row("GEN.1", { readAt: 50 }), lang: "en" as const };
+    expect(workChapterRow(english, chapter, existing, 999)).toMatchObject({ lang: "en", readAt: 50, body: "" });
+  });
+
   it("keeps read state and bookmark when reopening, and never stores a body", () => {
     const existing = row("GEN.1", { readAt: 50, bookmark: { tokenIndex: 9, scrollY: 400 }, body: "leaked" });
     const r = workChapterRow(work, { key: "GEN.1", title: "创世记 1" }, existing, 999);

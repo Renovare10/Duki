@@ -8,9 +8,10 @@ import { EN_NATIVE_TEXTS } from "./en-level-native";
 import { EN_WIKI_TEXTS } from "./en-wiki";
 import { EN_BEGINNER_TEXTS } from "./en-level-beginner";
 import { EN_CLASSICS_TEXTS } from "./en-classics";
+import { EN_BOOK_TEXTS } from "./en-books";
 
-/** English shelf rows: the starter stories, then each section (Elementary, Intermediate, Advanced, Native, Wikipedia, Beginner, Classics). */
-export const EN_SAMPLES: LibraryText[] = [...EN_STORY_TEXTS, ...EN_ELEMENTARY_TEXTS, ...EN_INTERMEDIATE_TEXTS, ...EN_ADVANCED_TEXTS, ...EN_NATIVE_TEXTS, ...EN_WIKI_TEXTS, ...EN_BEGINNER_TEXTS, ...EN_CLASSICS_TEXTS];
+/** English shelf rows: the starter stories, then each section (Elementary, Intermediate, Advanced, Native, Wikipedia, Beginner, Classics, Books). */
+export const EN_SAMPLES: LibraryText[] = [...EN_STORY_TEXTS, ...EN_ELEMENTARY_TEXTS, ...EN_INTERMEDIATE_TEXTS, ...EN_ADVANCED_TEXTS, ...EN_NATIVE_TEXTS, ...EN_WIKI_TEXTS, ...EN_BEGINNER_TEXTS, ...EN_CLASSICS_TEXTS, ...EN_BOOK_TEXTS];
 
 /** Generated Chinese glosses for every English story (ECDICT, MIT). Unknown words get a dash. */
 export const EN_GLOSSES: Record<string, string> = EN_GLOSSES_GENERATED;

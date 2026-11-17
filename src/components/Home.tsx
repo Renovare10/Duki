@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import type { Language, LibraryText, ReadingSession, TextCategory, TextScore, WordStatus } from "../types";
-import { WORKS, workStats } from "../data/works";
+import { worksForLanguage, workStats } from "../data/works";
 import { TOPICS, topicLabel } from "../data/topics";
 import { LEVEL_BANDS, type LevelBand } from "../lib/difficulty";
 import { buildShelves, daySeed, pickRecommendedItems, type LevelFilter } from "../lib/shelves";
@@ -135,11 +135,12 @@ export function Home({
   }, [filters.query]);
 
   const personal = useMemo(() => personalReady(statuses), [statuses]);
-  const workIds = useMemo(() => (lang === "zh" ? WORKS.map((w) => w.id) : []), [lang]);
+  const works = useMemo(() => worksForLanguage(lang), [lang]);
+  const workIds = useMemo(() => works.map((w) => w.id), [works]);
   const profiles = useWorkProfiles(workIds, personal);
   const startedWorks = useMemo(
-    () => WORKS.filter((w) => workRowSummary(texts, w.id).last).map((w) => w.id),
-    [texts],
+    () => works.filter((w) => workRowSummary(texts, w.id).last).map((w) => w.id),
+    [texts, works],
   );
   const tocs = useWorkTocs(startedWorks);
 
@@ -147,7 +148,6 @@ export function Home({
 
   const workInfo = useMemo(() => {
     const out = new Map<string, { entry: Entry; cont: ContinueTarget | null; lastTouched: number }>();
-    const works = lang === "zh" ? WORKS : [];
     for (const work of works) {
       const stats = workStats(work.id);
       const toc = tocs.get(work.id);
@@ -175,7 +175,7 @@ export function Home({
       out.set(work.id, { entry: workEntry(work, stats, known, progress), cont, lastTouched });
     }
     return out;
-  }, [lang, texts, tocs, profiles, statuses, personal]);
+  }, [works, texts, tocs, profiles, statuses, personal]);
 
   const entries = useMemo(() => {
     const list: Entry[] = collapsed.map((item) =>
@@ -610,7 +610,7 @@ function WorkCard({
   return (
     <article className="title-card work-card">
       <button type="button" className="title-hit" onClick={cont ? cont.open : onOpen}>
-        <Cover category={work.category} tag={tag} title={work.title} />
+        <Cover category={work.category} tag={tag} title={work.title} lang={work.lang} />
         <div className="title-copy">
           <DifficultyStrip info={info} known={known} fit={fit} />
           <div className="title-card-name">{work.title}</div>
@@ -788,11 +788,13 @@ export function Cover({
   coverUrl,
   tag,
   title,
+  lang = "zh",
 }: {
   category: TextCategory;
   coverUrl?: string;
   tag?: string;
   title?: string;
+  lang?: Language;
 }): ReactNode {
   return (
     <div className={`cover-art cover-${category}${title ? " cover-titled" : ""}`} aria-hidden="true">
@@ -800,7 +802,7 @@ export function Cover({
       <span className="blob a" />
       <span className="blob b" />
       <span className="blob c" />
-      {title ? <span className="cover-title" lang="zh-CN">{coverTitle(title)}</span> : null}
+      {title ? <span className="cover-title" lang={lang === "en" ? "en" : "zh-CN"}>{coverTitle(title)}</span> : null}
       {tag ? <span className="cover-tag">{tag}</span> : null}
     </div>
   );

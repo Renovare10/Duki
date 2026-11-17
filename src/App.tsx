@@ -364,12 +364,12 @@ export default function App() {
     if (view.name === "reader") page = texts.find((item) => item.id === view.id)?.title ?? "";
     else if (view.name === "book") {
       page = texts.find((item) => item.seriesId === view.id)?.seriesTitle ?? "";
-    } else if (view.name === "work") page = findWork(view.id)?.title ?? "";
+    } else if (view.name === "work") page = findWork(view.id, lang)?.title ?? "";
     else if (view.name === "review") page = "Review";
     else if (view.name === "stats") page = "Stats";
     else if (view.name === "add") page = "Add text";
     document.title = documentTitle(page);
-  }, [view, texts]);
+  }, [view, texts, lang]);
 
   useEffect(() => {
     const parsed = parseAuthCallback(window.location.search, window.location.hash);
@@ -974,13 +974,14 @@ export default function App() {
       }
       return;
     }
-    const work = findWork(ref.workId);
+    const work = findWork(ref.workId, lang);
     if (!work) {
       setWorkError("That book isn’t in this version of Duki.");
       return;
     }
     let cancelled = false;
     setWorkError(null);
+    setClassicPair(null);
     (async () => {
       try {
         const [toc, chapter] = await Promise.all([loadToc(ref.workId), loadChapter(ref.workId, ref.key)]);
@@ -999,7 +1000,7 @@ export default function App() {
     return () => {
       cancelled = true;
     };
-  }, [ready, view]);
+  }, [ready, view, lang]);
 
   /** Stats history: local-only, best effort — a failed write never blocks reading or review. */
   function logWordEvent(event: WordEvent) {
@@ -1600,7 +1601,7 @@ export default function App() {
         />
       ) : null}
 
-      {ready && lang === "zh" && view.name === "book" ? (
+      {ready && view.name === "book" ? (
         findBook(languageTexts, view.id) ? (
           <BookScreen
             book={findBook(languageTexts, view.id)!}
@@ -1623,10 +1624,11 @@ export default function App() {
         )
       ) : null}
 
-      {ready && lang === "zh" && view.name === "work" ? (
-        findWork(view.id) ? (
+      {ready && view.name === "work" ? (
+        findWork(view.id, lang) ? (
           <WorkScreen
-            work={findWork(view.id)!}
+            key={view.id}
+            work={findWork(view.id, lang)!}
             texts={texts}
             statuses={statuses}
             personal={personal}
@@ -1685,9 +1687,9 @@ export default function App() {
           <button
             className="primary"
             type="button"
-            onClick={() => navigate(findWork(readingWork.workId) ? { name: "work", id: readingWork.workId } : { name: "home" })}
+            onClick={() => navigate(findWork(readingWork.workId, lang) ? { name: "work", id: readingWork.workId } : { name: "home" })}
           >
-            {findWork(readingWork.workId) ? "Back to contents" : "Back to the shelves"}
+            {findWork(readingWork.workId, lang) ? "Back to contents" : "Back to the shelves"}
           </button>
         </div>
       ) : null}

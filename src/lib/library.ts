@@ -15,6 +15,7 @@ import { EN_NATIVE_TOPICS } from "../data/en-level-native";
 import { EN_WIKI_TOPICS } from "../data/en-wiki";
 import { EN_BEGINNER_TOPICS } from "../data/en-level-beginner";
 import { EN_CLASSICS_TOPICS } from "../data/en-classics";
+import { EN_BOOK_TOPICS } from "../data/en-books";
 import { REMOTE_META } from "../data/remote-meta.generated";
 import type { Book } from "./books";
 import { scoreSource } from "./books";
@@ -83,11 +84,16 @@ function measured(level: number, levelMax: number | null, score: number, chars: 
 }
 
 function topicTags(text: LibraryText, topics: Record<string, string[]>): string[] {
-  const listed = topics[text.id] ?? LIBRARY_TOPICS[text.id] ?? (text.lang === "en" ? EN_TOPICS[text.id] ?? EN_ELEMENTARY_TOPICS[text.id] ?? EN_INTERMEDIATE_TOPICS[text.id] ?? EN_ADVANCED_TOPICS[text.id] ?? EN_NATIVE_TOPICS[text.id] ?? EN_WIKI_TOPICS[text.id] ?? EN_BEGINNER_TOPICS[text.id] ?? EN_CLASSICS_TOPICS[text.id] : undefined) ?? [];
+  const listed = topics[text.id] ?? LIBRARY_TOPICS[text.id] ?? (text.lang === "en" ? EN_TOPICS[text.id] ?? EN_ELEMENTARY_TOPICS[text.id] ?? EN_INTERMEDIATE_TOPICS[text.id] ?? EN_ADVANCED_TOPICS[text.id] ?? EN_NATIVE_TOPICS[text.id] ?? EN_WIKI_TOPICS[text.id] ?? EN_BEGINNER_TOPICS[text.id] ?? EN_CLASSICS_TOPICS[text.id] ?? EN_BOOK_TOPICS[text.id] : undefined) ?? [];
   if (listed.length) return listed;
   if (text.kind === "wiki" || text.category === "wiki") return ["encyclopedia"];
   if (text.kind === "wikisource" || text.category === "wikisource") return ["classics"];
   return [];
+}
+
+export function englishReadingMinutes(words: number, level: number | null): number | null {
+  const rate = level && level <= 2 ? 80 : level && level <= 5 ? 120 : 160;
+  return words ? Math.max(1, Math.round(words / rate)) : null;
 }
 
 export function describeText(
@@ -104,7 +110,7 @@ export function describeText(
       level, levelMax: null,
       badge: level ? `L${level}` : "", badgeTitle: level ? LEVEL_NAMES[level] : "English text",
       band: level ? levelBand(level) : null, sortScore: level ?? UNMEASURED, chars: null,
-      minutes: words ? Math.max(1, Math.round(words / (level && level <= 2 ? 80 : level && level <= 5 ? 120 : 160))) : null,
+      minutes: englishReadingMinutes(words, level),
       topics: tags, words,
     };
   }
@@ -143,11 +149,14 @@ export function describeBook(book: Book, meta = TEXT_META, topics = TEXT_TOPICS)
   const levels = infos.map((i) => i.level).filter((l): l is number => l !== null);
   const chars = infos.reduce((s, i) => s + (i.chars ?? 0), 0);
   const tags = [...new Set(infos.flatMap((i) => i.topics))];
-  if (!levels.length) return { ...describeText(book.chapters[0], meta, topics), chars: chars || null, topics: tags };
-  const lo = Math.min(...levels);
-  const hi = Math.max(...levels);
-  const score = infos.reduce((s, i) => Math.min(s, i.sortScore), UNMEASURED);
-  return measured(lo, hi, score, chars, tags);
+  const info = levels.length
+    ? measured(Math.min(...levels), Math.max(...levels), infos.reduce((s, i) => Math.min(s, i.sortScore), UNMEASURED), chars, tags)
+    : { ...infos[0], chars: chars || null, topics: tags };
+  if (book.chapters[0].lang === "en") {
+    const words = infos.reduce((s, i) => s + (i.words ?? 0), 0);
+    return { ...info, chars: null, words, minutes: englishReadingMinutes(words, info.level) };
+  }
+  return info;
 }
 
 export function describeWork(work: WorkMeta, stats: WorkStats | undefined): EntryInfo {
@@ -155,7 +164,12 @@ export function describeWork(work: WorkMeta, stats: WorkStats | undefined): Entr
     return { level: null, levelMax: null, badge: "", badgeTitle: "", band: null, sortScore: UNMEASURED, chars: null, minutes: null, topics: work.topics };
   }
   // The range most chapters sit in (25th–75th percentile), not the outliers.
-  return measured(stats.levelLow, stats.levelHigh, stats.score, stats.chars, work.topics);
+  const info = measured(stats.levelLow, stats.levelHigh, stats.score, stats.chars, work.topics);
+  if (work.lang === "en") {
+    const words = stats.words ?? 0;
+    return { ...info, chars: null, words, minutes: englishReadingMinutes(words, info.level) };
+  }
+  return info;
 }
 
 // ------------------------------------------------------------------ personal
@@ -427,7 +441,7 @@ export function topicCounts(entries: Entry[]): Map<string, number> {
 export function lengthLabel(info: EntryInfo): string | null {
   if (info.words !== undefined) {
     const words = `${info.words.toLocaleString("en-US")} words`;
-    return info.minutes === null ? words : `${words} · ${info.minutes} min`;
+    return info.minutes === null ? words : `${words} · ${formatDuration(info.minutes)}`;
   }
   if (info.chars === null) return null;
   const chars = info.chars >= 10000 ? `${Math.round(info.chars / 1000).toLocaleString("en-US")}k 字` : `${info.chars.toLocaleString("en-US")} 字`;
