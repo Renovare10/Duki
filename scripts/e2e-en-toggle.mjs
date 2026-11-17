@@ -58,7 +58,9 @@ try {
   const enClassicsRow = page.locator('section.shelf[data-row="classics"]');
   assert.equal(Number((await enClassicsRow.locator(".shelf-count").first().innerText()).trim()), 20, "English Classics shelf has 20 texts");
   assert.match(await enClassicsRow.locator(".shelf-sub").first().innerText(), /Public-domain stories retold/, "English Classics hint");
-  assert.equal(Number((await page.locator('section.shelf[data-row="level-beginner"] .shelf-count').first().innerText()).trim()), 24, "English Beginner row: 4 starter + 20 Beginner");
+  assert.equal(Number((await page.locator('section.shelf[data-row="level-beginner"] .shelf-count').first().innerText()).trim()), 25, "English Beginner row: 4 starter + 20 Beginner + 1 L2 book series");
+  const enBooksRow = page.locator('section.shelf[data-row="books"]');
+  assert.equal(Number((await enBooksRow.locator(".shelf-count").first().innerText()).trim()), 7, "English Books shelf: 6 series + the World English Bible");
   for (const name of ["Review", "Stats", "Add text"]) {
     assert.ok(await page.getByRole("button", { name, exact: true }).count(), `English header has ${name}`);
   }
@@ -75,16 +77,16 @@ try {
   assert.equal(await page.getByRole("button", { name: "English", exact: true }).getAttribute("aria-pressed"), "true");
 
   // Shared search + Level filter, then open a story, tap a word, mark it.
-  // Level filters include the Wikipedia adaptations (five each at L4–L9) and the Classics (two per level, own shelf on Home).
+  // Level filters include the Wikipedia adaptations (five each at L4–L9), the Classics (two per level, own shelf on Home) and the Books (L2–L8 series, the L9 Bible).
   const allTitles = new Set();
-  for (const [band, n, label] of [["beginner", 28, "Beginner is L1–2"], ["intermediate", 38, "Intermediate is L5–6"], ["advanced", 38, "Advanced is L7–8"], ["native", 28, "Native is L9–10"], ["elementary", 33, "Elementary is L3–4"]]) {
+  for (const [band, n, label] of [["beginner", 29, "Beginner is L1–2"], ["intermediate", 39, "Intermediate is L5–6"], ["advanced", 40, "Advanced is L7–8"], ["native", 29, "Native is L9–10"], ["elementary", 35, "Elementary is L3–4"]]) {
     await page.getByLabel("Level", { exact: true }).selectOption(band);
     assert.equal(await page.locator(".title-card").count(), n, `${label} (${n} texts)`);
     for (const t of await page.locator(".title-card-name").allTextContents()) allTitles.add(t.trim());
   }
-  assert.equal(allTitles.size, 165, "20 starter + 145 section texts across the level filters (unique titles)");
+  assert.equal(allTitles.size, 172, "20 starter + 145 section texts + 6 book series + the Bible across the level filters (unique titles)");
   await page.getByLabel("Level", { exact: true }).selectOption("elementary");
-  assert.equal(await page.locator(".title-card").count(), 33, "Elementary is L3–4 (4 starter + 20 section stories + 5 L4 Wikipedia + 4 Classics)");
+  assert.equal(await page.locator(".title-card").count(), 35, "Elementary is L3–4 (4 starter + 20 section stories + 5 L4 Wikipedia + 4 Classics + 2 book series)");
   await page.getByLabel("Search the library").fill("Wrong Train");
   await page.locator(".title-card", { hasText: "The Wrong Train" }).waitFor();
   assert.equal(await page.locator(".title-card").count(), 1);
@@ -121,6 +123,29 @@ try {
   await page.locator(".article .word", { hasText: /^bamboo$/ }).first().click();
   const wikiGloss = await page.locator(".dock-en").innerText();
   assert.ok(wikiGloss && wikiGloss !== "—", `Wikipedia gloss shown: ${wikiGloss}`);
+  await page.goto(base);
+  await page.getByRole("heading", { name: "Read English at your level." }).waitFor();
+
+  // Books: a series opens to its chapter list and a chapter reads with English glosses.
+  await page.locator('section.shelf[data-row="books"] .title-card', { hasText: "Room for a Table" }).locator(".title-hit").first().click();
+  await page.getByText("3 chapters", { exact: false }).first().waitFor();
+  await page.screenshot({ path: `${shots}/english-book-series.png` });
+  await page.getByRole("button", { name: /Continue · Chapter 1/ }).click();
+  await page.locator(".article[lang='en-US'] .word").first().waitFor();
+  await page.locator(".article .word", { hasText: /^table$/ }).first().click();
+  const bookGloss = await page.locator(".dock-en").innerText();
+  assert.ok(bookGloss && bookGloss !== "—", `Book chapter gloss shown: ${bookGloss}`);
+  await page.screenshot({ path: `${shots}/english-book-chapter.png` });
+  await page.goto(base);
+  await page.getByRole("heading", { name: "Read English at your level." }).waitFor();
+  // The long work: the World English Bible opens a chapter and glosses names from its own glosses.json.
+  await page.locator('section.shelf[data-row="books"] .title-card', { hasText: "World English Bible" }).locator(".title-hit").first().click();
+  await page.getByRole("button", { name: /^(Start|Continue)/ }).first().click();
+  await page.locator(".article[lang='en-US'] .word").first().waitFor();
+  assert.ok((await page.locator(".article .word").count()) > 300, "Bible chapter opens with its full text");
+  await page.locator(".article .word", { hasText: /^beginning$/ }).first().click();
+  assert.ok((await page.locator(".dock-en").innerText()) !== "—", "Bible word glossed");
+  await page.screenshot({ path: `${shots}/english-bible-chapter.png` });
   await page.goto(base);
   await page.getByRole("heading", { name: "Read English at your level." }).waitFor();
 
