@@ -107,7 +107,7 @@ const OVERRIDES = {
   "prov'd": "v. （古）被证明（proved）", "reap'd": "a. （古）收割过的（reaped）", "untrimm'd": "a. （古）未修饰的（untrimmed）",
   "wander'st": "v. （古）你漫游（wander）", watchest: "v. （古）你注视（watch）", starwort: "n. 繁缕；紫菀（植物）", june: "n. 六月；（也作人名）", mark: "n. 记号，分数；vt. 做记号；（也作人名）",
   // Books section hand fixes
-  rialto: "n. 里亚尔托（影院名）", l: "（字母 L）", bore: "v. 带有，承受（bear 的过去式）；n. 令人厌烦的人",
+  rialto: "n. 里亚尔托（影院名）", l: "（字母 L）", b: "（字母 B）", e: "（字母 E）", f: "（字母 F）", w: "（字母 W）", bore: "v. 带有，承受（bear 的过去式）；n. 令人厌烦的人",
   lining: "n. 衬里，内衬；v. 排成行（line）", lettering: "n. 字体；（写或刻的）字", screening: "n. 放映（场次）；筛查",
   sanding: "v. 用砂纸打磨（sand）", fairness: "n. 公平，公正", batteries: "n. 电池（battery 的复数）",
   sweets: "n. 糖果（sweet 的复数）", ringing: "n. 铃声；v. 按铃，响（ring）",
