@@ -42,9 +42,17 @@ export function hasWord(word: string): boolean {
   return dict.has(word);
 }
 
+/** Extra English glosses for long works, fetched when one of their chapters opens (see loadEnWorkGlosses). */
+const enWorkGlosses: Record<string, string> = {};
+
+export function addEnglishGlosses(map: Record<string, string>): void {
+  Object.assign(enWorkGlosses, map);
+}
+
 export function getGloss(word: string, lang: Language = "zh"): Gloss {
   if (lang === "en") {
-    return { pinyin: "", english: EN_GLOSSES[word.toLowerCase()] ?? "—" };
+    const key = word.toLowerCase();
+    return { pinyin: "", english: EN_GLOSSES[key] ?? enWorkGlosses[key] ?? "—" };
   }
   const key = entries[word] ? word : toSimplified(word);
   const hit = entries[key];

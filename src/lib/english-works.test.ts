@@ -52,3 +52,35 @@ describe("English long-work edition", () => {
     expect(profile.words).toContain("the");
   });
 });
+
+describe("English long-work tap glosses", () => {
+  it("glosses (nearly) every word of every chapter through the bundled map plus the work's glosses.json", async () => {
+    const { EN_GLOSSES } = await import("../data/en-samples");
+    const root = path.resolve(__dirname, "../../public/works/en-bible-web");
+    const extra = JSON.parse(fs.readFileSync(path.join(root, "glosses.json"), "utf8")) as Record<string, string>;
+    for (const key of Object.keys(extra)) expect(EN_GLOSSES[key], key).toBeUndefined();
+    let total = 0;
+    const missing = new Set<string>();
+    for (const f of fs.readdirSync(root).filter((f) => /\.\d+\.json$/.test(f))) {
+      const { body } = JSON.parse(fs.readFileSync(path.join(root, f), "utf8")) as { body: string };
+      for (const tok of segment(body, () => false, 8, "en")) {
+        if (!tok.key) continue;
+        total++;
+        if (!EN_GLOSSES[tok.key] && !extra[tok.key]) missing.add(tok.key);
+      }
+    }
+    expect(total).toBeGreaterThan(700_000);
+    expect(missing.size).toBeLessThan(100);
+  });
+
+  it("registers a work's glosses for getGloss once its file loads", async () => {
+    const { getGloss } = await import("./glossary");
+    const { loadEnWorkGlosses, clearWorkCache } = await import("./works");
+    expect(getGloss("dukiworkfixtureword", "en").english).toBe("—");
+    const f = async () => new Response(JSON.stringify({ dukiworkfixtureword: "n. 测试" }), { status: 200 });
+    await loadEnWorkGlosses("en-fixture-work", f);
+    expect(getGloss("DukiWorkFixtureWord", "en").english).toBe("n. 测试");
+    expect(getGloss("dukiworkfixtureword", "zh").english).not.toBe("n. 测试");
+    clearWorkCache();
+  });
+});

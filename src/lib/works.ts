@@ -10,6 +10,7 @@
  */
 import type { Language, LibraryText, TextCategory } from "../types";
 import type { VocabProfile } from "./difficulty";
+import { addEnglishGlosses } from "./glossary";
 
 export type WorkStats = {
   id: string;
@@ -122,6 +123,11 @@ export function clearWorkCache(): void {
 export const loadToc = (workId: string, f?: FetchLike) => fetchWorkJson<WorkToc>(`${workId}/toc.json`, f);
 export const loadChapter = (workId: string, key: string, f?: FetchLike) =>
   fetchWorkJson<WorkChapter>(`${workId}/${key}.json`, f);
+/** An English work's extra tap glosses (words the bundled map lacks), registered before its chapter shows. */
+export const loadEnWorkGlosses = (workId: string, f?: FetchLike) =>
+  fetchWorkJson<Record<string, string>>(`${workId}/glosses.json`, f).then((map) => {
+    addEnglishGlosses(map);
+  });
 export const loadWorkProfile = (workId: string, f?: FetchLike) =>
   fetchWorkJson<VocabProfile>(`${workId}/profile.json`, f);
 

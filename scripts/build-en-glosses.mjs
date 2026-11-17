@@ -13,7 +13,7 @@ if (!csv) throw new Error("Set ECDICT_CSV to ecdict.csv");
 /** Every English data file whose titles and bodies a reader can tap. Add new section files here. */
 const SOURCES = ["src/data/en-stories.ts", "src/data/en-level-elementary.ts", "src/data/en-level-intermediate.ts",
   "src/data/en-level-advanced.ts", "src/data/en-level-native.ts", "src/data/en-wiki.ts", "src/data/en-level-beginner.ts",
-  "src/data/en-classics.ts"];
+  "src/data/en-classics.ts", "src/data/en-books.ts"];
 const src = SOURCES.map((f) => fs.readFileSync(path.join(root, f), "utf8")).join("\n");
 const bodies = [...src.matchAll(/(?:title: "([^"]*)"|body: `([^`]*)`)/g)].map((m) => m[1] ?? m[2]).join("\n");
 const keys = new Set((bodies.match(/[A-Za-z]+(?:['’][A-Za-z]+)*/g) ?? []).map((w) => w.toLowerCase().replaceAll("’", "'")));
@@ -66,7 +66,9 @@ const NAMES = new Set(["max", "ben", "lily", "anna", "sam", "maria", "lopez", "d
   // Native section (en-level-native.ts)
   "ada", "celia", "dyer", "graham", "peter", "reeves", "sami", "vale",
   // Beginner section (en-level-beginner.ts); "may", "rose" and "sock" are also common words, see OVERRIDES
-  "alex", "amy", "dan", "eli", "ken", "mia"]);
+  "alex", "amy", "dan", "eli", "ken", "mia",
+  // Books section (en-books.ts); "ruby" only appears there as a name
+  "elsie", "finch", "hugo", "leon", "lin", "marcus", "ruby", "shaw"]);
 
 function short(translation) {
   const lines = translation.split("\\n").map((l) => l.replace(/\\r/g, "").trim())
@@ -104,6 +106,11 @@ const OVERRIDES = {
   "lov'd": "v. （古）爱过（loved）", "moss'd": "a. （古）长满青苔的（mossed）", "ow'st": "v. （古）你拥有（owe = own）",
   "prov'd": "v. （古）被证明（proved）", "reap'd": "a. （古）收割过的（reaped）", "untrimm'd": "a. （古）未修饰的（untrimmed）",
   "wander'st": "v. （古）你漫游（wander）", watchest: "v. （古）你注视（watch）", starwort: "n. 繁缕；紫菀（植物）", june: "n. 六月；（也作人名）", mark: "n. 记号，分数；vt. 做记号；（也作人名）",
+  // Books section hand fixes
+  rialto: "n. 里亚尔托（影院名）", l: "（字母 L）", bore: "v. 带有，承受（bear 的过去式）；n. 令人厌烦的人",
+  lining: "n. 衬里，内衬；v. 排成行（line）", lettering: "n. 字体；（写或刻的）字", screening: "n. 放映（场次）；筛查",
+  sanding: "v. 用砂纸打磨（sand）", fairness: "n. 公平，公正", batteries: "n. 电池（battery 的复数）",
+  sweets: "n. 糖果（sweet 的复数）", ringing: "n. 铃声；v. 按铃，响（ring）",
 };
 
 function lookup(key) {
@@ -136,3 +143,34 @@ export const EN_GLOSSES_GENERATED: Record<string, string> = ${JSON.stringify(glo
 `;
 fs.writeFileSync(path.join(root, "src/data/en-glosses.generated.ts"), out);
 console.log(JSON.stringify({ words: keys.size, glossed: Object.keys(glosses).length, missing }));
+
+/**
+ * Long English works (public/works/<id>/, see docs/english-long-works.md) are too big for the bundled map.
+ * Each gets its own glosses.json with only the words the bundled map lacks, fetched when a chapter opens.
+ */
+const WORKS = ["en-bible-web"];
+for (const id of WORKS) {
+  const dir = path.join(root, "public/works", id);
+  const workKeys = new Set();
+  const lower = new Set();
+  for (const f of fs.readdirSync(dir).filter((f) => /\.\d+\.json$/.test(f)).sort()) {
+    const { title, body } = JSON.parse(fs.readFileSync(path.join(dir, f), "utf8"));
+    for (const w of `${title}\n${body}`.match(/[A-Za-z]+(?:['’][A-Za-z]+)*/g) ?? []) {
+      const key = w.toLowerCase().replaceAll("’", "'");
+      workKeys.add(key);
+      if (w[0] === w[0].toLowerCase()) lower.add(key);
+    }
+  }
+  const extra = {};
+  const workMissing = [];
+  for (const key of [...workKeys].sort()) {
+    if (glosses[key]) continue;
+    const g = lookup(key);
+    if (g) extra[key] = g;
+    // Words never written in lower case are names of people and places (Abijah, Kiriath Jearim).
+    else if (!lower.has(key)) extra[key] = "（专有名词：人名或地名）";
+    else workMissing.push(key);
+  }
+  fs.writeFileSync(path.join(dir, "glosses.json"), JSON.stringify(extra));
+  console.log(JSON.stringify({ work: id, words: workKeys.size, extra: Object.keys(extra).length, missing: workMissing.length }));
+}

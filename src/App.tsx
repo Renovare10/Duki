@@ -30,6 +30,7 @@ import type { VocabProfile } from "./lib/difficulty";
 import {
   isWorkRowId,
   loadChapter,
+  loadEnWorkGlosses,
   loadToc,
   neighbors,
   parseWorkRowId,
@@ -984,7 +985,12 @@ export default function App() {
     setClassicPair(null);
     (async () => {
       try {
-        const [toc, chapter] = await Promise.all([loadToc(ref.workId), loadChapter(ref.workId, ref.key)]);
+        const [toc, chapter] = await Promise.all([
+          loadToc(ref.workId),
+          loadChapter(ref.workId, ref.key),
+          // English works carry their own tap glosses; Mandarin uses the boot glossary.
+          work.lang === "en" ? loadEnWorkGlosses(ref.workId) : null,
+        ]);
         if (cancelled) return;
         setWorkTocs((prev) => (prev.has(ref.workId) ? prev : new Map(prev).set(ref.workId, toc)));
         setWorkBodies((prev) => new Map(prev).set(id, chapter.body));
