@@ -29,7 +29,7 @@ page.on("console", (msg) => { if (msg.type() === "error" && !/net::ERR_FAILED|Fa
 // The reading language lives in the account (avatar) menu.
 async function switchLanguage(to) {
   await page.locator("chadm-appbar .cab-avatar").click();
-  await page.getByRole("switch", { name: "Read in Mandarin (中文)" }).click();
+  await page.getByRole("radio", { name: to === "English" ? "English" : "中文" }).click();
   await page.getByRole("heading", { name: to === "English" ? "Read English at your level." : "Read real Chinese at your level." }).waitFor();
 }
 try {

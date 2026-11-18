@@ -92,7 +92,7 @@ import { loadClassic, type ClassicBody } from "./lib/classics";
 import { loadScriptChoice, saveScriptChoice, type ScriptChoice } from "./lib/script";
 import { profilesFrom, type WordSetFile } from "./lib/word-sets";
 import { MENU_ACTION_LABELS, MENU_GROUPS, type MenuActionId } from "./lib/menu";
-import { buildLangToggle, toggleLook } from "./lib/lang-toggle";
+import { buildLangToggle } from "./lib/lang-toggle";
 import { remainingUniques, scoreCounts, scoreTokens } from "./lib/score";
 import { segment } from "./lib/segment";
 import { createScoreCache } from "./lib/score-cache";
@@ -1505,7 +1505,7 @@ export default function App() {
             ...(ready
               ? [{
                   type: "element" as const,
-                  render: () => buildLangToggle(toggleLook(), lang, (choice) => {
+                  render: () => buildLangToggle(lang, (choice) => {
                     setLang(choice);
                     writeLanguage(window.localStorage, choice);
                     navigate({ name: "home" });

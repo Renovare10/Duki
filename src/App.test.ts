@@ -11,10 +11,7 @@ import { collapseTexts } from "./lib/books";
 /** The reading language lives in the account menu (avatar) as a toggle, not an always-visible header control. */
 async function switchLanguage(page: Page, to: "English" | "Mandarin") {
   await page.locator("chadm-appbar .cab-avatar").click();
-  // Default look (a) is a switch that is "on" for Mandarin.
-  const sw = page.getByRole("switch", { name: "Read in Mandarin (中文)" });
-  expect(await sw.getAttribute("aria-checked")).toBe(to === "English" ? "true" : "false");
-  await sw.click();
+  await page.getByRole("radio", { name: to === "English" ? "English" : "中文" }).click();
   await page.getByRole("heading", { name: to === "English" ? "Read English at your level." : "Read real Chinese at your level." }).waitFor();
 }
 
@@ -63,23 +60,20 @@ describe("App book navigation", () => {
     return { context, page, errors, writes };
   }
 
-  it.each(["a", "b", "c"] as const)("toggle look %s switches language from the account menu and remembers it", async (look) => {
+  it("switches language with the account-menu toggle and remembers it after a reload", async () => {
     const { context, page, errors, writes } = await localPage();
     try {
-      await page.goto(`${base}?toggle=${look}`);
-      await page.getByRole("heading", { name: "Read real Chinese at your level." }).waitFor();
       await page.locator("chadm-appbar .cab-avatar").click();
-      const item = page.locator(`.lang-toggle-item.lt-${look}`);
+      const item = page.locator(".lang-toggle-item");
       await item.waitFor();
       expect(await item.getAttribute("data-lang")).toBe("zh");
-      if (look === "a") await item.getByRole("switch").click();
-      else await item.getByRole("radio", { name: "English" }).click();
+      await item.getByRole("radio", { name: "English" }).click();
       await page.getByRole("heading", { name: "Read English at your level." }).waitFor();
       await page.reload();
       await page.getByRole("heading", { name: "Read English at your level." }).waitFor();
-      expect(page.url()).toContain(`toggle=${look}`);
       await page.locator("chadm-appbar .cab-avatar").click();
-      expect(await page.locator(`.lang-toggle-item.lt-${look}`).getAttribute("data-lang")).toBe("en");
+      expect(await page.locator(".lang-toggle-item").getAttribute("data-lang")).toBe("en");
+      expect(await page.getByRole("radio", { name: "English" }).getAttribute("aria-checked")).toBe("true");
       expect(errors).toEqual([]);
       expect(writes).toEqual([]);
     } finally {
