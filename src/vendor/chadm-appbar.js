@@ -140,6 +140,8 @@ class ChadmAppBar extends HTMLElement {
     } catch (e) { el.innerHTML = `<span class="cab-note">${esc(e.message)}</span>`; }
   }
   #item(it) {
+    // Duki extension: an app-built control (e.g. the reading-language toggle) placed in the menu as-is.
+    if (it.type === 'element') return it.render();
     if (it.type === 'checkbox') {
       const l = document.createElement('label');
       l.className = 'cab-item cab-check';

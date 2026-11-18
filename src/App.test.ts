@@ -8,10 +8,14 @@ import { CATALOG } from "./data/catalog";
 import { findWork, workStats, WORKS } from "./data/works";
 import { collapseTexts } from "./lib/books";
 
-/** The reading language now lives in the account menu (avatar) instead of an always-visible toggle. */
+/** The reading language lives in the account menu (avatar) as a toggle, not an always-visible header control. */
 async function switchLanguage(page: Page, to: "English" | "Mandarin") {
   await page.locator("chadm-appbar .cab-avatar").click();
-  await page.getByRole("button", { name: `Read in ${to} instead`, exact: true }).click();
+  // Default look (a) is a switch that is "on" for Mandarin.
+  const sw = page.getByRole("switch", { name: "Read in Mandarin (中文)" });
+  expect(await sw.getAttribute("aria-checked")).toBe(to === "English" ? "true" : "false");
+  await sw.click();
+  await page.getByRole("heading", { name: to === "English" ? "Read English at your level." : "Read real Chinese at your level." }).waitFor();
 }
 
 // Exercise the real App render gate and IndexedDB persistence, not a copy of its condition.
@@ -58,6 +62,30 @@ describe("App book navigation", () => {
     await page.getByRole("heading", { name: "Read real Chinese at your level." }).waitFor();
     return { context, page, errors, writes };
   }
+
+  it.each(["a", "b", "c"] as const)("toggle look %s switches language from the account menu and remembers it", async (look) => {
+    const { context, page, errors, writes } = await localPage();
+    try {
+      await page.goto(`${base}?toggle=${look}`);
+      await page.getByRole("heading", { name: "Read real Chinese at your level." }).waitFor();
+      await page.locator("chadm-appbar .cab-avatar").click();
+      const item = page.locator(`.lang-toggle-item.lt-${look}`);
+      await item.waitFor();
+      expect(await item.getAttribute("data-lang")).toBe("zh");
+      if (look === "a") await item.getByRole("switch").click();
+      else await item.getByRole("radio", { name: "English" }).click();
+      await page.getByRole("heading", { name: "Read English at your level." }).waitFor();
+      await page.reload();
+      await page.getByRole("heading", { name: "Read English at your level." }).waitFor();
+      expect(page.url()).toContain(`toggle=${look}`);
+      await page.locator("chadm-appbar .cab-avatar").click();
+      expect(await page.locator(`.lang-toggle-item.lt-${look}`).getAttribute("data-lang")).toBe("en");
+      expect(errors).toEqual([]);
+      expect(writes).toEqual([]);
+    } finally {
+      await context.close();
+    }
+  }, 30_000);
 
   it("opens all six English books, reads chapters, persists progress and resumes via Continue", async () => {
     const { context, page, errors, writes } = await localPage();

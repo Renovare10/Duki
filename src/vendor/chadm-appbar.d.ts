@@ -3,7 +3,9 @@ export type ChadmApp = { id: string; name: string; url: string; color: string; i
 export type ChadmAppBarItem =
   | { label: string; onSelect: () => void }
   | { label: string; href: string }
-  | { type: "checkbox"; label: string; checked: boolean | (() => boolean | Promise<boolean>); onChange: (on: boolean) => void };
+  | { type: "checkbox"; label: string; checked: boolean | (() => boolean | Promise<boolean>); onChange: (on: boolean) => void }
+  /** Duki extension: an app-built control placed in the menu as-is. */
+  | { type: "element"; render: () => HTMLElement };
 export type ChadmAppBarOptions = {
   app?: string;
   apps?: ChadmApp[];

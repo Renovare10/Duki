@@ -92,6 +92,7 @@ import { loadClassic, type ClassicBody } from "./lib/classics";
 import { loadScriptChoice, saveScriptChoice, type ScriptChoice } from "./lib/script";
 import { profilesFrom, type WordSetFile } from "./lib/word-sets";
 import { MENU_ACTION_LABELS, MENU_GROUPS, type MenuActionId } from "./lib/menu";
+import { buildLangToggle, toggleLook } from "./lib/lang-toggle";
 import { remainingUniques, scoreCounts, scoreTokens } from "./lib/score";
 import { segment } from "./lib/segment";
 import { createScoreCache } from "./lib/score-cache";
@@ -1503,14 +1504,13 @@ export default function App() {
             // The reading language lives in this menu instead of always sitting on screen.
             ...(ready
               ? [{
-                  label: lang === "zh" ? "Read in English instead" : "Read in Mandarin instead",
-                  onSelect: () => {
-                    const choice = lang === "zh" ? "en" : "zh";
+                  type: "element" as const,
+                  render: () => buildLangToggle(toggleLook(), lang, (choice) => {
                     setLang(choice);
                     writeLanguage(window.localStorage, choice);
                     navigate({ name: "home" });
                     window.scrollTo(0, 0);
-                  },
+                  }),
                 }]
               : []),
             { label: MENU_ACTION_LABELS.review, onSelect: () => navigate({ name: "review" }) },
