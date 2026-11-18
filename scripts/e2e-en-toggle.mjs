@@ -26,10 +26,14 @@ page.setDefaultTimeout(15000);
 const errors = [];
 page.on("pageerror", (err) => errors.push(String(err)));
 page.on("console", (msg) => { if (msg.type() === "error" && !/net::ERR_FAILED|Failed to load resource/.test(msg.text())) errors.push(msg.text()); });
+// The reading language lives in the account (avatar) menu.
+async function switchLanguage(to) {
+  await page.locator("chadm-appbar .cab-avatar").click();
+  await page.getByRole("button", { name: `Read in ${to} instead`, exact: true }).click();
+}
 try {
   await page.goto(base);
   await page.getByRole("heading", { name: "Read real Chinese at your level." }).waitFor();
-  assert.equal(await page.getByRole("button", { name: "Mandarin", exact: true }).getAttribute("aria-pressed"), "true");
   const zhCards = await page.locator(".title-card").count();
   assert.ok(zhCards > 0, "Mandarin shelves render");
   await page.screenshot({ path: `${shots}/mandarin.png` });
@@ -50,7 +54,7 @@ try {
   if (zhWiki) assert.match(zhWiki.title, /Wikipedia · native Chinese/, "Mandarin Wikipedia shelf keeps its heading");
   const zhClassicsSub = page.locator('section.shelf[data-row="classics"] .shelf-sub');
   if (await zhClassicsSub.count()) assert.equal((await zhClassicsSub.first().innerText()).trim(), "Simplified, with the original traditional text", "Mandarin Classics hint unchanged");
-  await page.getByRole("button", { name: "English", exact: true }).click();
+  await switchLanguage("English");
   await page.getByRole("heading", { name: "Read English at your level." }).waitFor();
   const enWikiRow = page.locator('section.shelf[data-row="wiki"]');
   assert.match((await enWikiRow.locator(".shelf-title-btn").first().innerText()).trim(), /Wikipedia · English/, "English Wikipedia shelf heading");
@@ -74,7 +78,7 @@ try {
 
   await page.reload();
   await page.getByRole("heading", { name: "Read English at your level." }).waitFor();
-  assert.equal(await page.getByRole("button", { name: "English", exact: true }).getAttribute("aria-pressed"), "true");
+  // The heading above proves English was remembered across the reload.
 
   // Shared search + Level filter, then open a story, tap a word, mark it.
   // Level filters include the Wikipedia adaptations (five each at L4–L9), the Classics (two per level, own shelf on Home) and the Books (L2–L8 series, the L9 Bible).
@@ -149,7 +153,7 @@ try {
   await page.goto(base);
   await page.getByRole("heading", { name: "Read English at your level." }).waitFor();
 
-  await page.getByRole("button", { name: "Mandarin", exact: true }).click();
+  await switchLanguage("Mandarin");
   await page.getByRole("heading", { name: "Read real Chinese at your level." }).waitFor();
   assert.equal(await page.locator(".title-card").count(), zhCards, "Mandarin shelves unchanged");
   if (zhWiki) {

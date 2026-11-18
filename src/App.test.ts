@@ -8,6 +8,12 @@ import { CATALOG } from "./data/catalog";
 import { findWork, workStats, WORKS } from "./data/works";
 import { collapseTexts } from "./lib/books";
 
+/** The reading language now lives in the account menu (avatar) instead of an always-visible toggle. */
+async function switchLanguage(page: Page, to: "English" | "Mandarin") {
+  await page.locator("chadm-appbar .cab-avatar").click();
+  await page.getByRole("button", { name: `Read in ${to} instead`, exact: true }).click();
+}
+
 // Exercise the real App render gate and IndexedDB persistence, not a copy of its condition.
 // Every test uses a fresh browser context; all network traffic is restricted to local Vite.
 describe("App book navigation", () => {
@@ -56,7 +62,7 @@ describe("App book navigation", () => {
   it("opens all six English books, reads chapters, persists progress and resumes via Continue", async () => {
     const { context, page, errors, writes } = await localPage();
     try {
-      await page.getByRole("button", { name: "English", exact: true }).click();
+      await switchLanguage(page, "English");
       await page.getByRole("heading", { name: "Read English at your level." }).waitFor();
       expect(await page.locator('[data-row="books"] .work-card').count()).toBe(1);
       const books = collapseTexts(EN_BOOK_TEXTS).filter((item) => item.type === "book");
@@ -115,7 +121,7 @@ describe("App book navigation", () => {
     });
     try {
       const work = findWork("en-bible-web", "en")!;
-      await page.getByRole("button", { name: "English", exact: true }).click();
+      await switchLanguage(page, "English");
       const card = page.locator('[data-row="books"] .work-card', { hasText: work.title });
       await card.waitFor();
       expect(await card.innerText()).toContain(`${workStats(work.id)!.words!.toLocaleString("en-US")} words`);
@@ -162,7 +168,7 @@ describe("App book navigation", () => {
       await page.locator('.article[lang="en-US"] .word').first().waitFor();
       expect(page.url()).toContain("#/read/w%3Aen-bible-web%3AGEN.2");
       expect(requests.filter((url) => /\/[A-Z0-9]+\.\d+\.json$/.test(url)).every((url) => /\/en-bible-web\/GEN\.[123]\.json$/.test(url))).toBe(true);
-      await page.getByRole("button", { name: "Mandarin", exact: true }).click();
+      await switchLanguage(page, "Mandarin");
       expect(await page.locator('[data-row="books"] .work-card').count()).toBe(4);
       expect(await page.locator('[data-row="continue"] .work-card').count()).toBe(0);
       await page.goto(`${base}#/work/${work.id}`);
@@ -198,7 +204,7 @@ describe("App book navigation", () => {
       await page.getByRole("heading", { name: work.title, exact: true }).waitFor();
       await page.getByLabel(/^1 of \d+ chapters read$/).waitFor();
 
-      await page.getByRole("button", { name: "English", exact: true }).click();
+      await switchLanguage(page, "English");
       await page.getByRole("heading", { name: "Read English at your level." }).waitFor();
       expect(await page.locator('[data-row="books"] .work-card').count()).toBe(1);
       await page.goto(`${base}#/book/${book.id}`);

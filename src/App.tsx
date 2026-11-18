@@ -1486,17 +1486,6 @@ export default function App() {
         >
           {menuOpen ? "Close" : "Menu"}
         </button>
-        <div className="language-toggle" role="group" aria-label="Reading language">
-          {(["zh", "en"] as const).map((choice) => (
-            <button type="button" key={choice} className="chip" aria-pressed={lang === choice}
-              disabled={!ready} onClick={() => {
-                setLang(choice);
-                writeLanguage(window.localStorage, choice);
-                navigate({ name: "home" });
-                window.scrollTo(0, 0);
-              }}>{choice === "zh" ? "Mandarin" : "English"}</button>
-          ))}
-        </div>
         <nav id="app-menu" className="top-actions" aria-label="Main">
           {MENU_GROUPS.filter((group) => group.id === "read" || group.id === "look").map((group) => (
             <div key={group.id} className={`menu-group menu-group-${group.id}`} data-group={group.id}>
@@ -1511,6 +1500,19 @@ export default function App() {
           canSignOut={!LOCAL_DRAFT && (Boolean(auth) || hasStoredAuthKey() || shared.signedIn)}
           signInLabel={LOCAL_DRAFT ? "Log in (off in preview)" : !auth && shared.signedIn && shared.email ? `Continue as ${shared.email}` : "Log in"}
           items={[
+            // The reading language lives in this menu instead of always sitting on screen.
+            ...(ready
+              ? [{
+                  label: lang === "zh" ? "Read in English instead" : "Read in Mandarin instead",
+                  onSelect: () => {
+                    const choice = lang === "zh" ? "en" : "zh";
+                    setLang(choice);
+                    writeLanguage(window.localStorage, choice);
+                    navigate({ name: "home" });
+                    window.scrollTo(0, 0);
+                  },
+                }]
+              : []),
             { label: MENU_ACTION_LABELS.review, onSelect: () => navigate({ name: "review" }) },
             { label: MENU_ACTION_LABELS.stats, onSelect: () => navigate({ name: "stats" }) },
             { label: MENU_ACTION_LABELS.add, onSelect: () => navigate({ name: "add" }) },
