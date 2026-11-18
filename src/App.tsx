@@ -1508,7 +1508,11 @@ export default function App() {
                   render: () => buildLangToggle(lang, (choice) => {
                     setLang(choice);
                     writeLanguage(window.localStorage, choice);
-                    navigate({ name: "home" });
+                    // Go home without a hashchange event, so the account menu stays open while the page switches.
+                    setMenuOpen(false);
+                    const home = viewToHash({ name: "home" });
+                    if (window.location.hash !== home) window.history.pushState(null, "", home);
+                    setView({ name: "home" });
                     window.scrollTo(0, 0);
                   }),
                 }]

@@ -44,7 +44,24 @@ class ChadmAppBar extends HTMLElement {
   // items [{label, onSelect | href | (type:'checkbox', checked, onChange)}] or () => items, onSignIn, onSignUp, onSignOut,
   // openApp async (app) => url | null: the URL to open for a tray app (e.g. with a one-time sign-in
   // handoff, chadm-handoff.js); null/failure/slow (> 5 s) falls back to the plain link.
-  configure(opts) { Object.assign(this.#o, opts); if (this.id_) this.#safeRender(); }
+  configure(opts) {
+    const who = JSON.stringify(this.#o.user ?? null);
+    Object.assign(this.#o, opts);
+    if (!this.id_) return;
+    // Duki extension: an open popover stays open across re-configures (e.g. the app switching its
+    // reading language from inside the menu). Same signed-in identity: rebuild just its contents in place.
+    if (this.#open && JSON.stringify(this.#o.user ?? null) === who) { this.#refreshOpen(); return; }
+    this.#safeRender();
+  }
+  #refreshOpen() {
+    const { btn, pop } = this.#open;
+    const focused = pop.contains(document.activeElement) ? document.activeElement : null;
+    const keyOf = el => el && (el.dataset?.value ? `[data-value="${el.dataset.value}"]` : null);
+    const key = keyOf(focused);
+    try { (pop.classList.contains('cab-tray') ? this.#tray() : this.#menu()); } catch (e) { console.error('chadm-appbar', e); this.close(false); this.#safeRender(); return; }
+    btn.setAttribute('aria-expanded', 'true');
+    if (focused) (pop.querySelector(`.lang-toggle-item [aria-checked="true"]`) || (key && pop.querySelector(key)) || pop.querySelector(FOCUSABLE))?.focus();
+  }
   #safeRender() {
     try { this.#render(); } catch (e) {
       console.error('chadm-appbar', e);

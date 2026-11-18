@@ -10,7 +10,8 @@ import { collapseTexts } from "./lib/books";
 
 /** The reading language lives in the account menu (avatar) as a toggle, not an always-visible header control. */
 async function switchLanguage(page: Page, to: "English" | "Mandarin") {
-  await page.locator("chadm-appbar .cab-avatar").click();
+  const avatar = page.locator("chadm-appbar > button.cab-avatar");
+  if ((await avatar.getAttribute("aria-expanded")) !== "true") await avatar.click();
   await page.getByRole("radio", { name: to === "English" ? "English" : "中文" }).click();
   await page.getByRole("heading", { name: to === "English" ? "Read English at your level." : "Read real Chinese at your level." }).waitFor();
 }
@@ -60,7 +61,7 @@ describe("App book navigation", () => {
     return { context, page, errors, writes };
   }
 
-  it("switches language with the account-menu toggle and remembers it after a reload", async () => {
+  it("switches language with the account-menu toggle, keeps the menu open, and remembers it after a reload", async () => {
     const { context, page, errors, writes } = await localPage();
     try {
       await page.locator("chadm-appbar .cab-avatar").click();
@@ -69,6 +70,14 @@ describe("App book navigation", () => {
       expect(await item.getAttribute("data-lang")).toBe("zh");
       await item.getByRole("radio", { name: "English" }).click();
       await page.getByRole("heading", { name: "Read English at your level." }).waitFor();
+      // The menu stays open while the page switches language, showing the new selection.
+      await page.waitForTimeout(400);
+      expect(await page.locator("chadm-appbar .cab-menu").isVisible()).toBe(true);
+      expect(await page.locator("chadm-appbar > button.cab-avatar").getAttribute("aria-expanded")).toBe("true");
+      expect(await page.getByRole("radio", { name: "English" }).getAttribute("aria-checked")).toBe("true");
+      // It closes on a tap outside.
+      await page.mouse.click(20, 400);
+      expect(await page.locator("chadm-appbar .cab-menu").isVisible()).toBe(false);
       await page.reload();
       await page.getByRole("heading", { name: "Read English at your level." }).waitFor();
       await page.locator("chadm-appbar .cab-avatar").click();
