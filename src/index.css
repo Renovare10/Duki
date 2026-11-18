@@ -2871,3 +2871,9 @@ button.badge {
 @media (prefers-reduced-motion: reduce) {
   .lang-toggle-item *, .lang-toggle-item *::before, .lang-toggle-item *::after { transition: none !important; }
 }
+
+/* Night theme: the selected side of the language toggle gets a light highlight with dark text
+   (the default thumb is too close to the track in the dark palette). Light theme unchanged. */
+[data-theme="night"] .lt-thumb { background: var(--ink); box-shadow: 0 1px 6px rgba(0, 0, 0, 0.45); }
+[data-theme="night"] .lt-opt[aria-checked="true"] { color: var(--paper); }
+[data-theme="night"] .lt-opt[aria-checked="false"] { color: var(--ink-soft); }
