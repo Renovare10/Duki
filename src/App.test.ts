@@ -25,7 +25,9 @@ describe("App book navigation", () => {
     browser = await chromium.launch({
       headless: true,
       ...(process.env.DUKI_CHROME ? { executablePath: process.env.DUKI_CHROME }
-        : process.platform === "win32" && !existsSync(chromium.executablePath()) ? { channel: "msedge" } : {}),
+        : existsSync(chromium.executablePath()) ? {}
+        // CI (GitHub's ubuntu runner) has Google Chrome but no Playwright browser download.
+        : process.platform === "win32" ? { channel: "msedge" } : existsSync("/opt/google/chrome/chrome") ? { channel: "chrome" } : {}),
     });
   }, 60_000);
 
