@@ -10,6 +10,7 @@ import { normalizeEvent } from "./history";
 import { normalizeText } from "./text";
 import { isWorkRowId } from "./works";
 import { normalizeWord } from "./word";
+import { incomingWins } from "./word-merge";
 import { packSnapshot } from "./sync";
 import { assertNewStories, assertStorageLimit, assertTextOnlyPayload, changedStories, LOCAL_STORAGE_BYTES } from "./storage-policy";
 
@@ -234,8 +235,12 @@ export async function applySyncState(input: {
   const textStore = tx.objectStore("texts");
   const sessionStore = tx.objectStore("sessions");
   const settingsStore = tx.objectStore("settings");
+  // Last write wins per word: a synced copy never overwrites a newer local tap (one made while
+  // the sync's GET was in flight would otherwise be put back to its old status).
+  const storedWords = await reqToPromise(wordStore.getAll() as IDBRequest<WordRecord[]>);
+  const stored = new Map(storedWords.map((w) => [w.hanzi, w]));
   for (const word of input.words) {
-    if (word?.hanzi) wordStore.put(normalizeWord(word));
+    if (word?.hanzi && incomingWins(stored.get(word.hanzi), word)) wordStore.put(normalizeWord(word));
   }
   for (const incoming of input.texts) {
     if (!incoming?.id) continue;

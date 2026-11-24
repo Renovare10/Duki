@@ -84,7 +84,7 @@ import {
   putWord,
 } from "./lib/db";
 import { makeWordEvent } from "./lib/history";
-import { mergeSnapshots, packSnapshot, pullSnapshotWithTag, pushSnapshot, retryOnConflict, SignInExpiredError } from "./lib/sync";
+import { mergeSnapshots, packSnapshot, pullSnapshotWithTag, pushSnapshot, retryOnConflict, SignInExpiredError, type SyncSnapshot } from "./lib/sync";
 import { ACCOUNT_STORAGE_BYTES, LOCAL_STORAGE_BYTES, assertNewStories, assertPlainText, assertStorageLimit, readTextImport, uploadedStoryBytes } from "./lib/storage-policy";
 import { dukiApiBase } from "./lib/gutenberg";
 import { hasWord, loadGlossary, MAX_WORD_LEN } from "./lib/glossary";
@@ -97,6 +97,8 @@ import { remainingUniques, scoreCounts, scoreTokens } from "./lib/score";
 import { segment } from "./lib/segment";
 import { createScoreCache } from "./lib/score-cache";
 import { applyReadingTap, applyReviewGrade } from "./lib/word";
+import { keepNewerWords, tapTime } from "./lib/word-merge";
+import { demoCloudBuild, demoPull, demoPush } from "./lib/demo-cloud";
 import type {
   BackupFile,
   Bookmark,
@@ -115,6 +117,8 @@ import type {
 // Production: false, so sign-in and Mandarin cloud sync behave exactly as before. Only a build
 // made with VITE_DUKI_CLOUD_SYNC=off is local-only. English rows never sync either way.
 const LOCAL_DRAFT = localOnlyBuild();
+/** TEST preview: a fake slow account in this browser (see lib/demo-cloud.ts). Off in production. */
+const DEMO_CLOUD = LOCAL_DRAFT && demoCloudBuild();
 
 type View =
   | { name: "home"; shelf?: string }
@@ -234,6 +238,11 @@ export default function App() {
   const authRef = useRef(auth);
   authRef.current = auth;
   const syncingRef = useRef(false);
+  /** Something changed while a sync was running: run one more when it ends. */
+  const resyncRef = useRef(false);
+  const [syncBusy, setSyncBusy] = useState(false);
+  /** A status tap could not be written on this device. */
+  const [saveError, setSaveError] = useState<string | null>(null);
   const syncTimerRef = useRef<number | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const importInputRef = useRef<HTMLInputElement>(null);
@@ -600,10 +609,77 @@ export default function App() {
     }));
   }
 
+  /**
+   * One pull → merge → push round. Status taps can land at any point while it runs (the GET can
+   * take seconds), so the merge starts from the current words, IndexedDB only takes a synced word
+   * when it is newer (applySyncState), and the reload keeps any word tapped meanwhile
+   * (keepNewerWords). The follow-up sync (resyncRef) then pushes those taps.
+   */
+  async function syncRound(
+    pull: () => Promise<{ snapshot: SyncSnapshot | null; etag: string | null }>,
+    push: (next: SyncSnapshot, remote: SyncSnapshot | null, etag: string | null) => Promise<void>,
+  ) {
+    let next = localSnapshot();
+    const pulled = await pull();
+    const remote = pulled.snapshot;
+    if (remote) {
+      next = mergeSnapshots(localSnapshot(), mandarinOnly(remote));
+      await applySyncState(next);
+      const loaded = await loadAll();
+      const sorted = loaded.texts.sort(
+        (a, b) => a.createdAt - b.createdAt || a.title.localeCompare(b.title),
+      );
+      textsRef.current = sorted;
+      setTexts(sorted);
+      const loadedWords = new Map(loaded.words.map((w) => [w.hanzi, w]));
+      const kept = keepNewerWords(loadedWords, wordsRef.current.values());
+      wordsRef.current = kept;
+      setWords((prev) => keepNewerWords(loadedWords, prev.values()));
+      setSessions(loaded.sessions);
+      setSettings(loaded.settings);
+      next = packSnapshot(mandarinOnly({
+        words: [...kept.values()],
+        texts: sorted,
+        sessions: loaded.sessions,
+        settings: loaded.settings,
+      }));
+    }
+    setAccountSettled(true);
+    await push(next, remote, pulled.etag);
+  }
+
+  function afterSync() {
+    if (!resyncRef.current) return;
+    resyncRef.current = false;
+    scheduleCloudPush();
+  }
+
+  async function runDemoCloudSync() {
+    syncingRef.current = true;
+    setSyncBusy(true);
+    try {
+      await syncRound(demoPull, (next) => demoPush(next));
+      setSyncError(null);
+    } catch (err) {
+      setSyncError(err instanceof Error ? `${err.message} Changes are still on this device.` : "Could not sync. Changes are still on this device.");
+      setAccountSettled(true);
+    } finally {
+      syncingRef.current = false;
+      setSyncBusy(false);
+      afterSync();
+    }
+  }
+
   async function runCloudSync(retried = false) {
-    if (LOCAL_DRAFT) return;
+    if (LOCAL_DRAFT && !DEMO_CLOUD) return;
+    if (syncingRef.current) {
+      // Don't drop it: a tap made during this sync isn't in what it pushes.
+      resyncRef.current = true;
+      return;
+    }
+    if (DEMO_CLOUD) return runDemoCloudSync();
     const stored = authRef.current;
-    if (!stored?.idToken || syncingRef.current) return;
+    if (!stored?.idToken) return;
     syncingRef.current = true;
     let retry = false;
     try {
@@ -621,32 +697,10 @@ export default function App() {
       }
       // The server refuses a save if the account changed since our GET (409). Then
       // re-fetch, merge exactly as before, and retry; a few attempts are plenty.
-      await retryOnConflict(async () => {
-        let next = localSnapshot();
-        const pulled = await pullSnapshotWithTag(tokens.idToken);
-        const remote = pulled.snapshot;
-        if (remote) {
-          next = mergeSnapshots(next, mandarinOnly(remote));
-          await applySyncState(next);
-          const loaded = await loadAll();
-          const sorted = loaded.texts.sort(
-            (a, b) => a.createdAt - b.createdAt || a.title.localeCompare(b.title),
-          );
-          textsRef.current = sorted;
-          setTexts(sorted);
-          setWords(new Map(loaded.words.map((w) => [w.hanzi, w])));
-          setSessions(loaded.sessions);
-          setSettings(loaded.settings);
-          next = packSnapshot(mandarinOnly({
-            words: loaded.words,
-            texts: sorted,
-            sessions: loaded.sessions,
-            settings: loaded.settings,
-          }));
-        }
-        setAccountSettled(true);
-        await pushSnapshot(tokens.idToken, next, fetch, remote?.texts ?? [], { ifMatch: pulled.etag });
-      });
+      await retryOnConflict(() => syncRound(
+        () => pullSnapshotWithTag(tokens.idToken),
+        (next, remote, etag) => pushSnapshot(tokens.idToken, next, fetch, remote?.texts ?? [], { ifMatch: etag }),
+      ));
       setSyncError(null);
     } catch (err) {
       // The API refused a token we thought was valid (revoked, clock skew): refresh once and retry.
@@ -670,12 +724,13 @@ export default function App() {
     } finally {
       syncingRef.current = false;
       if (retry) void runCloudSync(true);
+      else afterSync();
     }
   }
 
   function scheduleCloudPush() {
-    if (LOCAL_DRAFT) return;
-    if (!authRef.current?.idToken) return;
+    if (LOCAL_DRAFT && !DEMO_CLOUD) return;
+    if (!DEMO_CLOUD && !authRef.current?.idToken) return;
     if (syncTimerRef.current) window.clearTimeout(syncTimerRef.current);
     syncTimerRef.current = window.setTimeout(() => {
       void runCloudSync();
@@ -729,7 +784,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (!ready || !auth) return;
+    if (!ready || (!auth && !DEMO_CLOUD)) return;
     void runCloudSync();
   }, [ready, auth]);
 
@@ -1017,23 +1072,33 @@ export default function App() {
     });
   }
 
+  /** Show a word change at once (state + ref), then save it; a failed save says so. */
+  async function commitWord(next: WordRecord) {
+    wordsRef.current = new Map(wordsRef.current).set(next.hanzi, next);
+    setWords((p) => new Map(p).set(next.hanzi, next));
+    if (syncingRef.current) resyncRef.current = true;
+    try {
+      await putWord(next);
+      setSaveError(null);
+    } catch {
+      setSaveError("Couldn’t save that on this device. Tap the status again to retry.");
+    }
+    scheduleCloudPush();
+  }
+
   async function setStatus(hanzi: string, status: WordStatus) {
     const prev = wordsRef.current.get(hanzi);
-    const next = applyReadingTap(prev, hanzi, status);
-    setWords((p) => new Map(p).set(hanzi, next));
+    const next = applyReadingTap(prev, hanzi, status, tapTime(prev));
     logWordEvent(makeWordEvent(prev, next, "read"));
-    await putWord(next);
-    scheduleCloudPush();
+    await commitWord(next);
   }
 
   async function onGrade(hanzi: string, grade: ReviewGrade) {
     const existing = wordsRef.current.get(hanzi);
     const prev = existing ?? applyReadingTap(undefined, hanzi, "unknown");
-    const next = applyReviewGrade(prev, grade);
-    setWords((p) => new Map(p).set(hanzi, next));
+    const next = applyReviewGrade(prev, grade, tapTime(existing));
     logWordEvent(makeWordEvent(existing, next, "review", grade));
-    await putWord(next);
-    scheduleCloudPush();
+    await commitWord(next);
   }
 
   async function openClassic(text: LibraryText) {
@@ -1574,6 +1639,11 @@ export default function App() {
         </aside>
       ) : null}
       {syncError ? <p className="storage-usage" role="status">{syncError}</p> : null}
+      {DEMO_CLOUD ? (
+        <p className="demo-cloud-pill" role="status" aria-live="polite">
+          TEST preview · sample data · fake account sync {syncBusy ? "in flight…" : "idle"}
+        </p>
+      ) : null}
       {importError ? (
         <p className="paste-error" style={{ textAlign: "center", margin: "0.6rem 0 0" }}>
           {importError}
@@ -1682,6 +1752,7 @@ export default function App() {
           words={languageWords}
           settings={{ ...settings, theme: displayTheme }}
           onSetStatus={(hanzi, status) => void setStatus(wordStorageKey(lang, hanzi), status)}
+          saveError={saveError ?? syncError}
           onBookmark={(bookmark) => void onBookmark(current.id, bookmark)}
           onDone={(durationMs) => void onDone(current.id, durationMs)}
           onSettings={onReaderSettings}

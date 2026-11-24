@@ -2877,3 +2877,32 @@ button.badge {
 [data-theme="night"] .lt-thumb { background: var(--ink); box-shadow: 0 1px 6px rgba(0, 0, 0, 0.45); }
 [data-theme="night"] .lt-opt[aria-checked="true"] { color: var(--paper); }
 [data-theme="night"] .lt-opt[aria-checked="false"] { color: var(--ink-soft); }
+
+/* A status change that couldn't be saved: said in the dock, never a silent revert. */
+.dock-save-error {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 0.45rem 0.65rem;
+  border-radius: 0.6rem;
+  background: #fff4f1;
+  color: #8a2414;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* TEST preview builds only (VITE_DUKI_DEMO_CLOUD=on). */
+.demo-cloud-pill {
+  position: fixed;
+  top: calc(var(--topbar-h) + 0.35rem);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 7;
+  margin: 0;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  background: #1d4f91;
+  color: #fff;
+  font: 600 0.75rem/1.3 var(--sans);
+  white-space: nowrap;
+  pointer-events: none;
+}
