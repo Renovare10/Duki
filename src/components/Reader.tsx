@@ -36,6 +36,8 @@ type Props = {
   classic?: { original: string; simplified: string } | null;
   script?: ScriptChoice;
   onScript?: (script: ScriptChoice) => void;
+  /** A status change couldn't be saved (on this device or to the account); shown in the dock. */
+  saveError?: string | null;
 };
 
 type HoverState = {
@@ -64,6 +66,7 @@ export function Reader({
   classic = null,
   script = "simplified",
   onScript,
+  saveError = null,
 }: Props) {
   const lang = text.lang ?? "zh";
   const fontFamily = lang === "en" && settings.fontFamily === "serif" ? "var(--serif-en)" : FONT_STACKS[settings.fontFamily];
@@ -424,6 +427,7 @@ export function Reader({
         {selectedToken?.isWord && selectedGloss && selectedTint ? (
           <>
             <div className="dock-word">{selectedSurface}</div>
+            {saveError ? <p className="dock-save-error" role="alert">{saveError}</p> : null}
             <div className="status-btns">
               <StatusButton
                 label="Don’t know"
