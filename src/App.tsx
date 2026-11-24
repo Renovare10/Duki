@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { useDeferredValue, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { AddText } from "./components/AddText";
 import { Home } from "./components/Home";
 import { EN_SAMPLES } from "./data/en-samples";
@@ -98,6 +98,7 @@ import { segment } from "./lib/segment";
 import { createScoreCache } from "./lib/score-cache";
 import { applyReadingTap, applyReviewGrade } from "./lib/word";
 import { keepNewerWords, tapTime } from "./lib/word-merge";
+import { afterPaint } from "./lib/after-paint";
 import { demoCloudBuild, demoPull, demoPush } from "./lib/demo-cloud";
 import type {
   BackupFile,
@@ -240,6 +241,8 @@ export default function App() {
   const syncingRef = useRef(false);
   /** Something changed while a sync was running: run one more when it ends. */
   const resyncRef = useRef(false);
+  /** Word writes, chained so they reach IndexedDB in tap order. */
+  const wordWritesRef = useRef<Promise<void>>(Promise.resolve());
   const [syncBusy, setSyncBusy] = useState(false);
   /** A status tap could not be written on this device. */
   const [saveError, setSaveError] = useState<string | null>(null);
@@ -813,6 +816,20 @@ export default function App() {
     return map;
   }, [languageWords]);
 
+  // Library scores (home, shelves, stats) re-score every text, so a status tap must never wait
+  // on them: they keep the last value while reading and catch up in a deferred render after.
+  const readingNow = view.name === "reader" || view.name === "share";
+  const frozenStatusesRef = useRef(statuses);
+  if (!readingNow) frozenStatusesRef.current = statuses;
+  const scoreStatuses = useDeferredValue(readingNow ? frozenStatusesRef.current : statuses);
+  const tokenCache = useRef(new Map<string, { body: string; tokens: ReturnType<typeof segment> }>());
+  function cachedTokens(text: LibraryText) {
+    const hit = tokenCache.current.get(text.id);
+    if (hit && hit.body === text.body) return hit.tokens;
+    const tokens = segment(text.body, hasWord, MAX_WORD_LEN, text.lang);
+    tokenCache.current.set(text.id, { body: text.body, tokens });
+    return tokens;
+  }
   const scoreCache = useRef<ReturnType<typeof createScoreCache> | null>(null);
   if (!scoreCache.current) scoreCache.current = createScoreCache();
   const scores = useMemo(() => {
@@ -820,26 +837,29 @@ export default function App() {
     const profiles = profilesRef.current;
     for (const text of texts) {
       const profile = profiles?.get(text.id);
-      map.set(text.id, scoreCache.current!.get(text, statuses, profile, () =>
+      map.set(text.id, scoreCache.current!.get(text, scoreStatuses, profile, () =>
         text.body.trim()
-          ? scoreTokens(segment(text.body, hasWord, MAX_WORD_LEN, text.lang), statuses)
-          : profile ? scoreCounts(profile.words, profile.counts, statuses) : scoreTokens([], statuses),
+          ? scoreTokens(cachedTokens(text), scoreStatuses)
+          : profile ? scoreCounts(profile.words, profile.counts, scoreStatuses) : scoreTokens([], scoreStatuses),
       ));
     }
-    scoreCache.current!.retain(new Set(texts.map((text) => text.id)));
+    const ids = new Set(texts.map((text) => text.id));
+    scoreCache.current!.retain(ids);
+    for (const id of tokenCache.current.keys()) if (!ids.has(id)) tokenCache.current.delete(id);
     return map;
-  }, [texts, statuses, profileTick]);
+  }, [texts, scoreStatuses, profileTick]);
 
   const languageTexts = useMemo(() => texts.filter((t) => (t.lang ?? "zh") === lang), [texts, lang]);
   const languageTextIds = useMemo(() => new Set(languageTexts.map((t) => t.id)), [languageTexts]);
   const languageScores = useMemo(() => new Map([...scores].filter(([id]) => languageTextIds.has(id))), [scores, languageTextIds]);
   const languageSessions = useMemo(() => sessions.filter((s) => languageTextIds.has(s.textId)), [sessions, languageTextIds]);
+  const deferredEvents = useDeferredValue(wordEvents);
   const languageEvents = useMemo(
     () =>
-      wordEvents
+      deferredEvents
         .filter((e) => (lang === "en") === isEnglishWordKey(e.hanzi))
         .map((e) => (lang === "en" ? { ...e, hanzi: displayWordKey(e.hanzi) } : e)),
-    [wordEvents, lang],
+    [deferredEvents, lang],
   );
   const currentRow =
     view.name === "reader"
@@ -855,7 +875,7 @@ export default function App() {
         ? { ...currentRow, body: workBodies.get(currentRow.id)! }
         : undefined
       : currentRow;
-  const personal = useMemo(() => personalReady(statuses), [statuses]);
+  const personal = useMemo(() => personalReady(scoreStatuses), [scoreStatuses]);
 
   function mergeIncoming(incoming: LibraryText[]) {
     if (incoming.length === 0) return;
@@ -1067,30 +1087,39 @@ export default function App() {
   /** Stats history: local-only, best effort — a failed write never blocks reading or review. */
   function logWordEvent(event: WordEvent) {
     setWordEvents((prev) => [...prev, event]);
-    void putEvent(event).catch(() => {
-      /* history is optional */
+    afterPaint(() => {
+      void putEvent(event).catch(() => {
+        /* history is optional */
+      });
     });
   }
 
   /** Show a word change at once (state + ref), then save it; a failed save says so. */
-  async function commitWord(next: WordRecord) {
+  // The tap only updates state; IndexedDB and sync run after the frame is painted, in tap order.
+  function commitWord(next: WordRecord) {
     wordsRef.current = new Map(wordsRef.current).set(next.hanzi, next);
     setWords((p) => new Map(p).set(next.hanzi, next));
     if (syncingRef.current) resyncRef.current = true;
-    try {
-      await putWord(next);
-      setSaveError(null);
-    } catch {
-      setSaveError("Couldn’t save that on this device. Tap the status again to retry.");
-    }
-    scheduleCloudPush();
+    afterPaint(() => {
+      wordWritesRef.current = wordWritesRef.current
+        .then(() => putWord(next))
+        .then(
+          () => setSaveError(null),
+          () => setSaveError("Couldn’t save that on this device. Tap the status again to retry."),
+        );
+      scheduleCloudPush();
+    });
   }
 
-  async function setStatus(hanzi: string, status: WordStatus) {
+  function setStatus(hanzi: string, status: WordStatus) {
     const prev = wordsRef.current.get(hanzi);
     const next = applyReadingTap(prev, hanzi, status, tapTime(prev));
     logWordEvent(makeWordEvent(prev, next, "read"));
-    await commitWord(next);
+    commitWord(next);
+  }
+
+  function onReaderStatus(hanzi: string, status: WordStatus) {
+    setStatus(wordStorageKey(lang, hanzi), status);
   }
 
   async function onGrade(hanzi: string, grade: ReviewGrade) {
@@ -1098,7 +1127,7 @@ export default function App() {
     const prev = existing ?? applyReadingTap(undefined, hanzi, "unknown");
     const next = applyReviewGrade(prev, grade, tapTime(existing));
     logWordEvent(makeWordEvent(existing, next, "review", grade));
-    await commitWord(next);
+    commitWord(next);
   }
 
   async function openClassic(text: LibraryText) {
@@ -1751,7 +1780,7 @@ export default function App() {
           text={current}
           words={languageWords}
           settings={{ ...settings, theme: displayTheme }}
-          onSetStatus={(hanzi, status) => void setStatus(wordStorageKey(lang, hanzi), status)}
+          onSetStatus={onReaderStatus}
           saveError={saveError ?? syncError}
           onBookmark={(bookmark) => void onBookmark(current.id, bookmark)}
           onDone={(durationMs) => void onDone(current.id, durationMs)}

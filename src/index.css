@@ -2906,3 +2906,57 @@ button.badge {
   white-space: nowrap;
   pointer-events: none;
 }
+
+/* ---- Status tap juice (instant feedback) ---------------------------------------------- */
+.word {
+  transition: background-color 160ms ease, color 160ms ease, box-shadow 160ms ease;
+}
+
+.status-btn {
+  touch-action: manipulation;
+  transition: transform 90ms ease, background-color 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+
+.status-btn:active {
+  transform: scale(0.93);
+}
+
+.status-btn.pop.p0 { animation: status-pop-0 240ms cubic-bezier(0.2, 0.9, 0.3, 1.35); }
+.status-btn.pop.p1 { animation: status-pop-1 240ms cubic-bezier(0.2, 0.9, 0.3, 1.35); }
+@keyframes status-pop-0 { 0% { transform: scale(0.9); } 55% { transform: scale(1.08); } 100% { transform: scale(1); } }
+@keyframes status-pop-1 { 0% { transform: scale(0.9); } 55% { transform: scale(1.08); } 100% { transform: scale(1); } }
+
+/* The word just marked: a wash in its new colour that settles, plus a ripple ring. */
+.word.flash { position: relative; --flash: var(--ok); }
+.word.flash.unknown { --flash: var(--unknown-line); }
+.word.flash.shaky { --flash: var(--shaky-line); }
+.word.flash.known { --flash: var(--ok); }
+.word.flash.f0 { animation: word-flash-0 480ms ease-out; }
+.word.flash.f1 { animation: word-flash-1 480ms ease-out; }
+@keyframes word-flash-0 { 0% { background-color: color-mix(in srgb, var(--flash) 48%, transparent); } }
+@keyframes word-flash-1 { 0% { background-color: color-mix(in srgb, var(--flash) 48%, transparent); } }
+.word.flash::after {
+  content: "";
+  position: absolute;
+  inset: -0.1em;
+  border-radius: 0.32em;
+  border: 2px solid var(--flash);
+  opacity: 0;
+  pointer-events: none;
+}
+.word.flash.f0::after { animation: word-ripple-0 520ms ease-out; }
+.word.flash.f1::after { animation: word-ripple-1 520ms ease-out; }
+@keyframes word-ripple-0 { 0% { opacity: 0.9; transform: scale(0.85); } 100% { opacity: 0; transform: scale(1.45); } }
+@keyframes word-ripple-1 { 0% { opacity: 0.9; transform: scale(0.85); } 100% { opacity: 0; transform: scale(1.45); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .word,
+  .status-btn { transition: none; }
+  .status-btn:active { transform: none; }
+  .status-btn.pop.p0,
+  .status-btn.pop.p1,
+  .word.flash.f0,
+  .word.flash.f1,
+  .word.flash.f0::after,
+  .word.flash.f1::after { animation: none; }
+}

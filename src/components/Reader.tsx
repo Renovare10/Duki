@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import type {
   Bookmark,
   Gloss,
@@ -120,6 +120,24 @@ export function Reader({
   const selectedGloss = selectedToken?.isWord ? getGloss(selectedGlossKey || selectedToken.text, lang) : null;
   const selectedWord = selectedRecordKey ? words.get(selectedRecordKey) : undefined;
   const selectedTint = selectedToken?.isWord ? tintOf(words, selectedRecordKey) : null;
+
+  // Juice: the marked word flashes in its new colour and the pressed button pops; both replay
+  // on every tap (the counters alternate the CSS animation). Off under prefers-reduced-motion.
+  const [flash, setFlash] = useState<Flash | null>(null);
+  const [pulse, setPulse] = useState<{ status: WordStatus; n: number } | null>(null);
+  function mark(status: WordStatus) {
+    if (!selected || !selectedRecordKey) return;
+    onSetStatus(selectedRecordKey, status);
+    setFlash((f) => ({ zone: selected.zone, index: selected.index, n: (f?.n ?? 0) + 1 }));
+    setPulse((p) => ({ status, n: (p?.n ?? 0) + 1 }));
+    try {
+      if (typeof navigator.vibrate === "function") navigator.vibrate(10);
+    } catch {
+      /* no haptics */
+    }
+  }
+  const markRef = useRef(mark);
+  markRef.current = mark;
 
   const [resumeIndex, setResumeIndex] = useState<number | null>(null);
   const [toast, setToast] = useState<string | null>(null);
@@ -258,9 +276,9 @@ export function Reader({
       }
 
       if (!selectedToken?.isWord || !selectedRecordKey) return;
-      if (event.key === "1") onSetStatus(selectedRecordKey, "unknown");
-      if (event.key === "2") onSetStatus(selectedRecordKey, "shaky");
-      if (event.key === "3") onSetStatus(selectedRecordKey, "known");
+      if (event.key === "1") markRef.current("unknown");
+      if (event.key === "2") markRef.current("shaky");
+      if (event.key === "3") markRef.current("known");
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -270,9 +288,9 @@ export function Reader({
   const bodyContent = useMemo(() => bodyView.map((view) =>
     renderToken(view.token, "body", {
       lang, words, selected, resumeIndex, setSelected: selectWord, setHover,
-      speaking: speakingTokens, surface: view.surface, glossKey: view.glossKey,
+      speaking: speakingTokens, surface: view.surface, glossKey: view.glossKey, flash,
     }),
-  ), [bodyView, words, selected, resumeIndex, selectWord, speakingTokens, lang]);
+  ), [bodyView, words, selected, resumeIndex, selectWord, speakingTokens, lang, flash]);
 
   return (
     <div className={`reader-page highlights-${settings.highlightStyle ?? "color-coded"} width-${settings.textWidth ?? "medium"}`}>
@@ -294,6 +312,7 @@ export function Reader({
                   setSelected: selectWord,
                   setHover,
                   speaking: null,
+                  flash,
                 }),
               )}
             </h1>
@@ -434,21 +453,24 @@ export function Reader({
                 shortcut="1"
                 status="unknown"
                 active={selectedTint === "unknown"}
-                onClick={() => onSetStatus(selectedRecordKey, "unknown")}
+                pop={pulse?.status === "unknown" ? pulse.n : null}
+                onClick={() => mark("unknown")}
               />
               <StatusButton
                 label="Barely"
                 shortcut="2"
                 status="shaky"
                 active={selectedTint === "shaky"}
-                onClick={() => onSetStatus(selectedRecordKey, "shaky")}
+                pop={pulse?.status === "shaky" ? pulse.n : null}
+                onClick={() => mark("shaky")}
               />
               <StatusButton
                 label="Okay"
                 shortcut="3"
                 status="known"
                 active={selectedTint === "known"}
-                onClick={() => onSetStatus(selectedRecordKey, "known")}
+                pop={pulse?.status === "known" ? pulse.n : null}
+                onClick={() => mark("known")}
               />
             </div>
             {lang === "zh" ? <div className="dock-pinyin">{selectedGloss.pinyin}</div> : null}
@@ -497,7 +519,11 @@ type RenderOpts = {
   speaking: { from: number; to: number } | null;
   surface?: string;
   glossKey?: string;
+  flash?: Flash | null;
 };
+
+/** The word just marked: replays its status-colour flash (n alternates the animation). */
+type Flash = { zone: "title" | "body"; index: number; n: number };
 
 function renderToken(token: Token, zone: "title" | "body", opts: RenderOpts) {
   const marked =
@@ -506,49 +532,97 @@ function renderToken(token: Token, zone: "title" | "body", opts: RenderOpts) {
     token.index >= opts.speaking.from &&
     token.index < opts.speaking.to;
   if (!token.isWord) {
-    return (
-      <span key={`${zone}-${token.index}`} className={marked ? "speaking" : undefined}>
-        {VERSE_NUM.test(token.text) ? withVerseNumbers(token.text) : token.text}
-      </span>
-    );
+    return <PlainToken key={`${zone}-${token.index}`} text={token.text} marked={marked} />;
   }
   const surface = opts.surface ?? token.text;
   const glossKey = opts.glossKey ?? token.key ?? token.text;
   const record = opts.lang === "en" ? glossKey : markKey(glossKey, surface, (key) => opts.words.has(key));
-  const status = tintOf(opts.words, record);
-  const isSelected =
-    opts.selected?.zone === zone && opts.selected.index === token.index;
-  const isResume = zone === "body" && opts.resumeIndex === token.index;
+  const isSelected = opts.selected?.zone === zone && opts.selected.index === token.index;
+  const flash = opts.flash && opts.flash.zone === zone && opts.flash.index === token.index ? opts.flash.n : null;
+  return (
+    <WordToken
+      key={`${zone}-${token.index}`}
+      token={token}
+      zone={zone}
+      lang={opts.lang}
+      surface={surface}
+      glossKey={glossKey}
+      status={tintOf(opts.words, record)}
+      selected={isSelected}
+      resume={zone === "body" && opts.resumeIndex === token.index}
+      marked={marked}
+      flash={flash}
+      onSelect={opts.setSelected}
+      setHover={opts.setHover}
+    />
+  );
+}
+
+const PlainToken = memo(function PlainToken({ text, marked }: { text: string; marked: boolean }) {
+  return <span className={marked ? "speaking" : undefined}>{VERSE_NUM.test(text) ? withVerseNumbers(text) : text}</span>;
+});
+
+/**
+ * One word of the article. Memoized on primitive props, so a status tap re-renders only the
+ * words whose tint changed (not the whole article). `flash` (a counter) replays the
+ * status-colour flash on the word just marked.
+ */
+const WordToken = memo(function WordToken({
+  token,
+  zone,
+  lang,
+  surface,
+  glossKey,
+  status,
+  selected,
+  resume,
+  marked,
+  flash,
+  onSelect,
+  setHover,
+}: {
+  token: Token;
+  zone: "title" | "body";
+  lang: Language;
+  surface: string;
+  glossKey: string;
+  status: WordTint;
+  selected: boolean;
+  resume: boolean;
+  marked: boolean;
+  flash: number | null;
+  onSelect: (sel: Sel) => void;
+  setHover: (hover: HoverState | null) => void;
+}) {
   return (
     <span
-      key={`${zone}-${token.index}`}
       data-index={zone === "body" ? token.index : undefined}
-      className={`word ${status}${isSelected ? " selected" : ""}${isResume ? " resume" : ""}${marked ? " speaking" : ""}`}
+      className={`word ${status}${selected ? " selected" : ""}${resume ? " resume" : ""}${marked ? " speaking" : ""}${flash != null ? ` flash f${flash % 2}` : ""}`}
       onClick={() => {
-        opts.setSelected({ zone, index: token.index });
-        opts.setHover(null);
+        onSelect({ zone, index: token.index });
+        setHover(null);
       }}
       onMouseEnter={(event) => {
-        if (tintOf(opts.words, record) === "known") {
-          opts.setHover(null);
+        if (status === "known") {
+          setHover(null);
           return;
         }
         const rect = event.currentTarget.getBoundingClientRect();
-        opts.setHover({
+        setHover({
           token,
           zone,
-          gloss: getGloss(glossKey, opts.lang),
+          gloss: getGloss(glossKey, lang),
           x: rect.left + rect.width / 2,
           y: rect.top,
         });
       }}
-      onMouseLeave={() => opts.setHover(null)}
+      onMouseLeave={() => setHover(null)}
     >
-      {isResume ? <span className="resume-flag">resume here</span> : null}
+      {resume ? <span className="resume-flag">resume here</span> : null}
       {surface}
     </span>
   );
-}
+});
 
 /** Bible chapters carry verse numbers as superscript digits (¹²³); show them quietly. */
 const VERSE_NUM = /[⁰¹²³⁴⁵⁶⁷⁸⁹]/;
@@ -570,18 +644,21 @@ function StatusButton({
   shortcut,
   status,
   active,
+  pop = null,
   onClick,
 }: {
   label: string;
   shortcut: string;
   status: WordStatus;
   active: boolean;
+  pop?: number | null;
   onClick: () => void;
 }) {
   return (
     <button
       type="button"
-      className={`status-btn ${status}${active ? " active" : ""}`}
+      aria-pressed={active}
+      className={`status-btn ${status}${active ? " active" : ""}${pop != null ? ` pop p${pop % 2}` : ""}`}
       onClick={onClick}
     >
       {label}
