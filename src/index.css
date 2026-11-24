@@ -2914,6 +2914,7 @@ button.badge {
 
 .status-btn {
   touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent; /* our own press scale + pop instead of the grey/blue box */
   transition: transform 90ms ease, background-color 160ms ease, border-color 160ms ease, color 160ms ease;
 }
 
