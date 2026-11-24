@@ -6,6 +6,7 @@ Duki is a local-first Mandarin and English reader (React 19, Vite, TypeScript). 
 ## Start here
 1. Read `REPO-MAP.md`.
 2. `LIVE.md` is not generated in this repo yet; do not invent one.
+3. Shared programmer playbook: `/home/box/reference/PLAYBOOK.md`.
 
 ## Run / test
 ```bash
