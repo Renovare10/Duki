@@ -3,7 +3,7 @@
 ## Folders
 - `src/main.tsx`, `src/App.tsx` — React entry and shell (hash routes, language, sync).
 - `src/components/` — Home, Reader, Book, Work, Review, Stats, AddText, AppBar, Charts, VoicePlayer, ThemeToggle.
-- `src/lib/` — IndexedDB, auth, sync, library, scoring, SM-2 review, language toggle, Gutenberg/wiki/Wikisource, storage caps, handoff.
+- `src/lib/` — IndexedDB, auth, sync, library, scoring, SM-2 review, language toggle, Gutenberg/wiki/Wikisource, storage caps, handoff, word-merge (last write wins during a cloud sync), demo-cloud (preview-only fake slow account when `VITE_DUKI_DEMO_CLOUD=on` and cloud sync is off).
 - `src/data/` — built-in Mandarin and English catalogs (some `*.generated.ts`).
 - `src/vendor/` — copied shared `chadm-appbar`, `chadm-session`, `chadm-handoff` (same files as LOA and the portfolio).
 - `public/` — `glossary.json`, classic JSON, static works under `public/works/`.
@@ -29,4 +29,4 @@
 - Public fetches: gutendex.com, gutenberg.org, zh.wikipedia.org, zh.wikisource.org.
 
 ## Hot files (bots: coordinate first)
-`src/App.tsx`, `src/lib/auth.ts`, `src/lib/sync.ts`, `src/lib/language.ts`, `src/lib/handoff.ts`, `src/vendor/chadm-*.js`.
+`src/App.tsx`, `src/lib/auth.ts`, `src/lib/sync.ts`, `src/lib/word-merge.ts`, `src/lib/language.ts`, `src/lib/handoff.ts`, `src/vendor/chadm-*.js`.
