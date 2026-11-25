@@ -6,7 +6,8 @@ import { createServer, type ViteDevServer } from "vite";
 /**
  * Chad, Nov 24 2026: "the visuals on the website need to react instantly". A status tap must be
  * painted before IndexedDB is even written (the write is scheduled after paint), and the juice
- * (pop, flash, haptic) runs, except for motion under prefers-reduced-motion.
+ * (button pop, haptic) runs, except for motion under prefers-reduced-motion. Chad, Nov 25: no
+ * effect on the character itself; it just changes colour, instantly.
  */
 describe("Reader status tap: paint first, then save", () => {
   let server: ViteDevServer;
@@ -107,7 +108,7 @@ describe("Reader status tap: paint first, then save", () => {
     }
   }, 40_000);
 
-  it("pops the button, flashes the word in its new colour and buzzes; no motion when reduced", async () => {
+  it("pops the button and buzzes; the word only changes colour (no animation or transition); no motion when reduced", async () => {
     for (const motion of ["no-preference", "reduce"] as const) {
       const { page, close, errors } = await open(motion);
       try {
@@ -119,19 +120,23 @@ describe("Reader status tap: paint first, then save", () => {
           return {
             wordClass: word.className,
             wordAnim: getComputedStyle(word).animationName,
+            wordAfterAnim: getComputedStyle(word, "::after").animationName,
+            wordTransition: getComputedStyle(word).transitionDuration,
             btnClass: btn.className,
             btnAnim: getComputedStyle(btn).animationName,
             vibrate: (window as unknown as { __vibrate: number[] }).__vibrate,
           };
         });
-        expect(fx.wordClass).toMatch(/flash f[01]/);
+        expect(fx.wordClass).toContain("shaky");
+        expect(fx.wordClass).not.toMatch(/flash/);
+        expect(fx.wordAnim).toBe("none");
+        expect(fx.wordAfterAnim).toBe("none");
+        expect(fx.wordTransition).toBe("0s");
         expect(fx.btnClass).toMatch(/pop p[01]/);
         expect(fx.vibrate).toEqual([10]);
         if (motion === "reduce") {
-          expect(fx.wordAnim).toBe("none");
           expect(fx.btnAnim).toBe("none");
         } else {
-          expect(fx.wordAnim).toMatch(/^word-flash-[01]$/);
           expect(fx.btnAnim).toMatch(/^status-pop-[01]$/);
         }
         expect(errors).toEqual([]);

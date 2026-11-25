@@ -121,14 +121,12 @@ export function Reader({
   const selectedWord = selectedRecordKey ? words.get(selectedRecordKey) : undefined;
   const selectedTint = selectedToken?.isWord ? tintOf(words, selectedRecordKey) : null;
 
-  // Juice: the marked word flashes in its new colour and the pressed button pops; both replay
-  // on every tap (the counters alternate the CSS animation). Off under prefers-reduced-motion.
-  const [flash, setFlash] = useState<Flash | null>(null);
+  // Juice: the pressed button pops (the counter replays the CSS animation; off under
+  // prefers-reduced-motion). The word itself only changes colour, instantly, with no effect.
   const [pulse, setPulse] = useState<{ status: WordStatus; n: number } | null>(null);
   function mark(status: WordStatus) {
     if (!selected || !selectedRecordKey) return;
     onSetStatus(selectedRecordKey, status);
-    setFlash((f) => ({ zone: selected.zone, index: selected.index, n: (f?.n ?? 0) + 1 }));
     setPulse((p) => ({ status, n: (p?.n ?? 0) + 1 }));
     try {
       if (typeof navigator.vibrate === "function") navigator.vibrate(10);
@@ -288,9 +286,9 @@ export function Reader({
   const bodyContent = useMemo(() => bodyView.map((view) =>
     renderToken(view.token, "body", {
       lang, words, selected, resumeIndex, setSelected: selectWord, setHover,
-      speaking: speakingTokens, surface: view.surface, glossKey: view.glossKey, flash,
+      speaking: speakingTokens, surface: view.surface, glossKey: view.glossKey,
     }),
-  ), [bodyView, words, selected, resumeIndex, selectWord, speakingTokens, lang, flash]);
+  ), [bodyView, words, selected, resumeIndex, selectWord, speakingTokens, lang]);
 
   return (
     <div className={`reader-page highlights-${settings.highlightStyle ?? "color-coded"} width-${settings.textWidth ?? "medium"}`}>
@@ -312,7 +310,6 @@ export function Reader({
                   setSelected: selectWord,
                   setHover,
                   speaking: null,
-                  flash,
                 }),
               )}
             </h1>
@@ -519,11 +516,7 @@ type RenderOpts = {
   speaking: { from: number; to: number } | null;
   surface?: string;
   glossKey?: string;
-  flash?: Flash | null;
 };
-
-/** The word just marked: replays its status-colour flash (n alternates the animation). */
-type Flash = { zone: "title" | "body"; index: number; n: number };
 
 function renderToken(token: Token, zone: "title" | "body", opts: RenderOpts) {
   const marked =
@@ -538,7 +531,6 @@ function renderToken(token: Token, zone: "title" | "body", opts: RenderOpts) {
   const glossKey = opts.glossKey ?? token.key ?? token.text;
   const record = opts.lang === "en" ? glossKey : markKey(glossKey, surface, (key) => opts.words.has(key));
   const isSelected = opts.selected?.zone === zone && opts.selected.index === token.index;
-  const flash = opts.flash && opts.flash.zone === zone && opts.flash.index === token.index ? opts.flash.n : null;
   return (
     <WordToken
       key={`${zone}-${token.index}`}
@@ -551,7 +543,6 @@ function renderToken(token: Token, zone: "title" | "body", opts: RenderOpts) {
       selected={isSelected}
       resume={zone === "body" && opts.resumeIndex === token.index}
       marked={marked}
-      flash={flash}
       onSelect={opts.setSelected}
       setHover={opts.setHover}
     />
@@ -564,8 +555,7 @@ const PlainToken = memo(function PlainToken({ text, marked }: { text: string; ma
 
 /**
  * One word of the article. Memoized on primitive props, so a status tap re-renders only the
- * words whose tint changed (not the whole article). `flash` (a counter) replays the
- * status-colour flash on the word just marked.
+ * words whose tint changed (not the whole article).
  */
 const WordToken = memo(function WordToken({
   token,
@@ -577,7 +567,6 @@ const WordToken = memo(function WordToken({
   selected,
   resume,
   marked,
-  flash,
   onSelect,
   setHover,
 }: {
@@ -590,14 +579,13 @@ const WordToken = memo(function WordToken({
   selected: boolean;
   resume: boolean;
   marked: boolean;
-  flash: number | null;
   onSelect: (sel: Sel) => void;
   setHover: (hover: HoverState | null) => void;
 }) {
   return (
     <span
       data-index={zone === "body" ? token.index : undefined}
-      className={`word ${status}${selected ? " selected" : ""}${resume ? " resume" : ""}${marked ? " speaking" : ""}${flash != null ? ` flash f${flash % 2}` : ""}`}
+      className={`word ${status}${selected ? " selected" : ""}${resume ? " resume" : ""}${marked ? " speaking" : ""}`}
       onClick={() => {
         onSelect({ zone, index: token.index });
         setHover(null);
