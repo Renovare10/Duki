@@ -10,7 +10,8 @@
 - `scripts/` — glossary/works builders, `validate-library.mjs`, `build-pages.sh`, Playwright e2e.
 - `deploy/pages/` — `_headers` (CSP + cache), `_redirects`, `assets-404.html`.
 - `docs/` — historical briefs and import/storage notes. Not the source of truth for commands (see `AGENTS.md`).
-- `.github/workflows/deploy.yml` — push to `main` deploys Cloudflare Pages.
+- `.github/workflows/ci.yml` — full test suite (`npm test`) on every push and pull request; no deploy.
+- `.github/workflows/deploy.yml` — push to `main` deploys Cloudflare Pages. Wait for green CI first.
 
 ## Entry points
 - Dev: `npm run dev` (Vite, port 5173).

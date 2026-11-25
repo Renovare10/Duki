@@ -17,6 +17,7 @@ npm test                  # scripts/validate-library.mjs + vitest (src/**/*.test
 npm run build             # tsc --noEmit && vite build
 npm run e2e / e2e:en      # Playwright, optional
 ```
+Run only focused tests locally. CI (`.github/workflows/ci.yml`) runs the full suite (`npm test`) on every push and pull request; do not deploy until that CI is green.
 
 ## Hard rules
 - No deploy, push to `main`, paid service, or delete without Chad's approval in his own words.
