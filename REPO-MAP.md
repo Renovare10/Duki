@@ -11,7 +11,7 @@
 - `deploy/pages/` — `_headers` (CSP + cache), `_redirects`, `assets-404.html`.
 - `docs/` — historical briefs and import/storage notes. Not the source of truth for commands (see `AGENTS.md`).
 - `.github/workflows/ci.yml` — full test suite (`npm test`) on every push and pull request; no deploy.
-- `.github/workflows/deploy.yml` — push to `main` deploys Cloudflare Pages. Wait for green CI first.
+- `.github/workflows/deploy.yml` — push to `main` runs the Test job, then deploys Cloudflare Pages. A red suite blocks deploy. Wait for green CI first.
 
 ## Entry points
 - Dev: `npm run dev` (Vite, port 5173).

@@ -6,7 +6,27 @@ on:
   workflow_dispatch:
 
 jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install and run full test suite
+        run: |
+          npm ci
+          npm test
+
   deploy:
+    needs: test
     runs-on: ubuntu-latest
     permissions:
       contents: read

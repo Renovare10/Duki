@@ -30,7 +30,7 @@ Run only focused tests locally. CI (`.github/workflows/ci.yml`) runs the full su
 
 ## Deploy (only when approved)
 1. Record the current Cloudflare Pages deployment ID for rollback (project `chadmurchison-duki`).
-2. Production: push to `main`. CI runs `npm ci && npm test && npm run build`, `./scripts/build-pages.sh dist-pages`, then `pages deploy dist-pages --project-name=chadmurchison-duki --branch=main`.
+2. Production: push to `main`. The deploy workflow runs a Test job first (`npm ci && npm test`); a red suite blocks deploy. The deploy job then runs `npm ci && npm test && npm run build`, `./scripts/build-pages.sh dist-pages`, and `pages deploy dist-pages --project-name=chadmurchison-duki --branch=main`.
 3. CI sets `VITE_DUKI_API` and `VITE_COGNITO_*` (see the workflow). A preview may set `VITE_DUKI_CLOUD_SYNC=off` to stay local-only.
 4. Manual preview: assemble `dist-pages` the same way and deploy to a Pages branch other than `main`. Never `--branch=main` unless Chad approved going live.
 5. Rollback: redeploy the recorded prior Pages deployment. AWS login and sync are unchanged by a Pages rollback.
