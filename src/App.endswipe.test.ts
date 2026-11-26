@@ -81,67 +81,75 @@ describe("Reader word card: swipe down at the end of a story dismisses it", () =
     return box.text;
   }
 
-  it("at the end: a downward swipe slides the card away (~200 ms, no flicker); another word still opens", async () => {
+  /** Record the dock's offset every frame for `ms`. */
+  const sample = (page: Page, ms = 900) => page.evaluate((ms) => {
+    const w = window as unknown as { __samples: number[] };
+    w.__samples = [];
+    const dock = document.querySelector<HTMLElement>(".dock")!;
+    const t0 = performance.now();
+    const tick = () => {
+      w.__samples.push(Math.round(new DOMMatrixReadOnly(getComputedStyle(dock).transform).m42));
+      if (performance.now() - t0 < ms) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }, ms);
+  const samples = (page: Page) => page.evaluate(() => (window as unknown as { __samples: number[] }).__samples);
+
+  /** Open a card at scroll position `y`, swipe down, and check it folds all the way, smoothly. */
+  async function foldsAt(where: "mid" | "near-bottom" | "bottom") {
     const { page, cdp, close, errors } = await open();
     try {
-      await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+      await page.evaluate((where) => {
+        const max = document.documentElement.scrollHeight - innerHeight;
+        window.scrollTo(0, where === "mid" ? Math.round(max / 2) : where === "near-bottom" ? max - 60 : max);
+      }, where);
       await page.waitForTimeout(400);
-      await tapWord(page, "last");
-      const opened = await dockState(page);
-      expect(opened).toMatchObject({ hidden: false, offset: 0 });
-      expect(opened.word).toBeTruthy();
+      const opened = await tapWord(page, "last");
+      // The opening tap never folds it.
+      await page.waitForTimeout(500);
+      expect(await dockState(page)).toMatchObject({ hidden: false, offset: 0, word: opened });
 
-      // Sample the dock every frame through the swipe and the slide.
-      await page.evaluate(() => {
-        const w = window as unknown as { __samples: number[] };
-        w.__samples = [];
-        const dock = document.querySelector<HTMLElement>(".dock")!;
-        const t0 = performance.now();
-        const tick = () => {
-          w.__samples.push(Math.round(new DOMMatrixReadOnly(getComputedStyle(dock).transform).m42));
-          if (performance.now() - t0 < 900) requestAnimationFrame(tick);
-        };
-        requestAnimationFrame(tick);
-      });
-      await swipe(cdp, 195, 500, 160);
+      await sample(page);
+      await swipe(cdp, 195, 500, 120);
       await page.waitForTimeout(700);
-      const samples = await page.evaluate(() => (window as unknown as { __samples: number[] }).__samples);
+      const seen = await samples(page);
       const done = await dockState(page);
       expect(done.hidden).toBe(true);
       expect(done.offset).toBeGreaterThan(100);
-      // Smooth: in-between positions seen, and it only ever moves down (no jump back / flicker).
-      expect(samples.some((v) => v > 0 && v < done.offset)).toBe(true);
-      for (let i = 1; i < samples.length; i++) expect(samples[i]).toBeGreaterThanOrEqual(samples[i - 1]);
+      // Slid (in-between frames seen), only ever moving down: no half-way stop, no jump back.
+      expect(seen.some((v) => v > 0 && v < done.offset)).toBe(true);
+      for (let i = 1; i < seen.length; i++) expect(seen[i]).toBeGreaterThanOrEqual(seen[i - 1]);
+      expect(seen.at(-1)).toBe(done.offset);
 
-      // Tapping another word brings the card back with that word.
+      // Another word reopens the card with that word.
       const other = await tapWord(page, "other");
-      expect(other).not.toBe(opened.word);
+      expect(other).not.toBe(opened);
       expect(await dockState(page)).toMatchObject({ hidden: false, offset: 0, word: other });
-      // And opening it doesn't dismiss it by itself.
-      await page.waitForTimeout(500);
-      expect((await dockState(page)).hidden).toBe(false);
       expect(errors).toEqual([]);
     } finally {
       await close();
     }
-  }, 40_000);
+  }
 
-  it("mid-story is unchanged: the card rides down 1:1 with the scroll", async () => {
+  it("mid-story: a downward swipe folds the card all the way (200 ms slide)", () => foldsAt("mid"), 40_000);
+  it("near the bottom (used to stick half way): folds all the way", () => foldsAt("near-bottom"), 40_000);
+  it("at the very bottom (nothing left to scroll): folds all the way", () => foldsAt("bottom"), 40_000);
+
+  it("tiny jitter and upward scrolling leave the card where it is", async () => {
     const { page, cdp, close, errors } = await open();
     try {
-      await page.evaluate(() => window.scrollTo(0, 300));
+      await page.evaluate(() => window.scrollTo(0, 1200));
       await page.waitForTimeout(400);
       await tapWord(page, "last");
+      await page.waitForTimeout(400);
+      await swipe(cdp, 195, 500, 4, 2);
+      await page.waitForTimeout(300);
       expect(await dockState(page)).toMatchObject({ hidden: false, offset: 0 });
       const y0 = await page.evaluate(() => window.scrollY);
-      await swipe(cdp, 195, 500, 60, 6);
-      await page.waitForTimeout(300);
-      const y1 = await page.evaluate(() => window.scrollY);
-      const s = await dockState(page);
-      expect(y1).toBeGreaterThan(y0);
-      expect(s.hidden).toBe(false);
-      // Pushed down by the distance scrolled (the existing behaviour), not slid away.
-      expect(Math.abs(s.offset - (y1 - y0))).toBeLessThanOrEqual(3);
+      await swipe(cdp, 195, 300, -150);
+      await page.waitForTimeout(400);
+      expect(await page.evaluate(() => window.scrollY)).toBeLessThan(y0);
+      expect(await dockState(page)).toMatchObject({ hidden: false, offset: 0 });
       expect(errors).toEqual([]);
     } finally {
       await close();

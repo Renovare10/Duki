@@ -77,33 +77,26 @@ export function stepSheetScroll(
 }
 
 /**
- * At the end of a story there is no scroll left, so the 1:1 push-down above never moves the
- * sheet. A downward swipe (finger moving up), wheel or overscroll attempt there dismisses it
- * instead. Never from the gesture that opened it: the touch must start after the reveal (a
- * wheel waits out a short grace period), and it must start at the end, so mid-story is unchanged.
+ * Word card fold (Chad, Nov 25): any deliberate downward scroll, swipe or wheel while the card is
+ * up slides it all the way off (never stuck half way), anywhere in the story, including at the
+ * end where there is nothing left to scroll. Never from the gesture that opened it: a touch must
+ * start after the reveal; scroll and wheel wait out a short grace period after it.
  */
-export const END_SWIPE_PX = 24;
-export const END_WHEEL_GRACE_MS = 350;
-/** Within this many px of the bottom counts as "at the end" (subpixel scroll positions). */
-export const AT_END_SLACK_PX = 2;
+/** Downward travel (px) that counts as deliberate; tap jitter stays below it. */
+export const DOWN_DISMISS_PX = 8;
+export const REVEAL_GRACE_MS = 350;
 
-export function atScrollEnd(y: number, maxY: number): boolean {
-  return y >= Math.max(0, maxY) - AT_END_SLACK_PX;
-}
-
-export function shouldDismissAtEnd(g: {
+export function shouldDismissOnDown(g: {
   latched: boolean;
-  /** At the end when the gesture started, and still at the end now. */
-  startedAtEnd: boolean;
-  atEndNow: boolean;
-  /** performance.now() of the gesture start and of the last reveal (word tap). */
+  /** performance.now() of the gesture start (touch) or of this event (scroll/wheel), and of the last reveal. */
   startedAt: number;
   revealedAt: number;
-  /** Content-direction travel: + = trying to scroll further down. */
+  /** Content-direction travel: + = scrolling further down. */
   travel: number;
-  kind: "touch" | "wheel";
+  kind: "touch" | "scroll" | "wheel";
 }): boolean {
-  if (g.latched || !g.startedAtEnd || !g.atEndNow) return false;
-  if (g.kind === "touch") return g.startedAt > g.revealedAt && g.travel > END_SWIPE_PX;
-  return g.travel > 0 && g.startedAt - g.revealedAt > END_WHEEL_GRACE_MS;
+  if (g.latched) return false;
+  if (g.kind === "touch") return g.startedAt > g.revealedAt && g.travel > DOWN_DISMISS_PX;
+  if (g.startedAt - g.revealedAt <= REVEAL_GRACE_MS) return false;
+  return g.kind === "wheel" ? g.travel > 0 : g.travel > DOWN_DISMISS_PX;
 }

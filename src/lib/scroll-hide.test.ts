@@ -1,8 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
-  atScrollEnd,
-  END_SWIPE_PX,
-  shouldDismissAtEnd,
+  DOWN_DISMISS_PX,
+  shouldDismissOnDown,
   initialSheetScroll,
   rebaseSheetScroll,
   revealSheetScroll,
@@ -118,33 +117,30 @@ describe("rebase and reveal", () => {
   });
 });
 
-describe("end-of-story swipe dismiss", () => {
-  const base = { latched: false, startedAtEnd: true, atEndNow: true, startedAt: 1000, revealedAt: 500, travel: 40, kind: "touch" as const };
-  it("a downward swipe at the end dismisses", () => {
-    expect(shouldDismissAtEnd(base)).toBe(true);
+describe("word card folds on any downward scroll", () => {
+  const touch = { latched: false, startedAt: 1000, revealedAt: 500, travel: 20, kind: "touch" as const };
+  it("a downward swipe anywhere folds it (mid-story, near the bottom, at the end)", () => {
+    expect(shouldDismissOnDown(touch)).toBe(true);
+    expect(shouldDismissOnDown({ ...touch, kind: "scroll", travel: 12 })).toBe(true);
   });
-  it("needs a real swipe, not a tap jitter", () => {
-    expect(shouldDismissAtEnd({ ...base, travel: END_SWIPE_PX })).toBe(false);
-    expect(shouldDismissAtEnd({ ...base, travel: -80 })).toBe(false);
+  it("tiny jitter does not", () => {
+    expect(shouldDismissOnDown({ ...touch, travel: DOWN_DISMISS_PX })).toBe(false);
+    expect(shouldDismissOnDown({ ...touch, kind: "scroll", travel: 3 })).toBe(false);
+  });
+  it("upward does not", () => {
+    expect(shouldDismissOnDown({ ...touch, travel: -60 })).toBe(false);
+    expect(shouldDismissOnDown({ ...touch, kind: "scroll", travel: -60 })).toBe(false);
+    expect(shouldDismissOnDown({ ...touch, kind: "wheel", travel: -3 })).toBe(false);
   });
   it("never from the touch that opened the card", () => {
-    expect(shouldDismissAtEnd({ ...base, startedAt: 400, revealedAt: 500 })).toBe(false);
+    expect(shouldDismissOnDown({ ...touch, startedAt: 400, revealedAt: 500 })).toBe(false);
   });
-  it("mid-story (gesture started above the end) is left to normal scrolling", () => {
-    expect(shouldDismissAtEnd({ ...base, startedAtEnd: false })).toBe(false);
-    expect(shouldDismissAtEnd({ ...base, atEndNow: false })).toBe(false);
+  it("scroll and wheel wait out a short grace period after the reveal", () => {
+    expect(shouldDismissOnDown({ ...touch, kind: "scroll", startedAt: 800, revealedAt: 600 })).toBe(false);
+    expect(shouldDismissOnDown({ ...touch, kind: "wheel", travel: 2, startedAt: 800, revealedAt: 600 })).toBe(false);
+    expect(shouldDismissOnDown({ ...touch, kind: "wheel", travel: 2, startedAt: 1000, revealedAt: 600 })).toBe(true);
   });
   it("already hidden: nothing to do", () => {
-    expect(shouldDismissAtEnd({ ...base, latched: true })).toBe(false);
-  });
-  it("wheel down at the end dismisses after a short grace period from the reveal", () => {
-    expect(shouldDismissAtEnd({ ...base, kind: "wheel", travel: 3, startedAt: 1000, revealedAt: 900 })).toBe(false);
-    expect(shouldDismissAtEnd({ ...base, kind: "wheel", travel: 3, startedAt: 1000, revealedAt: 600 })).toBe(true);
-    expect(shouldDismissAtEnd({ ...base, kind: "wheel", travel: -3, startedAt: 1000, revealedAt: 0 })).toBe(false);
-  });
-  it("at the end allows subpixel slack and short pages", () => {
-    expect(atScrollEnd(998.5, 1000)).toBe(true);
-    expect(atScrollEnd(990, 1000)).toBe(false);
-    expect(atScrollEnd(0, -20)).toBe(true);
+    expect(shouldDismissOnDown({ ...touch, latched: true })).toBe(false);
   });
 });

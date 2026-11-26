@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type RefObject } from "react";
 import {
-  atScrollEnd,
   initialSheetScroll,
-  shouldDismissAtEnd,
+  shouldDismissOnDown,
   rebaseSheetScroll,
   revealSheetScroll,
   sheetHideDistance,
@@ -103,7 +102,23 @@ export function useScrollHide({
       if (settle || frameRef.current) return;
       frameRef.current = window.requestAnimationFrame(() => {
         frameRef.current = 0;
-        apply(stepSheetScroll(stateRef.current, window.scrollY, maxY, distance));
+        const s = stateRef.current;
+        // Hidden (or sliding off): stays down, as before.
+        if (s.latched) return apply(stepSheetScroll(s, window.scrollY, maxY, distance));
+        const y = Math.min(Math.max(0, window.scrollY), Math.max(0, maxY));
+        // Up: just re-anchor (the card stays put); down past the threshold: fold it all the way.
+        if (y < s.lastY) {
+          stateRef.current = { ...s, lastY: y };
+          return;
+        }
+        if (shouldDismissOnDown({
+          latched: false,
+          startedAt: performance.now(),
+          revealedAt: revealedAtRef.current,
+          travel: y - s.lastY,
+          kind: "scroll",
+        })) dismissDown();
+        else if (performance.now() - revealedAtRef.current <= REVEAL_MS + 150) stateRef.current = { ...s, lastY: y };
       });
     };
     // iOS address bar show/hide resizes the viewport; never treat that as scrolling.
@@ -127,8 +142,8 @@ export function useScrollHide({
     ro?.observe(el);
     ro?.observe(document.body);
 
-    // End of story: nothing left to scroll, so slide the sheet away on a downward swipe/wheel.
-    const dismissAtEnd = () => {
+    // Any deliberate downward scroll/swipe/wheel: slide the sheet all the way off (200 ms).
+    const dismissDown = () => {
       window.cancelAnimationFrame(frameRef.current);
       frameRef.current = 0;
       window.clearTimeout(revealTimer.current);
@@ -144,41 +159,34 @@ export function useScrollHide({
         if (stateRef.current.latched) setLatched(true);
       }, motion ? DISMISS_MS : 0);
     };
-    let touch: { y: number; at: number; atEnd: boolean } | null = null;
+    let touch: { y: number; at: number } | null = null;
     const onTouchStart = (e: TouchEvent) => {
-      touch = e.touches.length === 1
-        ? { y: e.touches[0].clientY, at: performance.now(), atEnd: atScrollEnd(window.scrollY, maxY) }
-        : null;
+      touch = e.touches.length === 1 ? { y: e.touches[0].clientY, at: performance.now() } : null;
     };
     const onTouchMove = (e: TouchEvent) => {
       if (!touch || e.touches.length !== 1) return;
-      if (shouldDismissAtEnd({
+      if (shouldDismissOnDown({
         latched: stateRef.current.latched,
-        startedAtEnd: touch.atEnd,
-        atEndNow: atScrollEnd(window.scrollY, maxY),
         startedAt: touch.at,
         revealedAt: revealedAtRef.current,
         travel: touch.y - e.touches[0].clientY,
         kind: "touch",
       })) {
         touch = null;
-        dismissAtEnd();
+        dismissDown();
       }
     };
     const onTouchEnd = () => {
       touch = null;
     };
     const onWheel = (e: WheelEvent) => {
-      const atEnd = atScrollEnd(window.scrollY, maxY);
-      if (shouldDismissAtEnd({
+      if (shouldDismissOnDown({
         latched: stateRef.current.latched,
-        startedAtEnd: atEnd,
-        atEndNow: atEnd,
         startedAt: performance.now(),
         revealedAt: revealedAtRef.current,
         travel: e.deltaY,
         kind: "wheel",
-      })) dismissAtEnd();
+      })) dismissDown();
     };
     window.addEventListener("touchstart", onTouchStart, { passive: true });
     window.addEventListener("touchmove", onTouchMove, { passive: true });
