@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef, useState, type RefObject } from "react";
 import {
+  atScrollEnd,
   initialSheetScroll,
+  shouldDismissAtEnd,
   rebaseSheetScroll,
   revealSheetScroll,
   sheetHideDistance,
@@ -9,6 +11,7 @@ import {
 } from "../lib/scroll-hide";
 
 const REVEAL_MS = 200;
+const DISMISS_MS = 200;
 
 function useMediaQuery(query: string): boolean {
   const [matches, setMatches] = useState(
@@ -62,6 +65,9 @@ export function useScrollHide({
   const stateRef = useRef<SheetScrollState>(initialSheetScroll(0));
   const revealTimer = useRef(0);
   const frameRef = useRef(0);
+  /** performance.now() of the last reveal (word tap); gestures that began before it are ignored. */
+  const revealedAtRef = useRef(0);
+  const dismissTimer = useRef(0);
 
   useEffect(() => {
     const el = sheetRef.current;
@@ -121,12 +127,77 @@ export function useScrollHide({
     ro?.observe(el);
     ro?.observe(document.body);
 
+    // End of story: nothing left to scroll, so slide the sheet away on a downward swipe/wheel.
+    const dismissAtEnd = () => {
+      window.cancelAnimationFrame(frameRef.current);
+      frameRef.current = 0;
+      window.clearTimeout(revealTimer.current);
+      const prev = stateRef.current;
+      stateRef.current = { lastY: Math.min(Math.max(0, window.scrollY), Math.max(0, maxY)), offset: distance, latched: true };
+      const motion = !prefersReducedMotion();
+      el.style.transition = motion ? `transform ${DISMISS_MS}ms cubic-bezier(0.4, 0, 1, 1)` : "";
+      if (prev.offset !== distance) writeOffset(el, distance);
+      // Latch (visibility: hidden) only once the slide has played, so it is seen leaving.
+      window.clearTimeout(dismissTimer.current);
+      dismissTimer.current = window.setTimeout(() => {
+        el.style.transition = "";
+        if (stateRef.current.latched) setLatched(true);
+      }, motion ? DISMISS_MS : 0);
+    };
+    let touch: { y: number; at: number; atEnd: boolean } | null = null;
+    const onTouchStart = (e: TouchEvent) => {
+      touch = e.touches.length === 1
+        ? { y: e.touches[0].clientY, at: performance.now(), atEnd: atScrollEnd(window.scrollY, maxY) }
+        : null;
+    };
+    const onTouchMove = (e: TouchEvent) => {
+      if (!touch || e.touches.length !== 1) return;
+      if (shouldDismissAtEnd({
+        latched: stateRef.current.latched,
+        startedAtEnd: touch.atEnd,
+        atEndNow: atScrollEnd(window.scrollY, maxY),
+        startedAt: touch.at,
+        revealedAt: revealedAtRef.current,
+        travel: touch.y - e.touches[0].clientY,
+        kind: "touch",
+      })) {
+        touch = null;
+        dismissAtEnd();
+      }
+    };
+    const onTouchEnd = () => {
+      touch = null;
+    };
+    const onWheel = (e: WheelEvent) => {
+      const atEnd = atScrollEnd(window.scrollY, maxY);
+      if (shouldDismissAtEnd({
+        latched: stateRef.current.latched,
+        startedAtEnd: atEnd,
+        atEndNow: atEnd,
+        startedAt: performance.now(),
+        revealedAt: revealedAtRef.current,
+        travel: e.deltaY,
+        kind: "wheel",
+      })) dismissAtEnd();
+    };
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: true });
+    window.addEventListener("touchend", onTouchEnd, { passive: true });
+    window.addEventListener("touchcancel", onTouchEnd, { passive: true });
+    window.addEventListener("wheel", onWheel, { passive: true });
+
     const vv = window.visualViewport;
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onResize);
     vv?.addEventListener("resize", onResize);
     return () => {
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("touchend", onTouchEnd);
+      window.removeEventListener("touchcancel", onTouchEnd);
+      window.removeEventListener("wheel", onWheel);
+      window.clearTimeout(dismissTimer.current);
       window.removeEventListener("resize", onResize);
       vv?.removeEventListener("resize", onResize);
       ro?.disconnect();
@@ -143,6 +214,8 @@ export function useScrollHide({
     window.cancelAnimationFrame(frameRef.current);
     frameRef.current = 0;
     const el = sheetRef.current;
+    revealedAtRef.current = performance.now();
+    window.clearTimeout(dismissTimer.current);
     const wasDown = stateRef.current.offset > 0;
     stateRef.current = revealSheetScroll(window.scrollY, maxScrollY());
     setLatched(false);

@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
+  atScrollEnd,
+  END_SWIPE_PX,
+  shouldDismissAtEnd,
   initialSheetScroll,
   rebaseSheetScroll,
   revealSheetScroll,
@@ -112,5 +115,36 @@ describe("rebase and reveal", () => {
     const shown = revealSheetScroll(1200, MAX);
     expect(shown).toEqual({ lastY: 1200, offset: 0, latched: false });
     expect(stepSheetScroll(shown, 1230, MAX, D).offset).toBe(30);
+  });
+});
+
+describe("end-of-story swipe dismiss", () => {
+  const base = { latched: false, startedAtEnd: true, atEndNow: true, startedAt: 1000, revealedAt: 500, travel: 40, kind: "touch" as const };
+  it("a downward swipe at the end dismisses", () => {
+    expect(shouldDismissAtEnd(base)).toBe(true);
+  });
+  it("needs a real swipe, not a tap jitter", () => {
+    expect(shouldDismissAtEnd({ ...base, travel: END_SWIPE_PX })).toBe(false);
+    expect(shouldDismissAtEnd({ ...base, travel: -80 })).toBe(false);
+  });
+  it("never from the touch that opened the card", () => {
+    expect(shouldDismissAtEnd({ ...base, startedAt: 400, revealedAt: 500 })).toBe(false);
+  });
+  it("mid-story (gesture started above the end) is left to normal scrolling", () => {
+    expect(shouldDismissAtEnd({ ...base, startedAtEnd: false })).toBe(false);
+    expect(shouldDismissAtEnd({ ...base, atEndNow: false })).toBe(false);
+  });
+  it("already hidden: nothing to do", () => {
+    expect(shouldDismissAtEnd({ ...base, latched: true })).toBe(false);
+  });
+  it("wheel down at the end dismisses after a short grace period from the reveal", () => {
+    expect(shouldDismissAtEnd({ ...base, kind: "wheel", travel: 3, startedAt: 1000, revealedAt: 900 })).toBe(false);
+    expect(shouldDismissAtEnd({ ...base, kind: "wheel", travel: 3, startedAt: 1000, revealedAt: 600 })).toBe(true);
+    expect(shouldDismissAtEnd({ ...base, kind: "wheel", travel: -3, startedAt: 1000, revealedAt: 0 })).toBe(false);
+  });
+  it("at the end allows subpixel slack and short pages", () => {
+    expect(atScrollEnd(998.5, 1000)).toBe(true);
+    expect(atScrollEnd(990, 1000)).toBe(false);
+    expect(atScrollEnd(0, -20)).toBe(true);
   });
 });

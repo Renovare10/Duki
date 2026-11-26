@@ -75,3 +75,35 @@ export function stepSheetScroll(
   const offset = Math.min(distance, Math.max(0, state.offset + delta));
   return { lastY: y, offset, latched: offset >= distance };
 }
+
+/**
+ * At the end of a story there is no scroll left, so the 1:1 push-down above never moves the
+ * sheet. A downward swipe (finger moving up), wheel or overscroll attempt there dismisses it
+ * instead. Never from the gesture that opened it: the touch must start after the reveal (a
+ * wheel waits out a short grace period), and it must start at the end, so mid-story is unchanged.
+ */
+export const END_SWIPE_PX = 24;
+export const END_WHEEL_GRACE_MS = 350;
+/** Within this many px of the bottom counts as "at the end" (subpixel scroll positions). */
+export const AT_END_SLACK_PX = 2;
+
+export function atScrollEnd(y: number, maxY: number): boolean {
+  return y >= Math.max(0, maxY) - AT_END_SLACK_PX;
+}
+
+export function shouldDismissAtEnd(g: {
+  latched: boolean;
+  /** At the end when the gesture started, and still at the end now. */
+  startedAtEnd: boolean;
+  atEndNow: boolean;
+  /** performance.now() of the gesture start and of the last reveal (word tap). */
+  startedAt: number;
+  revealedAt: number;
+  /** Content-direction travel: + = trying to scroll further down. */
+  travel: number;
+  kind: "touch" | "wheel";
+}): boolean {
+  if (g.latched || !g.startedAtEnd || !g.atEndNow) return false;
+  if (g.kind === "touch") return g.startedAt > g.revealedAt && g.travel > END_SWIPE_PX;
+  return g.travel > 0 && g.startedAt - g.revealedAt > END_WHEEL_GRACE_MS;
+}
