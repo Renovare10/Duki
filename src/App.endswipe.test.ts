@@ -63,18 +63,22 @@ describe("Reader word card: swipe down at the end of a story dismisses it", () =
     return { hidden: dock.classList.contains("dock-hidden"), offset: Math.round(m.m42), word: document.querySelector(".dock-word")?.textContent ?? null };
   });
 
-  async function tapWord(page: Page, nth: number | "last-visible") {
-    const box = await page.evaluate((nth) => {
-      const words = [...document.querySelectorAll<HTMLElement>(".article .word")];
-      const dockTop = document.querySelector<HTMLElement>(".dock")!.getBoundingClientRect().top;
-      const pick = nth === "last-visible"
-        ? words.filter((w) => { const r = w.getBoundingClientRect(); return r.top > 80 && r.bottom < Math.min(dockTop, innerHeight) - 8; }).at(-1)!
-        : words[nth];
-      const r = pick.getBoundingClientRect();
-      return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
-    }, nth);
+  /** Tap a word a finger can actually reach (not under the sticky chrome or the card). */
+  async function tapWord(page: Page, pick: "last" | "other") {
+    const box = await page.evaluate((pick) => {
+      const current = document.querySelector(".article .word.selected");
+      const hittable = [...document.querySelectorAll<HTMLElement>(".article .word")].filter((w) => {
+        const r = w.getBoundingClientRect();
+        if (r.bottom < 0 || r.top > innerHeight) return false;
+        return document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2) === w;
+      });
+      const w = pick === "last" ? hittable.at(-1)! : hittable.filter((x) => x !== current && x.textContent !== current?.textContent).at(-1)!;
+      const r = w.getBoundingClientRect();
+      return { x: r.left + r.width / 2, y: r.top + r.height / 2, text: w.textContent };
+    }, pick);
     await page.touchscreen.tap(box.x, box.y);
     await page.waitForTimeout(250);
+    return box.text;
   }
 
   it("at the end: a downward swipe slides the card away (~200 ms, no flicker); another word still opens", async () => {
@@ -82,7 +86,7 @@ describe("Reader word card: swipe down at the end of a story dismisses it", () =
     try {
       await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
       await page.waitForTimeout(400);
-      await tapWord(page, "last-visible");
+      await tapWord(page, "last");
       const opened = await dockState(page);
       expect(opened).toMatchObject({ hidden: false, offset: 0 });
       expect(opened.word).toBeTruthy();
@@ -110,8 +114,9 @@ describe("Reader word card: swipe down at the end of a story dismisses it", () =
       for (let i = 1; i < samples.length; i++) expect(samples[i]).toBeGreaterThanOrEqual(samples[i - 1]);
 
       // Tapping another word brings the card back with that word.
-      await tapWord(page, "last-visible");
-      expect(await dockState(page)).toMatchObject({ hidden: false, offset: 0 });
+      const other = await tapWord(page, "other");
+      expect(other).not.toBe(opened.word);
+      expect(await dockState(page)).toMatchObject({ hidden: false, offset: 0, word: other });
       // And opening it doesn't dismiss it by itself.
       await page.waitForTimeout(500);
       expect((await dockState(page)).hidden).toBe(false);
@@ -126,7 +131,7 @@ describe("Reader word card: swipe down at the end of a story dismisses it", () =
     try {
       await page.evaluate(() => window.scrollTo(0, 300));
       await page.waitForTimeout(400);
-      await tapWord(page, "last-visible");
+      await tapWord(page, "last");
       expect(await dockState(page)).toMatchObject({ hidden: false, offset: 0 });
       const y0 = await page.evaluate(() => window.scrollY);
       await swipe(cdp, 195, 500, 60, 6);
